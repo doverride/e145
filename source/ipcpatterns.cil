@@ -1,0 +1,9 @@
+(macro stream_connect_pattern ((type ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (allow ARG1 ARG2 (dirs (search)))
+    (allow ARG1 ARG3 write_sock_file_perms)
+    (allow ARG1 ARG4 (unix_stream_socket (connectto))))
+
+(macro dgram_send_pattern ((type ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (allow ARG1 ARG2 (dirs (search)))
+    (allow ARG1 ARG3 write_sock_file_perms)
+    (allow ARG1 ARG4 (unix_dgram_socket (sendto))))

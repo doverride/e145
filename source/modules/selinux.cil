@@ -1,0 +1,125 @@
+(boolean secure_mode_policyload false)
+
+(typeattribute is_bool_file_object)
+
+(typeattribute can_load_policy)
+(typeattribute
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_load_policy)
+
+(typeattribute can_setenforce)
+(typeattribute
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setenforce)
+
+(typeattribute can_setsecparam)
+(typeattribute
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setsecparam)
+
+(typeattribute has_unconfined_access_to_selinux_assets)
+
+(typeattribute all_bool_file_objects_except_secure_mode_policyload)
+
+(call object_roletype (is_bool_file_object))
+
+(type security_t)
+(call selinux_boolean_object (security_t))
+(call files_mnt_object (security_t))
+(call filesystem_object (security_t))
+
+(sid security)
+(context security (system_u object_r security_t (mls_systemhigh
+    mls_systemhigh)))
+(sidcontext security security)
+
+(genfscon "selinuxfs" "/" (system_u object_r security_t ((s0) (s0))))
+(genfscon "securityfs" "/" (system_u object_r security_t ((s0) (s0))))
+
+(type secure_mode_policyload_t)
+(call selinux_boolean_object (secure_mode_policyload_t))
+
+(context secure_mode_policyload (system_u object_r
+    secure_mode_policyload_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/secure_mode_policyload"
+    secure_mode_policyload)
+
+(typeattributeset
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_load_policy
+    (not (has_unconfined_access_to_selinux_assets can_load_policy)))
+
+(neverallow
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_load_policy
+        security_t (security (load_policy)))
+
+(typeattributeset
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setenforce
+    (not (has_unconfined_access_to_selinux_assets can_setenforce)))
+
+(neverallow
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setenforce
+        security_t (security (setenforce)))
+
+(typeattributeset
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setsecparam
+        (not (has_unconfined_access_to_selinux_assets can_setsecparam)))
+
+(neverallow
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setsecparam
+        security_t (security (setsecparam)))
+
+(booleanif (not secure_mode_policyload)
+    (true
+        (allow has_unconfined_access_to_selinux_assets security_t
+            (security (load_policy setenforce)))
+        (allow has_unconfined_access_to_selinux_assets
+            secure_mode_policyload_t write_file_perms)))
+
+(allow has_unconfined_access_to_selinux_assets security_t (dirs (list)))
+(allow has_unconfined_access_to_selinux_assets security_t rw_file_perms)
+
+(typeattributeset all_bool_file_objects_except_secure_mode_policyload
+    (and (is_bool_file_object)
+       (not (secure_mode_policyload_t))))
+
+(allow has_unconfined_access_to_selinux_assets is_bool_file_object
+    read_file_perms)
+(allow has_unconfined_access_to_selinux_assets
+    all_bool_file_objects_except_secure_mode_policyload
+        write_file_perms)
+
+(allow has_unconfined_access_to_selinux_assets security_t
+    all_security_perms_except_load_policy_and_setenforce)
+
+(macro selinux_boolean_object ((type ARG1))
+    (typeattributeset is_bool_file_object ARG1))
+
+(macro selinux_set_enforce_mode ((type ARG1))
+    (allow ARG1 security_t rw_file_perms)
+    (typeattributeset can_setenforce ARG1)
+    (booleanif (not secure_mode_policyload)
+        (true
+            (allow ARG1 security_t (security (setenforce))))))
+
+(macro selinux_load_policy ((type ARG1))
+    (allow ARG1 security_t rw_file_perms)
+    (typeattributeset can_load_policy ARG1)
+    (booleanif (not secure_mode_policyload)
+        (true
+            (allow ARG1 security_t (security (load_policy))))))
+
+(macro selinux_set_all_booleans ((type ARG1))
+    (allow ARG1 all_bool_file_objects_except_secure_mode_policyload
+        rw_file_perms)
+    (allow ARG1 secure_mode_policyload_t read_file_perms)
+    (allow ARG1 security_t (security (setbool)))
+    (booleanif (not secure_mode_policyload)
+        (true
+            (allow ARG1 secure_mode_policyload_t
+                write_file_perms))))
+
+(macro selinux_set_parameters ((type ARG1))
+    (allow ARG1 security_t rw_file_perms)
+    (allow ARG1 security_t (security (setsecparam)))
+    (auditallow ARG1 security_t (security (setsecparam)))
+    (typeattributeset can_setsecparam ARG1))
+
+(macro selinux_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_selinux_assets ARG1))

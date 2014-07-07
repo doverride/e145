@@ -1,0 +1,86 @@
+(boolean unconfined_execheap true)
+(boolean unconfined_execmem true)
+(boolean unconfined_execstack true)
+(boolean unconfined_execmod true)
+(boolean unconfined_ptrace true)
+
+(type unconfined_execheap_t)
+(call selinux_boolean_object (unconfined_execheap_t))
+
+(context unconfined_execheap (system_u object_r
+    unconfined_execheap_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/unconfined_execheap"
+    unconfined_execheap)
+
+(type unconfined_execmem_t)
+(call selinux_boolean_object (unconfined_execmem_t))
+
+(context unconfined_execmem (system_u object_r
+    unconfined_execmem_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/unconfined_execmem"
+    unconfined_execmem)
+
+(type unconfined_execstack_t)
+(call selinux_boolean_object (unconfined_execstack_t))
+
+(context unconfined_execstack (system_u object_r
+    unconfined_execstack_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/unconfined_execstack"
+    unconfined_execstack)
+
+(type unconfined_execmod_t)
+(call selinux_boolean_object (unconfined_execmod_t))
+
+(context unconfined_execmod (system_u object_r
+    unconfined_execmod_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/unconfined_execmod"
+    unconfined_execmod)
+
+(type unconfined_ptrace_t)
+(call selinux_boolean_object (unconfined_ptrace_t))
+
+(context unconfined_ptrace (system_u object_r
+    unconfined_ptrace_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/unconfined_ptrace"
+    unconfined_ptrace)
+
+(macro unconfined_subject ((type ARG1))
+    (allow ARG1 self all_capability_perms_except_sys_nice_and_sys_module)
+    (allow ARG1 self all_capability2_perms_except_mac_admin_and_mac_override)
+    (allow ARG1 self (process (transition dyntransition setcurrent setsched)))
+    (allow ARG1 self (fifo_file (all)))
+    (call devices_unconfined (ARG1))
+    (call subject_unconfined (ARG1))
+    (call files_unconfined (ARG1))
+    (call filesystem_unconfined (ARG1))
+    (call network_unconfined (ARG1))
+    (call selinux_unconfined (ARG1))
+    (call system_unconfined (ARG1))
+    (booleanif unconfined_execheap
+        (true
+            (allow ARG1 self (process (execheap)))))
+    (booleanif unconfined_execmem
+        (true
+            (allow ARG1 self (process (execmem)))))
+    (booleanif unconfined_execstack
+        (true
+            (allow ARG1 self (process (execstack execmem)))))
+    (booleanif unconfined_execmod
+        (true
+            (call files_execmod_all_files (ARG1))))
+    (booleanif unconfined_ptrace
+        (true
+            (allow ARG1 self (process (ptrace)))))
+    (optional unconfined_subject_optional_storage
+        (call storage_unconfined (ARG1)))
+
+    ; others
+
+    (allow ARG1 is_subject (context (all)))
+    (allow ARG1 is_subject (dbus (all)))
+    (allow ARG1 is_subject (passwd (all)))
+
+    (allow ARG1 is_subject (service (all)))
+    (allow ARG1 is_file_object (service (all)))
+
+    (allow ARG1 is_subject (system (all))))

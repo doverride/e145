@@ -1,0 +1,541 @@
+(typeattribute is_dev_file_object)
+
+(typeattribute can_read_memory_raw)
+(typeattribute can_write_memory_raw)
+
+(typeattribute has_unconfined_access_to_devices_assets)
+
+(typeattribute
+    not_associated_with_can_read_memory_raw_or_has_unconfined_access_to_devices_assets)
+(typeattribute
+    not_associated_with_can_write_memory_raw_or_has_unconfined_access_to_devices_assets)
+
+(call object_roletype (is_dev_file_object))
+
+(type device_t)
+(call files_mnt_object (device_t))
+(call filesystem_xattr_object (device_t))
+
+(context device (system_u object_r device_t ((s0) (s0))))
+(fsuse trans "devtmpfs" device)
+
+(type device_agp_t)
+(call devices_object (device_agp_t))
+
+(context device_agp (system_u object_r device_agp_t ((s0) (s0))))
+(filecon "/dev/(misc/)?agpgart" char device_agp)
+
+(type device_apm_t)
+(call devices_object (device_apm_t))
+
+(context device_apm (system_u object_r device_apm_t ((s0) (s0))))
+(filecon "/dev/apm_bios" char device_apm)
+(filecon "/dev/snapshot" char device_apm)
+
+(type device_autofs_t)
+(call devices_object (device_autofs_t))
+
+(context device_autofs (system_u object_r device_autofs_t ((s0) (s0))))
+(filecon "/dev/autofs.*" char device_autofs)
+
+(type device_cachefiles_t)
+(call devices_object (device_cachefiles_t))
+
+(context device_cachefiles (system_u object_r device_cachefiles_t ((s0)
+    (s0))))
+(filecon "/dev/cachefiles" char device_cachefiles)
+
+(type device_clock_t)
+(call devices_object (device_clock_t))
+
+(context device_clock (system_u object_r device_clock_t ((s0) (s0))))
+(filecon "/dev/efirtc" char device_clock)
+(filecon "/dev/gtrsc.*" char device_clock)
+(filecon "/dev/hpet" char device_clock)
+(filecon "/dev/pcfclock.*" char device_clock)
+(filecon "/dev/pps.*" char device_clock)
+(filecon "/dev/ptp.*" char device_clock)
+(filecon "/dev/(misc/)?rtc[0-9]*" char device_clock)
+
+(type device_cpu_t)
+(call devices_object (device_cpu_t))
+
+(context device_cpu (system_u object_r device_cpu_t ((s0) (s0))))
+(filecon "/dev/bsr.*" char device_cpu)
+(filecon "/dev/cpu.*" char device_cpu)
+(filecon "/dev/microcode" char device_cpu)
+(filecon "/dev/msr.*" char device_cpu)
+
+(type device_crash_t)
+(call devices_object (device_crash_t))
+
+(context device_crash (system_u object_r device_crash_t (mls_systemhigh
+    mls_systemhigh)))
+(filecon "/dev/crash" char device_crash)
+
+(type device_crypt_t)
+(call devices_object (device_crypt_t))
+
+(context device_crypt (system_u object_r device_crypt_t ((s0) (s0))))
+(filecon "/dev/z90crypt" char device_crypt)
+
+(type device_dlm_control_t)
+(call devices_object (device_dlm_control_t))
+
+(context device_dlm_control (system_u object_r device_dlm_control_t
+    ((s0) (s0))))
+(filecon "/dev/dlm.*" char device_dlm_control)
+(filecon "/dev/misc/dlm.*" char device_dlm_control)
+
+(type device_dri_t)
+(call devices_object (device_dri_t))
+
+(context device_dri (system_u object_r device_dri_t ((s0) (s0))))
+(filecon "/dev/dri/.+" char device_dri)
+(filecon "/dev/i915" char device_dri)
+(filecon "/dev/radeon" char device_dri)
+
+(type device_ecryptfs_t)
+(call devices_object (device_ecryptfs_t))
+
+(context device_ecryptfs (system_u object_r device_ecryptfs_t
+    (mls_systemhigh mls_systemhigh)))
+(filecon "/dev/ecryptfs" char device_ecryptfs)
+
+(type device_event_t)
+(call devices_object (device_event_t))
+
+(context device_event (system_u object_r device_event_t ((s0) (s0))))
+(filecon "/dev/biometric/sensor.*" char device_event)
+(filecon "/dev/event.*" char device_event)
+(filecon "/dev/input/.*" char device_event)
+(filecon "/dev/input/keyboard.*" char device_event)
+(filecon "/dev/input/event.*" char device_event)
+(filecon "/dev/input/uinput" char device_event)
+(filecon "/dev/lik.*" char device_event)
+(filecon "/dev/uinput" char device_event)
+
+(type device_framebuf_t)
+(call devices_object (device_framebuf_t))
+
+(context device_framebuf (system_u object_r device_framebuf_t ((s0)
+    (s0))))
+(filecon "/dev/fb[0-9]*" char device_framebuf)
+
+(type device_ipmi_t)
+(call devices_object (device_ipmi_t))
+
+(context device_ipmi (system_u object_r device_ipmi_t ((s0) (s0))))
+(filecon "/dev/ipmi[0-9]+" char device_ipmi)
+(filecon "/dev/ipmi/[0-9]+" char device_ipmi)
+
+(type device_kmsg_t)
+(call devices_object (device_kmsg_t))
+
+(context device_kmsg (system_u object_r device_kmsg_t (mls_systemhigh
+    mls_systemhigh)))
+(filecon "/dev/kmsg" char device_kmsg)
+(filecon "/dev/mcelog" char device_kmsg)
+
+(type device_ksm_t)
+(call devices_object (device_ksm_t))
+
+(context device_ksm (system_u object_r device_ksm_t ((s0) (s0))))
+(filecon "/dev/ksm" char device_ksm)
+
+(type device_kvm_t)
+(call devices_object (device_kvm_t))
+
+(context device_kvm (system_u object_r device_kvm_t ((s0) (s0))))
+(filecon "/dev/kvm" char device_kvm)
+
+(type device_lirc_t)
+(call devices_object (device_lirc_t))
+
+(context device_lirc (system_u object_r device_lirc_t ((s0) (s0))))
+(filecon "/dev/lirc[0-9]+" char device_lirc)
+
+(type device_loop_control_t)
+(call devices_object (device_loop_control_t))
+
+(context device_loop_control (system_u object_r device_loop_control_t
+    ((s0) (s0))))
+(filecon "/dev/loop-control" char device_loop_control)
+
+(type device_lvm_control_t)
+(call devices_object (device_lvm_control_t))
+
+(context device_lvm_control (system_u object_r device_lvm_control_t
+    ((s0) (s0))))
+(filecon "/dev/btrfs-control" char device_lvm_control)
+(filecon "/dev/etherd/.+" char device_lvm_control)
+(filecon "/dev/mapper/control" char device_lvm_control)
+
+(type device_mei_t)
+(call devices_object (device_mei_t))
+
+(context device_mei (system_u object_r device_mei_t ((s0) (s0))))
+(filecon "/dev/mei" char device_mei)
+
+(type device_memory_t)
+(call devices_object (device_memory_t))
+
+(context device_memory (system_u object_r device_memory_t
+    (mls_systemhigh mls_systemhigh)))
+(filecon "/dev/kmem" char device_memory)
+(filecon "/dev/mem" char device_memory)
+(filecon "/dev/mergemem" char device_memory)
+(filecon "/dev/oldmem" char device_memory)
+(filecon "/dev/port" char device_memory)
+(filecon "/dev/vc-mem" char device_memory)
+
+(type device_modem_t)
+(call devices_object (device_modem_t))
+
+(context device_modem (system_u object_r device_modem_t ((s0) (s0))))
+(filecon "/dev/cdc-wdm[0-9]" char device_modem)
+(filecon "/dev/modem" char device_modem)
+(filecon "/dev/noz.*" char device_modem)
+
+(type device_mouse_t)
+(call devices_object (device_mouse_t))
+
+(context device_mouse (system_u object_r device_mouse_t ((s0) (s0))))
+(filecon "/dev/.*mouse.*" char device_mouse)
+(filecon "/dev/atibm" char device_mouse)
+(filecon "/dev/elographics/e2201" char device_mouse)
+(filecon "/dev/inportbm" char device_mouse)
+(filecon "/dev/input/m.*" char device_mouse)
+(filecon "/dev/input/.*mouse.*" char device_mouse)
+(filecon "/dev/input/mice" char device_mouse)
+(filecon "/dev/input/js.*" char device_mouse)
+(filecon "/dev/jbm" char device_mouse)
+(filecon "/dev/js.*" char device_mouse)
+(filecon "/dev/lircm" char device_mouse)
+(filecon "/dev/logibm" char device_mouse)
+(filecon "/dev/mice" char device_mouse)
+(filecon "/dev/pc110pad" char device_mouse)
+(filecon "/dev/(misc/)?psaux" char device_mouse)
+(filecon "/dev/touchscreen/ucb1x00" char device_mouse)
+(filecon "/dev/touchscreen/mk712" char device_mouse)
+(filecon "/dev/vrtpanel" char device_mouse)
+
+(type device_net_control_t)
+(call devices_object (device_net_control_t))
+
+(context device_net_control (system_u object_r device_net_control_t
+    ((s0) (s0))))
+(filecon "/dev/cpu_dma_latency" char device_net_control)
+(filecon "/dev/network_latency" char device_net_control)
+(filecon "/dev/network_throughput" char device_net_control)
+
+(type device_null_t)
+(call devices_object (device_null_t))
+(call filesystem_associate_tmpfs (device_null_t))
+
+(sid devnull)
+(context devnull (system_u object_r device_null_t ((s0) (s0))))
+(sidcontext devnull devnull)
+(filecon "/dev/full" char devnull)
+(filecon "/dev/null" char devnull)
+
+(type device_nvram_t)
+(call devices_object (device_nvram_t))
+
+(context device_nvram (system_u object_r device_nvram_t
+    (mls_systemhigh mls_systemhigh)))
+(filecon "/dev/nvram" char device_nvram)
+
+(type device_power_t)
+(call devices_object (device_power_t))
+
+(context device_power (system_u object_r device_power_t ((s0) (s0))))
+(filecon "/dev/pmu" char device_power)
+(filecon "/dev/smu" char device_power)
+
+(type device_printer_t)
+(call devices_object (device_printer_t))
+
+(context device_printer (system_u object_r device_printer_t ((s0)
+    (s0))))
+(filecon "/dev/irlpt[0-9]+" char device_printer)
+(filecon "/dev/lp.*" char device_printer)
+(filecon "/dev/mfpports/.*" char device_printer)
+(filecon "/dev/par.*" char device_printer)
+(filecon "/dev/usblp.*" char device_printer)
+(filecon "/dev/usb/lp.*" char device_printer)
+
+(type device_qemu_t)
+(call devices_object (device_qemu_t))
+
+(context device_qemu (system_u object_r device_qemu_t ((s0) (s0))))
+(filecon "/dev/kqemu" char device_qemu)
+
+(type device_random_t)
+(call devices_object (device_random_t))
+(call filesystem_associate_tmpfs (device_random_t))
+
+(context device_random (system_u object_r device_random_t ((s0) (s0))))
+(filecon "/dev/hw_random" char device_random)
+(filecon "/dev/hwrng" char device_random)
+(filecon "/dev/random" char device_random)
+
+(type device_scanner_t)
+(call devices_object (device_scanner_t))
+
+(context device_scanner (system_u object_r device_scanner_t ((s0)
+    (s0))))
+(filecon "/dev/mmetfgrab" char device_scanner)
+(filecon "/dev/usbscanner" char device_scanner)
+(filecon "/dev/usb/dc2xx.*" char device_scanner)
+(filecon "/dev/usb/mdc800.*" char device_scanner)
+(filecon "/dev/usb/scanner.*" char device_scanner)
+
+(type device_smartcard_t)
+(call devices_object (device_smartcard_t))
+
+(context device_smartcard (system_u object_r device_smartcard_t ((s0)
+    (s0))))
+(filecon "/dev/cmx.*" char device_smartcard)
+
+(type device_sound_t)
+(call devices_object (device_sound_t))
+
+(context device_sound (system_u object_r device_sound_t ((s0) (s0))))
+(filecon "/dev/admmidi.*" char device_sound)
+(filecon "/dev/adsp.*" char device_sound)
+(filecon "/dev/aload.*" char device_sound)
+(filecon "/dev/amidi.*" char device_sound)
+(filecon "/dev/amixer.*" char device_sound)
+(filecon "/dev/audio.*" char device_sound)
+(filecon "/dev/beep" char device_sound)
+(filecon "/dev/dahdi/.*" char device_sound)
+(filecon "/dev/dmfm" char device_sound)
+(filecon "/dev/dmmidi.*" char device_sound)
+(filecon "/dev/dsp.*" char device_sound)
+(filecon "/dev/hfmodem" char device_sound)
+(filecon "/dev/midi.*" char device_sound)
+(filecon "/dev/mixer.*" char device_sound)
+(filecon "/dev/mpu401.*" char device_sound)
+(filecon "/dev/patmgr[01]" char device_sound)
+(filecon "/dev/rmidi.*" char device_sound)
+(filecon "/dev/sequencer" char device_sound)
+(filecon "/dev/sequencer2" char device_sound)
+(filecon "/dev/smpte.*" char device_sound)
+(filecon "/dev/srnd[0-7]" char device_sound)
+(filecon "/dev/sndstat" char device_sound)
+(filecon "/dev/s(ou)?nd/.*" char device_sound)
+
+(type device_tpm_t)
+(call devices_object (device_tpm_t))
+
+(context device_tpm (system_u object_r device_tpm_t ((s0) (s0))))
+(filecon "/dev/tpm[0-9]*" char device_tpm)
+
+(type device_urandom_t)
+(call devices_object (device_urandom_t))
+(call filesystem_associate_tmpfs (device_urandom_t))
+
+(context device_urandom (system_u object_r device_urandom_t ((s0)
+    (s0))))
+(filecon "/dev/urandom" char device_urandom)
+
+(type device_usb_t)
+(call devices_object (device_usb_t))
+
+(context device_usb (system_u object_r device_usb_t ((s0) (s0))))
+(filecon "/dev/[0-9].*" char device_usb)
+(filecon "/dev/bus/usb/.*/[0-9]+" char device_usb)
+(filecon "/dev/fw.*" char device_usb)
+(filecon "/dev/hiddev.*" char device_usb)
+(filecon "/dev/hidraw.*" char device_usb)
+(filecon "/dev/spidev.*" char device_usb)
+(filecon "/dev/ub[a-c]" char device_usb)
+(filecon "/dev/usb.+" char device_usb)
+
+(type device_usbmon_t)
+(call devices_object (device_usbmon_t))
+
+(context device_usbmon (system_u object_r device_usbmon_t ((s0) (s0))))
+(filecon "/dev/usbmon.+" char device_usbmon)
+
+(type device_userio_t)
+(call devices_object (device_userio_t))
+
+(context device_userio (system_u object_r device_userio_t ((s0) (s0))))
+(filecon "/dev/uio[0-9]+" char device_userio)
+
+(type device_uhid_t)
+(call devices_object (device_uhid_t))
+
+(context device_uhid (system_u object_r device_uhid_t ((s0) (s0))))
+(filecon "/dev/uhid" char device_uhid)
+
+(type device_vfio_t)
+(call devices_object (device_vfio_t))
+
+(context device_vfio (system_u object_r device_vfio_t ((s0) (s0))))
+(filecon "/dev/sclp[0-9]*" char device_vfio)
+(filecon "/dev/vfio/(vfio)?[0-9]*" char device_vfio)
+(filecon "/dev/vmcp[0-9]*" char device_vfio)
+
+(type device_v4l_t)
+(call devices_object (device_v4l_t))
+
+(context device_v4l (system_u object_r device_v4l_t ((s0) (s0))))
+(filecon "/dev/dvb/.*" char device_v4l)
+(filecon "/dev/em8300.*" char device_v4l)
+(filecon "/dev/media.*" char device_v4l)
+(filecon "/dev/radio.*" char device_v4l)
+(filecon "/dev/raw1394.*" char device_v4l)
+(filecon "/dev/sonypi" char device_v4l)
+(filecon "/dev/tlk[0-3]" char device_v4l)
+(filecon "/dev/vchiq" char device_v4l)
+(filecon "/dev/vbi.*" char device_v4l)
+(filecon "/dev/video.*" char device_v4l)
+(filecon "/dev/vttuner" char device_v4l)
+(filecon "/dev/vtx.*" char device_v4l)
+(filecon "/dev/winradio.*" char device_v4l)
+
+(type device_vhost_t)
+(call devices_object (device_vhost_t))
+
+(context device_vhost (system_u object_r device_vhost_t ((s0) (s0))))
+(filecon "/dev/net/vhost" char device_vhost)
+(filecon "/dev/vhost-net" char device_vhost)
+
+(type device_vmware_t)
+(call devices_object (device_vmware_t))
+
+(context device_vmware (system_u object_r device_vmware_t ((s0)
+    (s0))))
+(filecon "/dev/vmmon" char device_vmware)
+(filecon "/dev/vmnet.*" char device_vmware)
+
+(type device_watchdog_t)
+(call devices_object (device_watchdog_t))
+
+(context device_watchdog (system_u object_r device_watchdog_t ((s0)
+    (s0))))
+(filecon "/dev/watchdog.*" char device_watchdog)
+
+(type device_wireless_t)
+(call devices_object (device_wireless_t))
+
+(context device_wireless (system_u object_r device_wireless_t ((s0)
+    (s0))))
+(filecon "/dev/rfkill" char device_wireless)
+
+(type device_xen_t)
+(call devices_object (device_xen_t))
+
+(context device_xen (system_u object_r device_xen_t ((s0) (s0))))
+(filecon "/dev/evtchn" char device_xen)
+(filecon "/dev/xen/blktap.*" char device_xen)
+(filecon "/dev/xen/evtchn" char device_xen)
+(filecon "/dev/xen/gntdev" char device_xen)
+(filecon "/dev/xen/gntalloc" char device_xen)
+
+(type device_xserver_misc_t)
+(call devices_object (device_xserver_misc_t))
+
+(context device_xserver_misc (system_u object_r device_xserver_misc_t
+    ((s0) (s0))))
+(filecon "/dev/3dfx" char device_xserver_misc)
+(filecon "/dev/ati/card.*" char device_xserver_misc)
+(filecon "/dev/controlD64" char device_xserver_misc)
+(filecon "/dev/card.*" char device_xserver_misc)
+(filecon "/dev/gfx" char device_xserver_misc)
+(filecon "/dev/graphics" char device_xserver_misc)
+(filecon "/dev/mga_vid.*" char device_xserver_misc)
+(filecon "/dev/mvideo/.*" char device_xserver_misc)
+(filecon "/dev/nvidia.*" char device_xserver_misc)
+(filecon "/dev/opengl" char device_xserver_misc)
+(filecon "/dev/vbox.*" char device_xserver_misc)
+(filecon "/dev/vga_arbiter" char device_xserver_misc)
+
+(type device_zero_t)
+(call devices_object (device_zero_t))
+(call filesystem_associate_tmpfs (device_zero_t))
+
+(context device_zero (system_u object_r device_zero_t ((s0) (s0))))
+(filecon "/dev/zero" char device_zero)
+
+(type sysfs_t)
+(call files_mnt_object (sysfs_t))
+(call filesystem_xattr_object (sysfs_t))
+
+(context sysfs (system_u object_r sysfs_t ((s0) (s0))))
+(genfscon "sysfs" "/" sysfs)
+
+(type usbfs_t)
+(call files_mnt_object (usbfs_t))
+(call filesystem_noxattr_object (usbfs_t))
+
+(context usbfs (system_u object_r usbfs_t ((s0) (s0))))
+(genfscon "usbfs" "/" usbfs)
+(genfscon "usbdevfs" "/" usbfs)
+
+(typeattributeset
+    not_associated_with_can_read_memory_raw_or_has_unconfined_access_to_devices_assets
+    (not (can_read_memory_raw has_unconfined_access_to_devices_assets)))
+
+(neverallow
+    not_associated_with_can_read_memory_raw_or_has_unconfined_access_to_devices_assets
+    device_memory_t (blk_file (read)))
+(neverallow
+    not_associated_with_can_read_memory_raw_or_has_unconfined_access_to_devices_assets
+    device_memory_t (chr_file (read)))
+
+(typeattributeset
+    not_associated_with_can_write_memory_raw_or_has_unconfined_access_to_devices_assets
+    (not (can_write_memory_raw has_unconfined_access_to_devices_assets)))
+(neverallow
+    not_associated_with_can_write_memory_raw_or_has_unconfined_access_to_devices_assets
+    device_memory_t (blk_file (append write)))
+(neverallow
+    not_associated_with_can_write_memory_raw_or_has_unconfined_access_to_devices_assets
+    device_memory_t (chr_file (append write)))
+
+(allow is_dev_file_object device_t (filesystem (associate)))
+
+(allow has_unconfined_access_to_devices_assets self (capability
+    (sys_rawio)))
+(allow has_unconfined_access_to_devices_assets is_dev_file_object
+    all_chr_file_perms_except_execmod)
+
+(macro devices_object ((type ARG1))
+    (typeattributeset is_dev_file_object ARG1))
+
+(macro devices_manage_all_nodes ((type ARG1))
+    (call manage_chr_files_pattern (ARG1 device_t is_dev_file_object))
+    (typeattributeset can_read_memory_raw ARG1)
+    (typeattributeset can_write_memory_raw ARG1)
+    (optional devices_optional_storage
+        (call storage_manage_fixed_disk_nodes (ARG1))
+        (call storage_manage_scsi_generic_nodes (ARG1))))
+
+(macro devices_read_all_nodes ((type ARG1))
+    (allow ARG1 is_dev_file_object read_chr_file_perms)
+    (typeattributeset can_read_memory_raw ARG1))
+
+(macro devices_read_memory_raw ((type ARG1))
+    (allow ARG1 self (capability (sys_rawio)))
+    (allow ARG1 device_memory_t read_chr_file_perms)
+    (typeattributeset can_read_memory_raw ARG1))
+
+(macro devices_write_memory_raw ((type ARG1))
+    (allow ARG1 self (capability (sys_rawio)))
+    (allow ARG1 device_memory_t write_chr_file_perms)
+    (typeattributeset can_write_memory_raw ARG1))
+
+(macro devices_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_devices_assets ARG1)
+    (optional devices_optional_storage
+        (call storage_unconfined (ARG1))))
+
+(filecon "/dev/.*" any ())
+(filecon "/dev" dir ())
+
+(filecon "/sys/.*" any ())
+(filecon "/sys" dir ())

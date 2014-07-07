@@ -1,0 +1,355 @@
+(typeattribute is_filesystem_object)
+
+(typeattribute has_unconfined_access_to_filesystem_assets)
+
+(typeattribute is_xattr_filesystem_object)
+(typeattribute is_noxattr_filesystem_object)
+
+(call object_roletype (is_filesystem_object))
+
+(type anon_inodefs_t)
+(call filesystem_object (anon_inodefs_t))
+(call files_mnt_object (anon_inodefs_t))
+
+(context fs_anon_inodefs (system_u object_r anon_inodefs_t ((s0)
+    (s0))))
+(genfscon "anon_inodefs" "/" fs_anon_inodefs)
+
+(type autofs_t)
+(call filesystem_noxattr_object (autofs_t))
+(call files_mnt_object (autofs_t))
+
+(context fs_autofs (system_u object_r autofs_t ((s0) (s0))))
+(genfscon "autofs" "/" fs_autofs)
+(genfscon "automount" "/" fs_autofs)
+
+(type bdev_t)
+(call filesystem_object (bdev_t))
+
+(context fs_bdev (system_u object_r bdev_t ((s0) (s0))))
+(genfscon "bdev" "/" fs_bdev)
+
+(type binfmt_misc_t)
+(call filesystem_object (binfmt_misc_t))
+(call files_mnt_object (binfmt_misc_t))
+
+(context fs_binfmt_misc (system_u object_r binfmt_misc_t ((s0)
+    (s0))))
+(genfscon "binfmt_misc" "/" fs_binfmt_misc)
+
+(type capifs_t)
+(call filesystem_object (capifs_t))
+(call files_mnt_object (capifs_t))
+
+(context fs_capifs (system_u object_r capifs_t ((s0) (s0))))
+(genfscon "capifs" "/" fs_capifs)
+
+(type cgroup_t)
+(call filesystem_object (cgroup_t))
+(call files_mnt_object (cgroup_t))
+
+(context fs_cgroup (system_u object_r cgroup_t ((s0) (s0))))
+(genfscon "cgroup" "/" fs_cgroup)
+
+(type cifs_t)
+(call filesystem_noxattr_object (cifs_t))
+(call files_mnt_object (cifs_t))
+
+(context fs_cifs (system_u object_r cifs_t ((s0) (s0))))
+(genfscon "cifs" "/" fs_cifs)
+(genfscon "smbfs" "/" fs_cifs)
+
+(type configfs_t)
+(call filesystem_object (configfs_t))
+(call files_mnt_object (configfs_t))
+
+(context fs_configfs (system_u object_r configfs_t ((s0) (s0))))
+(genfscon "configfs" "/" fs_configfs)
+
+(type cpuset_t)
+(call filesystem_object (cpuset_t))
+
+(context fs_cpuset (system_u object_r cpuset_t ((s0) (s0))))
+(genfscon "cpuset" "/" fs_cpuset)
+
+(type dosfs_t)
+(call filesystem_noxattr_object (dosfs_t))
+(call files_mnt_object (dosfs_t))
+
+(context fs_dosfs (system_u object_r dosfs_t ((s0) (s0))))
+(genfscon "fat" "/" fs_dosfs)
+(genfscon "hfs" "/" fs_dosfs)
+(genfscon "hfsplus" "/" fs_dosfs)
+(genfscon "msdos" "/" fs_dosfs)
+(genfscon "ntfs-3g" "/" fs_dosfs)
+(genfscon "ntfs" "/" fs_dosfs)
+(genfscon "vfat" "/" fs_dosfs)
+
+(type ecryptfs_t)
+(call filesystem_noxattr_object (ecryptfs_t))
+(call files_mnt_object (ecryptfs_t))
+
+(context fs_ecryptfs (system_u object_r ecryptfs_t ((s0) (s0))))
+(genfscon "ecryptfs" "/" fs_ecryptfs)
+
+(type efivarfs_t)
+(call filesystem_noxattr_object (efivarfs_t))
+(call files_mnt_object (efivarfs_t))
+
+(context fs_efivarfs (system_u object_r efivarfs_t ((s0) (s0))))
+(genfscon "efivarfs" "/" fs_efivarfs)
+
+(type fs_t)
+(call filesystem_xattr_object (fs_t))
+
+(sid fs)
+(context fs (system_u object_r fs_t ((s0) (s0))))
+(sidcontext fs fs)
+
+(fsuse xattr "btrfs" fs)
+(fsuse xattr "encfs" fs)
+(fsuse xattr "ext2" fs)
+(fsuse xattr "ext3" fs)
+(fsuse xattr "ext4" fs)
+(fsuse xattr "ext4dev" fs)
+(fsuse xattr "f2fs" fs)
+(fsuse xattr "gfs" fs)
+(fsuse xattr "gfs2" fs)
+(fsuse xattr "gpfs" fs)
+(fsuse xattr "jffs2" fs)
+(fsuse xattr "jfs" fs)
+(fsuse xattr "lustre" fs)
+(fsuse xattr "ocfs2" fs)
+(fsuse xattr "xfs" fs)
+(fsuse xattr "squashfs" fs)
+(fsuse xattr "zfs" fs)
+(fsuse xattr "fuse.glusterfs" fs)
+
+(fsuse task "eventpollfs" fs)
+(fsuse task "pipefs" fs)
+(fsuse task "sockfs" fs)
+
+(type fuse_t)
+(call filesystem_noxattr_object (fuse_t))
+(call files_mnt_object (fuse_t))
+
+(context fs_fuse (system_u object_r fuse_t ((s0) (s0))))
+(genfscon "fuse" "/" fs_fuse)
+(genfscon "fuseblk" "/" fs_fuse)
+(genfscon "fusectl" "/" fs_fuse)
+
+(type futexfs_t)
+(call filesystem_object (futexfs_t))
+
+(context fs_futexfs (system_u object_r futexfs_t ((s0) (s0))))
+(genfscon "futexfs" "/" fs_futexfs)
+
+(type hugetlbfs_t)
+(call filesystem_xattr_object (hugetlbfs_t))
+(call files_mnt_object (hugetlbfs_t))
+
+(context fs_hugetlbfs (system_u object_r hugetlbfs_t ((s0) (s0))))
+(fsuse trans "hugetlbfs" fs_hugetlbfs)
+
+(type ibmadmfs_t)
+(call filesystem_object (ibmadmfs_t))
+
+(context fs_ibmasmfs (system_u object_r ibmadmfs_t ((s0) (s0))))
+(genfscon "ibmasmfs" "/" fs_ibmasmfs)
+
+(type infinibandeventfs_t)
+(call filesystem_object (infinibandeventfs_t))
+
+(context fs_infinibandeventfs (system_u object_r infinibandeventfs_t
+    ((s0) (s0))))
+(genfscon "infinibandeventfs" "/" fs_infinibandeventfs)
+
+(type inotifyfs_t)
+(call filesystem_object (inotifyfs_t))
+
+(context fs_inotifyfs (system_u object_r inotifyfs_t ((s0) (s0))))
+(genfscon "inotifyfs" "/" fs_inotifyfs)
+
+(type iso9660_t)
+(call filesystem_noxattr_object (iso9660_t))
+(call files_mnt_object (iso9660_t))
+
+(context fs_iso9660 (system_u object_r iso9660_t ((s0) (s0))))
+(genfscon "iso9660" "/" fs_iso9660)
+(genfscon "udf" "/" fs_iso9660)
+
+(type mvfs_t)
+(call filesystem_noxattr_object (mvfs_t))
+
+(context fs_mvfs (system_u object_r mvfs_t ((s0) (s0))))
+(genfscon "mvfs" "/" fs_mvfs)
+
+(type nfs_t)
+(call filesystem_noxattr_object (nfs_t))
+(call files_mnt_object (nfs_t))
+
+(context fs_nfs (system_u object_r nfs_t ((s0) (s0))))
+(genfscon "nfs" "/" fs_nfs)
+(genfscon "nfs4" "/" fs_nfs)
+(genfscon "afs" "/" fs_nfs)
+(genfscon "dazukofs" "/" fs_nfs)
+(genfscon "coda" "/" fs_nfs)
+(genfscon "lustre" "/" fs_nfs)
+(genfscon "ncpfs" "/" fs_nfs)
+(genfscon "reiserfs" "/" fs_nfs)
+(genfscon "panfs" "/" fs_nfs)
+(genfscon "gadgetfs" "/" fs_nfs)
+(genfscon "9p" "/" fs_nfs)
+
+(type nfsd_t)
+(call filesystem_object (nfsd_t))
+
+(context fs_nfsd (system_u object_r nfsd_t ((s0) (s0))))
+(genfscon "nfsd" "/" fs_nfsd)
+
+(type oprofilefs_t)
+(call filesystem_object (oprofilefs_t))
+
+(context fs_oprofilefs (system_u object_r oprofilefs_t ((s0) (s0))))
+(genfscon "oprofilefs" "/" fs_oprofilefs)
+
+(type oracleasmfs_t)
+(call filesystem_object (oracleasmfs_t))
+(call files_mnt_object (oracleasmfs_t))
+
+(context fs_oracleasmfs (system_u object_r oracleasmfs_t ((s0)
+    (s0))))
+(genfscon "oracleasmfs" "/" fs_oracleasmfs)
+
+(type pstore_t)
+(call filesystem_object (pstore_t))
+(call files_mnt_object (pstore_t))
+
+(context fs_pstore (system_u object_r pstore_t ((s0) (s0))))
+(genfscon "pstore" "/" fs_pstore)
+
+(type ramfs_t)
+(call filesystem_object (ramfs_t))
+(call files_mnt_object (ramfs_t))
+
+(context fs_ramfs (system_u object_r ramfs_t ((s0) (s0))))
+(genfscon "ramfs" "/" fs_ramfs)
+
+(type removable_t)
+(call filesystem_noxattr_object (removable_t))
+(call files_mnt_object (removable_t))
+
+(type romfs_t)
+(call filesystem_object (romfs_t))
+
+(context fs_romfs (system_u object_r romfs_t ((s0) (s0))))
+(genfscon "romfs" "/" fs_romfs)
+(genfscon "cramfs" "/" fs_romfs)
+
+(type rpc_pipefs_t)
+(call filesystem_object (rpc_pipefs_t))
+(call files_mnt_object (rpc_pipefs_t))
+
+(context fs_rpc_pipefs (system_u object_r rpc_pipefs_t ((s0) (s0))))
+(genfscon "rpc_pipefs" "/" fs_rpc_pipefs)
+
+(type spufs_t)
+(call filesystem_object (spufs_t))
+(call files_mnt_object (spufs_t))
+
+(context fs_spufs (system_u object_r spufs_t ((s0) (s0))))
+(genfscon "spufs" "/" fs_spufs)
+
+(type sysv_t)
+(call filesystem_noxattr_object (sysv_t))
+(call files_mnt_object (sysv_t))
+
+(context fs_sysv (system_u object_r sysv_t ((s0) (s0))))
+(genfscon "sysv" "/" fs_sysv)
+(genfscon "v7" "/" fs_sysv)
+
+(type tmpfs_t)
+(call filesystem_xattr_object (tmpfs_t))
+(call files_mnt_object (tmpfs_t))
+
+(context fs_tmpfs (system_u object_r tmpfs_t ((s0) (s0))))
+(fsuse trans "mqueue" fs_tmpfs)
+(fsuse trans "shm" fs_tmpfs)
+(fsuse trans "tmpfs" fs_tmpfs)
+
+(type vmblock_t)
+(call filesystem_noxattr_object (vmblock_t))
+(call files_mnt_object (vmblock_t))
+
+(context fs_vmblock (system_u object_r vmblock_t ((s0) (s0))))
+(genfscon "vmblock" "/" fs_vmblock)
+(genfscon "vboxsf" "/" fs_vmblock)
+(genfscon "vmhgfs" "/" fs_vmblock)
+
+(type vxfs_t)
+(call filesystem_noxattr_object (vxfs_t))
+(call files_mnt_object (vxfs_t))
+
+(context fs_vxfs (system_u object_r vxfs_t ((s0) (s0))))
+(genfscon "vxfs" "/" fs_vxfs)
+
+(type xenfs_t)
+(call filesystem_noxattr_object (xenfs_t))
+(call files_mnt_object (xenfs_t))
+
+(context fs_xenfs (system_u object_r xenfs_t ((s0) (s0))))
+(genfscon "xenfs" "/" fs_xenfs)
+
+(allow is_filesystem_object self (filesystem (associate)))
+
+(allow has_unconfined_access_to_filesystem_assets is_filesystem_object
+    all_file_perms_except_execmod_and_entrypoint)
+(allow has_unconfined_access_to_filesystem_assets is_filesystem_object
+    all_dir_perms_except_execmod)
+(allow has_unconfined_access_to_filesystem_assets is_filesystem_object
+    all_lnk_file_perms_except_execmod)
+(allow has_unconfined_access_to_filesystem_assets is_filesystem_object
+    all_fifo_file_perms_except_execmod)
+(allow has_unconfined_access_to_filesystem_assets is_filesystem_object
+    all_sock_file_perms_except_execmod)
+(allow has_unconfined_access_to_filesystem_assets is_filesystem_object
+    all_blk_file_perms_except_execmod)
+(allow has_unconfined_access_to_filesystem_assets is_filesystem_object
+    all_chr_file_perms_except_execmod)
+
+(allow has_unconfined_access_to_filesystem_assets is_filesystem_object
+    (filesystem (all)))
+
+(macro filesystem_object ((type ARG1))
+    (typeattributeset is_filesystem_object ARG1))
+
+(macro filesystem_noxattr_object ((type ARG1))
+    (call filesystem_object (ARG1))
+    (typeattributeset is_noxattr_filesystem_object ARG1))
+
+(macro filesystem_xattr_object ((type ARG1))
+    (call filesystem_object (ARG1))
+    (typeattributeset is_xattr_filesystem_object ARG1))
+
+(macro filesystem_associate_all_noxattr ((type ARG1))
+    (allow ARG1 is_noxattr_filesystem_object (filesystem
+        (associate))))
+
+(macro filesystem_associate_all_xattr ((type ARG1))
+    (allow ARG1 is_xattr_filesystem_object (filesystem
+        (associate))))
+
+(macro filesystem_associate_tmpfs ((type ARG1))
+    (allow ARG1 tmpfs_t (filesystem (associate))))
+
+(macro filesystem_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_filesystem_assets ARG1))
+
+(filecon "/dev/hugepages(/.*)?" any ())
+(filecon "/dev/hugepages" dir ())
+
+(filecon "/dev/mqueue/.*" any ())
+(filecon "/dev/mqueue" dir ())
+
+(filecon "/dev/shm/.*" any ())
+(filecon "/dev/shm" dir ())

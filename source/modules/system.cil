@@ -1,0 +1,369 @@
+(boolean secure_mode_insmod false)
+
+(typeattribute can_load_kernel_modules)
+(typeattribute not_associated_with_can_load_kernel_modules)
+
+(typeattribute can_receive_kernel_messages)
+(typeattribute
+    not_associated_with_can_receive_kernel_messages_or_has_unconfined_access_to_system_assets)
+
+(typeattribute can_dump_kernel)
+(typeattribute not_associated_with_can_dump_kernel_or_has_unconfined_access_to_system_assets)
+
+(typeattribute is_sysctl_security_or_sysctl_usermodehelper_file_object)
+(typeattribute
+    all_sysctl_file_objects_except_is_sysctl_security_or_sysctl_usermodehelper_file_object)
+
+(typeattribute can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object)
+(typeattribute
+    not_associated_with_can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object)
+
+(typeattribute is_proc_file_object)
+(typeattribute is_sysctl_file_object)
+
+(typeattribute has_unconfined_access_to_system_assets)
+
+(call object_roletype (is_proc_file_object))
+(call object_roletype (is_sysctl_file_object))
+
+(user system_u)
+(role system_r)
+(call object_userrole (system_u))
+(userrole system_u system_r)
+(userlevel system_u (s0))
+(userrange system_u ((s0) systemhigh))
+
+(type system_t)
+(call subject_common_subject (system_t))
+(roletype system_r system_t)
+
+(sid kernel)
+(context kernel (system_u system_r system_t (mls_systemhigh
+    mls_systemhigh)))
+(sidcontext kernel kernel)
+
+(type debugfs_t)
+(call files_mnt_object (debugfs_t))
+(call filesystem_object (debugfs_t))
+
+(context debugfs (system_u object_r debugfs_t ((s0) (s0))))
+(genfscon "debugfs" "/" debugfs)
+
+(type kvmfs_t)
+(call filesystem_object (kvmfs_t))
+
+(context kvmfs (system_u object_r kvmfs_t ((s0) (s0))))
+(genfscon "kvmfs" "/" kvmfs)
+
+(type proc_t)
+(call system_proc_object (proc_t))
+(call files_mnt_object (proc_t))
+(call filesystem_object (proc_t))
+
+(context proc (system_u object_r proc_t ((s0) (s0))))
+(genfscon "proc" "/" proc)
+(genfscon "proc" "/sysvipc" proc)
+
+(type proc_afs_t)
+(call system_proc_object (proc_afs_t))
+
+(context proc_afs (system_u object_r proc_afs_t ((s0) (s0))))
+(genfscon "proc" "/fs/openafs" proc_afs)
+
+(type proc_kallsyms_t)
+(call system_proc_object (proc_kallsyms_t))
+
+(context proc_kallsyms (system_u object_r proc_kallsyms_t ((s0) (s0))))
+(genfscon "proc" "/kallsyms" proc_kallsyms)
+
+(type proc_kcore_t)
+(call system_proc_object (proc_kcore_t))
+
+(context proc_kcore (system_u object_r proc_kcore_t (mls_systemhigh
+    mls_systemhigh)))
+(genfscon "proc" "/kcore" proc_kcore)
+
+(type proc_kmsg_t)
+(call system_proc_object (proc_kmsg_t))
+
+(context proc_kmsg (system_u object_r proc_kmsg_t (mls_systemhigh
+    mls_systemhigh)))
+(genfscon "proc" "/kmsg" proc_kmsg)
+
+(type proc_mdstat_t)
+(call system_proc_object (proc_mdstat_t))
+
+(context proc_mdstat (system_u object_r proc_mdstat_t ((s0) (s0))))
+(genfscon "proc" "/mdstat" proc_mdstat)
+
+(type proc_mtrr_t)
+(call system_proc_object (proc_mtrr_t))
+
+(context proc_mtrr (system_u object_r proc_mtrr_t ((s0) (s0))))
+(genfscon "proc" "/mtrr" proc_mtrr)
+
+(type proc_net_t)
+(call system_proc_object (proc_net_t))
+
+(context proc_net (system_u object_r proc_net_t ((s0) (s0))))
+(genfscon "proc" "/net" proc_net)
+
+(type proc_numa_t)
+(call system_proc_object (proc_numa_t))
+
+(context proc_numa (system_u object_r proc_numa_t ((s0) (s0))))
+(genfscon "proc" "/numatools" proc_numa)
+
+(type proc_sysrq_t)
+(call system_proc_object (proc_sysrq_t))
+
+(context proc_sysrq (system_u object_r proc_sysrq_t ((s0) (s0))))
+(genfscon "proc" "/sysrq-trigger" proc_sysrq)
+
+(type proc_xen_t)
+(call system_proc_object (proc_xen_t))
+(call files_mnt_object (proc_xen_t))
+
+(context proc_xen (system_u object_r proc_xen_t ((s0) (s0))))
+(genfscon "proc" "/xen" proc_xen)
+
+(type sysctl_t)
+(call system_sysctl_object (sysctl_t))
+(call files_mnt_object (sysctl_t))
+
+(sid sysctl)
+(context sysctl (system_u object_r sysctl_t ((s0) (s0))))
+(sidcontext sysctl sysctl)
+(genfscon "proc" "/sys" sysctl)
+
+(type sysctl_crypto_t)
+(call system_sysctl_object (sysctl_crypto_t))
+
+(context sysctl_crypto (system_u object_r sysctl_crypto_t ((s0) (s0))))
+(genfscon "proc" "/sys/crypto" sysctl_crypto)
+
+(type sysctl_dev_t)
+(call system_sysctl_object (sysctl_dev_t))
+
+(context sysctl_dev (system_u object_r sysctl_dev_t ((s0) (s0))))
+(genfscon "proc" "/sys/dev" sysctl_dev)
+
+(type sysctl_fs_t)
+(call system_sysctl_object (sysctl_fs_t))
+(call files_mnt_object (sysctl_fs_t))
+
+(context sysctl_fs (system_u object_r sysctl_fs_t ((s0) (s0))))
+(genfscon "proc" "/sys/fs" sysctl_fs)
+
+(type sysctl_irq_t)
+(call system_sysctl_object (sysctl_irq_t))
+
+(context sysctl_irq (system_u object_r sysctl_irq_t ((s0) (s0))))
+(genfscon "proc" "/irq" sysctl_irq)
+
+(type sysctl_kernel_t)
+(call system_sysctl_object (sysctl_kernel_t))
+
+(context sysctl_kernel (system_u object_r sysctl_kernel_t ((s0) (s0))))
+(genfscon "proc" "/sys/kernel" sysctl_kernel)
+
+(type sysctl_net_t)
+(call system_sysctl_object (sysctl_net_t))
+
+(context sysctl_net (system_u object_r sysctl_net_t ((s0) (s0))))
+(genfscon "proc" "/sys/net" sysctl_net)
+
+(type sysctl_net_unix_t)
+(call system_sysctl_object (sysctl_net_unix_t))
+
+(context sysctl_net_unix (system_u object_r sysctl_net_unix_t ((s0)
+    (s0))))
+(genfscon "proc" "/sys/net/unix" sysctl_net_unix)
+
+(type sysctl_rpc_t)
+(call system_sysctl_object (sysctl_rpc_t))
+
+(context sysctl_rpc (system_u object_r sysctl_rpc_t ((s0) (s0))))
+(genfscon "proc" "/net/rpc" sysctl_rpc)
+
+(type sysctl_security_t)
+(call system_sysctl_object (sysctl_security_t))
+(typeattributeset
+    is_sysctl_security_or_sysctl_usermodehelper_file_object (sysctl_security_t))
+
+(context sysctl_security (system_u object_r sysctl_security_t ((s0)
+    (s0))))
+(genfscon "proc" "/sys/fs/protected_hardlinks" sysctl_security)
+(genfscon "proc" "/sys/fs/protected_symlinks" sysctl_security)
+(genfscon "proc" "/sys/fs/suid_dumpable" sysctl_security)
+(genfscon "proc" "/sys/kernel/dmesg_restrict" sysctl_security)
+(genfscon "proc" "/sys/kernel/kptr_restrict" sysctl_security)
+(genfscon "proc" "/sys/kernel/modules_disabled" sysctl_security)
+(genfscon "proc" "/sys/kernel/randomize_va_space" sysctl_security)
+(genfscon "proc" "/sys/vm/mmap_min_addr" sysctl_security)
+
+(type sysctl_usermodehelper_t)
+(call system_sysctl_object (sysctl_usermodehelper_t))
+(typeattributeset
+    is_sysctl_security_or_sysctl_usermodehelper_file_object (sysctl_usermodehelper_t))
+
+(context sysctl_usermodehelper (system_u object_r
+    sysctl_usermodehelper_t ((s0) (s0))))
+(genfscon "proc" "/sys/kernel/core_pattern" sysctl_usermodehelper)
+(genfscon "proc" "/sys/kernel/hotplug" sysctl_usermodehelper)
+(genfscon "proc" "/sys/kernel/modprobe" sysctl_usermodehelper)
+(genfscon "proc" "/sys/kernel/poweroff_cmd" sysctl_usermodehelper)
+(genfscon "proc" "/sys/kernel/usermodehelper" sysctl_usermodehelper)
+
+(type sysctl_vm_t)
+(call system_sysctl_object (sysctl_vm_t))
+
+(context sysctl_vm (system_u object_r sysctl_vm_t ((s0) (s0))))
+(genfscon "proc" "/sys/vm" sysctl_vm)
+
+(type sysctl_vm_overcommit_t)
+(call system_sysctl_object (sysctl_vm_overcommit_t))
+
+(context systctl_vm_overcommit (system_u object_r sysctl_vm_overcommit_t
+    ((s0) (s0))))
+(genfscon "proc" "/sys/vm/overcommit_memory" systctl_vm_overcommit)
+
+(type invalid_t)
+(call files_mnt_object (invalid_t))
+(call files_rootfs_mnt_object (invalid_t))
+
+(sid unlabeled)
+(context invalid (system_u object_r invalid_t (mls_systemhigh
+    mls_systemhigh)))
+(sidcontext unlabeled invalid)
+
+(type unlabeled_t)
+(call files_mnt_object (unlabeled_t))
+(call files_rootfs_mnt_object (unlabeled_t))
+
+(sid file)
+(context unlabeled (system_u object_r unlabeled_t ((s0) (s0))))
+(sidcontext file unlabeled)
+
+(type secure_mode_insmod_t)
+(call selinux_boolean_object (secure_mode_insmod_t))
+
+(context secure_mode_insmod (system_u object_r
+    secure_mode_insmod_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/secure_mode_insmod"
+    secure_mode_insmod)
+
+(typeattributeset not_associated_with_can_load_kernel_modules
+    (not can_load_kernel_modules))
+
+(neverallow not_associated_with_can_load_kernel_modules self
+    (capability (sys_module)))
+
+(typeattributeset
+    not_associated_with_can_receive_kernel_messages_or_has_unconfined_access_to_system_assets
+        (not (can_receive_kernel_messages has_unconfined_access_to_system_assets)))
+
+(neverallow
+    not_associated_with_can_receive_kernel_messages_or_has_unconfined_access_to_system_assets
+        proc_kmsg_t all_file_perms_except_getattr)
+
+(typeattributeset
+    not_associated_with_can_dump_kernel_or_has_unconfined_access_to_system_assets
+        (not (can_dump_kernel has_unconfined_access_to_system_assets)))
+
+(neverallow
+    not_associated_with_can_dump_kernel_or_has_unconfined_access_to_system_assets
+        proc_kcore_t all_file_perms_except_getattr)
+
+(typeattributeset
+    not_associated_with_can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
+        (not
+            (can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object)))
+
+(neverallow
+    not_associated_with_can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
+        is_sysctl_security_or_sysctl_usermodehelper_file_object (file
+            (append write)))
+
+(booleanif (not secure_mode_insmod)
+    (true
+        (allow can_load_kernel_modules self
+            sys_nice_and_sys_module_capability_perms)
+        (allow can_load_kernel_modules system_t (process (setsched)))))
+
+(optional system_optional_unconfined
+    (call unconfined_subject (system_t)))
+
+(allow has_unconfined_access_to_system_assets system_t (system
+    (ipc_info syslog_read syslog_mod syslog_console module_request)))
+
+(typeattributeset all_sysctl_file_objects_except_is_sysctl_security_or_sysctl_usermodehelper_file_object
+    (and (is_sysctl_file_object)
+       (not (is_sysctl_security_or_sysctl_usermodehelper_file_object))))
+
+(allow has_unconfined_access_to_system_assets is_proc_file_object
+    rw_file_perms)
+(allow has_unconfined_access_to_system_assets
+    is_proc_file_object (dirs (list)))
+
+(allow has_unconfined_access_to_system_assets
+    all_sysctl_file_objects_except_is_sysctl_security_or_sysctl_usermodehelper_file_object
+        rw_file_perms)
+(allow has_unconfined_access_to_system_assets
+    is_sysctl_security_or_sysctl_usermodehelper_file_object
+        rw_file_perms_except_append_and_write)
+(allow has_unconfined_access_to_system_assets
+    is_sysctl_file_object (dirs (list)))
+
+(allow has_unconfined_access_to_system_assets invalid_t
+    all_process_perms_except_transition_dyntransition_setcurrent_ptrace_setsched_execmem_execstack_and_execheap)
+(allow has_unconfined_access_to_system_assets invalid_t (filesystem
+    (all)))
+
+(allow has_unconfined_access_to_system_assets unlabeled_t (filesystem
+    (all)))
+
+(macro system_proc_object ((type ARG1))
+    (typeattributeset is_proc_file_object ARG1))
+
+(macro system_sysctl_object ((type ARG1))
+    (typeattributeset is_sysctl_file_object ARG1))
+
+(macro system_load_kernel_modules ((type ARG1))
+    (typeattributeset can_load_kernel_modules ARG1))
+
+(macro system_read_core_if ((type ARG1))
+    (allow ARG1 self (capability (sys_rawio)))
+    (allow ARG1 proc_kcore_t read_file_perms)
+    (typeattributeset can_dump_kernel ARG1))
+
+(macro system_read_messages ((type ARG1))
+    (allow ARG1 proc_kmsg_t read_file_perms)
+    (typeattributeset can_receive_kernel_messages ARG1))
+
+(macro system_rw_sysctl_security_files ((type ARG1))
+    (typeattributeset
+        can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
+            ARG1)
+    (allow ARG1 sysctl_security_t rw_file_perms))
+
+(macro system_rw_sysctl_usermodehelper_files ((type ARG1))
+    (typeattributeset
+        can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
+            ARG1)
+    (allow ARG1 sysctl_usermodehelper_t rw_file_perms))
+
+(macro system_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_system_assets ARG1)
+    (call system_load_kernel_modules (ARG1)))
+
+(filecon "/proc/.*" any ())
+(filecon "/proc" dir ())
+
+; others
+
+(call system_rw_sysctl_security_files (system_t))
+
+(optional system_optional_session
+    (call session_shell_manual_subject_type_transition (system_t))
+    (call session_dynamic_subject_type_transition (system_t)))

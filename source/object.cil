@@ -1,0 +1,7 @@
+(role object_r)
+
+(macro object_roletype ((type ARG1))
+    (roletype object_r ARG1))
+
+(macro object_userrole ((user ARG1))
+    (userrole ARG1 object_r))

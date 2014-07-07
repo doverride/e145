@@ -1,0 +1,203 @@
+(typeattribute can_read_fixed_disk_raw)
+(typeattribute can_write_fixed_disk_raw)
+
+(typeattribute can_read_scsi_generic)
+(typeattribute can_write_scsi_generic)
+
+(typeattribute has_unconfined_access_to_storage_assets)
+
+(typeattribute
+    not_associated_with_can_read_fixed_disk_raw_or_has_unconfined_access_to_storage_assets)
+(typeattribute
+    not_associated_with_can_write_fixed_disk_raw_or_has_unconfined_access_to_storage_assets)
+(typeattribute
+    not_associated_with_can_read_scsi_generic_or_has_unconfined_access_to_storage_assets)
+(typeattribute
+    not_associated_with_can_write_scsi_generic_or_has_unconfined_access_to_storage_assets)
+
+(type device_fixed_disk_t)
+(call devices_object (device_fixed_disk_t))
+
+(context device_fixed_disk (system_u object_r device_fixed_disk_t
+    (mls_systemhigh mls_systemhigh)))
+(filecon "/dev/\.tmp-block-.*" char device_fixed_disk)
+(filecon "/dev/[shmxv]d[^/]*" block device_fixed_disk)
+(filecon "/dev/ataraid/.*" block device_fixed_disk)
+(filecon "/dev/bcache[0-9]+" block device_fixed_disk)
+(filecon "/dev/cciss/[^/]*" block device_fixed_disk)
+(filecon "/dev/dasd[^/]*" block device_fixed_disk)
+(filecon "/dev/dasd[^/]*" char device_fixed_disk)
+(filecon "/dev/dm-[0-9]+" block device_fixed_disk)
+(filecon "/dev/drbd[^/]*" block device_fixed_disk)
+(filecon "/dev/device-mapper" char device_fixed_disk)
+(filecon "/dev/etherd/.+" block device_fixed_disk)
+(filecon "/dev/flash[^/]*" block device_fixed_disk)
+(filecon "/dev/infiniband/.*" block device_fixed_disk)
+(filecon "/dev/infiniband/.*" char device_fixed_disk)
+(filecon "/dev/initrd" block device_fixed_disk)
+(filecon "/dev/i2o/hd[^/]*" block device_fixed_disk)
+(filecon "/dev/ida/[^/]*" block device_fixed_disk)
+(filecon "/dev/jsfd" block device_fixed_disk)
+(filecon "/dev/jsflash" char device_fixed_disk)
+(filecon "/dev/loop.*" block device_fixed_disk)
+(filecon "/dev/lvm" char device_fixed_disk)
+(filecon "/dev/mtd.*" block device_fixed_disk)
+(filecon "/dev/md/.*" block device_fixed_disk)
+(filecon "/dev/mapper/.*" block device_fixed_disk)
+(filecon "/dev/nb[^/]+" block device_fixed_disk)
+(filecon "/dev/ps3d.*" block device_fixed_disk)
+(filecon "/dev/ram.*" block device_fixed_disk)
+(filecon "/dev/(raw/)?rawctl" char device_fixed_disk)
+(filecon "/dev/rd.*" block device_fixed_disk)
+(filecon "/dev/root" block device_fixed_disk)
+(filecon "/dev/raw/raw[0-9]+" char device_fixed_disk)
+(filecon "/dev/scramdisk/.*" block device_fixed_disk)
+(filecon "/dev/tw[a-z][^/]+" char device_fixed_disk)
+(filecon "/dev/ubd[^/]*" block device_fixed_disk)
+(filecon "/dev/vd[^/]*" block device_fixed_disk)
+(filecon "/dev/xvd[^/]*" block device_fixed_disk)
+
+(type device_fuse_t)
+(call devices_object (device_fuse_t))
+
+(context device_fuse (system_u object_r device_fuse_t ((s0) (s0))))
+(filecon "/dev/fuse" char device_fuse)
+
+(type device_scsi_generic_t)
+(call devices_object (device_scsi_generic_t))
+
+(context device_scsi_generic (system_u object_r device_scsi_generic_t
+    ((s0) (s0))))
+(filecon "/dev/bsg/.+" char device_scsi_generic)
+(filecon "/dev/sg[0-9]+" char device_scsi_generic)
+(filecon "/dev/tgt" char device_scsi_generic)
+
+(type device_removable_t)
+(call devices_object (device_removable_t))
+
+(context device_removable (system_u object_r device_removable_t ((s0)
+    (s0))))
+(filecon "/dev/aztcd" block device_removable)
+(filecon "/dev/bpcd" block device_removable)
+(filecon "/dev/cdu.*" block device_removable)
+(filecon "/dev/cm20.*" block device_removable)
+(filecon "/dev/fd[^/]+" block device_removable)
+(filecon "/dev/floppy/[^/]*" block device_removable)
+(filecon "/dev/gscd" block device_removable)
+(filecon "/dev/hitcd" block device_removable)
+(filecon "/dev/hwcdrom" block device_removable)
+(filecon "/dev/mcdx?" block device_removable)
+(filecon "/dev/megadev.*" char device_removable)
+(filecon "/dev/mmcblk.*" block device_removable)
+(filecon "/dev/mspblk.*" block device_removable)
+(filecon "/dev/optcd" block device_removable)
+(filecon "/dev/p[fg][0-3]" block device_removable)
+(filecon "/dev/pcd[0-3]" block device_removable)
+(filecon "/dev/pd[a-d][^/]*" block device_removable)
+(filecon "/dev/pg[0-3]" char device_removable)
+(filecon "/dev/s(cd|r)[^/]*" block device_removable)
+(filecon "/dev/sbpcd.*" block device_removable)
+(filecon "/dev/sjcd" block device_removable)
+(filecon "/dev/sonycd" block device_removable)
+(filecon "/dev/ub[a-z][^/]+" block device_removable)
+(filecon "/dev/usb/rio500" char device_removable)
+
+(type device_tape_t)
+(call devices_object (device_tape_t))
+
+(context device_tape (system_u object_r device_tape_t ((s0) (s0))))
+(filecon "/dev/n?(raw)?[qr]ft[0-3]" char device_tape)
+(filecon "/dev/n?[hs]t[0-9].*" char device_tape)
+(filecon "/dev/n?z?qft[0-3]" char device_tape)
+(filecon "/dev/n?osst[0-3].*" char device_tape)
+(filecon "/dev/n?pt[0-9]+" char device_tape)
+(filecon "/dev/n?tpqic[12].*" char device_tape)
+(filecon "/dev/ht[0-1]" block device_tape)
+(filecon "/dev/tape.*" char device_tape)
+
+(typeattributeset
+    not_associated_with_can_read_fixed_disk_raw_or_has_unconfined_access_to_storage_assets
+        (not (can_read_fixed_disk_raw has_unconfined_access_to_storage_assets)))
+
+(neverallow
+    not_associated_with_can_read_fixed_disk_raw_or_has_unconfined_access_to_storage_assets
+        device_fixed_disk_t (blk_file (read)))
+(neverallow
+    not_associated_with_can_read_fixed_disk_raw_or_has_unconfined_access_to_storage_assets
+        device_fixed_disk_t (chr_file (read)))
+
+(typeattributeset
+    not_associated_with_can_write_fixed_disk_raw_or_has_unconfined_access_to_storage_assets
+        (not (can_write_fixed_disk_raw has_unconfined_access_to_storage_assets)))
+
+(neverallow
+    not_associated_with_can_write_fixed_disk_raw_or_has_unconfined_access_to_storage_assets
+        device_fixed_disk_t (blk_file (append write)))
+(neverallow
+    not_associated_with_can_write_fixed_disk_raw_or_has_unconfined_access_to_storage_assets
+        device_fixed_disk_t (chr_file (append write)))
+
+(typeattributeset
+    not_associated_with_can_read_scsi_generic_or_has_unconfined_access_to_storage_assets
+        (not (can_read_scsi_generic has_unconfined_access_to_storage_assets)))
+
+(neverallow
+    not_associated_with_can_read_scsi_generic_or_has_unconfined_access_to_storage_assets
+        device_scsi_generic_t (blk_file (read)))
+(neverallow
+    not_associated_with_can_read_scsi_generic_or_has_unconfined_access_to_storage_assets
+        device_scsi_generic_t (chr_file (read)))
+
+(typeattributeset
+    not_associated_with_can_write_scsi_generic_or_has_unconfined_access_to_storage_assets
+        (not (can_write_scsi_generic has_unconfined_access_to_storage_assets)))
+
+(neverallow
+    not_associated_with_can_write_scsi_generic_or_has_unconfined_access_to_storage_assets
+        device_scsi_generic_t (blk_file (append write)))
+(neverallow
+    not_associated_with_can_write_scsi_generic_or_has_unconfined_access_to_storage_assets
+        device_scsi_generic_t (chr_file (append write)))
+
+(allow has_unconfined_access_to_storage_assets device_fixed_disk_t
+    all_blk_file_perms_except_execmod)
+(allow has_unconfined_access_to_storage_assets device_fixed_disk_t
+    all_chr_file_perms_except_execmod)
+
+(allow has_unconfined_access_to_storage_assets device_fuse_t
+    all_chr_file_perms_except_execmod)
+(allow has_unconfined_access_to_storage_assets device_fuse_t
+    all_chr_file_perms_except_execmod)
+
+(allow has_unconfined_access_to_storage_assets device_removable_t
+    all_blk_file_perms_except_execmod)
+(allow has_unconfined_access_to_storage_assets device_removable_t
+    all_chr_file_perms_except_execmod)
+
+(allow has_unconfined_access_to_storage_assets device_tape_t
+    all_chr_file_perms_except_execmod)
+
+(macro storage_manage_fixed_disk_nodes ((type ARG1))
+    (allow ARG1 self (capability (mknod)))
+    (call manage_blk_files_pattern (ARG1 device_t device_fixed_disk_t))
+    (call manage_chr_files_pattern (ARG1 device_t device_fixed_disk_t))
+    (typeattributeset can_read_fixed_disk_raw ARG1)
+    (typeattributeset can_write_fixed_disk_raw ARG1))
+
+(macro storage_read_fixed_disk_nodes ((type ARG1))
+    (allow ARG1 device_fixed_disk_t read_blk_file_perms)
+    (allow ARG1 device_fixed_disk_t read_chr_file_perms)
+    (typeattributeset can_read_fixed_disk_raw ARG1))
+
+(macro storage_manage_scsi_generic_nodes ((type ARG1))
+    (allow ARG1 self (capability (mknod)))
+    (call manage_chr_files_pattern (ARG1 device_t device_scsi_generic_t))
+    (typeattributeset can_read_scsi_generic ARG1)
+    (typeattributeset can_write_scsi_generic ARG1))
+
+(macro storage_read_scsi_generic_nodes ((type ARG1))
+    (allow ARG1 device_scsi_generic_t read_chr_file_perms)
+    (typeattributeset can_read_scsi_generic ARG1))
+
+(macro storage_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_storage_assets ARG1))

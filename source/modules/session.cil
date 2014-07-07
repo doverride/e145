@@ -1,0 +1,37 @@
+(user session_u)
+(role session_r)
+(call object_userrole (session_u))
+(userrole session_u session_r)
+(userlevel session_u (s0))
+(userrange session_u ((s0) systemhigh))
+
+(type session_t)
+(call subject_common_subject (session_t))
+(roletype session_r session_t)
+
+(roleallow system_r session_r)
+
+(type device_session_pts_t)
+(call terminal_user_pty_object (session_t device_session_pts_t))
+
+(type device_session_tty_t)
+(call terminal_user_tty_object (session_t device_session_tty_t))
+
+(call commands_bin_files_entry_subject (session_t))
+(call commands_shell_files_entry_subject (session_t))
+
+(call subject_user_exemption_target (session_t))
+
+(optional session_optional_unconfined
+    (call unconfined_subject (session_t)))
+
+(macro session_shell_manual_subject_type_transition ((type ARG1))
+    (call commands_shell_manual_subject_type_transition (ARG1 session_t))
+    (allow session_t ARG1 (fd (use)))
+    (allow session_t ARG1 rw_inherited_fifo_file_perms)
+    (allow session_t ARG1 (process (sigchld))))
+
+(macro session_dynamic_subject_type_transition ((type ARG1))
+    (call subject_dynamic_type_transition_subject (ARG1))
+    (call dynamic_subject_type_transition_pattern (ARG1
+        session_t)))

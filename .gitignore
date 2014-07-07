@@ -1,0 +1,6 @@
+.project
+policy/policy.*
+policy.*
+contexts/files/file_contexts
+file_contexts
+source/build.sh

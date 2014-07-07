@@ -1,0 +1,55 @@
+(classmap all_file_objects (all_perms_except_entrypoint_and_execmod))
+
+(classmapping all_file_objects all_perms_except_entrypoint_and_execmod
+    all_file_perms_except_execmod_and_entrypoint)
+(classmapping all_file_objects all_perms_except_entrypoint_and_execmod
+    all_dir_perms_except_execmod)
+(classmapping all_file_objects all_perms_except_entrypoint_and_execmod
+    all_lnk_file_perms_except_execmod)
+(classmapping all_file_objects all_perms_except_entrypoint_and_execmod
+    all_fifo_file_perms_except_execmod)
+(classmapping all_file_objects all_perms_except_entrypoint_and_execmod
+    all_sock_file_perms_except_execmod)
+(classmapping all_file_objects all_perms_except_entrypoint_and_execmod
+    all_blk_file_perms_except_execmod)
+(classmapping all_file_objects all_perms_except_entrypoint_and_execmod
+    all_chr_file_perms_except_execmod)
+
+(classmap dirs (add_entry del_entry list search rw manage))
+
+(classmapping dirs add_entry
+    add_entry_dir_perms)
+(classmapping dirs add_entry
+    read_lnk_file_perms)
+
+(classmapping dirs del_entry
+    del_entry_dir_perms)
+(classmapping dirs del_entry
+    read_lnk_file_perms)
+
+(classmapping dirs list
+    list_dir_perms)
+(classmapping dirs list
+    read_lnk_file_perms)
+
+(classmapping dirs search
+    search_dir_perms)
+(classmapping dirs search
+    read_lnk_file_perms)
+
+(classmapping dirs rw
+    rw_dir_perms)
+(classmapping dirs rw
+    read_lnk_file_perms)
+
+(classmapping dirs manage
+    manage_dir_perms)
+(classmapping dirs manage
+    read_lnk_file_perms)
+
+(classmap dir_file (mounton))
+
+(classmapping dir_file mounton
+    (dir (mounton)))
+(classmapping dir_file mounton
+    (file (mounton)))

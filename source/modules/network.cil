@@ -1,0 +1,173 @@
+(typeattribute is_interface_object)
+(typeattribute is_ipsec_security_policy_database_object)
+(typeattribute is_netlabel_peer_object)
+(typeattribute is_node_object)
+(typeattribute is_packet_object)
+(typeattribute is_port_object)
+
+(typeattribute has_unconfined_access_to_network_assets)
+
+(typeattribute is_ephemeral_port_object)
+(typeattribute is_reserved_port_object)
+(typeattribute is_rpc_port_object)
+(typeattribute is_unreserved_port_object)
+
+(call object_roletype (is_interface_object))
+(call object_roletype (is_node_object))
+(call object_roletype (is_packet_object))
+(call object_roletype (is_port_object))
+(call object_roletype (is_netlabel_peer_object))
+(call object_roletype (is_ipsec_security_policy_database_object))
+
+(type device_ppp_t)
+(call devices_object (device_ppp_t))
+
+(context device_ppp (system_u object_r device_ppp_t ((s0) (s0))))
+(filecon "/dev/ippp.*" char device_ppp)
+(filecon "/dev/ppp" char device_ppp)
+(filecon "/dev/pppox.*" char device_ppp)
+
+(type device_tun_tap_t)
+(call devices_object (device_tun_tap_t))
+
+(context device_tun_tap (system_u object_r device_tun_tap_t ((s0)
+    (s0))))
+(filecon "/dev/tap.*" char device_tun_tap)
+(filecon "/dev/net/.*" char device_tun_tap)
+
+(type netif_t)
+(call network_interface_object (netif_t))
+
+(sid netif)
+(context netif (system_u object_r netif_t ((s0) mls_systemhigh)))
+(sidcontext netif netif)
+
+(type netlabel_peer_t)
+(call object_roletype (netlabel_peer_t))
+
+(sid netmsg)
+(context netlabel_peer (system_u object_r netlabel_peer_t
+    (mls_systemhigh mls_systemhigh)))
+(sidcontext netmsg netlabel_peer)
+
+(type node_t)
+(call network_node_object (node_t))
+
+(sid node)
+(context node (system_u object_r node_t ((s0) mls_systemhigh)))
+(sidcontext node node)
+
+(type port_t)
+(call network_port_object (port_t))
+
+(sid port)
+(context port (system_u object_r port_t ((s0) (s0))))
+(sidcontext port port)
+
+(type port_ephemeral_t)
+(call network_ephemeral_port_object (port_ephemeral_t))
+
+(context port_ephemeral (system_u object_r port_ephemeral_t ((s0)
+    (s0))))
+(portcon "tcp" (32768 61000) port_ephemeral)
+(portcon "udp" (32768 61000) port_ephemeral)
+
+(type port_hi_reserved_t)
+(call network_hi_reserved_port_object (port_hi_reserved_t))
+
+(context port_hi_reserved (system_u object_r port_hi_reserved_t ((s0)
+    (s0))))
+(portcon "tcp" (512 1023) port_hi_reserved)
+(portcon "udp" (512 1023) port_hi_reserved)
+
+(type port_reserved_t)
+(call network_reserved_port_object (port_reserved_t))
+
+(context port_reserved (system_u object_r port_reserved_t ((s0) (s0))))
+(portcon "tcp" (1 511) port_reserved)
+(portcon "udp" (1 511) port_reserved)
+
+(type port_unreserved_t)
+(call network_unreserved_port_object (port_unreserved_t))
+
+(context port_unreserved (system_u object_r port_unreserved_t ((s0)
+    (s0))))
+(portcon "tcp" (1024 32767) port_unreserved)
+(portcon "udp" (1024 32767) port_unreserved)
+(portcon "tcp" (61001 65535) port_unreserved)
+(portcon "udp" (61001 65535) port_unreserved)
+
+(allow has_unconfined_access_to_network_assets is_interface_object
+    (netif (all)))
+(allow has_unconfined_access_to_network_assets is_node_object (node
+    (all)))
+(allow has_unconfined_access_to_network_assets is_packet_object (packet
+    (all)))
+(allow has_unconfined_access_to_network_assets is_port_object
+    (dccp_socket (send_msg recv_msg name_bind name_connect)))
+(allow has_unconfined_access_to_network_assets is_port_object (tcp_socket
+    (send_msg recv_msg name_bind name_connect)))
+(allow has_unconfined_access_to_network_assets is_port_object (udp_socket
+    (send_msg recv_msg name_bind)))
+(allow has_unconfined_access_to_network_assets is_port_object
+    (rawip_socket (send_msg recv_msg name_bind)))
+
+(allow has_unconfined_access_to_network_assets is_node_object
+    (dccp_socket (node_bind)))
+(allow has_unconfined_access_to_network_assets is_node_object (tcp_socket
+    (node_bind)))
+(allow has_unconfined_access_to_network_assets is_node_object (udp_socket
+    (node_bind)))
+(allow has_unconfined_access_to_network_assets is_node_object
+    (rawip_socket (node_bind)))
+
+(allow has_unconfined_access_to_network_assets unlabeled_t (dccp_socket
+    (recvfrom)))
+(allow has_unconfined_access_to_network_assets unlabeled_t (tcp_socket
+    (recvfrom)))
+(allow has_unconfined_access_to_network_assets unlabeled_t (udp_socket
+    (recvfrom)))
+(allow has_unconfined_access_to_network_assets unlabeled_t (rawip_socket
+    (recvfrom)))
+
+(allow has_unconfined_access_to_network_assets unlabeled_t (peer
+    (recv)))
+
+(macro network_interface_object ((type ARG1))
+    (typeattributeset is_interface_object ARG1))
+
+(macro network_ipsec_security_policy_database_object ((type ARG1))
+    (typeattributeset
+        is_ipsec_security_policy_database_object ARG1))
+
+(macro network_netlabel_peer_object ((type ARG1))
+    (typeattributeset is_netlabel_peer_object ARG1))
+
+(macro network_node_object ((type ARG1))
+    (typeattributeset is_node_object ARG1))
+
+(macro network_packet_object ((type ARG1))
+    (typeattributeset is_packet_object ARG1))
+
+(macro network_port_object ((type ARG1))
+    (typeattributeset is_port_object ARG1))
+
+(macro network_reserved_port_object ((type ARG1))
+    (call network_port_object (ARG1))
+    (typeattributeset is_reserved_port_object ARG1))
+
+(macro network_hi_reserved_port_object ((type ARG1))
+    (call network_port_object (ARG1))
+    (typeattributeset is_reserved_port_object ARG1)
+    (typeattributeset is_rpc_port_object ARG1))
+
+(macro network_unreserved_port_object ((type ARG1))
+    (call network_port_object (ARG1))
+    (typeattributeset is_unreserved_port_object ARG1))
+
+(macro network_ephemeral_port_object ((type ARG1))
+    (call network_port_object (ARG1))
+    (typeattributeset is_ephemeral_port_object ARG1))
+
+(macro network_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_network_assets ARG1))

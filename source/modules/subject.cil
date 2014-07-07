@@ -1,0 +1,190 @@
+(boolean mmap_low_allowed false)
+
+(typeattribute is_subject)
+(typeattribute is_common_subject)
+
+(typeattribute can_mmap_low)
+(typeattribute can_set_current_context)
+
+(typeattribute
+    all_except_is_subject)
+(typeattribute all_subjects_except_subjects_associated_with_can_mmap_low)
+(typeattribute
+    all_subjects_except_subjects_associated_with_can_set_current_context)
+
+(typeattribute can_change_subject_identity)
+(typeattribute can_change_subject_role)
+(typeattribute can_change_object_identity)
+(typeattribute can_system_change)
+(typeattribute is_user_target_subject)
+(typeattribute is_uncond_exempt_subject)
+
+(typeattribute is_entry_file_object)
+
+(typeattribute
+    not_associated_with_is_subject_or_invalid)
+
+(typeattribute is_any)
+
+(typeattribute has_unconfined_access_to_subject_assets)
+
+(typeattributeset all_except_is_subject (not
+    is_subject))
+
+(neverallow is_subject
+    all_except_is_subject (process (transition
+        dyntransition)))
+
+(typeattributeset
+    all_subjects_except_subjects_associated_with_can_set_current_context
+        (xor is_subject can_set_current_context))
+
+(neverallow all_subjects_except_subjects_associated_with_can_set_current_context
+    self (process (setcurrent)))
+
+(typeattributeset all_subjects_except_subjects_associated_with_can_mmap_low
+    (xor is_subject can_mmap_low))
+
+(neverallow all_subjects_except_subjects_associated_with_can_mmap_low self
+    (memprotect (mmap_zero)))
+
+(call object_roletype (is_subject))
+
+(type mmap_low_allowed_t)
+(call selinux_boolean_object (mmap_low_allowed_t))
+
+(context mmap_low_allowed (system_u object_r
+    mmap_low_allowed_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/mmap_low_allowed"
+    mmap_low_allowed)
+
+(typeattributeset
+    not_associated_with_is_subject_or_invalid (not
+        (is_subject invalid_t)))
+
+(neverallow is_subject
+    not_associated_with_is_subject_or_invalid
+        (process (all)))
+(neverallow invalid_t
+    not_associated_with_is_subject_or_invalid
+        (process (all)))
+
+(typeattributeset is_any (all))
+
+(neverallow not_associated_with_is_subject_or_invalid
+    is_any (process (all)))
+
+(allow has_unconfined_access_to_subject_assets is_subject (dccp_socket
+    (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (tcp_socket
+    (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (udp_socket
+    (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (rawip_socket
+    (all)))
+
+(allow has_unconfined_access_to_subject_assets is_subject (key (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (socket
+    (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (unix_stream_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (unix_dgram_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (appletalk_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (tun_socket
+    (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (packet_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_selinux_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_nflog_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_dnrt_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_kobject_uevent_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_route_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_firewall_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_tcpdiag_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_xfrm_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_audit_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (netlink_ip6fw_socket (all)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    (socket (all)))
+
+(allow has_unconfined_access_to_subject_assets is_subject
+    all_process_perms_except_transition_dyntransition_setcurrent_ptrace_setsched_execmem_execstack_and_execheap)
+(allow has_unconfined_access_to_subject_assets is_subject (fd (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (key (all)))
+
+(allow has_unconfined_access_to_subject_assets is_subject (dirs (list)))
+(allow has_unconfined_access_to_subject_assets is_subject
+    rw_file_perms)
+(allow has_unconfined_access_to_subject_assets is_subject
+    rw_fifo_file_perms)
+
+(allow has_unconfined_access_to_subject_assets is_subject (ipc (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (msgq (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (sem (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (shm (all)))
+(allow has_unconfined_access_to_subject_assets is_subject (msg (all)))
+
+(macro subject_base_subject ((type ARG1))
+    (typeattributeset is_subject ARG1))
+
+(macro subject_common_subject ((type ARG1))
+    (call subject_base_subject (ARG1))
+    (typeattributeset is_common_subject ARG1))
+
+(macro subject_dynamic_type_transition_subject ((type ARG1))
+    (typeattributeset can_set_current_context ARG1))
+
+(macro subject_entry ((type ARG1)(type ARG2))
+    (allow ARG1 ARG2 (file (entrypoint)))
+    (allow ARG1 ARG2 mmap_file_perms)
+    (call subject_entry_object (ARG2))
+    (call commands_bin_object (ARG2)))
+
+(macro subject_entry_object ((type ARG1))
+    (typeattributeset is_entry_file_object ARG1))
+
+(macro subject_system_change_exemption ((type ARG1))
+    (typeattributeset can_system_change ARG1))
+
+(macro subject_subj_id_change_exemption ((type ARG1))
+    (typeattributeset can_change_subject_identity ARG1))
+
+(macro subject_role_change_exemption ((type ARG1))
+    (typeattributeset can_change_subject_role ARG1))
+
+(macro subject_obj_id_change_exemption ((type ARG1))
+    (typeattributeset can_change_object_identity ARG1))
+
+(macro subject_user_exemption_target ((type ARG1))
+    (typeattributeset is_user_target_subject ARG1))
+
+(macro subject_mmap_low ((type ARG1))
+    (typeattributeset can_mmap_low ARG1)
+    (booleanif mmap_low_allowed
+        (true
+            (allow ARG1 self (memprotect (mmap_zero))))))
+
+(macro subject_mmap_low_uncond ((type ARG1))
+    (typeattributeset can_mmap_low ARG1)
+    (allow ARG1 self (memprotect (mmap_zero))))
+
+(macro subject_unconfined ((type ARG1))
+    (call subject_mmap_low (ARG1))
+    (typeattributeset can_change_object_identity ARG1)
+    (typeattributeset can_set_current_context ARG1)
+    (typeattributeset has_unconfined_access_to_subject_assets ARG1)
+    (typeattributeset is_uncond_exempt_subject ARG1))

@@ -1,0 +1,132 @@
+(boolean console_login false)
+
+(typeattribute is_pty_file_object)
+(typeattribute is_serial_file_object)
+(typeattribute is_tty_file_object)
+
+(typeattribute is_server_pty_file_object)
+
+(type console_login_t)
+(call selinux_boolean_object (console_login_t))
+
+(context console_login (system_u object_r
+    console_login_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/console_login" console_login)
+
+(type device_bsd_pty_t)
+(call devices_object (device_bsd_pty_t))
+
+(context device_bsd_pty (system_u object_r device_bsd_pty_t ((s0)
+    (s0))))
+(filecon "/dev/[pt]ty[a-ep-z][0-9a-f]"  char device_bsd_pty)
+(filecon "/dev/pty/.*" char device_bsd_pty)
+
+(type device_console_t)
+(call devices_object (device_console_t))
+
+(context device_console (system_u object_r device_console_t ((s0)
+    (s0))))
+(filecon "/dev/console" char device_console)
+
+(type device_devtty_t)
+(call devices_object (device_devtty_t))
+(call filesystem_associate_tmpfs (device_devtty_t))
+
+(context device_devtty (system_u object_r device_devtty_t ((s0)
+    (s0))))
+(filecon "/dev/tty" char device_devtty)
+
+(type device_ptmx_t)
+; BUG: /dev/pts/ptmx currently cannot be labeled with this
+(call terminal_associate_devpts (device_ptmx_t))
+(call devices_object (device_ptmx_t))
+
+(context device_ptmx (system_u object_r device_ptmx_t ((s0)
+    (s0))))
+(filecon "/dev/ptmx" char device_ptmx)
+
+(type device_tty_t)
+(call terminal_serial_object (device_tty_t))
+
+(context device_tty (system_u object_r device_tty_t ((s0)
+    (s0))))
+(filecon "/dev/.*tty[^/]*" char device_tty)
+(filecon "/dev/adb.*" char device_tty)
+(filecon "/dev/capi.*" char device_tty)
+(filecon "/dev/cu.*" char device_tty)
+(filecon "/dev/dcbri[0-9]+" char device_tty)
+(filecon "/dev/hpilo/[^/]*" char device_tty)
+(filecon "/dev/hvc.*" char device_tty)
+(filecon "/dev/hvsi.*" char device_tty)
+(filecon "/dev/i2c[^/]*" char device_tty)
+(filecon "/dev/ircomm[0-9]+" char device_tty)
+(filecon "/dev/ip2[^/]*" char device_tty)
+(filecon "/dev/isdn.*" char device_tty)
+(filecon "/dev/rfcomm[0-9]+" char device_tty)
+(filecon "/dev/sclp_line[0-9]+" char device_tty)
+(filecon "/dev/slamr[0-9]+" char device_tty)
+(filecon "/dev/tts/[^/]*" char device_tty)
+(filecon "/dev/tts/[0-9]*" char device_tty)
+(filecon "/dev/ttySG.*" char device_tty)
+(filecon "/dev/vcc?/.*" char device_tty)
+(filecon "/dev/vcs[^/]*" char device_tty)
+(filecon "/dev/xvc[^/]*" char device_tty)
+(filecon "/dev/xvc[0-9]*" char device_tty)
+
+(type device_usbtty_t)
+(call terminal_serial_object (device_usbtty_t))
+
+(context device_usbtty (system_u object_r device_usbtty_t ((s0)
+    (s0))))
+(filecon "/dev/ttyUSB[0-9]+" char device_usbtty)
+(filecon "/dev/usb/tty.*" char device_usbtty)
+
+(type device_virtio_t)
+(call terminal_serial_object (device_virtio_t))
+
+(context device_virtio (system_u object_r device_virtio_t ((s0)
+    (s0))))
+(filecon "/dev/vport[0-9]p[0-9]+" char device_virtio)
+
+(type devpts_t)
+(call files_mnt_object (devpts_t))
+(call filesystem_xattr_object (devpts_t))
+
+(context devpts (system_u object_r devpts_t ((s0)
+    (s0))))
+(fsuse trans "devpts" devpts)
+
+(filecon "/dev/pts/.*"  any ())
+(filecon "/dev/pts" dir (system_u object_r devpts_t ((s0)
+    mls_systemhigh)))
+
+(macro terminal_login_pty_object ((type ARG1))
+    (call terminal_pty_object (ARG1))
+    (typeattributeset is_server_pty_file_object ARG1))
+
+(macro terminal_pty_object ((type ARG1))
+    (call devices_object (ARG1))
+    (call terminal_associate_devpts (ARG1))
+    (typeattributeset is_pty_file_object ARG1))
+
+(macro terminal_serial_object ((type ARG1))
+    (call devices_object (ARG1))
+    (typeattributeset is_serial_file_object ARG1))
+
+(macro terminal_tty_object ((type ARG1))
+    (call terminal_serial_object (ARG1))
+    (typeattributeset is_tty_file_object ARG1))
+
+(macro terminal_user_pty_object ((type ARG1)(type ARG2))
+    (call terminal_pty_object (ARG2))
+    (typechange ARG1 is_server_pty_file_object chr_file ARG2))
+
+(macro terminal_user_tty_object ((type ARG1)(type ARG2))
+    (call terminal_tty_object (ARG2))
+    (typechange ARG1 device_tty_t chr_file ARG2)
+    (booleanif console_login
+        (true
+            (typechange ARG1 device_console_t chr_file ARG2))))
+
+(macro terminal_associate_devpts ((type ARG1))
+    (allow ARG1 devpts_t (filesystem (associate))))
