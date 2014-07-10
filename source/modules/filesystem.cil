@@ -46,7 +46,6 @@
 
 (type cgroup_t)
 (call filesystem_object (cgroup_t))
-(call files_mnt_object (cgroup_t))
 
 (context fs_cgroup (system_u object_r cgroup_t ((s0) (s0))))
 (genfscon "cgroup" "/" fs_cgroup)
