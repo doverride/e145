@@ -74,14 +74,12 @@
     (allow ARG1 ld_so_cache_t manage_file_perms))
 
 (macro libraries_etc_filetrans_ld_so_cache_files ((type ARG1))
-    (call files_list_etc (ARG1))
     (call files_etc_filetrans (ARG1 ld_so_cache_t file "ld.so.cache"))
     (call files_etc_filetrans (ARG1 ld_so_cache_t file "ld.so.cache~"))
     (call files_etc_filetrans (ARG1 ld_so_cache_t file "ld.so.preload"))
     (call files_etc_filetrans (ARG1 ld_so_cache_t file "ld.so.preload~")))
 
 (macro libraries_subtrans_ldconfig ((type ARG1))
-    (call commands_list_bin (ARG1))
     (call subtrans_pattern (ARG1 ldconfig_exec_t ldconfig_t)))
 
 (macro libraries_run_ldconfig ((type ARG1)(role ARG2))
@@ -89,5 +87,4 @@
     (roleattributeset ldconfig_roles (ARG2)))
 
 (macro libraries_exec_ldconfig ((type ARG1))
-    (call commands_list_bin (ARG1))
     (call can_exec (ARG1 ldconfig_exec_t)))

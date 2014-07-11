@@ -8,6 +8,7 @@ ipcpatterns.cil
 isid.cil
 miscpatterns.cil
 mls.cil
+contrib/libraries.cil
 modules/commands.cil
 modules/devices.cil
 modules/files.cil
