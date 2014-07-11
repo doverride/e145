@@ -12,6 +12,7 @@ contrib/application.cil
 contrib/dns.cil
 contrib/hostname.cil
 contrib/hwclock.cil
+contrib/ip.cil
 contrib/libraries.cil
 contrib/miscfiles.cil
 modules/commands.cil

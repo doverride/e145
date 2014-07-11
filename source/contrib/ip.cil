@@ -1,0 +1,21 @@
+(roleattribute is_ip_role)
+
+(type ip_t)
+(type ip_exec_t)
+(call application_subject_entry (ip_t ip_exec_t))
+(roleattributeset is_ip_role system_r)
+(roletype is_ip_role ip_t)
+
+(context file_ip_exec (system_u object_r ip_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/ethtool" file file_ip_exec)
+(filecon "/usr/sbin/ifconfig" file file_ip_exec)
+(filecon "/usr/sbin/ip" file file_ip_exec)
+(filecon "/usr/sbin/iwconfig" file file_ip_exec)
+(filecon "/usr/sbin/tc" file file_ip_exec)
+
+(macro ip_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 ip_exec_t ip_t)))
+
+(macro ip_run ((type ARG1)(role ARG2))
+    (call ip_subtrans (ARG1))
+    (roleattributeset is_ip_role (ARG2)))
