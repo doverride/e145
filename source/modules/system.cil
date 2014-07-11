@@ -337,6 +337,9 @@
     (allow ARG1 proc_kcore_t read_file_perms)
     (typeattributeset can_dump_kernel ARG1))
 
+(macro system_read_generic_proc_files ((type ARG1))
+    (allow ARG1 proc_t read_file_perms))
+
 (macro system_read_messages ((type ARG1))
     (allow ARG1 proc_kmsg_t read_file_perms)
     (typeattributeset can_receive_kernel_messages ARG1))

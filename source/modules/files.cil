@@ -348,7 +348,8 @@
 (macro files_rw_etc_dirs ((type ARG1))
     (allow ARG1 etc_t rw_dir_perms))
 
-(macro files_etc_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+(macro files_etc_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
+    ARG4))
     (call filetrans_pattern (ARG1 etc_t ARG2 ARG3 ARG4)))
 
 (macro files_env_object ((type ARG1))
@@ -369,10 +370,15 @@
 (macro files_run_object ((type ARG1))
     (typeattributeset is_run_file_object ARG1))
 
+(macro files_run_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
+    ARG4))
+    (call filetrans_pattern (ARG1 run_t ARG2 ARG3 ARG4)))
+
 (macro files_var_object ((type ARG1))
     (typeattributeset is_var_file_object ARG1))
 
-(macro files_var_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+(macro files_var_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
+    ARG4))
     (call filetrans_pattern (ARG1 var_t ARG2 ARG3 ARG4)))
 
 (macro files_var_spool_object ((type ARG1))
@@ -380,6 +386,10 @@
 
 (macro files_var_lib_object ((type ARG1))
     (typeattributeset is_lib_file_object ARG1))
+
+(macro files_var_lib_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
+    ARG4))
+    (call filetrans_pattern (ARG1 var_lib_t ARG2 ARG3 ARG4)))
 
 (macro files_tmp_object ((type ARG1))
     (typeattributeset is_tmp_file_object ARG1))

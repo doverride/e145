@@ -1,0 +1,107 @@
+(roleattribute is_dhclient_role)
+
+(typeattribute is_dhcp_admin_subject)
+(typeattribute is_dhcp_file_object)
+
+(typeattributeset is_dhcp_file_object (dhcp_conf_t dhclient_run_t
+    dhclient_var_lib_t))
+
+(type dhclient_t)
+(type dhclient_exec_t)
+(call application_subject_entry (dhclient_t dhclient_exec_t))
+(roleattributeset is_dhclient_role system_r)
+(roletype is_dhclient_role dhclient_t)
+
+(context file_dhclient_exec (system_u object_r dhclient_exec_t ((s0) (s0))))
+(filecon "/etc/NetworkManager/dispatcher\.d/[^/]*dhclient" file
+    file_dhclient_exec)
+(filecon "/usr/sbin/dhclient.*" file file_dhclient_exec)
+
+(type dhclient_run_t)
+(call files_run_object (dhclient_run_t))
+
+(context file_dhclient_run (system_u object_r dhclient_run_t ((s0) (s0))))
+(filecon "/var/run/dhclient.*" file file_dhclient_run)
+
+(type dhclient_var_lib_t)
+(call files_var_lib_object (dhclient_var_lib_t))
+
+(context file_dhclient_var_lib (system_u object_r dhclient_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/dhclient(/.*)?" any file_dhclient_var_lib)
+
+(type dhcp_conf_t)
+(call files_etc_object (dhcp_conf_t))
+
+(context file_dhcp_conf (system_u object_r dhcp_conf_t ((s0) (s0))))
+(filecon "/etc/dhcp(/.*)?" any file_dhcp_conf)
+
+(type port_dhcp_t)
+(call network_reserved_port_object (port_dhcp_t))
+
+(context port_dhcp (system_u object_r port_dhcp_t ((s0) (s0))))
+(portcon "tcp" 68 port_dhcp)
+(portcon "udp" 68 port_dhcp)
+
+(allow dhclient_t self (capability (net_raw)))
+(allow dhclient_t self (process (setcap)))
+(allow dhclient_t self create_packet_socket_perms)
+(allow dhclient_t self create_unix_stream_socket_perms)
+(allow dhclient_t self rw_fifo_file_perms)
+
+(allow dhclient_t dhclient_run_t manage_file_perms)
+(call files_run_filetrans (dhclient_t dhclient_run_t file "*"))
+
+(allow dhclient_t dhclient_var_lib_t manage_dir_perms)
+(call files_var_lib_filetrans (dhclient_t dhclient_var_lib_t dir "*"))
+
+(call system_read_generic_proc_files (dhclient_t))
+
+(call commands_execute_bin_files (dhclient_t))
+(call commands_mprot_read_shell_files (dhclient_t))
+
+(call network_udp_bind_all_unreserved_ports (dhclient_t))
+(call network_udp_bind_generic_node (dhclient_t))
+
+(call selinux_get_fs_mount (dhclient_t))
+
+(call dhcp_read_config_files (dhclient_t))
+(call dhcp_udp_bind_dhcp_port (dhclient_t))
+
+; (optional dhcpc_optional_auth
+    ; (call auth_nsswitch_client (dhclient_t)))
+
+; (optional dhcpc_optional_journal
+   ; (call journal_client (dhclient_t)))
+
+(optional dhclient_optional_miscfiles
+    (call miscfiles_read_localization_files (dhclient_t))
+    (call miscfiles_read_network_environ_files (dhclient_t)))
+
+; (optional dhcpc_optional_networkmgr
+    ; (call networkmgr_execute_helper_files (dhclient_t))
+    ; (call networkmgr_list_config (dhclient_t))
+    ; (call networkmgr_manage_var_lib_files (dhclient_t))
+    ; (call networkmgr_stream_connect (dhclient_t)))
+
+(call admin_pattern (is_dhcp_admin_subject is_dhcp_file_object))
+
+(macro dhcp_search_config ((type ARG1))
+    (allow ARG1 dhcp_conf_t (dirs (search))))
+
+(macro dhcp_subtrans_dhclient ((type ARG1))
+    (call subtrans_pattern (ARG1 dhclient_exec_t ip_t)))
+
+(macro dhcp_run_dhclient ((type ARG1)(role ARG2))
+    (call dhcp_subtrans_dhclient (ARG1))
+    (roleattributeset is_dhclient_role (ARG2)))
+
+(macro dhcp_read_config_files ((type ARG1))
+    (call dhcp_search_config (ARG1))
+    (allow ARG1 dhcp_conf_t read_file_perms))
+
+(macro dhcp_udp_bind_dhcp_port ((type ARG1))
+    (allow ARG1 port_dhcp_t (udp_socket (name_bind))))
+
+(macro dhcp_admin ((type ARG1))
+    (typeattributeset is_dhcp_admin_subject ARG1))

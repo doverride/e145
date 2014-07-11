@@ -169,6 +169,9 @@
     (call network_port_object (ARG1))
     (typeattributeset is_ephemeral_port_object ARG1))
 
+(macro network_udp_bind_all_unreserved_ports ((type ARG1))
+    (allow ARG1 is_unreserved_port_object (udp_socket (name_bind))))
+
 (macro network_tcp_sendrecv_generic_interface ((type ARG1))
     (allow ARG1 netif_t (netif (tcp_send tcp_recv egress ingress))))
 
