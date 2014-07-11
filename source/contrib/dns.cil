@@ -1,0 +1,58 @@
+(typeattribute is_dns_resolve_client_subject)
+
+(type port_dns_t)
+(call network_reserved_port_object (port_dns_t))
+
+(context port_dns (system_u object_r port_dns_t ((s0) (s0))))
+(portcon "tcp" 53 port_dns)
+(portcon "udp" 53 port_dns)
+
+(type port_dnssec_t)
+(call network_unreserved_port_object (port_dnssec_t))
+
+(context port_dnssec (system_u object_r port_dnssec_t ((s0) (s0))))
+(portcon "tcp" 8955 port_dnssec)
+(portcon "udp" 8955 port_dnssec)
+
+(type resolv_conf_t)
+(call files_etc_object (resolv_conf_t))
+
+(context file_resolv_conf (system_u object_r resolv_conf_t ((s0) (s0))))
+(filecon "/etc/resolv\.conf.*" file file_resolv_conf)
+
+(allow is_dns_resolve_client_subject self create_tcp_socket_perms)
+(allow is_dns_resolve_client_subject self create_udp_socket_perms)
+(allow is_dns_resolve_client_subject self r_netlink_route_socket_perms)
+
+(call network_tcp_sendrecv_generic_interface (is_dns_resolve_client_subject))
+(call network_udp_send_generic_interface (is_dns_resolve_client_subject))
+
+(call network_tcp_sendrecv_generic_node (is_dns_resolve_client_subject))
+(call network_udp_send_generic_node (is_dns_resolve_client_subject))
+
+(call dns_tcp_connect_dns_port (is_dns_resolve_client_subject))
+(call dns_tcp_connect_dnssec_port (is_dns_resolve_client_subject))
+
+(call dns_read_resolv_config_files (is_dns_resolve_client_subject))
+
+(macro dns_etc_filetrans_resolv_conf_files ((type ARG1))
+    (call files_etc_filetrans (ARG1 resolv_conf_t file "resolv.conf"))
+    (call files_etc_filetrans (ARG1 resolv_conf_t file "resolv.conf.tmp"))
+    (call files_etc_filetrans (ARG1 resolv_conf_t file "resolv.conf.fp-tmp"))
+    (call files_etc_filetrans (ARG1 resolv_conf_t file "resolv.conf.fp-saved")))
+
+(macro dns_manage_resolv_config_files ((type ARG1))
+    (call files_rw_etc_dirs (ARG1))
+    (allow ARG1 resolv_conf_t manage_file_perms))
+
+(macro dns_read_resolv_config_files ((type ARG1))
+    (allow ARG1 resolv_conf_t read_file_perms))
+
+(macro dns_resolve_client ((type ARG1))
+    (typeattributeset is_dns_resolve_client_subject ARG1))
+
+(macro dns_tcp_connect_dns_port ((type ARG1))
+    (allow ARG1 port_dns_t (tcp_socket (name_connect))))
+
+(macro dns_tcp_connect_dnssec_port ((type ARG1))
+    (allow ARG1 port_dnssec_t (tcp_socket (name_connect))))
