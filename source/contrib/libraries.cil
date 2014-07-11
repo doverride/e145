@@ -1,14 +1,14 @@
-(roleattribute ldconfig_roles)
+(roleattribute is_ldconfig_role)
 
-(typeattribute lib_and_textrel_shlib)
+(typeattribute is_lib_or_textrel_shlib_file_object)
 
 (type ldconfig_t)
 (call subject_common_subject (ldconfig_t))
 
 (type ldconfig_exec_t)
 (call subject_entry (ldconfig_t ldconfig_exec_t))
-(roleattributeset ldconfig_roles system_r)
-(roletype ldconfig_roles ldconfig_t)
+(roleattributeset is_ldconfig_role system_r)
+(roletype is_ldconfig_role ldconfig_t)
 
 (context file_ldconfig_exec (system_u object_r ldconfig_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/ldconfig" file file_ldconfig_exec)
@@ -43,7 +43,7 @@
 (type textrel_shlib_t)
 (call files_object (textrel_shlib_t))
 
-(typeattributeset lib_and_textrel_shlib (lib_t textrel_shlib_t))
+(typeattributeset is_lib_or_textrel_shlib_file_object (lib_t textrel_shlib_t))
 
 (call files_etc_filetrans (ldconfig_t ld_so_cache_t file "*"))
 
@@ -66,7 +66,7 @@
 
 (macro libraries_use_shared_libs ((type ARG1))
     (call libraries_list (ARG1))
-    (allow ARG1 lib_and_textrel_shlib mmap_file_perms)
+    (allow ARG1 is_lib_or_textrel_shlib_file_object mmap_file_perms)
     (allow ARG1 textrel_shlib_t (file (execmod))))
 
 (macro libraries_manage_ld_so_cache_files ((type ARG1))
@@ -84,7 +84,7 @@
 
 (macro libraries_run_ldconfig ((type ARG1)(role ARG2))
     (call libraries_subtrans_ldconfig (ARG1))
-    (roleattributeset ldconfig_roles (ARG2)))
+    (roleattributeset is_ldconfig_role (ARG2)))
 
 (macro libraries_exec_ldconfig ((type ARG1))
     (call can_exec (ARG1 ldconfig_exec_t)))
