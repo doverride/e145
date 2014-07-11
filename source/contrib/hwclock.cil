@@ -1,0 +1,26 @@
+(roleattribute is_clock_role)
+
+(type adjtime_t)
+(call files_etc_object (adjtime_t))
+
+(context file_adjtime (system_u object_r adjtime_t ((s0) (s0))))
+(filecon "/etc/adjtime" file file_adjtime)
+
+(type hwclock_t)
+(type hwclock_exec_t)
+(call application_subject_entry (hwclock_t hwclock_exec_t))
+(roleattributeset is_clock_role system_r)
+(roletype is_clock_role hwclock_t)
+
+(context file_hwclock_exec (system_u object_r hwclock_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/hwclock" file file_hwclock_exec)
+
+(macro hwclock_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 hwclock_exec_t hwclock_t)))
+
+(macro hwclock_run ((type ARG1)(role ARG2))
+    (call hwclock_subtrans (ARG1))
+    (roleattributeset is_clock_role (ARG2)))
+
+(macro hwclock_read_adjtime_files ((type ARG1))
+    (allow ARG1 adjtime_t read_file_perms))
