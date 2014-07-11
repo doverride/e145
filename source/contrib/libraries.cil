@@ -14,7 +14,7 @@
 (filecon "/usr/sbin/ldconfig" file file_ldconfig_exec)
 
 (type ldconfig_cache_t)
-(call files_object (ldconfig_cache_t))
+(call files_var_cache_object (ldconfig_cache_t))
 
 (context file_ldconfig_cache (system_u object_r ldconfig_cache_t ((s0) (s0))))
 (filecon "/var/cache/ldconfig(/.*)?" any file_ldconfig_cache)
