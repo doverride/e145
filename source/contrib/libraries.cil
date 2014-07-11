@@ -20,20 +20,20 @@
 (filecon "/var/cache/ldconfig(/.*)?" any file_ldconfig_cache)
 
 (type ld_so_cache_t)
-(call files_object (ld_so_cache_t))
+(call files_etc_object (ld_so_cache_t))
 
 (context file_ld_so_cache (system_u object_r ld_so_cache_t ((s0) (s0))))
 (filecon "/etc/ld\.so\.cache.*" file file_ld_so_cache)
 (filecon "/etc/ld\.so\.preload.*" file file_ld_so_cache)
 
 (type ld_so_t)
-(call files_object (ld_so_t))
+(call files_usr_object (ld_so_t))
 
 (context file_ld_so (system_u object_r ld_so_t ((s0) (s0))))
 (filecon "/usr/lib/ld-[^/]*\.so(\.[^/]*)*" file file_ld_so)
 
 (type lib_t)
-(call files_object (lib_t))
+(call files_usr_object (lib_t))
 
 (context file_lib (system_u object_r lib_t ((s0) (s0))))
 (filecon "/usr/lib/.*" any file_lib)
@@ -41,7 +41,7 @@
 (filecon "/usr/lib" dir file_lib)
 
 (type textrel_shlib_t)
-(call files_object (textrel_shlib_t))
+(call files_usr_object (textrel_shlib_t))
 
 (typeattributeset is_lib_or_textrel_shlib_file_object (lib_t textrel_shlib_t))
 
