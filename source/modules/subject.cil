@@ -74,6 +74,27 @@
 (neverallow not_associated_with_is_subject_or_invalid
     is_any (process (all)))
 
+(allow is_common_subject self (process (fork sigchld)))
+
+(allow is_common_subject self (dirs (list)))
+(allow is_common_subject self rw_file_perms)
+
+(call commands_search_bin (is_common_subject))
+(call files_search_root (is_common_subject))
+(call system_search_proc (is_common_subject))
+
+(call devices_rw_null (is_common_subject))
+(call devices_rw_zero (is_common_subject))
+
+(call terminal_use_controlling_term (is_common_subject))
+
+(optional subject_optional_libraries
+    (call libraries_use_ld_so (is_common_subject))
+    (call libraries_use_shared_libs (is_common_subject)))
+
+; (optional subject_optional_systemd
+    ; (call systemd_send_sigchld (is_common_subject)))
+
 (allow has_unconfined_access_to_subject_assets is_subject (dccp_socket
     (all)))
 (allow has_unconfined_access_to_subject_assets is_subject (tcp_socket

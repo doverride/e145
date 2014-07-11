@@ -76,6 +76,9 @@
 
     ; others
 
+    (optional unconfined_subject_optional_libraries
+        (call libraries_etc_filetrans_ld_so_cache_files (ARG1)))
+
     (allow ARG1 is_subject (context (all)))
     (allow ARG1 is_subject (dbus (all)))
     (allow ARG1 is_subject (passwd (all)))

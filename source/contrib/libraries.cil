@@ -1,0 +1,93 @@
+(roleattribute ldconfig_roles)
+
+(typeattribute lib_and_textrel_shlib)
+
+(type ldconfig_t)
+(call subject_common_subject (ldconfig_t))
+
+(type ldconfig_exec_t)
+(call subject_entry (ldconfig_t ldconfig_exec_t))
+(roleattributeset ldconfig_roles system_r)
+(roletype ldconfig_roles ldconfig_t)
+
+(context file_ldconfig_exec (system_u object_r ldconfig_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/ldconfig" file file_ldconfig_exec)
+
+(type ldconfig_cache_t)
+(call files_object (ldconfig_cache_t))
+
+(context file_ldconfig_cache (system_u object_r ldconfig_cache_t ((s0) (s0))))
+(filecon "/var/cache/ldconfig(/.*)?" any file_ldconfig_cache)
+
+(type ld_so_cache_t)
+(call files_object (ld_so_cache_t))
+
+(context file_ld_so_cache (system_u object_r ld_so_cache_t ((s0) (s0))))
+(filecon "/etc/ld\.so\.cache.*" file file_ld_so_cache)
+(filecon "/etc/ld\.so\.preload.*" file file_ld_so_cache)
+
+(type ld_so_t)
+(call files_object (ld_so_t))
+
+(context file_ld_so (system_u object_r ld_so_t ((s0) (s0))))
+(filecon "/usr/lib/ld-[^/]*\.so(\.[^/]*)*" file file_ld_so)
+
+(type lib_t)
+(call files_object (lib_t))
+
+(context file_lib (system_u object_r lib_t ((s0) (s0))))
+(filecon "/usr/lib/.*" any file_lib)
+(filecon "/usr/lib" symlink file_lib)
+(filecon "/usr/lib" dir file_lib)
+
+(type textrel_shlib_t)
+(call files_object (textrel_shlib_t))
+
+(typeattributeset lib_and_textrel_shlib (lib_t textrel_shlib_t))
+
+(call files_etc_filetrans (ldconfig_t ld_so_cache_t file "*"))
+
+(call files_var_cache_filetrans (ldconfig_t ldconfig_cache_t dir "*"))
+
+(macro libraries_search ((type ARG1))
+    (allow ARG1 lib_t (dirs (search))))
+
+(macro libraries_list ((type ARG1))
+    (allow ARG1 lib_t (dirs (list))))
+
+(macro libraries_use_ld_so ((type ARG1))
+    (allow ARG1 lib_t (dirs (list)))
+    (allow ARG1 ld_so_t mmap_file_perms)
+    (allow ARG1 ld_so_cache_t read_file_perms))
+
+(macro libraries_read_lib_files ((type ARG1))
+    (call libraries_list (ARG1))
+    (allow ARG1 lib_t read_file_perms))
+
+(macro libraries_use_shared_libs ((type ARG1))
+    (call libraries_list (ARG1))
+    (allow ARG1 lib_and_textrel_shlib mmap_file_perms)
+    (allow ARG1 textrel_shlib_t (file (execmod))))
+
+(macro libraries_manage_ld_so_cache_files ((type ARG1))
+    (call files_rw_etc_dirs (ARG1))
+    (allow ARG1 ld_so_cache_t manage_file_perms))
+
+(macro libraries_etc_filetrans_ld_so_cache_files ((type ARG1))
+    (call files_list_etc (ARG1))
+    (call files_etc_filetrans (ARG1 ld_so_cache_t file "ld.so.cache"))
+    (call files_etc_filetrans (ARG1 ld_so_cache_t file "ld.so.cache~"))
+    (call files_etc_filetrans (ARG1 ld_so_cache_t file "ld.so.preload"))
+    (call files_etc_filetrans (ARG1 ld_so_cache_t file "ld.so.preload~")))
+
+(macro libraries_subtrans_ldconfig ((type ARG1))
+    (call commands_list_bin (ARG1))
+    (call subtrans_pattern (ARG1 ldconfig_exec_t ldconfig_t)))
+
+(macro libraries_run_ldconfig ((type ARG1)(role ARG2))
+    (call libraries_subtrans_ldconfig (ARG1))
+    (roleattributeset ldconfig_roles (ARG2)))
+
+(macro libraries_exec_ldconfig ((type ARG1))
+    (call commands_list_bin (ARG1))
+    (call can_exec (ARG1 ldconfig_exec_t)))

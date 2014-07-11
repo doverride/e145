@@ -54,6 +54,12 @@
 (macro commands_bin_files_entry_subject ((type ARG1))
     (call subject_entry (ARG1 bin_t)))
 
+(macro commands_list_bin ((type ARG1))
+    (allow ARG1 bin_t (dirs (list))))
+
+(macro commands_search_bin ((type ARG1))
+    (allow ARG1 bin_t (dirs (search))))
+
 (macro commands_shell_files_entry_subject ((type ARG1))
     (call subject_entry (ARG1 shell_t)))
 
