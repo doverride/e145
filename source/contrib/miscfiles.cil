@@ -45,6 +45,19 @@
 (context file_man_cache (system_u object_r man_cache_t ((s0) (s0))))
 (filecon "/var/cache/man(/.*)?" any file_man_cache)
 
+(type net_conf_t)
+(call files_etc_object (net_conf_t))
+
+(context file_net_conf (system_u object_r net_conf_t ((s0) (s0))))
+(filecon "/etc/hosts" file file_net_conf)
+(filecon "/etc/sysconfig/network-scripts(/.*)?" file file_net_conf)
+
+(type net_env_t)
+(call files_etc_object (net_env_t))
+
+(context file_net_env (system_u object_r net_env_t ((s0) (s0))))
+(filecon "/etc/sysconfig/network" file file_net_env)
+
 (type public_content_t)
 (call files_var_object (public_content_t))
 
@@ -78,3 +91,13 @@
     ; (optional miscfiles_optional_locale
         ; (call locale_read_config_files (ARG1)))
         )
+
+(macro miscfiles_list_network_config ((type ARG1))
+    (allow ARG1 net_conf_t (dirs (list))))
+
+(macro miscfiles_read_network_config_files ((type ARG1))
+    (call miscfiles_list_network_config (ARG1))
+    (allow ARG1 net_conf_t read_file_perms))
+
+(macro miscfiles_read_network_environ_files ((type ARG1))
+    (allow ARG1 net_env_t read_file_perms))
