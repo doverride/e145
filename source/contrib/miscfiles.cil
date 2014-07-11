@@ -1,0 +1,80 @@
+(typeattribute is_cert_file_object)
+
+(type cert_t)
+(call miscfiles_cert_object (cert_t))
+
+(context file_cert (system_u object_r cert_t ((s0) (s0))))
+(filecon "/etc/pki(/.*)?" any file_cert)
+
+(type fonts_t)
+(call files_usr_object (fonts_t))
+
+(context file_fonts (system_u object_r fonts_t ((s0) (s0))))
+(filecon "/usr/share/fonts(/.*)?" any file_fonts)
+(filecon "/usr/share/ghostscript/fonts(/.*)?" any file_fonts)
+
+(type fonts_cache_t)
+(call files_var_cache_object (fonts_cache_t))
+
+(context file_fonts_cache (system_u object_r fonts_cache_t ((s0) (s0))))
+(filecon "/var/cache/fontconfig(/.*)?" any file_fonts_cache)
+
+(type hwdata_t)
+(call files_usr_object (hwdata_t))
+
+(context file_hwdata (system_u object_r hwdata_t ((s0) (s0))))
+(filecon "/usr/share/hwdata(/.*)?" any file_hwdata)
+
+(type locale_t)
+(call files_usr_object (locale_t))
+
+(context file_locale (system_u object_r locale_t ((s0) (s0))))
+(filecon "/usr/lib/locale(/.*)?" any file_locale)
+(filecon "/usr/share/locale(/.*)?" any file_locale)
+(filecon "/usr/share/zoneinfo(/.*)?" any file_locale)
+
+(type man_t)
+(call files_usr_object (man_t))
+
+(context file_man (system_u object_r man_t ((s0) (s0))))
+(filecon "/usr/share/man(/.*)?" any file_man)
+
+(type man_cache_t)
+(call files_var_cache_object (man_cache_t))
+
+(context file_man_cache (system_u object_r man_cache_t ((s0) (s0))))
+(filecon "/var/cache/man(/.*)?" any file_man_cache)
+
+(type public_content_t)
+(call files_var_object (public_content_t))
+
+(type public_content_rw_t)
+(call files_var_object (public_content_rw_t))
+
+(type tetex_data_t)
+(call files_var_object (tetex_data_t))
+
+(context file_tetex_data (system_u object_r tetex_data_t ((s0) (s0))))
+(filecon "/var/lib/texmf(/.*)?" any file_tetex_data)
+(filecon "/var/spool/texmf(/.*)?" any file_tetex_data)
+
+(macro miscfiles_cert_object ((type ARG1))
+    (typeattributeset is_cert_file_object ARG1)
+    (call files_etc_object (ARG1)))
+
+(macro miscfiles_list_generic_cert ((type ARG1))
+    (allow ARG1 cert_t (dirs (list))))
+
+(macro miscfiles_read_generic_cert_files ((type ARG1))
+    (call miscfiles_list_generic_cert (ARG1))
+    (allow ARG1 cert_t read_file_perms))
+
+(macro miscfiles_list_localization ((type ARG1))
+    (allow ARG1 locale_t (dirs (list))))
+
+(macro miscfiles_read_localization_files ((type ARG1))
+    (call miscfiles_list_localization (ARG1))
+    (allow ARG1 locale_t read_file_perms)
+    ; (optional miscfiles_optional_locale
+        ; (call locale_read_config_files (ARG1)))
+        )
