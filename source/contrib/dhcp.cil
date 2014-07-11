@@ -68,17 +68,17 @@
 (call dhcp_read_config_files (dhclient_t))
 (call dhcp_udp_bind_dhcp_port (dhclient_t))
 
-; (optional dhcpc_optional_auth
+; (optional dhclient_optional_auth
     ; (call auth_nsswitch_client (dhclient_t)))
 
-; (optional dhcpc_optional_journal
+; (optional dhclient_optional_journal
    ; (call journal_client (dhclient_t)))
 
 (optional dhclient_optional_miscfiles
     (call miscfiles_read_localization_files (dhclient_t))
     (call miscfiles_read_network_environ_files (dhclient_t)))
 
-; (optional dhcpc_optional_networkmgr
+; (optional dhclient_optional_networkmgr
     ; (call networkmgr_execute_helper_files (dhclient_t))
     ; (call networkmgr_list_config (dhclient_t))
     ; (call networkmgr_manage_var_lib_files (dhclient_t))
