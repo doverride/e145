@@ -1,0 +1,23 @@
+(typeattribute is_application_subject)
+(typeattribute is_application_executable_file_object)
+
+(macro application_subject ((type ARG1))
+    (typeattributeset is_application_subject ARG1)
+    (call subject_common_subject (ARG1)))
+
+(macro application_executable_object ((type ARG1))
+    (typeattributeset is_application_executable_file_object ARG1)
+    (call commands_bin_object (ARG1)))
+
+(macro application_execute_all_application_executable_files ((type ARG1))
+    (call can_exec (ARG1 is_application_executable_file_object)))
+
+(macro application_execute_all_executable_files ((type ARG1))
+    (call commands_execute_bin_files (ARG1))
+    (call commands_execute_shell_files (ARG1))
+    (call application_execute_all_application_executable_files (ARG1)))
+
+(macro application_subject_entry ((type ARG1)(type ARG2))
+    (call application_subject (ARG1))
+    (call application_executable_object (ARG2))
+    (call subject_entry (ARG1 ARG2)))
