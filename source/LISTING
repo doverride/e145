@@ -9,6 +9,7 @@ isid.cil
 miscpatterns.cil
 mls.cil
 contrib/application.cil
+contrib/hostname.cil
 contrib/hwclock.cil
 contrib/libraries.cil
 contrib/miscfiles.cil

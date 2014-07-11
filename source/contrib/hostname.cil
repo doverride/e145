@@ -1,0 +1,17 @@
+(roleattribute is_hostname_role)
+
+(type hostname_t)
+(type hostname_exec_t)
+(call application_subject_entry (hostname_t hostname_exec_t))
+(roleattributeset is_hostname_role system_r)
+(roletype is_hostname_role hostname_t)
+
+(context file_hostname_exec (system_u object_r hostname_exec_t ((s0) (s0))))
+(filecon "/usr/bin/hostname" file file_hostname_exec)
+
+(macro hostname_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 hostname_exec_t hostname_t)))
+
+(macro hostname_run ((type ARG1)(role ARG2))
+    (call hostname_subtrans (ARG1))
+    (roleattributeset is_hostname_role (ARG2)))
