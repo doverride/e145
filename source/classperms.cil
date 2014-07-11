@@ -725,7 +725,7 @@
 (classpermission all_file_perms_except_execmod_and_entrypoint)
 (classpermissionset all_file_perms_except_execmod_and_entrypoint (file
     (not (execmod entrypoint))))
- 
+
  (classpermission all_dir_perms_except_execmod)
 (classpermissionset all_dir_perms_except_execmod (dir (not (execmod))))
 
