@@ -19,6 +19,7 @@
 (call object_roletype (is_netlabel_peer_object))
 (call object_roletype (is_ipsec_security_policy_database_object))
 
+; move this to ppp module
 (type device_ppp_t)
 (call devices_object (device_ppp_t))
 
@@ -27,6 +28,7 @@
 (filecon "/dev/ppp" char device_ppp)
 (filecon "/dev/pppox.*" char device_ppp)
 
+; move this to vpn module
 (type device_tun_tap_t)
 (call devices_object (device_tun_tap_t))
 
