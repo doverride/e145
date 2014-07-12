@@ -177,6 +177,10 @@
 (allow has_unconfined_access_to_storage_assets device_tape_t
     all_chr_file_perms_except_execmod)
 
+(macro storage_getattr_fixed_disk_nodes ((type ARG1))
+    (allow ARG1 device_fixed_disk_t (blk_file (getattr)))
+    (allow ARG1 device_fixed_disk_t (chr_file (getattr))))
+
 (macro storage_manage_fixed_disk_nodes ((type ARG1))
     (allow ARG1 self (capability (mknod)))
     (call manage_blk_files_pattern (ARG1 device_t device_fixed_disk_t))

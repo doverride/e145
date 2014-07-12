@@ -535,6 +535,13 @@
     (call devices_list (ARG1))
     (allow ARG1 device_zero_t rw_chr_file_perms))
 
+(macro devices_search_sysfs ((type ARG1))
+    (allow ARG1 sysfs_t (dirs (search))))
+
+(macro devices_read_sysfs_files ((type ARG1))
+    (call devices_search_sysfs (ARG1))
+    (allow ARG1 sysfs_t read_file_perms))
+
 (macro devices_write_memory_raw ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))
     (allow ARG1 device_memory_t write_chr_file_perms)

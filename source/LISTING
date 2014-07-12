@@ -16,6 +16,7 @@ contrib/hwclock.cil
 contrib/ip.cil
 contrib/libraries.cil
 contrib/miscfiles.cil
+contrib/mount.cil
 modules/commands.cil
 modules/devices.cil
 modules/files.cil

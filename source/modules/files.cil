@@ -345,6 +345,13 @@
 (macro files_list_etc ((type ARG1))
     (allow ARG1 etc_t (dirs (list))))
 
+(macro files_search_etc ((type ARG1))
+    (allow ARG1 etc_t (dirs (search))))
+
+(macro files_read_generic_etc_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 etc_t read_file_perms))
+
 (macro files_rw_etc_dirs ((type ARG1))
     (allow ARG1 etc_t rw_dir_perms))
 
@@ -373,6 +380,13 @@
 (macro files_run_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 run_t ARG2 ARG3 ARG4)))
+
+(macro files_rw_generic_run_files ((type ARG1)) ; /run/mount/utab
+    (call files_search_run (ARG1))
+    (allow ARG1 run_t rw_file_perms))
+
+(macro files_search_run ((type ARG1))
+    (allow ARG1 run_t (dirs (search))))
 
 (macro files_var_object ((type ARG1))
     (typeattributeset is_var_file_object ARG1))
@@ -407,6 +421,22 @@
 (macro files_security_mnt_object ((type ARG1))
     (call files_security_object (ARG1))
     (typeattributeset is_mnt_file_object ARG1))
+
+(macro files_audit_access_all_mnt_dirs ((type ARG1))
+    (dontaudit ARG1 is_mnt_file_object (dir (audit_access))))
+
+(macro files_mounton_all_mnt_dirs ((type ARG1))
+    (allow ARG1 is_mnt_file_object (dir (mounton))))
+
+(macro files_mounton_all_non_security ((type ARG1))
+    (allow ARG1 not_associated_with_security_file_object
+        (dir_file (mounton))))
+
+(macro files_read_all_non_security_files ((type ARG1))
+    (allow ARG1 not_associated_with_security_file_object read_file_perms))
+
+(macro files_setattr_all_mnt_dirs ((type ARG1))
+    (allow ARG1 is_mnt_file_object (dir (setattr))))
 
 (macro files_execmod_all_files ((type ARG1))
     (allow ARG1 is_file_object (file (execmod))))

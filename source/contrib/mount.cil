@@ -1,0 +1,81 @@
+(boolean mount_any_file false)
+
+(roleattribute is_mount_role)
+(roleattribute is_showmount_role)
+
+(type mount_t)
+(type mount_exec_t)
+(call application_subject_entry (mount_t mount_exec_t))
+(roletype is_mount_role mount_t)
+
+(context file_mount_exec (system_u object_r mount_exec_t ((s0) (s0))))
+(filecon "/usr/bin/mount.*" file file_mount_exec)
+(filecon "/usr/bin/umount.*" file file_mount_exec)
+
+(type mount_run_t)
+(call files_run_object (mount_run_t))
+
+(context file_mount_run (system_u object_r mount_run_t ((s0) (s0))))
+(filecon "/var/run/mount(/.*)?" dir file_mount_run)
+
+(type showmount_t)
+(type showmount_exec_t)
+(call application_subject_entry (showmount_t showmount_exec_t))
+(roleattributeset is_showmount_role system_r)
+(roletype is_showmount_role showmount_t)
+
+(context file_showmount_exec (system_u object_r showmount_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/showmount" file file_showmount_exec)
+
+(type mount_any_file_t)
+(call selinux_boolean_object (mount_any_file_t))
+
+(context mount_any_file (system_u object_r mount_any_file_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/mount_any_file" mount_any_file)
+
+(allow mount_t self (capability (dac_override sys_admin)))
+
+(allow mount_t mount_run_t manage_dir_perms)
+(allow mount_t mount_run_t manage_file_perms)
+(call files_run_filetrans (mount_t mount_run_t dir "*"))
+
+(call system_setsched (mount_t))
+
+(call devices_read_sysfs_files (mount_t))
+
+(call files_audit_access_all_mnt_dirs (mount_t))
+(call files_mounton_all_mnt_dirs (mount_t))
+(call files_read_generic_etc_files (mount_t)) ; /etc/fstab
+(call files_setattr_all_mnt_dirs (mount_t)) ; syscall=utimensat
+(call files_rw_generic_run_files (mount_t)) ; early mislabeled /run/mount/utab
+
+(call filesystem_mount_all_filesystems (mount_t))
+(call filesystem_remount_all_filesystems (mount_t))
+(call filesystem_unmount_all_filesystems (mount_t))
+
+(call selinux_get_fs_mount (mount_t))
+
+(booleanif mount_any_file
+    (true
+        (call files_read_all_non_security_files (mount_t))
+        (call files_mounton_all_non_security (mount_t))))
+
+(optional mount_optional_miscfiles
+    (call miscfiles_read_localization_files (mount_t)))
+
+(optional mount_optional_storage
+    (call storage_getattr_fixed_disk_nodes (mount_t)))
+
+(macro mount_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 mount_exec_t mount_t)))
+
+(macro mount_run ((type ARG1)(role ARG2))
+    (call mount_subtrans (ARG1))
+    (roleattributeset is_mount_role (ARG2)))
+
+(macro mount_subtrans_showmount ((type ARG1))
+    (call subtrans_pattern (ARG1 showmount_exec_t showmount_t)))
+
+(macro mount_run_showmount ((type ARG1)(role ARG2))
+    (call mount_subtrans_showmount (ARG1))
+    (roleattributeset is_showmount_role (ARG2)))
