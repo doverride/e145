@@ -1,0 +1,89 @@
+(roleattribute is_insmod_role)
+
+(typeattribute is_kmod_admin_subject)
+(typeattribute is_kmod_file_object)
+
+(typeattributeset is_kmod_file_object (modules_conf_t modules_dep_t
+    kmod_run_t))
+
+(type kmod_t)
+(type kmod_exec_t)
+(call application_subject_entry (kmod_t kmod_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (kmod_t kmod_exec_t))
+(roletype is_insmod_role kmod_t)
+
+(context file_kmod_exec (system_u object_r kmod_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/kmod" file file_kmod_exec)
+
+(type modules_conf_t)
+(call files_etc_object (modules_conf_t))
+
+(context file_modules_conf (system_u object_r modules_conf_t
+    ((s0) (s0))))
+(filecon "/etc/depmod\.d(/.*)?" any file_modules_conf)
+(filecon "/etc/modprobe\.d(/.*)?" any file_modules_conf)
+(filecon "/usr/lib/modules/modprobe\.conf" file file_modules_conf)
+
+(type modules_dep_t)
+(call files_usr_object (modules_dep_t))
+
+(context file_modules_dep (system_u object_r modules_dep_t ((s0)
+    (s0))))
+(filecon "/usr/lib/modules/[^/]+/modules\..+" file file_modules_dep)
+
+(type kmod_run_t)
+(call files_run_object (kmod_run_t))
+
+(context file_kmod_run (system_u object_r kmod_run_t ((s0) (s0))))
+(filecon "/var/run/tmpfiles\.d/kmod\.conf" file file_kmod_run)
+
+(type kmod_unit_t)
+(call files_object (kmod_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (kmod_unit_t))
+
+(context file_kmod_unit (system_u object_r kmod_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*kmod-static-nodes.*" file
+    file_kmod_unit)
+
+(allow kmod_t kmod_run_t manage_file_perms)
+; (call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*"))
+
+(call system_link_keyring (kmod_t))
+(call system_load_kernel_modules (kmod_t))
+(call system_read_debugfs_files (kmod_t))
+(call system_read_generic_proc_files (kmod_t))
+
+(call devices_read_sysfs_files (kmod_t))
+
+(call kmod_read_modules_config_files (kmod_t))
+(call kmod_read_modules_dep_files (kmod_t))
+
+(allow is_kmod_admin_subject kmod_t signal_perms)
+(call ps_subject_pattern (is_kmod_admin_subject kmod_t))
+
+(call admin_pattern (is_kmod_admin_subject kmod_unit_t))
+(allow is_kmod_admin_subject kmod_unit_t (service (all)))
+
+(call admin_pattern (is_kmod_admin_subject is_kmod_file_object))
+
+(optional kmod_optional_miscfiles
+    (call miscfiles_read_module_files (kmod_t)))
+
+(macro kmod_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 kmod_exec_t kmod_t)))
+
+(macro kmod_run ((type ARG1)(role ARG2))
+    (call kmod_subtrans (ARG1))
+    (roleattributeset is_kmod_role (ARG2)))
+
+(macro kmod_search_modules_conf ((type ARG1))
+    (allow ARG1 modules_conf_t (dirs (search))))
+
+(macro kmod_read_modules_config_files ((type ARG1))
+    (call kmod_search_modules_conf (ARG1))
+    (allow ARG1 modules_conf_t read_file_perms))
+
+(macro kmod_read_modules_dep_files ((type ARG1))
+    (allow ARG1 modules_dep_t read_file_perms))

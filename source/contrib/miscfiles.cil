@@ -29,6 +29,7 @@
 (call files_usr_object (locale_t))
 
 (context file_locale (system_u object_r locale_t ((s0) (s0))))
+(filecon "/etc/localtime" symlink file_locale)
 (filecon "/usr/lib/locale(/.*)?" any file_locale)
 (filecon "/usr/share/locale(/.*)?" any file_locale)
 (filecon "/usr/share/zoneinfo(/.*)?" any file_locale)
@@ -44,6 +45,13 @@
 
 (context file_man_cache (system_u object_r man_cache_t ((s0) (s0))))
 (filecon "/var/cache/man(/.*)?" any file_man_cache)
+
+(type module_t)
+(call files_usr_object (module_t))
+
+(context file_module (system_u object_r module_t ((s0)
+    (s0))))
+(filecon "/usr/lib/modules(/.*)?" any file_module)
 
 (type net_conf_t)
 (call files_etc_object (net_conf_t))
@@ -92,6 +100,13 @@
     ; (optional miscfiles_optional_locale
         ; (call locale_read_config_files (ARG1)))
         )
+
+(macro miscfiles_search_module ((type ARG1))
+    (allow ARG1 module_t (dirs (search))))
+
+(macro miscfiles_read_module_files ((type ARG1))
+    (call miscfiles_search_module (ARG1))
+    (allow ARG1 module_t read_file_perms))
 
 (macro miscfiles_list_network_config ((type ARG1))
     (allow ARG1 net_conf_t (dirs (list))))

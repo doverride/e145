@@ -102,13 +102,6 @@
 (filecon "/var/run/media(/[^/]*)" symlink file_mnt)
 (filecon "/var/run/media(/[^/]*)?" dir file_mnt)
 
-(type module_t)
-(call files_object (module_t))
-
-(context file_module (system_u object_r module_t ((s0)
-    (s0))))
-(filecon "/usr/lib/modules(/.*)?" any file_module)
-
 (type recov_t)
 (call files_object (recov_t))
 

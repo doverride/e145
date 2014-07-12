@@ -8,8 +8,8 @@
 
 (type dhclient_t)
 (type dhclient_exec_t)
-(call application_subject_entry (dhclient_t dhclient_exec_t))
-(roleattributeset is_dhclient_role system_r)
+(call application_subject_entry (dhclient_t dhclient_exec_t)) ; temporary hack for object_roletype
+; (call systemd_daemon_subject_entry (dhclient_t dhclient_exec_t))
 (roletype is_dhclient_role dhclient_t)
 
 (context file_dhclient_exec (system_u object_r dhclient_exec_t ((s0) (s0))))
@@ -67,6 +67,11 @@
 
 (call dhcp_read_config_files (dhclient_t))
 (call dhcp_udp_bind_dhcp_port (dhclient_t))
+
+(allow is_dhcp_admin_subject dhclient_t signal_perms)
+(call ps_subject_pattern (is_dhcp_admin_subject dhclient_t))
+
+(call admin_pattern (is_kmod_admin_subject is_dhcp_file_object))
 
 ; (optional dhclient_optional_auth
     ; (call auth_nsswitch_client (dhclient_t)))

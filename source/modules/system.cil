@@ -329,6 +329,9 @@
 (macro system_sysctl_object ((type ARG1))
     (typeattributeset is_sysctl_file_object ARG1))
 
+(macro system_link_keyring ((type ARG1))
+    (allow ARG1 system_t (key (search link))))
+
 (macro system_load_kernel_modules ((type ARG1))
     (typeattributeset can_load_kernel_modules ARG1))
 
@@ -358,6 +361,16 @@
 
 (macro system_search_proc ((type ARG1))
     (allow ARG1 proc_t (dirs (search))))
+
+(macro system_list_debugfs ((type ARG1))
+    (allow ARG1 debugfs_t (dirs (list))))
+
+(macro system_read_debugfs_files ((type ARG1))
+    (call system_search_debugfs (ARG1))
+    (allow ARG1 debugfs_t read_file_perms))
+
+(macro system_search_debugfs ((type ARG1))
+    (allow ARG1 debugfs_t (dirs (search))))
 
 (macro system_setsched ((type ARG1))
     (allow ARG1 system_t (process (setsched))))

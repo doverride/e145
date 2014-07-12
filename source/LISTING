@@ -14,6 +14,7 @@ contrib/dns.cil
 contrib/hostname.cil
 contrib/hwclock.cil
 contrib/ip.cil
+contrib/kmod.cil
 contrib/libraries.cil
 contrib/miscfiles.cil
 contrib/mount.cil
