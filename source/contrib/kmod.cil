@@ -1,4 +1,4 @@
-(roleattribute is_insmod_role)
+(roleattribute is_kmod_role)
 
 (typeattribute is_kmod_admin_subject)
 (typeattribute is_kmod_file_object)
@@ -10,7 +10,7 @@
 (type kmod_exec_t)
 (call application_subject_entry (kmod_t kmod_exec_t)) ; temporary hack for object_roletype
 ; (call systemd_oneshot_subject_entry (kmod_t kmod_exec_t))
-(roletype is_insmod_role kmod_t)
+(roletype is_kmod_role kmod_t)
 
 (context file_kmod_exec (system_u object_r kmod_exec_t ((s0)
     (s0))))
