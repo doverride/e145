@@ -388,5 +388,6 @@
 (call system_rw_sysctl_usermodehelper_files (system_t))
 
 (optional system_optional_session
-    (call session_shell_manual_subject_type_transition (system_t))
-    (call session_dynamic_subject_type_transition (system_t)))
+    (call session_setsched (system_t))
+    (call session_dynamic_subject_type_transition (system_t))
+    (call session_shell_manual_subject_type_transition (system_t)))
