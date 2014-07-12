@@ -71,7 +71,7 @@
 (allow is_dhcp_admin_subject dhclient_t signal_perms)
 (call ps_subject_pattern (is_dhcp_admin_subject dhclient_t))
 
-(call admin_pattern (is_kmod_admin_subject is_dhcp_file_object))
+(call admin_pattern (is_dhcp_admin_subject is_dhcp_file_object))
 
 ; (optional dhclient_optional_auth
     ; (call auth_nsswitch_client (dhclient_t)))
