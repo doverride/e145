@@ -90,7 +90,7 @@
     (allow ARG1 dhcp_conf_t (dirs (search))))
 
 (macro dhcp_subtrans_dhclient ((type ARG1))
-    (call subtrans_pattern (ARG1 dhclient_exec_t ip_t)))
+    (call subtrans_pattern (ARG1 dhclient_exec_t dhclient_t)))
 
 (macro dhcp_run_dhclient ((type ARG1)(role ARG2))
     (call dhcp_subtrans_dhclient (ARG1))
