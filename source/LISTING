@@ -10,6 +10,7 @@ miscpatterns.cil
 mls.cil
 contrib/application.cil
 contrib/dhcp.cil
+contrib/dm.cil
 contrib/dns.cil
 contrib/fstools.cil
 contrib/hostname.cil

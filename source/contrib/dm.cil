@@ -1,0 +1,61 @@
+(roleattribute is_dmsetup_role)
+
+(typeattribute is_dm_admin_subject)
+(typeattribute is_dm_subject)
+
+(typeattributeset is_dm_subject (dmeventd_t dmsetup_t))
+
+(type dmeventd_t)
+(type dmeventd_exec_t)
+(call application_subject_entry (dmeventd_t dmeventd_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (dmeventd_t dmeventd_exec_t))
+
+; (call systemd_socket_activated_subject (dmeventd_t dmeventd_run_t))
+
+(context file_dmeventd_exec (system_u object_r dmeventd_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/dmeventd" file file_dmeventd_exec)
+
+(type dmeventd_unit_t)
+(call files_object (dmeventd_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (dmeventd_unit_t))
+
+(context file_dmeventd_unit (system_u object_r dmeventd_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/dm-event.*" file file_dmeventd_unit)
+
+(type dmeventd_run_t)
+(call files_run_object (dmeventd_run_t))
+
+(context file_dmeventd_run (system_u object_r dmeventd_run_t ((s0)
+    (s0))))
+(filecon "/var/run/dmeventd-client" pipe file_dmeventd_run)
+(filecon "/var/run/dmeventd-server" pipe file_dmeventd_run)
+(filecon "/var/run/dmeventd\.pid" file file_dmeventd_run)
+
+(type dmsetup_t)
+(type dmsetup_exec_t)
+(call application_subject_entry (dmsetup_t dmsetup_exec_t))
+(roletype is_dmsetup_role dmsetup_t)
+
+(context file_dmsetup_exec (system_u object_r dmsetup_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/dmsetup" file file_dmsetup_exec)
+
+(allow is_dm_admin_subject is_dm_subject signal_perms)
+(call ps_subject_pattern (is_dm_admin_subject is_dm_subject))
+
+(call admin_pattern (is_dm_admin_subject dmeventd_unit_t))
+(allow is_dm_admin_subject dmeventd_unit_t (service (all)))
+
+(call admin_pattern (is_dm_admin_subject dmeventd_run_t))
+
+(macro dm_subtrans_dmsetup ((type ARG1))
+    (call subtrans_pattern (ARG1 dmsetup_exec_t dmsetup_t)))
+
+(macro dm_run_dmsetup ((type ARG1)(role ARG2))
+    (call dm_subtrans_dmsetup (ARG1))
+    (roleattributeset is_dmsetup_role (ARG2)))
+
+(macro dm_admin ((type ARG1))
+    (typeattributeset is_dm_admin_subject ARG1))
