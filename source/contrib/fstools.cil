@@ -1,0 +1,88 @@
+(roleattribute is_fstools_role)
+
+(type fstools_t)
+(type fstools_exec_t)
+(call application_subject_entry (fstools_t fstools_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (fstools_t fstools_exec_t))
+(roletype is_fstools_role fstools_t)
+
+(context file_fstools_exec (system_u object_r fstools_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/partition_uuid" file file_fstools_exec)
+(filecon "/usr/bin/raw" file file_fstools_exec)
+(filecon "/usr/bin/scsi_unique_id" file file_fstools_exec)
+(filecon "/usr/bin/syslinux" file file_fstools_exec)
+
+(filecon "/usr/sbin/badblocks" file file_fstools_exec)
+(filecon "/usr/sbin/blkid" file file_fstools_exec)
+(filecon "/usr/sbin/blockdev" file file_fstools_exec)
+(filecon "/usr/sbin/cfdisk" file file_fstools_exec)
+(filecon "/usr/sbin/clubufflush" file file_fstools_exec)
+(filecon "/usr/sbin/dosfsck" file file_fstools_exec)
+(filecon "/usr/sbin/dump" file file_fstools_exec)
+(filecon "/usr/sbin/dumpe2fs" file file_fstools_exec)
+(filecon "/usr/sbin/e2fsck" file file_fstools_exec)
+(filecon "/usr/sbin/e4fsck" file file_fstools_exec)
+(filecon "/usr/sbin/e2label" file file_fstools_exec)
+(filecon "/usr/sbin/fdisk" file file_fstools_exec)
+(filecon "/usr/sbin/findfs" file file_fstools_exec)
+(filecon "/usr/sbin/fsck.*" file file_fstools_exec)
+(filecon "/usr/sbin/hdparm" file file_fstools_exec)
+(filecon "/usr/sbin/install-mbr" file file_fstools_exec)
+(filecon "/usr/sbin/jfs_.*" file file_fstools_exec)
+(filecon "/usr/sbin/kpartx" file file_fstools_exec)
+(filecon "/usr/sbin/losetup.*" file file_fstools_exec)
+(filecon "/usr/sbin/lsraid" file file_fstools_exec)
+(filecon "/usr/sbin/make_reiser4" file file_fstools_exec)
+(filecon "/usr/sbin/mkdosfs" file file_fstools_exec)
+(filecon "/usr/sbin/mke2fs" file file_fstools_exec)
+(filecon "/usr/sbin/mke4fs" file file_fstools_exec)
+(filecon "/usr/sbin/mkfs.*" file file_fstools_exec)
+(filecon "/usr/sbin/mkraid" file file_fstools_exec)
+(filecon "/usr/sbin/mkreiserfs" file file_fstools_exec)
+(filecon "/usr/sbin/mkswap" file file_fstools_exec)
+(filecon "/usr/sbin/parted" file file_fstools_exec)
+(filecon "/usr/sbin/partprobe" file file_fstools_exec)
+(filecon "/usr/sbin/partx" file file_fstools_exec)
+(filecon "/usr/sbin/raidautorun" file file_fstools_exec)
+(filecon "/usr/sbin/raidstart" file file_fstools_exec)
+(filecon "/usr/sbin/reiserfs(ck|tune)" file file_fstools_exec)
+(filecon "/usr/sbin/resize.*fs" file file_fstools_exec)
+(filecon "/usr/sbin/scsi_info" file file_fstools_exec)
+(filecon "/usr/sbin/sfdisk" file file_fstools_exec)
+(filecon "/usr/sbin/smartctl" file file_fstools_exec)
+(filecon "/usr/sbin/swapoff" file file_fstools_exec)
+(filecon "/usr/sbin/swapon.*" file file_fstools_exec)
+(filecon "/usr/sbin/tune2fs" file file_fstools_exec)
+
+(allow fstools_t self (capability (sys_admin)))
+
+(call can_exec (fstools_t fstools_exec_t))
+
+(call system_read_generic_proc_files (fstools_t))
+
+(call devices_read_sysfs_files (fstools_t))
+
+(call files_read_generic_etc_files (fstools_t)) ; /etc/fstab
+
+(call selinux_get_fs_mount (fstools_t))
+
+(optional fstools_optional_miscfiles
+    (call miscfiles_read_localization_files (fstools_t)))
+
+(optional fstools_optional_mount
+    (call mount_read_run_files (fstools_t)))
+
+(optional fstools_optional_storage
+    (call storage_read_fixed_disk_nodes (fstools_t))
+    (call storage_write_fixed_disk_nodes (fstools_t)))
+
+(macro fstools_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 fstools_exec_t fstools_t)))
+
+(macro fstools_exec ((type ARG1))
+    (call can_exec (ARG1 fstools_exec_t)))
+
+(macro fstools_run ((type ARG1)(role ARG2))
+    (call fstools_subtrans (ARG1))
+    (roleattributeset is_fstools_role (ARG2)))
