@@ -36,6 +36,7 @@
 (type dmsetup_t)
 (type dmsetup_exec_t)
 (call application_subject_entry (dmsetup_t dmsetup_exec_t))
+(roleattributeset is_dmsetup_role system_r)
 (roletype is_dmsetup_role dmsetup_t)
 
 (context file_dmsetup_exec (system_u object_r dmsetup_exec_t ((s0)
