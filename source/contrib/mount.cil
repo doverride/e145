@@ -54,7 +54,7 @@
 (call filesystem_remount_all_filesystems (mount_t))
 (call filesystem_unmount_all_filesystems (mount_t))
 
-(call selinux_get_fs_mount (mount_t))
+(call selinux_get_filesystems_mount (mount_t))
 
 (booleanif mount_any_file
     (true

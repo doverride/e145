@@ -68,7 +68,7 @@
 
 (call files_read_generic_etc_files (fstools_t)) ; /etc/fstab
 
-(call selinux_get_fs_mount (fstools_t))
+(call selinux_get_filesystems_mount (fstools_t))
 
 (optional fstools_optional_miscfiles
     (call miscfiles_read_localization_files (fstools_t)))

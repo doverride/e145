@@ -63,7 +63,7 @@
 (call network_udp_bind_all_unreserved_ports (dhclient_t))
 (call network_udp_bind_generic_node (dhclient_t))
 
-(call selinux_get_fs_mount (dhclient_t))
+(call selinux_get_filesystems_mount (dhclient_t))
 
 (call dhcp_read_config_files (dhclient_t))
 (call dhcp_udp_bind_dhcp_port (dhclient_t))

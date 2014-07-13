@@ -91,9 +91,15 @@
 (macro selinux_boolean_object ((type ARG1))
     (typeattributeset is_bool_file_object ARG1))
 
-(macro selinux_get_fs_mount ((type ARG1))
-    (allow ARG1 security_t (dir (getattr)))
+(macro selinux_getattr_filesystems ((type ARG1))
     (allow ARG1 security_t (filesystem (getattr))))
+
+(macro selinux_get_enforce_mode ((type ARG1))
+    (call read_files_pattern (ARG1 security_t security_t)))
+
+(macro selinux_get_filesystems_mount ((type ARG1))
+    (call selinux_getattr_filesystems (ARG1))
+    (allow ARG1 security_t (dir (getattr))))
 
 (macro selinux_set_enforce_mode ((type ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))

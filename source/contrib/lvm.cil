@@ -100,7 +100,8 @@
 
 (allow is_lvm_subject self (process (setfscreate)))
 
-(call selinux_get_fs_mount (is_lvm_subject))
+(call selinux_getattr_filesystems (is_lvm_subject))
+(call selinux_get_enforce_mode (is_lvm_subject))
 
 ; (optional lvm_optional_seutil
     ; (call seutil_read_config_files (is_lvm_subject))
