@@ -182,4 +182,4 @@
         lvmetad_run_t lvmetad_t)))
 
 (macro lvm_admin ((type ARG1))
-    (typeattributeset lvm_admin_subject ARG1))
+    (typeattributeset is_lvm_admin_subject ARG1))
