@@ -78,12 +78,8 @@
     (call kmod_subtrans (ARG1))
     (roleattributeset is_kmod_role (ARG2)))
 
-(macro kmod_search_modules_conf ((type ARG1))
-    (allow ARG1 modules_conf_t (dirs (search))))
-
 (macro kmod_read_modules_config_files ((type ARG1))
-    (call kmod_search_modules_conf (ARG1))
-    (allow ARG1 modules_conf_t read_file_perms))
+    (call read_files_pattern (ARG1 modules_conf_t modules_conf_t)))
 
 (macro kmod_read_modules_dep_files ((type ARG1))
     (allow ARG1 modules_dep_t read_file_perms))

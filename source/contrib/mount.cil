@@ -80,3 +80,7 @@
 (macro mount_run_showmount ((type ARG1)(role ARG2))
     (call mount_subtrans_showmount (ARG1))
     (roleattributeset is_showmount_role (ARG2)))
+
+(macro mount_read_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 mount_run_t mount_run_t))
+    (call files_read_generic_run_files (ARG1))) ; mislabeled /run/mount/utab

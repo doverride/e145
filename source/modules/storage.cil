@@ -183,8 +183,8 @@
 
 (macro storage_manage_fixed_disk_nodes ((type ARG1))
     (allow ARG1 self (capability (mknod)))
-    (call manage_blk_files_pattern (ARG1 device_t device_fixed_disk_t))
-    (call manage_chr_files_pattern (ARG1 device_t device_fixed_disk_t))
+    (allow ARG1 device_fixed_disk_t manage_blk_file_perms)
+    (allow ARG1 device_fixed_disk_t manage_chr_file_perms)
     (typeattributeset can_read_fixed_disk_raw ARG1)
     (typeattributeset can_write_fixed_disk_raw ARG1))
 
@@ -193,9 +193,14 @@
     (allow ARG1 device_fixed_disk_t read_chr_file_perms)
     (typeattributeset can_read_fixed_disk_raw ARG1))
 
+(macro storage_write_fixed_disk_nodes ((type ARG1))
+    (allow ARG1 device_fixed_disk_t write_blk_file_perms)
+    (allow ARG1 device_fixed_disk_t write_chr_file_perms)
+    (typeattributeset can_write_fixed_disk_raw ARG1))
+
 (macro storage_manage_scsi_generic_nodes ((type ARG1))
     (allow ARG1 self (capability (mknod)))
-    (call manage_chr_files_pattern (ARG1 device_t device_scsi_generic_t))
+    (allow ARG1 device_scsi_generic_t manage_chr_file_perms)
     (typeattributeset can_read_scsi_generic ARG1)
     (typeattributeset can_write_scsi_generic ARG1))
 

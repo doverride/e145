@@ -118,7 +118,6 @@
     (typeattributeset is_tty_file_object ARG1))
 
 (macro terminal_use_controlling_term ((type ARG1))
-    (call devices_list (ARG1))
     (allow ARG1 device_devtty_t rw_term_perms))
 
 (macro terminal_user_pty_object ((type ARG1)(type ARG2))

@@ -84,36 +84,20 @@
     (typeattributeset is_cert_file_object ARG1)
     (call files_etc_object (ARG1)))
 
-(macro miscfiles_list_generic_cert ((type ARG1))
-    (allow ARG1 cert_t (dirs (list))))
-
 (macro miscfiles_read_generic_cert_files ((type ARG1))
-    (call miscfiles_list_generic_cert (ARG1))
-    (allow ARG1 cert_t read_file_perms))
-
-(macro miscfiles_list_localization ((type ARG1))
-    (allow ARG1 locale_t (dirs (list))))
+    (call read_files_pattern (ARG1 cert_t cert_t)))
 
 (macro miscfiles_read_localization_files ((type ARG1))
-    (call miscfiles_list_localization (ARG1))
-    (allow ARG1 locale_t read_file_perms)
+    (call read_files_pattern (ARG1 locale_t locale_t))
     ; (optional miscfiles_optional_locale
         ; (call locale_read_config_files (ARG1)))
         )
 
-(macro miscfiles_search_module ((type ARG1))
-    (allow ARG1 module_t (dirs (search))))
-
 (macro miscfiles_read_module_files ((type ARG1))
-    (call miscfiles_search_module (ARG1))
-    (allow ARG1 module_t read_file_perms))
-
-(macro miscfiles_list_network_config ((type ARG1))
-    (allow ARG1 net_conf_t (dirs (list))))
+    (call read_files_pattern (ARG1 module_t module_t)))
 
 (macro miscfiles_read_network_config_files ((type ARG1))
-    (call miscfiles_list_network_config (ARG1))
-    (allow ARG1 net_conf_t read_file_perms))
+    (call read_files_pattern (ARG1 net_conf_t net_conf_t)))
 
 (macro miscfiles_read_network_environ_files ((type ARG1))
     (allow ARG1 net_env_t read_file_perms))

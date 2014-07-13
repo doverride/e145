@@ -335,15 +335,8 @@
 (macro files_etc_object ((type ARG1))
     (typeattributeset is_etc_file_object ARG1))
 
-(macro files_list_etc ((type ARG1))
-    (allow ARG1 etc_t (dirs (list))))
-
-(macro files_search_etc ((type ARG1))
-    (allow ARG1 etc_t (dirs (search))))
-
 (macro files_read_generic_etc_files ((type ARG1))
-    (call files_search_etc (ARG1))
-    (allow ARG1 etc_t read_file_perms))
+    (call read_files_pattern (ARG1 etc_t etc_t)))
 
 (macro files_rw_etc_dirs ((type ARG1))
     (allow ARG1 etc_t rw_dir_perms))
@@ -374,12 +367,11 @@
     ARG4))
     (call filetrans_pattern (ARG1 run_t ARG2 ARG3 ARG4)))
 
-(macro files_rw_generic_run_files ((type ARG1)) ; /run/mount/utab
-    (call files_search_run (ARG1))
-    (allow ARG1 run_t rw_file_perms))
+(macro files_read_generic_run_files ((type ARG1)) ; /run/mount/utab
+    (call read_files_pattern (ARG1 run_t run_t)))
 
-(macro files_search_run ((type ARG1))
-    (allow ARG1 run_t (dirs (search))))
+(macro files_rw_generic_run_files ((type ARG1)) ; /run/mount/utab
+    (call rw_files_pattern (ARG1 run_t run_t)))
 
 (macro files_var_object ((type ARG1))
     (typeattributeset is_var_file_object ARG1))

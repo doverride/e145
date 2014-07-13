@@ -337,14 +337,14 @@
 
 (macro system_read_core_if ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))
-    (allow ARG1 proc_kcore_t read_file_perms)
+    (call read_files_pattern (ARG1 proc_t proc_kcore_t))
     (typeattributeset can_dump_kernel ARG1))
 
 (macro system_read_generic_proc_files ((type ARG1))
     (allow ARG1 proc_t read_file_perms))
 
 (macro system_read_messages ((type ARG1))
-    (allow ARG1 proc_kmsg_t read_file_perms)
+    (call read_files_pattern (ARG1 proc_t proc_kmsg_t))
     (typeattributeset can_receive_kernel_messages ARG1))
 
 (macro system_rw_sysctl_security_files ((type ARG1))
@@ -357,20 +357,13 @@
     (typeattributeset
         can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
             ARG1)
-    (allow ARG1 sysctl_usermodehelper_t rw_file_perms))
+    (call rw_files_pattern (ARG1 sysctl_usermodehelper_t sysctl_usermodehelper_t)))
 
 (macro system_search_proc ((type ARG1))
     (allow ARG1 proc_t (dirs (search))))
 
-(macro system_list_debugfs ((type ARG1))
-    (allow ARG1 debugfs_t (dirs (list))))
-
 (macro system_read_debugfs_files ((type ARG1))
-    (call system_search_debugfs (ARG1))
-    (allow ARG1 debugfs_t read_file_perms))
-
-(macro system_search_debugfs ((type ARG1))
-    (allow ARG1 debugfs_t (dirs (search))))
+    (call read_files_pattern (ARG1 debugfs_t debugfs_t)))
 
 (macro system_setsched ((type ARG1))
     (allow ARG1 system_t (process (setsched))))

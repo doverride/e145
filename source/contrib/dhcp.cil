@@ -91,9 +91,6 @@
 
 (call admin_pattern (is_dhcp_admin_subject is_dhcp_file_object))
 
-(macro dhcp_search_config ((type ARG1))
-    (allow ARG1 dhcp_conf_t (dirs (search))))
-
 (macro dhcp_subtrans_dhclient ((type ARG1))
     (call subtrans_pattern (ARG1 dhclient_exec_t dhclient_t)))
 
@@ -102,8 +99,7 @@
     (roleattributeset is_dhclient_role (ARG2)))
 
 (macro dhcp_read_config_files ((type ARG1))
-    (call dhcp_search_config (ARG1))
-    (allow ARG1 dhcp_conf_t read_file_perms))
+    (call read_files_pattern (ARG1 dhcp_conf_t dhcp_conf_t)))
 
 (macro dhcp_udp_bind_dhcp_port ((type ARG1))
     (allow ARG1 port_dhcp_t (udp_socket (name_bind))))

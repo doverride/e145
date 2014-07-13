@@ -49,20 +49,16 @@
 
 (call files_var_cache_filetrans (ldconfig_t ldconfig_cache_t dir "*"))
 
-(macro libraries_search ((type ARG1))
-    (allow ARG1 lib_t (dirs (search))))
-
 (macro libraries_list ((type ARG1))
     (allow ARG1 lib_t (dirs (list))))
 
 (macro libraries_use_ld_so ((type ARG1))
-    (allow ARG1 lib_t (dirs (list)))
+    (call libraries_list (ARG1))
     (allow ARG1 ld_so_t mmap_file_perms)
     (allow ARG1 ld_so_cache_t read_file_perms))
 
 (macro libraries_read_lib_files ((type ARG1))
-    (call libraries_list (ARG1))
-    (allow ARG1 lib_t read_file_perms))
+    (call read_files_pattern (ARG1 lib_t lib_t)))
 
 (macro libraries_use_shared_libs ((type ARG1))
     (call libraries_list (ARG1))

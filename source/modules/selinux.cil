@@ -96,14 +96,14 @@
     (allow ARG1 security_t (filesystem (getattr))))
 
 (macro selinux_set_enforce_mode ((type ARG1))
-    (allow ARG1 security_t rw_file_perms)
+    (call rw_files_pattern (ARG1 security_t security_t))
     (typeattributeset can_setenforce ARG1)
     (booleanif (not secure_mode_policyload)
         (true
             (allow ARG1 security_t (security (setenforce))))))
 
 (macro selinux_load_policy ((type ARG1))
-    (allow ARG1 security_t rw_file_perms)
+    (call rw_files_pattern (ARG1 security_t security_t))
     (typeattributeset can_load_policy ARG1)
     (booleanif (not secure_mode_policyload)
         (true
@@ -112,7 +112,7 @@
 (macro selinux_set_all_booleans ((type ARG1))
     (allow ARG1 all_bool_file_objects_except_secure_mode_policyload
         rw_file_perms)
-    (allow ARG1 secure_mode_policyload_t read_file_perms)
+    (call read_files_pattern (ARG1 security_t secure_mode_policyload_t))
     (allow ARG1 security_t (security (setbool)))
     (booleanif (not secure_mode_policyload)
         (true
@@ -120,7 +120,7 @@
                 write_file_perms))))
 
 (macro selinux_set_parameters ((type ARG1))
-    (allow ARG1 security_t rw_file_perms)
+    (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (setsecparam)))
     (auditallow ARG1 security_t (security (setsecparam)))
     (typeattributeset can_setsecparam ARG1))
