@@ -161,14 +161,14 @@
 
 (call admin_pattern (is_lvm_admin_subject is_lvm_file_object))
 
-(macro lvm_subtrans ((type ARG1))
+(macro lvm_subtrans_lvm ((type ARG1))
     (call subtrans_pattern (ARG1 lvm_exec_t lvm_t)))
 
-(macro lvm_exec ((type ARG1))
+(macro lvm_exec_lvm ((type ARG1))
     (call can_exec (ARG1 lvm_exec_t)))
 
-(macro lvm_run ((type ARG1)(role ARG2))
-    (call lvm_subtrans (ARG1))
+(macro lvm_run_lvm ((type ARG1)(role ARG2))
+    (call lvm_subtrans_lvm (ARG1))
     (roleattributeset is_lvm_role (ARG2)))
 
 (macro lvm_manage_metadata_files ((type ARG1))
