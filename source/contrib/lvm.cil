@@ -143,7 +143,7 @@
 
 ; (optional lvm_optional_udev
     ; (call udev_read_config_files (lvm_t))
-    ; (call udev_read_var_run_files (lvm_t)))
+    ; (call udev_read_run_files (lvm_t)))
 
 (allow lvmetad_t self create_unix_stream_stream_socket_perms)
 
