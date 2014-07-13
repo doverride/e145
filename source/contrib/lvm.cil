@@ -1,0 +1,228 @@
+(roleattribute is_lvm_role)
+
+(typeattribute is_lvm_admin_subject)
+(typeattribute is_lvm_subject)
+
+(typeattribute is_lvm_file_object)
+(typeattribute is_lvm_unit_file_object)
+
+(typeattributeset is_lvm_subject (lvm_t lvmetad_t))
+
+(typeattributeset is_lvm_file_object (lvm_conf_t lvm_metadata_t
+    lvm_run_t lvmetad_run_t lvm_lock_t lvm_unit_t lvmetad_unit_t))
+
+(typeattributeset is_lvm_unit_file_object (lvm_unit_t lvmetad_unit_t))
+
+(type lvmetad_t)
+(type lvmetad_exec_t)
+(call application_subject_entry (lvmetad_t lvmetad_exec_t)) ; temporary hack for object_roletype
+; (call systemd_daemon_subject_entry (lvmetad_t lvmetad_exec_t))
+
+; (call systemd_socket_activated_subject (lvmetad_t lvmetad_run_t))
+
+(context file_lvmetad_exec (system_u object_r lvmetad_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/lvmetad" file file_lvmetad_exec)
+
+(type lvmetad_unit_t)
+(call files_object (lvmetad_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (lvmetad_unit_t))
+
+(context file_lvmetad_unit (system_u object_r lvmetad_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/lvm2-lvmetad.*" file
+    file_lvmetad_unit)
+
+(type lvmetad_run_t)
+(call files_run_object (lvmetad_run_t))
+
+(context file_lvmetad_run (system_u object_r lvmetad_run_t ((s0)
+    (s0))))
+(filecon "/run/lvmetad\.pid" file file_lvmetad_run)
+
+(type lvm_t)
+(type lvm_exec_t)
+(call application_subject_entry (lvm_t lvm_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (lvm_t lvm_exec_t))
+(roletype is_lvm_role lvm_t)
+
+(context file_lvm_exec (system_u object_r lvm_exec_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system-generators/lvm2-activation-generator"
+    file file_lvm_exec)
+
+(filecon "/usr/sbin/lvchange" file file_lvm_exec)
+(filecon "/usr/sbin/lvconvert" file file_lvm_exec)
+(filecon "/usr/sbin/lvcreate" file file_lvm_exec)
+(filecon "/usr/sbin/lvdisplay" file file_lvm_exec)
+(filecon "/usr/sbin/lvextend" file file_lvm_exec)
+(filecon "/usr/sbin/lvm" file file_lvm_exec)
+(filecon "/usr/sbin/lvmchange" file file_lvm_exec)
+(filecon "/usr/sbin/lvmconf" file file_lvm_exec)
+(filecon "/usr/sbin/lvmdiskscan" file file_lvm_exec)
+(filecon "/usr/sbin/lvmdump" file file_lvm_exec)
+(filecon "/usr/sbin/lvmsadc" file file_lvm_exec)
+(filecon "/usr/sbin/lvmsar" file file_lvm_exec)
+(filecon "/usr/sbin/lvreduce" file file_lvm_exec)
+(filecon "/usr/sbin/lvremove" file file_lvm_exec)
+(filecon "/usr/sbin/lvrename" file file_lvm_exec)
+(filecon "/usr/sbin/lvresize" file file_lvm_exec)
+(filecon "/usr/sbin/lvs" file file_lvm_exec)
+(filecon "/usr/sbin/lvscan" file file_lvm_exec)
+(filecon "/usr/sbin/pvchange" file file_lvm_exec)
+(filecon "/usr/sbin/pvck" file file_lvm_exec)
+(filecon "/usr/sbin/pvcreate" file file_lvm_exec)
+(filecon "/usr/sbin/pvdisplay" file file_lvm_exec)
+(filecon "/usr/sbin/pvmove" file file_lvm_exec)
+(filecon "/usr/sbin/pvremove" file file_lvm_exec)
+(filecon "/usr/sbin/pvresize" file file_lvm_exec)
+(filecon "/usr/sbin/pvs" file file_lvm_exec)
+(filecon "/usr/sbin/pvscan" file file_lvm_exec)
+(filecon "/usr/sbin/vgcfgbackup" file file_lvm_exec)
+(filecon "/usr/sbin/vgcfgrestore" file file_lvm_exec)
+(filecon "/usr/sbin/vgchange" file file_lvm_exec)
+(filecon "/usr/sbin/vgck" file file_lvm_exec)
+(filecon "/usr/sbin/vgconvert" file file_lvm_exec)
+(filecon "/usr/sbin/vgcreate" file file_lvm_exec)
+(filecon "/usr/sbin/vgdisplay" file file_lvm_exec)
+(filecon "/usr/sbin/vgexport" file file_lvm_exec)
+(filecon "/usr/sbin/vgextend" file file_lvm_exec)
+(filecon "/usr/sbin/vgimport" file file_lvm_exec)
+(filecon "/usr/sbin/vgimportclone" file file_lvm_exec)
+(filecon "/usr/sbin/vgmerge" file file_lvm_exec)
+(filecon "/usr/sbin/vgmknodes" file file_lvm_exec)
+(filecon "/usr/sbin/vgmknodes" file file_lvm_exec)
+(filecon "/usr/sbin/vgreduce" file file_lvm_exec)
+(filecon "/usr/sbin/vgremove" file file_lvm_exec)
+(filecon "/usr/sbin/vgrename" file file_lvm_exec)
+(filecon "/usr/sbin/vgs" file file_lvm_exec)
+(filecon "/usr/sbin/vgscan" file file_lvm_exec)
+(filecon "/usr/sbin/vgsplit" file file_lvm_exec)
+
+(type lvm_conf_t)
+(call files_etc_object (lvm_conf_t))
+
+(context file_lvm_conf (system_u object_r lvm_conf_t ((s0)
+    (s0))))
+(filecon "/etc/lvm(/.*)?" any file_lvm_conf)
+
+(type lvm_lock_t)
+(call files_run_lock_object (lvm_lock_t))
+
+(context file_lvm_lock (system_u object_r lvm_lock_t ((s0)
+    (s0))))
+(filecon "/run/lock/lvm(/.*)?" any file_lvm_lock)
+
+(type lvm_metadata_t)
+(call files_etc_object (lvm_metadata_t))
+
+(context file_lvm_metadata (system_u object_r lvm_metadata_t ((s0)
+    (s0))))
+(filecon "/etc/lvm/cache(/.*)?" any file_lvm_metadata)
+(filecon "/etc/lvm/archive(/.*)?" any file_lvm_metadata)
+(filecon "/etc/lvm/backup(/.*)?" any file_lvm_metadata)
+(filecon "/etc/lvm/profile(/.*)?" any file_lvm_metadata)
+
+(type lvm_run_t)
+(call files_run_object (lvm_run_t))
+
+(context file_lvm_run (system_u object_r lvm_run_t ((s0)
+    (s0))))
+(filecon "/run/lvm(/.*)?" any file_lvm_run)
+
+(type lvm_unit_t)
+(call files_object (lvm_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (lvm_unit_t))
+
+(context file_lvm_unit (system_u object_r lvm_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/blk-availability.*" file
+    file_lvm_unit)
+(filecon "/usr/lib/systemd/system/lvm2-.*" file
+    file_lvm_unit)
+
+(allow is_lvm_subject self (process (setfscreate)))
+
+(call selinux_get_fs_mount (is_lvm_subject))
+
+; (optional lvm_optional_seutil
+    ; (call seutil_read_config_files (is_lvm_subject))
+    ; (call seutil_read_file_context_files (is_lvm_subject)))
+
+(allow lvm_t self (capability (ipc_lock sys_nice sys_admin)))
+(allow lvm_t self (process (setsched)))
+(allow lvm_t self create_sem_perms)
+(allow lvm_t self create_unix_stream_socket_perms)
+
+(allow lvm_t lvm_lock_t manage_dir_perms)
+(allow lvm_t lvm_lock_t manage_file_perms)
+(call files_lock_filetrans (lvm_t lvm_lock_t dir "*"))
+
+(call system_get_sysvipc_info (lvm_t))
+(call system_getattr_core_if (lvm_t))
+(call system_list_debugfs (lvm_t))
+(call system_read_generic_proc_files (lvm_t))
+(call system_use_fd (lvm_t))
+
+(call devices_getattr_all_nodes (lvm_t))
+(call devices_read_sysfs_files (lvm_t))
+(call devices_read_urandom (lvm_t))
+(call devices_rw_lvm_control (lvm_t))
+
+(call filesystem_list_tmpfs (lvm_t))
+(call filesystem_list_hugetlbfs (lvm_t))
+
+(call terminal_getattr_generic_pty_nodes (lvm_t))
+
+(call lvm_read_config_files (lvm_t))
+(call lvm_manage_metadata_files (lvm_t))
+(call lvm_stream_connect_lvmetad (lvm_t))
+
+(optional lvm_optional_miscfiles
+    (call miscfiles_read_localization_files (lvm_t)))
+
+(optional lvm_optional_storage
+    (call storage_manage_fixed_disk_nodes (lvm_t)))
+
+; (optional lvm_optional_udev
+    ; (call udev_read_config_files (lvm_t))
+    ; (call udev_read_var_run_files (lvm_t)))
+
+(allow lvmetad_t self create_unix_stream_stream_socket_perms)
+
+(allow lvmetad_t lvm_run_t manage_dir_perms)
+(allow lvmetad_t lvm_run_t manage_sock_file_perms)
+(call files_run_filetrans (lvmetad_t lvm_run_t dir "*"))
+
+(allow lvmetad_t lvmetad_run_t manage_file_perms)
+(call files_run_filetrans (lvmetad_t lvmetad_run_t file "*"))
+
+(allow is_lvm_admin_subject is_lvm_subject signal_perms)
+(call ps_subject_pattern (is_lvm_admin_subject is_lvm_subject))
+
+(allow is_lvm_admin_subject is_lvm_unit_file_object (service (all)))
+
+(call admin_pattern (is_lvm_admin_subject is_lvm_file_object))
+
+(macro lvm_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 lvm_exec_t lvm_t)))
+
+(macro lvm_exec ((type ARG1))
+    (call can_exec (ARG1 lvm_exec_t)))
+
+(macro lvm_run ((type ARG1)(role ARG2))
+    (call lvm_subtrans (ARG1))
+    (roleattributeset is_lvm_role (ARG2)))
+
+(macro lvm_manage_metadata_files ((type ARG1))
+    (call manage_files_pattern (ARG1 lvm_metadata_t lvm_metadata_t)))
+
+(macro lvm_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 lvm_conf_t lvm_conf_t)))
+
+(macro lvm_stream_connect_lvmetad ((type ARG1))
+    (call stream_connect_pattern (ARG1 lvmetad_run_t
+        lvmetad_run_t lvmetad_t)))
+
+(macro lvm_admin ((type ARG1))
+    (typeattributeset lvm_admin_subject ARG1))
