@@ -351,6 +351,10 @@
 (macro files_run_lock_object ((type ARG1))
     (typeattributeset is_lock_file_object ARG1))
 
+(macro files_lock_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
+    ARG4))
+    (call filetrans_pattern (ARG1 run_lock_t ARG2 ARG3 ARG4)))
+
 (macro files_search_root ((type ARG1))
     (allow ARG1 root_t (dirs (search))))
 

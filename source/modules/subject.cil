@@ -86,7 +86,7 @@
 (call devices_rw_null (is_common_subject))
 (call devices_rw_zero (is_common_subject))
 
-(call terminal_use_controlling_term (is_common_subject))
+(call terminal_use_controlling_terminal (is_common_subject))
 
 (optional subject_optional_libraries
     (call libraries_use_ld_so (is_common_subject))

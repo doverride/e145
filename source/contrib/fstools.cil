@@ -14,6 +14,7 @@
 (filecon "/usr/bin/syslinux" file file_fstools_exec)
 
 (filecon "/usr/sbin/badblocks" file file_fstools_exec)
+(filecon "/usr/sbin/blkactivate" file file_fstools_exec)
 (filecon "/usr/sbin/blkid" file file_fstools_exec)
 (filecon "/usr/sbin/blockdev" file file_fstools_exec)
 (filecon "/usr/sbin/cfdisk" file file_fstools_exec)

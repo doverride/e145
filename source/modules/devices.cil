@@ -507,6 +507,10 @@
 (macro devices_object ((type ARG1))
     (typeattributeset is_dev_file_object ARG1))
 
+(macro devices_getattr_all_nodes ((type ARG1))
+    (allow ARG1 is_dev_file_object (chr_file (getattr)))
+    (allow ARG1 is_dev_file_object (blk_file (getattr))))
+
 (macro devices_manage_all_nodes ((type ARG1))
     (call manage_chr_files_pattern (ARG1 device_t is_dev_file_object))
     (typeattributeset can_read_memory_raw ARG1)
@@ -523,6 +527,12 @@
     (allow ARG1 self (capability (sys_rawio)))
     (call read_files_pattern (ARG1 device_t device_memory_t))
     (typeattributeset can_read_memory_raw ARG1))
+
+(macro devices_read_urandom ((type ARG1))
+    (call read_files_pattern (ARG1 device_t device_urandom_t)))
+
+(macro devices_rw_lvm_control ((type ARG1))
+    (call rw_files_pattern (ARG1 device_t device_lvm_control_t)))
 
 (macro devices_rw_null ((type ARG1))
     (call rw_files_pattern (ARG1 device_t device_null_t)))

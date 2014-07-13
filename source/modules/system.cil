@@ -329,6 +329,12 @@
 (macro system_sysctl_object ((type ARG1))
     (typeattributeset is_sysctl_file_object ARG1))
 
+(macro system_get_sysvipc_info ((type ARG1))
+    (allow ARG1 system_t (system (ipc_info))))
+
+(macro system_getattr_core_if ((type ARG1))
+    (allow ARG1 proc_kcore_t (file (getattr))))
+
 (macro system_link_keyring ((type ARG1))
     (allow ARG1 system_t (key (search link))))
 
@@ -339,6 +345,9 @@
     (allow ARG1 self (capability (sys_rawio)))
     (call read_files_pattern (ARG1 proc_t proc_kcore_t))
     (typeattributeset can_dump_kernel ARG1))
+
+(macro system_list_debugfs ((type ARG1))
+    (allow ARG1 debugfs_t (dirs (list))))
 
 (macro system_read_generic_proc_files ((type ARG1))
     (allow ARG1 proc_t read_file_perms))
@@ -362,11 +371,11 @@
 (macro system_search_proc ((type ARG1))
     (allow ARG1 proc_t (dirs (search))))
 
-(macro system_read_debugfs_files ((type ARG1))
-    (call read_files_pattern (ARG1 debugfs_t debugfs_t)))
-
 (macro system_setsched ((type ARG1))
     (allow ARG1 system_t (process (setsched))))
+
+(macro system_use_fd ((type ARG1))
+    (allow ARG1 system_t (fd (use))))
 
 (macro system_unconfined ((type ARG1))
     (typeattributeset has_unconfined_access_to_system_assets ARG1)

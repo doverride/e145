@@ -4,7 +4,7 @@
 (typeattribute is_kmod_file_object)
 
 (typeattributeset is_kmod_file_object (modules_conf_t modules_dep_t
-    kmod_run_t))
+    kmod_run_t kmod_unit_t))
 
 (type kmod_t)
 (type kmod_exec_t)
@@ -51,8 +51,8 @@
 ; (call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*"))
 
 (call system_link_keyring (kmod_t))
+(call system_list_debugfs (kmod_t))
 (call system_load_kernel_modules (kmod_t))
-(call system_read_debugfs_files (kmod_t))
 (call system_read_generic_proc_files (kmod_t))
 
 (call devices_read_sysfs_files (kmod_t))
@@ -63,7 +63,6 @@
 (allow is_kmod_admin_subject kmod_t signal_perms)
 (call ps_subject_pattern (is_kmod_admin_subject kmod_t))
 
-(call admin_pattern (is_kmod_admin_subject kmod_unit_t))
 (allow is_kmod_admin_subject kmod_unit_t (service (all)))
 
 (call admin_pattern (is_kmod_admin_subject is_kmod_file_object))

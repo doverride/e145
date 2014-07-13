@@ -117,7 +117,10 @@
     (call terminal_serial_object (ARG1))
     (typeattributeset is_tty_file_object ARG1))
 
-(macro terminal_use_controlling_term ((type ARG1))
+(macro terminal_getattr_generic_pty_nodes ((type ARG1))
+    (allow ARG1 devpts_t (chr_file (getattr))))
+
+(macro terminal_use_controlling_terminal ((type ARG1))
     (allow ARG1 device_devtty_t rw_term_perms))
 
 (macro terminal_user_pty_object ((type ARG1)(type ARG2))

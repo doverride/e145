@@ -341,6 +341,12 @@
 (macro filesystem_associate_tmpfs ((type ARG1))
     (allow ARG1 tmpfs_t (filesystem (associate))))
 
+(macro filesystem_list_hugetlbfs ((type ARG1))
+    (allow ARG1 hugetlbfs_t (dirs (list))))
+
+(macro filesystem_list_tmpfs ((type ARG1))
+    (allow ARG1 tmpfs_t (dirs (list))))
+
 (macro filesystem_mount_all_filesystems ((type ARG1))
     (allow ARG1 is_filesystem_object (filesystem (mount))))
 
