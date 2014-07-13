@@ -521,7 +521,7 @@
 
 (macro devices_read_memory_raw ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))
-    (call read_files_pattern (ARG1 device_t device_memory_t)) 
+    (call read_files_pattern (ARG1 device_t device_memory_t))
     (typeattributeset can_read_memory_raw ARG1))
 
 (macro devices_rw_null ((type ARG1))
