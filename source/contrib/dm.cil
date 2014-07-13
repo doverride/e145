@@ -8,7 +8,7 @@
 (type dmeventd_t)
 (type dmeventd_exec_t)
 (call application_subject_entry (dmeventd_t dmeventd_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (dmeventd_t dmeventd_exec_t))
+; (call systemd_daemon_subject_entry (dmeventd_t dmeventd_exec_t))
 
 ; (call systemd_socket_activated_subject (dmeventd_t dmeventd_run_t))
 
@@ -41,6 +41,9 @@
 (context file_dmsetup_exec (system_u object_r dmsetup_exec_t ((s0)
     (s0))))
 (filecon "/usr/sbin/dmsetup" file file_dmsetup_exec)
+
+(call files_run_filetrans (dmeventd_t dmeventd_run_t fifo_file "*"))
+(call files_run_filetrans (dmeventd_t dmeventd_run_t file "*"))
 
 (allow is_dm_admin_subject is_dm_subject signal_perms)
 (call ps_subject_pattern (is_dm_admin_subject is_dm_subject))
