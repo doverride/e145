@@ -25,10 +25,17 @@
 (optional session_optional_unconfined
     (call unconfined_subject (session_t)))
 
+(macro session_create_keyring ((type ARG1))
+    (allow ARG1 self (process (setkeycreate)))
+    (allow ARG1 session_t (key (create search link write))))
+
 (macro session_dynamic_subject_type_transition ((type ARG1))
     (call subject_dynamic_type_transition_subject (ARG1))
     (call dynamic_subject_type_transition_pattern (ARG1
         session_t)))
+
+(macro session_send_signal ((type ARG1))
+    (allow ARG1 session_t (process (signal))))
 
 (macro session_setsched ((type ARG1))
     (allow ARG1 session_t (process (setsched))))

@@ -361,11 +361,18 @@
 (macro files_var_log_object ((type ARG1))
     (typeattributeset is_log_file_object ARG1))
 
+(macro files_var_log_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
+    ARG4))
+    (call filetrans_pattern (ARG1 var_log_t ARG2 ARG3 ARG4)))
+
 (macro files_usr_object ((type ARG1))
     (typeattributeset is_usr_file_object ARG1))
 
 (macro files_run_object ((type ARG1))
     (typeattributeset is_run_file_object ARG1))
+
+(macro files_list_run ((type ARG1))
+    (allow ARG1 run_t (dirs (list))))
 
 (macro files_run_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))

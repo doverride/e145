@@ -1,0 +1,385 @@
+(class passwd (passwd chfn chsh rootok crontab))
+
+(roleattribute is_authconfig_role)
+(roleattribute is_chkpwd_role)
+(roleattribute is_updpwd_role)
+
+(typeattribute is_login_program_subject)
+(typeattribute is_nsswitch_client_subject)
+(typeattribute is_pam_client_subject)
+
+(typeattribute has_unconfined_access_to_auth_assets)
+
+(typeattribute can_read_shadow_passwords)
+(typeattribute
+    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets)
+
+(typeattribute can_write_shadow_passwords)
+(typeattribute
+    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets)
+
+(typeattribute can_relabelto_shadow_passwords)
+(typeattribute
+    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets)
+
+(type authconfig_t)
+(type authconfig_exec_t)
+(call application_subject_entry (authconfig_t authconfig_exec_t))
+(roletype is_authconfig_role authconfig_t)
+
+(context file_authconfig_exec (system_u object_r authconfig_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/authconfig" file file_authconfig_exec)
+
+(type authconfig_pam_conf_t)
+(call files_etc_object (authconfig_pam_conf_t))
+
+(context file_authconfig_pam_conf (system_u object_r authconfig_pam_conf_t
+    ((s0) (s0))))
+(filecon "/etc/pam\.d/fingerprint-auth-ac" file file_authconfig_pam_conf)
+(filecon "/etc/pam\.d/password-auth-ac" file file_authconfig_pam_conf)
+(filecon "/etc/pam\.d/postlogin-ac" file file_authconfig_pam_conf)
+(filecon "/etc/pam\.d/smartcard-auth-ac" file file_authconfig_pam_conf)
+(filecon "/etc/pam\.d/system-auth-ac" file file_authconfig_pam_conf)
+
+(type authconfig_env_t)
+(call files_env_object (authconfig_env_t))
+
+(context file_authconfig_env (system_u object_r authconfig_env_t ((s0)
+    (s0))))
+(filecon "/etc/sysconfig/authconfig" file file_authconfig_env)
+
+(type authconfig_var_lib_t)
+(call files_var_lib_object (authconfig_var_lib_t))
+
+(context file_authconfig_var_lib (system_u object_r authconfig_var_lib_t
+    ((s0) (s0))))
+(filecon "/var/lib/authconfig(/.*)?" any file_authconfig_var_lib)
+
+(type chkpwd_t)
+(type chkpwd_exec_t)
+(call application_subject_entry (chkpwd_t chkpwd_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (chkpwd_t chkpwd_exec_t))
+(roletype is_chkpwd_role chkpwd_t)
+
+(context file_chkpwd_exec (system_u object_r chkpwd_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/unix_chkpwd" file file_chkpwd_exec)
+
+(type nsswitch_conf_t)
+(call files_etc_object (nsswitch_conf_t))
+
+(context file_nsswitch_conf (system_u object_r nsswitch_conf_t ((s0) (s0))))
+(filecon "/etc/nsswitch\.conf.*" file file_nsswitch_conf)
+
+(type pam_t)
+(call subject_common_subject (pam_t))
+
+(type pam_exec_t)
+(call subject_entry (pam_t pam_exec_t))
+(roletype system_r pam_t)
+
+(context file_pam_exec (system_u object_r pam_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/pam_timestamp_check" file file_pam_exec)
+
+(type pam_conf_t)
+(call files_etc_object (pam_conf_t))
+
+(context file_pam_conf (system_u object_r pam_conf_t ((s0) (s0))))
+(filecon "/etc/pam\.d(/.*)?" file file_pam_conf)
+(filecon "/etc/security(/.*)?" file file_pam_conf)
+
+(type pam_run_t)
+(call files_run_object (pam_run_t))
+
+(context file_pam_run (system_u object_r pam_run_t ((s0) (s0))))
+(filecon "/run/sepermit(/.*)?" any file_pam_run)
+
+(type pam_console_t)
+(type pam_console_exec_t)
+(call application_subject_entry (pam_console_t pam_console_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (pam_console_t pam_console_exec_t))
+
+(context file_pam_console_exec (system_u object_r pam_console_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/pam_console_apply" file file_pam_console_exec)
+
+(type pam_console_run_t)
+(call files_run_object (pam_console_run_t))
+
+(context file_pam_console_run (system_u object_r pam_console_run_t
+    ((s0) (s0))))
+(filecon "/run/console(/.*)?" any file_pam_console_run)
+
+(type updpwd_t)
+(type updpwd_exec_t)
+(call application_subject_entry (updpwd_t updpwd_exec_t))
+(roleattributeset is_updpwd_role system_r)
+(roletype is_updpwd_role updpwd_t)
+
+(context file_updpwd_exec (system_u object_r updpwd_exec_t
+    ((s0) (s0))))
+(filecon "/usr/sbin/unix_update" file file_updpwd_exec)
+
+(type utempter_t)
+(call subject_common_subject (utempter_t))
+
+(type utempter_exec_t)
+(call subject_entry (utempter_t utempter_exec_t))
+(roletype system_r utempter_t)
+
+(context file_utempter_exec (system_u object_r utempter_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/utempter/utempter" file file_utempter_exec)
+
+(type password_t)
+(call files_etc_object (password_t))
+
+(context file_password (system_u object_r password_t ((s0) (s0))))
+(filecon "/etc/passwd\.lock" file file_password)
+(filecon "/etc/passwd\.adjunct.*" file file_password)
+(filecon "/etc/\.pwd\.lock" file file_password)
+(filecon "/etc/passwd[-\+]?" file file_password)
+(filecon "/etc/passwd\.OLD" file file_password)
+(filecon "/etc/ptmptmp" file file_password)
+(filecon "/etc/group[-\+]?" file file_password)
+
+(type faillog_t)
+(call files_var_log_object (faillog_t))
+
+(context file_faillog (system_u object_r faillog_t ((s0) (s0))))
+(filecon "/var/log/btmp.*" file file_faillog)
+(filecon "/var/log/faillog" file file_faillog)
+(filecon "/var/log/tallylog" file file_faillog)
+
+(filecon "/run/faillock(/.*)?" any file_faillog)
+
+(type lastlog_t)
+(call files_var_log_object (lastlog_t))
+
+(context file_lastlog (system_u object_r lastlog_t ((s0) (s0))))
+(filecon "/var/log/lastlog" file file_lastlog)
+
+(type wtmp_t)
+(call files_var_log_object (wtmp_t))
+
+(context file_wtmp (system_u object_r wtmp_t ((s0) (s0))))
+(filecon "/var/log/wtmp.*" file file_wtmp)
+
+(type shadow_t)
+(call files_auth_object (shadow_t))
+
+(context file_shadow (system_u object_r shadow_t ((s0) (s0))))
+(filecon "/var/db/shadow.*" file file_shadow)
+(filecon "/etc/group\.lock" file file_shadow)
+(filecon "/etc/gshadow.*" file file_shadow)
+(filecon "/etc/nshadow.*" file file_shadow)
+(filecon "/etc/shadow.*" file file_shadow)
+(filecon "/etc/security/opasswd" file file_shadow)
+(filecon "/etc/security/opasswd\.old" file file_shadow)
+
+(allow is_login_program_subject self (capability (setuid setgid chown)))
+(allow is_login_program_subject self (process (setexec setsched)))
+
+(call system_read_generic_proc_files (is_login_program_subject))
+
+(call selinux_getattr_filesystems (is_login_program_subject))
+(call selinux_compute_user_contexts (is_login_program_subject))
+(call selinux_compute_relabel_context (is_login_program_subject))
+(call selinux_validate_context (is_login_program_subject))
+
+(call auth_pam_client_subject (is_login_program_subject))
+
+; (optional login_program_subject_optional_dbus
+    ; (call dbus_system_client_subject (is_login_program_subject)))
+
+; (optional login_program_subject_optional_logind
+    ; (call logind_dbus_chat (is_login_program_subject))
+    ; (call logind_read_run_files (is_login_program_subject)))
+
+(optional login_program_subject_optional_miscfiles
+    (call miscfiles_read_localization_files (is_login_program_subject)))
+
+; (optional login_program_subject_optional_seutil
+    ; (call seutil_read_config_files (is_login_program_subject))
+    ; (call seutil_search_default_context (is_login_program_subject))
+    ; (call seutil_read_default_context_files (is_login_program_subject)))
+
+(optional login_program_subject_optional_session
+    (call session_create_keyring (is_login_program_subject))
+    (call session_send_signal (is_login_program_subject)))
+
+; (optional login_program_subject_optional_utmp
+    ; (call utmp_rw_run_files (is_login_program_subject)))
+
+(allow is_nsswitch_client_subject self (key (all)))
+
+(call auth_read_nsswitch_config_files (is_nsswitch_client_subject))
+(call auth_read_passwd_files (is_nsswitch_client_subject))
+
+; /var/run/nscd/socket
+(call files_list_run (is_nsswitch_client_subject))
+
+(optional auth_optional_dns
+    (call dns_resolve_client_subject (is_nsswitch_client_subject)))
+
+(call auth_subtrans_chkpwd (is_pam_client_subject))
+(call auth_subtrans_updpwd (is_pam_client_subject))
+
+(call auth_execute_pam_executable_files (is_pam_client_subject))
+
+(call auth_append_wtmp_log_files (is_pam_client_subject))
+(call auth_read_wtmp_log_files (is_pam_client_subject))
+(call auth_dontaudit_write_wtmp_log_files (is_pam_client_subject))
+
+(call auth_read_pam_config_files (is_pam_client_subject))
+
+(call auth_create_faillog_log_files (is_pam_client_subject))
+(call auth_rw_faillog_log_files (is_pam_client_subject))
+(call auth_var_log_filetrans_faillog_files (is_pam_client_subject))
+
+(call auth_create_lastlog_log_files (is_pam_client_subject))
+(call auth_rw_lastlog_log_files (is_pam_client_subject))
+(call auth_var_log_filetrans_lastlog_files (is_pam_client_subject))
+
+(call auth_nsswitch_client_subject (is_pam_client_subject))
+
+; (optional auth_optional_audit
+    ; (call audit_client_subject (is_pam_client_subject)))
+
+; (optional auth_optional_journal
+    ; (call journal_client_subject (is_pam_client_subject)))
+
+(allow chkpwd_t self (capability (dac_override)))
+(allow chkpwd_t self create_unix_stream_socket_perms)
+
+(call system_read_sysctl_crypto_files (chkpwd_t))
+
+(call selinux_get_filesystems_mount (chkpwd_t))
+
+(call terminal_dontaudit_use_console_nodes (chkpwd_t))
+(call terminal_dontaudit_use_unallocated_tty_nodes (chkpwd_t))
+
+(call auth_read_shadow_files (chkpwd_t))
+(call auth_nsswitch_client_subject (chkpwd_t))
+
+(optional chkpwd_optional_miscfiles
+    (call miscfiles_read_localization_files (chkpwd_t)))
+
+(typeattributeset
+    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        (not (has_unconfined_access_to_auth_assets
+            can_read_shadow_passwords)))
+
+(neverallow
+    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        shadow_t (file (read)))
+
+(typeattributeset
+    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        (not (has_unconfined_access_to_auth_assets
+            can_write_shadow_passwords)))
+
+(neverallow
+    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        shadow_t (file (create write)))
+
+(typeattributeset
+    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        (not (has_unconfined_access_to_auth_assets
+            can_relabelto_shadow_passwords)))
+
+(neverallow
+    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        shadow_t (file (relabelto)))
+
+(allow has_unconfined_access_to_auth_assets self (passwd (all)))
+
+(allow has_unconfined_access_to_auth_assets shadow_t
+    all_file_perms_except_execmod_and_entrypoint)
+
+(macro auth_login_program_subject ((type ARG1))
+    (call subject_common_subject (ARG1))
+    (call subject_subj_id_change_exemption (ARG1))
+    (call subject_role_change_exemption (ARG1))
+    (call subject_obj_id_change_exemption (ARG1))
+    (typeattributeset is_login_program_subject ARG1)
+    (roletype system_r ARG1))
+
+(macro auth_execute_pam_executable_files ((type ARG1))
+    (call can_exec (ARG1 pam_exec_t)))
+
+(macro auth_subtrans_authconfig ((type ARG1))
+    (call subtrans_pattern (ARG1 authconfig_exec_t authconfig_t)))
+
+(macro auth_run_authconfig ((type ARG1)(role ARG2))
+    (call auth_subtrans_authconfig (ARG1))
+    (roleattributeset is_authconfig_role (ARG2)))
+
+(macro auth_subtrans_chkpwd ((type ARG1))
+    (call subtrans_pattern (ARG1 chkpwd_exec_t chkpwd_t))
+    (call auth_dontaudit_read_shadow_files (ARG1)))
+
+(macro auth_run_chkpwd ((type ARG1)(role ARG2))
+    (call auth_subtrans_chkpwd (ARG1))
+    (roleattributeset is_chkpwd_role (ARG2)))
+
+(macro auth_subtrans_updpwd ((type ARG1))
+    (call subtrans_pattern (ARG1 updpwd_exec_t updpwd_t))
+    (call auth_dontaudit_read_shadow_files (ARG1)))
+
+(macro auth_run_updpwd ((type ARG1)(role ARG2))
+    (call auth_subtrans_updpwd (ARG1))
+    (roleattributeset is_updpwd_role (ARG2)))
+
+(macro auth_append_wtmp_log_files ((type ARG1))
+    (allow ARG1 wtmp_t append_file_perms))
+
+(macro auth_read_wtmp_log_files ((type ARG1))
+    (allow ARG1 wtmp_t read_file_perms))
+
+(macro auth_create_faillog_log_files ((type ARG1))
+    (allow ARG1 faillog_t create_file_perms))
+
+(macro auth_rw_faillog_log_files ((type ARG1))
+    (allow ARG1 faillog_t rw_file_perms))
+
+(macro auth_var_log_filetrans_faillog_files ((type ARG1))
+    (call files_var_log_filetrans (ARG1 faillog_t file "tallylog"))
+    (call files_var_log_filetrans (ARG1 faillog_t file "btmp")))
+
+(macro auth_create_lastlog_log_files ((type ARG1))
+    (allow ARG1 lastlog_t create_file_perms))
+
+(macro auth_rw_lastlog_log_files ((type ARG1))
+    (allow ARG1 lastlog_t rw_file_perms))
+
+(macro auth_var_log_filetrans_lastlog_files ((type ARG1))
+    (call files_var_log_filetrans (ARG1 lastlog_t file "lastlog")))
+
+(macro auth_read_nsswitch_config_files ((type ARG1))
+    (allow ARG1 nsswitch_conf_t read_file_perms))
+
+(macro auth_dontaudit_write_wtmp_log_files ((type ARG1))
+    (dontaudit ARG1 wtmp_t write_file_perms))
+
+(macro auth_read_pam_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 pam_conf_t pam_conf_t)))
+
+(macro auth_read_passwd_files ((type ARG1))
+    (allow ARG1 password_t read_file_perms))
+
+(macro auth_dontaudit_read_shadow_files ((type ARG1))
+    (dontaudit ARG1 shadow_t read_file_perms))
+
+(macro auth_read_shadow_files ((type ARG1))
+    (allow ARG1 shadow_t read_file_perms)
+    (typeattributeset can_read_shadow_passwords ARG1))
+
+(macro auth_nsswitch_client_subject ((type ARG1))
+    (typeattributeset is_nsswitch_client_subject ARG1))
+
+(macro auth_pam_client_subject ((type ARG1))
+    (typeattributeset is_pam_client_subject ARG1))
+
+(macro auth_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_auth_assets ARG1))

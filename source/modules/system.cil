@@ -356,6 +356,9 @@
     (call read_files_pattern (ARG1 proc_t proc_kmsg_t))
     (typeattributeset can_receive_kernel_messages ARG1))
 
+(macro system_read_sysctl_crypto_files ((type ARG1))
+    (call read_files_pattern (ARG1 sysctl_crypto_t sysctl_crypto_t)))
+
 (macro system_rw_sysctl_security_files ((type ARG1))
     (typeattributeset
         can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object

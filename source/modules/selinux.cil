@@ -91,6 +91,14 @@
 (macro selinux_boolean_object ((type ARG1))
     (typeattributeset is_bool_file_object ARG1))
 
+(macro selinux_compute_relabel_context ((type ARG1))
+    (call rw_files_pattern (ARG1 security_t security_t))
+    (allow ARG1 security_t (security (compute_relabel))))
+
+(macro selinux_compute_user_contexts ((type ARG1))
+    (call rw_files_pattern (ARG1 security_t security_t))
+    (allow ARG1 security_t (security (compute_user))))
+
 (macro selinux_getattr_filesystems ((type ARG1))
     (allow ARG1 security_t (filesystem (getattr))))
 
@@ -130,6 +138,10 @@
     (allow ARG1 security_t (security (setsecparam)))
     (auditallow ARG1 security_t (security (setsecparam)))
     (typeattributeset can_setsecparam ARG1))
+
+(macro selinux_validate_context ((type ARG1))
+    (call rw_files_pattern (ARG1 security_t security_t))
+    (allow ARG1 security_t (security (check_context))))
 
 (macro selinux_unconfined ((type ARG1))
     (typeattributeset has_unconfined_access_to_selinux_assets ARG1))

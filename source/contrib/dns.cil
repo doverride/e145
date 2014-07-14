@@ -48,7 +48,7 @@
 (macro dns_read_resolv_config_files ((type ARG1))
     (allow ARG1 resolv_conf_t read_file_perms))
 
-(macro dns_resolve_client ((type ARG1))
+(macro dns_resolve_client_subject ((type ARG1))
     (typeattributeset is_dns_resolve_client_subject ARG1))
 
 (macro dns_tcp_connect_dns_port ((type ARG1))
