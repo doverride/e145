@@ -1,8 +1,8 @@
-(boolean unconfined_execheap true)
-(boolean unconfined_execmem true)
-(boolean unconfined_execstack true)
-(boolean unconfined_execmod true)
-(boolean unconfined_ptrace true)
+(boolean unconfined_execheap false)
+(boolean unconfined_execmem false)
+(boolean unconfined_execstack false)
+(boolean unconfined_execmod false)
+(boolean unconfined_ptrace false)
 
 (type unconfined_execheap_t)
 (call selinux_boolean_object (unconfined_execheap_t))
