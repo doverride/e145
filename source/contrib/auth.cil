@@ -339,6 +339,7 @@
     (allow ARG1 wtmp_t read_file_perms))
 
 (macro auth_create_faillog_log_files ((type ARG1))
+    (call files_rw_var_log_dirs (ARG1))
     (allow ARG1 faillog_t create_file_perms))
 
 (macro auth_rw_faillog_log_files ((type ARG1))
@@ -349,6 +350,7 @@
     (call files_var_log_filetrans (ARG1 faillog_t file "btmp")))
 
 (macro auth_create_lastlog_log_files ((type ARG1))
+    (call files_rw_var_log_dirs (ARG1))
     (allow ARG1 lastlog_t create_file_perms))
 
 (macro auth_rw_lastlog_log_files ((type ARG1))

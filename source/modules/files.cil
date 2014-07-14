@@ -361,6 +361,9 @@
 (macro files_var_log_object ((type ARG1))
     (typeattributeset is_log_file_object ARG1))
 
+(macro files_rw_var_log_dirs ((type ARG1))
+    (allow ARG1 var_log_t rw_dir_perms))
+
 (macro files_var_log_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 var_log_t ARG2 ARG3 ARG4)))
