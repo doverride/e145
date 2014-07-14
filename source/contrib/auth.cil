@@ -178,6 +178,33 @@
 (filecon "/etc/security/opasswd" file file_shadow)
 (filecon "/etc/security/opasswd\.old" file file_shadow)
 
+(typeattributeset
+    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        (not (has_unconfined_access_to_auth_assets
+            can_read_shadow_passwords)))
+
+(neverallow
+    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        shadow_t (file (read)))
+
+(typeattributeset
+    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        (not (has_unconfined_access_to_auth_assets
+            can_write_shadow_passwords)))
+
+(neverallow
+    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        shadow_t (file (create write)))
+
+(typeattributeset
+    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        (not (has_unconfined_access_to_auth_assets
+            can_relabelto_shadow_passwords)))
+
+(neverallow
+    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets
+        shadow_t (file (relabelto)))
+
 (allow is_login_program_subject self (capability (setuid setgid chown)))
 (allow is_login_program_subject self (process (setexec setsched)))
 
@@ -265,33 +292,6 @@
 
 (optional chkpwd_optional_miscfiles
     (call miscfiles_read_localization_files (chkpwd_t)))
-
-(typeattributeset
-    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        (not (has_unconfined_access_to_auth_assets
-            can_read_shadow_passwords)))
-
-(neverallow
-    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        shadow_t (file (read)))
-
-(typeattributeset
-    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        (not (has_unconfined_access_to_auth_assets
-            can_write_shadow_passwords)))
-
-(neverallow
-    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        shadow_t (file (create write)))
-
-(typeattributeset
-    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        (not (has_unconfined_access_to_auth_assets
-            can_relabelto_shadow_passwords)))
-
-(neverallow
-    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        shadow_t (file (relabelto)))
 
 (allow has_unconfined_access_to_auth_assets self (passwd (all)))
 
