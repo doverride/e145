@@ -4,7 +4,7 @@
 
 (typeattribute is_iptables_file_object)
 (typeattributeset is_iptables_file_object (iptables_conf_t iptables_env_t
-    iptables_unit_t iptables_lock_t))
+    iptables_unit_t iptables_lock_t iptables_var_lib_t))
 
 (type iptables_t)
 (type iptables_exec_t)
@@ -40,6 +40,15 @@
 (filecon "/etc/sysconfig/ip6tables-config" file file_iptables_env)
 (filecon "/etc/sysconfig/iptables-config" file file_iptables_env)
 
+(type iptables_lock_t)
+(call files_run_lock_object (iptables_lock_t))
+
+(context file_iptables_lock (system_u object_r iptables_lock_t ((s0)
+    (s0))))
+(filecon "/run/lock/subsys/ebtables" file file_iptables_lock)
+(filecon "/run/lock/subsys/iptables" file file_iptables_lock)
+(filecon "/run/lock/subsys/ip6tables" file file_iptables_lock)
+
 (type iptables_unit_t)
 (call files_object (iptables_unit_t)) ; temporary hack for object_roletype
 ; (call systemd_unit_object (iptables_unit_t))
@@ -50,14 +59,12 @@
 (filecon "/usr/lib/systemd/system/[^/]*iptables.*" file file_iptables_unit)
 (filecon "/usr/lib/systemd/system/[^/]*ip6tables.*" file file_iptables_unit)
 
-(type iptables_lock_t)
-(call files_run_lock_object (iptables_lock_t))
+(type iptables_var_lib_t)
+(call files_var_lib_object (iptables_var_lib_t))
 
-(context file_iptables_lock (system_u object_r iptables_lock_t ((s0)
+(context file_iptables_var_lib (system_u object_r iptables_var_lib_t ((s0)
     (s0))))
-(filecon "/run/lock/subsys/ebtables" file file_iptables_lock)
-(filecon "/run/lock/subsys/iptables" file file_iptables_lock)
-(filecon "/run/lock/subsys/ip6tables" file file_iptables_lock)
+(filecon "/var/lib/ebtables(/.*)?" file file_iptables_var_lib)
 
 (allow iptables_t self (capability (net_raw net_admin)))
 (allow iptables_t self create_rawip_socket_perms)
