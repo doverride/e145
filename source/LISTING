@@ -9,6 +9,7 @@ isid.cil
 miscpatterns.cil
 mls.cil
 contrib/application.cil
+contrib/audit.cil
 contrib/auth.cil
 contrib/dhcp.cil
 contrib/dm.cil

@@ -179,27 +179,27 @@
 (call files_mnt_object (run_t))
 
 (context file_run (system_u object_r run_t ((s0) (s0))))
-(filecon "/var/run/.*" any file_run)
-(filecon "/var/run" symlink file_run)
-(filecon "/var/run" dir file_run)
+(filecon "/run/.*" any file_run)
+(filecon "/run" symlink file_run)
+(filecon "/run" dir file_run)
 
 (type run_lock_t)
 (call files_run_lock_object (run_lock_t))
 (call files_mnt_object (run_lock_t))
 
 (context file_run_lock (system_u object_r run_lock_t ((s0) (s0))))
-(filecon "/var/lock/.*" any file_run_lock)
-(filecon "/var/lock" symlink file_run_lock)
-(filecon "/var/lock" dir file_run_lock)
+(filecon "/run/lock/.*" any file_run_lock)
+(filecon "/run/lock" symlink file_run_lock)
+(filecon "/run/lock" dir file_run_lock)
 
 (type run_user_root_t)
 (call files_mnt_object (run_user_root_t))
 
 (context file_run_user_root (system_u object_r run_user_root_t ((s0)
     mls_systemhigh)))
-(filecon "/var/run/user/.*" any ())
-(filecon "/var/run/user" dir file_run_user_root)
-(filecon "/var/run/user" symlink (system_u object_r run_user_root_t
+(filecon "/run/user/.*" any ())
+(filecon "/run/user" dir file_run_user_root)
+(filecon "/run/user" symlink (system_u object_r run_user_root_t
     ((s0) (s0))))
 
 (type tmp_t)
@@ -423,6 +423,12 @@
 
 (macro files_audit_access_all_mnt_dirs ((type ARG1))
     (dontaudit ARG1 is_mnt_file_object (dir (audit_access))))
+
+(macro files_getattr_all_files ((type ARG1)) ; for auditctl to add watches
+    (allow ARG1 is_file_object (file (getattr))))
+
+(macro files_getattr_all_dirs ((type ARG1)) ; for auditctl to add watches
+    (allow ARG1 is_file_object (dir (getattr))))
 
 (macro files_mounton_all_mnt_dirs ((type ARG1))
     (allow ARG1 is_mnt_file_object (dir (mounton))))
