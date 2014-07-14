@@ -167,6 +167,7 @@
 
 (type shadow_t)
 (call files_auth_object (shadow_t))
+(call files_all_files_exception (shadow_t))
 
 (context file_shadow (system_u object_r shadow_t ((s0) (s0))))
 (filecon "/var/db/shadow.*" file file_shadow)
