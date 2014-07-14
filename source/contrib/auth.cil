@@ -271,8 +271,8 @@
 
 (call auth_nsswitch_client_subject (is_pam_client_subject))
 
-; (optional auth_optional_audit
-    ; (call audit_client_subject (is_pam_client_subject)))
+(optional auth_optional_audit
+    (call audit_client_subject (is_pam_client_subject)))
 
 ; (optional auth_optional_journal
     ; (call journal_client_subject (is_pam_client_subject)))

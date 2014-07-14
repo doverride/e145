@@ -1,0 +1,117 @@
+(roleattribute is_iptables_role)
+
+(typeattribute is_iptables_admin_subject)
+
+(typeattribute is_iptables_file_object)
+(typeattributeset is_iptables_file_object (iptables_conf_t iptables_env_t
+    iptables_unit_t iptables_lock_t))
+
+(type iptables_t)
+(type iptables_exec_t)
+(call application_subject_entry (iptables_t iptables_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (iptables_t iptables_exec_t))
+(roletype is_iptables_role iptables_t)
+
+(context file_iptables_exec (system_u object_r iptables_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/ebtables" file file_iptables_exec)
+(filecon "/usr/libexec/iptables/ip6tables\.init" file file_iptables_exec)
+(filecon "/usr/libexec/iptables/iptables\.init" file file_iptables_exec)
+(filecon "/usr/bin/ebtables.*" file file_iptables_exec)
+(filecon "/usr/sbin/xtables-multi" file file_iptables_exec)
+
+(type iptables_conf_t)
+(call files_etc_object (iptables_conf_t))
+
+(context file_iptables_conf (system_u object_r iptables_conf_t ((s0)
+    (s0))))
+(filecon "/etc/ethertypes" file file_iptables_conf)
+(filecon "/etc/sysconfig/ebtables.*" file file_iptables_conf)
+(filecon "/etc/sysconfig/iptables.*" file file_iptables_conf)
+(filecon "/etc/sysconfig/ip6tables.*" file file_iptables_conf)
+(filecon "/etc/xtables(/.*)?" any file_iptables_conf)
+
+(type iptables_env_t)
+(call files_env_object (iptables_env_t))
+
+(context file_iptables_env (system_u object_r iptables_env_t ((s0)
+    (s0))))
+(filecon "/etc/sysconfig/ebtables-config" file file_iptables_env)
+(filecon "/etc/sysconfig/ip6tables-config" file file_iptables_env)
+(filecon "/etc/sysconfig/iptables-config" file file_iptables_env)
+
+(type iptables_unit_t)
+(call files_object (iptables_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (iptables_unit_t))
+
+(context file_iptables_unit (system_u object_r iptables_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*ebtables.*" file file_iptables_unit)
+(filecon "/usr/lib/systemd/system/[^/]*iptables.*" file file_iptables_unit)
+(filecon "/usr/lib/systemd/system/[^/]*ip6tables.*" file file_iptables_unit)
+
+(type iptables_lock_t)
+(call files_run_lock_object (iptables_lock_t))
+
+(context file_iptables_lock (system_u object_r iptables_lock_t ((s0)
+    (s0))))
+(filecon "/run/lock/subsys/ebtables" file file_iptables_lock)
+(filecon "/run/lock/subsys/iptables" file file_iptables_lock)
+(filecon "/run/lock/subsys/ip6tables" file file_iptables_lock)
+
+(allow iptables_t self (capability (net_raw net_admin)))
+(allow iptables_t self create_rawip_socket_perms)
+(allow iptables_t self create_unix_stream_socket_perms)
+(allow iptables_t self rw_fifo_file_perms)
+
+(allow iptables_t iptables_conf_t manage_file_perms)
+(call files_etc_filetrans (iptables_t iptables_conf_t file "ip6tables"))
+(call files_etc_filetrans (iptables_t iptables_conf_t file "iptables"))
+
+(allow iptables_t iptables_lock_t manage_file_perms)
+(call files_run_lock_filetrans (iptables_t iptables_lock_t file "*"))
+
+(call can_exec (iptables_t iptables_exec_t))
+
+(call system_getattr_proc_filesystems (iptables_t))
+(call system_read_generic_proc_files (iptables_t))
+(call system_read_proc_net_files (iptables_t))
+(call system_read_sysctl_usermodehelper_files (iptables_t))
+(call system_request_load_module (iptables_t))
+
+(call commands_execute_bin_files (iptables_t))
+(call commands_mprot_read_shell_files (iptables_t))
+
+(call files_read_generic_etc_files (iptables_t))
+
+(call iptables_read_env_files (iptables_t))
+
+(optional iptables_optional_auth
+    (call auth_nsswitch_client_subject (iptables_t)))
+
+(optional iptables_optional_miscfiles
+    (call miscfiles_read_localization_files (iptables_t)))
+
+(optional iptables_optional_kmod
+    (call kmod_read_modules_config_files (iptables_t))
+    (call kmod_run (iptables_t is_iptables_role))) ; /usr/libexec/iptables6?.init
+
+(allow is_iptables_admin_subject iptables_t signal_perms)
+(call ps_subject_pattern (is_iptables_admin_subject iptables_t))
+
+(allow is_iptables_admin_subject iptables_unit_t (service (all)))
+
+(call admin_pattern (is_iptables_admin_subject is_iptables_file_object))
+
+(macro iptables_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 iptables_exec_t iptables_t)))
+
+(macro iptables_run ((type ARG1)(role ARG2))
+    (call iptables_subtrans (ARG1))
+    (roleattributeset is_iptables_role ARG2))
+
+(macro iptables_read_env_files ((type ARG1))
+    (allow ARG1 iptables_env_t read_file_perms))
+
+(macro iptables_admin ((type ARG1))
+    (typeattributeset is_iptables_admin_subject ARG1))

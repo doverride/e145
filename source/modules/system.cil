@@ -335,6 +335,9 @@
 (macro system_getattr_core_if ((type ARG1))
     (allow ARG1 proc_kcore_t (file (getattr))))
 
+(macro system_getattr_proc_filesystems ((type ARG1))
+    (allow ARG1 proc_t (filesystem (getattr))))
+
 (macro system_link_keyring ((type ARG1))
     (allow ARG1 system_t (key (search link))))
 
@@ -346,6 +349,9 @@
     (call read_files_pattern (ARG1 proc_t proc_kcore_t))
     (typeattributeset can_dump_kernel ARG1))
 
+(macro system_request_load_module ((type ARG1))
+    (allow ARG1 system_t (system (module_request))))
+
 (macro system_list_debugfs ((type ARG1))
     (allow ARG1 debugfs_t (dirs (list))))
 
@@ -356,6 +362,9 @@
     (call read_files_pattern (ARG1 proc_t proc_kmsg_t))
     (typeattributeset can_receive_kernel_messages ARG1))
 
+(macro system_read_proc_net_files ((type ARG1))
+    (call read_files_pattern (ARG1 proc_net_t proc_net_t)))
+
 (macro system_read_sysctl_crypto_files ((type ARG1))
     (call read_files_pattern (ARG1 sysctl_crypto_t sysctl_crypto_t)))
 
@@ -364,6 +373,9 @@
         can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
             ARG1)
     (allow ARG1 sysctl_security_t rw_file_perms))
+
+(macro system_read_sysctl_usermodehelper_files ((type ARG1))
+    (call read_files_pattern (ARG1 sysctl_usermodehelper_t sysctl_usermodehelper_t)))
 
 (macro system_rw_sysctl_usermodehelper_files ((type ARG1))
     (typeattributeset

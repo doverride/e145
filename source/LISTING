@@ -18,6 +18,7 @@ contrib/fstools.cil
 contrib/hostname.cil
 contrib/hwclock.cil
 contrib/ip.cil
+contrib/iptables.cil
 contrib/kmod.cil
 contrib/libraries.cil
 contrib/lvm.cil

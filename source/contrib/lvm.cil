@@ -114,7 +114,7 @@
 
 (allow lvm_t lvm_lock_t manage_dir_perms)
 (allow lvm_t lvm_lock_t manage_file_perms)
-(call files_lock_filetrans (lvm_t lvm_lock_t dir "*"))
+(call files_run_lock_filetrans (lvm_t lvm_lock_t dir "*"))
 
 (call system_get_sysvipc_info (lvm_t))
 (call system_getattr_core_if (lvm_t))
