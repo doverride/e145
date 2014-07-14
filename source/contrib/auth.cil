@@ -85,8 +85,8 @@
 (call files_etc_object (pam_conf_t))
 
 (context file_pam_conf (system_u object_r pam_conf_t ((s0) (s0))))
-(filecon "/etc/pam\.d(/.*)?" file file_pam_conf)
-(filecon "/etc/security(/.*)?" file file_pam_conf)
+(filecon "/etc/pam\.d(/.*)?" any file_pam_conf)
+(filecon "/etc/security(/.*)?" any file_pam_conf)
 
 (type pam_run_t)
 (call files_run_object (pam_run_t))
