@@ -117,6 +117,12 @@
     (call terminal_serial_object (ARG1))
     (typeattributeset is_tty_file_object ARG1))
 
+(macro terminal_getattr_devpts_filesystems ((type ARG1))
+    (allow ARG1 devpts_t (filesystem (getattr))))
+
+(macro terminal_use_generic_pty_files ((type ARG1)) ; /dev/pts/ptmx
+    (allow ARG1 devpts_t rw_term_perms))
+
 (macro terminal_relabel_console_nodes ((type ARG1))
     (allow ARG1 device_console_t relabel_chr_file_perms))
 
@@ -128,6 +134,9 @@
 
 (macro terminal_use_console_nodes ((type ARG1))
     (allow ARG1 device_console_t rw_term_perms))
+
+(macro terminal_use_ptmx_nodes ((type ARG1))
+    (allow ARG1 device_ptmx_t rw_term_perms))
 
 (macro terminal_relabel_unallocated_tty_nodes ((type ARG1))
     (allow ARG1 device_tty_t relabel_chr_file_perms))

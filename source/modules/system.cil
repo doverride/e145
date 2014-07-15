@@ -392,6 +392,9 @@
 (macro system_setsched ((type ARG1))
     (allow ARG1 system_t (process (setsched))))
 
+(macro system_stream_connectto ((type ARG1))
+    (allow ARG1 system_t (unix_stream_socket (connectto))))
+
 (macro system_use_fd ((type ARG1))
     (allow ARG1 system_t (fd (use))))
 

@@ -1,0 +1,139 @@
+(roleattribute is_plymouth_role)
+
+(typeattribute is_plymouth_admin_subject)
+
+(typeattribute is_plymouth_subject)
+(typeattributeset is_plymouth_subject (plymouthd_t plymouth_t))
+
+(typeattribute is_plymouth_file_object)
+(typeattributeset is_plymouth_file_object (plymouthd_conf_t plymouthd_var_lib_t
+    plymouthd_run_t plymouthd_var_spool_t plymouthd_unit_t))
+
+(type plymouth_t)
+(type plymouth_exec_t)
+(call application_subject_entry (plymouth_t plymouth_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (plymouth_t plymouth_exec_t))
+(roletype is_plymouth_role plymouth_t)
+
+(context file_plymouth_exec (system_u object_r plymouth_exec_t ((s0) (s0))))
+(filecon "/usr/bin/plymouth" file file_plymouth_exec)
+
+(type plymouthd_t)
+(type plymouthd_exec_t)
+(call application_subject_entry (plymouthd_t plymouthd_exec_t)) ; temporary hack for object_roletype
+; (call systemd_oneshot_subject_entry (plymouthd_t plymouthd_exec_t))
+
+(context file_plymouthd_exec (system_u object_r plymouthd_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/plymouthd" file file_plymouthd_exec)
+
+(type plymouthd_conf_t)
+(call files_etc_object (plymouthd_conf_t))
+
+(context file_plymouthd_conf (system_u object_r plymouthd_conf_t ((s0) (s0))))
+(filecon "/etc/plymouth(/.*)?" any file_plymouthd_conf)
+
+(type plymouthd_run_t)
+(call files_run_object (plymouthd_run_t))
+
+(context file_plymouthd_run (system_u object_r plymouthd_run_t ((s0) (s0))))
+(filecon "/run/plymouth(/.*)?" any file_plymouthd_run)
+
+(type plymouthd_unit_t)
+(call files_object (plymouthd_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (plymouthd_unit_t))
+
+(context file_plymouthd_unit (system_u object_r plymouthd_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*plymouth-.*" file file_plymouthd_unit)
+
+(type plymouthd_var_lib_t)
+(call files_var_lib_object (plymouthd_var_lib_t))
+
+(context file_plymouthd_var_lib (system_u object_r plymouthd_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/plymouth(/.*)?" any file_plymouthd_var_lib)
+
+(type plymouthd_var_spool_t)
+(call files_var_spool_object (plymouthd_var_spool_t))
+
+(context file_plymouthd_var_spool (system_u object_r plymouthd_var_spool_t ((s0)
+    (s0))))
+(filecon "/var/spool/plymouth(/.*)?" any file_plymouthd_var_spool)
+
+(call system_read_generic_proc_files (is_plymouth_subject))
+
+(call terminal_use_console_nodes (is_plymouth_subject))
+
+(allow plymouth_t self (capability2 (block_suspend)))
+(allow plymouth_t self create_unix_stream_socket_perms)
+
+(call system_stream_connectto (plymouth_t))
+
+(call plymouth_stream_connect_plymouthd (plymouth_t))
+
+(allow plymouthd_t self (capability (sys_tty_config sys_admin)))
+(allow plymouthd_t self (capability2 (block_suspend)))
+(allow plymouthd_t self create_unix_stream_stream_socket_perms)
+(allow plymouthd_t self rw_fifo_file_perms)
+
+(allow plymouthd_t plymouthd_run_t manage_dir_perms)
+(allow plymouthd_t plymouthd_run_t manage_file_perms)
+(call files_run_filetrans (plymouthd_t plymouthd_run_t dir "*"))
+
+(allow plymouthd_t plymouthd_var_lib_t manage_dir_perms)
+(allow plymouthd_t plymouthd_var_lib_t manage_file_perms)
+(call files_var_lib_filetrans (plymouthd_t plymouthd_var_lib_t dir "*"))
+
+(allow plymouthd_t plymouthd_var_spool_t manage_dir_perms)
+(call files_var_spool_filetrans (plymouthd_t plymouthd_var_spool_t dir "*"))
+
+(call devices_read_sysfs_files (plymouthd_t))
+
+(call files_read_generic_usr_files (plymouthd_t))
+
+(call terminal_getattr_devpts_filesystems (plymouthd_t))
+(call terminal_use_generic_pty_files (plymouthd_t))
+(call terminal_use_ptmx_nodes (plymouthd_t))
+(call terminal_use_unallocated_tty_nodes (plymouthd_t))
+
+; (call systemd_send_signal (plymouthd_t))
+
+(optional plymouthd_optional_auth
+    (call auth_nsswitch_client_subject (plymouthd_t)))
+
+(allow is_plymouth_admin_subject is_plymouth_subject signal_perms)
+(call ps_subject_pattern (is_plymouth_admin_subject is_plymouth_subject))
+
+(allow is_plymouth_admin_subject plymouthd_unit_t (service (all)))
+
+(call admin_pattern (is_plymouth_admin_subject is_plymouth_file_object))
+
+(macro plymouth_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 plymouth_exec_t plymouth_t)))
+
+(macro plymouth_run ((type ARG1)(role ARG2))
+    (call plymouth_subtrans (ARG1))
+    (roleattributeset is_plymouth_role ARG2))
+
+(macro plymouth_use_fd_plymouth ((type ARG1))
+    (allow ARG1 plymouth_t (fd (use))))
+
+(macro plymouth_use_fd_plymouthd ((type ARG1))
+    (allow ARG1 plymouthd_t (fd (use))))
+
+(macro plymouth_read_var_lib_files ((type ARG1))
+    (call read_files_pattern (ARG1 plymouthd_var_lib_t plymouthd_var_lib_t)))
+
+(macro plymouth_manage_var_lib_files ((type ARG1))
+    (call manage_files_pattern (ARG1 plymouthd_var_lib_t plymouthd_var_lib_t)))
+
+(macro plymouth_read_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 plymouthd_run_t plymouthd_run_t)))
+
+(macro plymouth_manage_run_files ((type ARG1))
+    (call manage_files_pattern (ARG1 plymouthd_run_t plymouthd_run_t)))
+
+(macro plymouth_stream_connect_plymouthd ((type ARG1))
+    (call stream_connect_pattern (ARG1 plymouthd_run_t plymouthd_run_t plymouthd_t)))
+
+(macro plymouth_admin ((type ARG1))
+    (typeattributeset is_plymouth_admin_subject ARG1))

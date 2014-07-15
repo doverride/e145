@@ -400,6 +400,10 @@
 (macro files_var_spool_object ((type ARG1))
     (typeattributeset is_spool_file_object ARG1))
 
+(macro files_var_spool_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
+    ARG4))
+    (call filetrans_pattern (ARG1 var_spool_t ARG2 ARG3 ARG4)))
+
 (macro files_var_lib_object ((type ARG1))
     (typeattributeset is_lib_file_object ARG1))
 
