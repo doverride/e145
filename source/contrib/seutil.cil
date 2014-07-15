@@ -5,10 +5,10 @@
 (roleattribute is_setfiles_role)
 
 (typeattribute can_write_binary_policy)
-(typeattribute not_associated_with_can_write_binary_policy_or_has_unconfined_access_to_seutil_assets)
+(typeattribute not_associated_with_can_write_binary_policy)
 
 (typeattribute can_relabelto_binary_policy)
-(typeattribute not_associated_with_can_relabelto_binary_policy_or_has_unconfined_access_to_seutil_assets)
+(typeattribute not_associated_with_can_relabelto_binary_policy)
 
 (typeattribute is_seutil_admin_subject)
 
@@ -88,21 +88,21 @@
     object_r selinux_conf_t (mls_systemhigh mls_systemhigh)))
 
 (typeattributeset
-    not_associated_with_can_relabelto_binary_policy_or_has_unconfined_access_to_seutil_assets
+    not_associated_with_can_relabelto_binary_policy
         (not
-            (can_relabelto_binary_policy has_unconfined_access_to_seutil_assets)))
+            (can_relabelto_binary_policy)))
 
 (neverallow
-    not_associated_with_can_relabelto_binary_policy_or_has_unconfined_access_to_seutil_assets
+    not_associated_with_can_relabelto_binary_policy
         policy_conf_t (file (relabelto)))
 
 (typeattributeset
-    not_associated_with_can_write_binary_policy_or_has_unconfined_access_to_seutil_assets
+    not_associated_with_can_write_binary_policy
         (not
-            (can_write_binary_policy has_unconfined_access_to_seutil_assets)))
+            (can_write_binary_policy)))
 
 (neverallow
-    not_associated_with_can_write_binary_policy_or_has_unconfined_access_to_seutil_assets
+    not_associated_with_can_write_binary_policy
         policy_conf_t (file (create write)))
 
 (call selinux_getattr_filesystems (load_policy_t))
@@ -156,21 +156,6 @@
 (call seutil_relabel_policy_config_files (is_seutil_admin_subject))
 
 (allow has_unconfined_access_to_seutil_assets self (context (all)))
-
-(allow has_unconfined_access_to_seutil_assets policy_conf_t
-    all_file_perms_except_execmod_and_entrypoint)
-(allow has_unconfined_access_to_seutil_assets policy_conf_t
-    all_dir_perms_except_execmod)
-(allow has_unconfined_access_to_seutil_assets policy_conf_t
-    all_fifo_file_perms_except_execmod)
-(allow has_unconfined_access_to_seutil_assets policy_conf_t
-    all_lnk_file_perms_except_execmod)
-(allow has_unconfined_access_to_seutil_assets policy_conf_t
-    all_sock_file_perms_except_execmod)
-(allow has_unconfined_access_to_seutil_assets policy_conf_t
-    all_blk_file_perms_except_execmod)
-(allow has_unconfined_access_to_seutil_assets policy_conf_t
-    all_chr_file_perms_except_execmod)
 
 (macro seutil_subtrans_load_policy ((type ARG1))
     (call subtrans_pattern (ARG1 load_policy_exec_t load_policy_t)))

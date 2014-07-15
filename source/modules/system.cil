@@ -413,6 +413,10 @@
 (call system_rw_sysctl_security_files (system_t))
 (call system_rw_sysctl_usermodehelper_files (system_t))
 
+(optional system_optional_auth
+    (call auth_manage_shadow_files (system_t))
+    (call auth_relabel_shadow_files (system_t)))
+
 (optional system_optional_session
     (call session_setsched (system_t))
     (call session_dynamic_subject_type_transition (system_t))

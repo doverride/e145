@@ -23,15 +23,15 @@
 
 (typeattribute can_read_shadow_passwords)
 (typeattribute
-    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets)
+    not_associated_with_can_read_shadow_passwords)
 
 (typeattribute can_write_shadow_passwords)
 (typeattribute
-    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets)
+    not_associated_with_can_write_shadow_passwords)
 
 (typeattribute can_relabelto_shadow_passwords)
 (typeattribute
-    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets)
+    not_associated_with_can_relabelto_shadow_passwords)
 
 (type authconfig_t)
 (type authconfig_exec_t)
@@ -190,30 +190,27 @@
 (filecon "/etc/security/opasswd\.old" file file_shadow)
 
 (typeattributeset
-    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        (not (has_unconfined_access_to_auth_assets
-            can_read_shadow_passwords)))
+    not_associated_with_can_read_shadow_passwords
+        (not (can_read_shadow_passwords)))
 
 (neverallow
-    not_associated_with_can_read_shadow_passwords_or_has_unconfined_access_to_auth_assets
+    not_associated_with_can_read_shadow_passwords
         shadow_t (file (read)))
 
 (typeattributeset
-    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        (not (has_unconfined_access_to_auth_assets
-            can_write_shadow_passwords)))
+    not_associated_with_can_write_shadow_passwords
+        (not (can_write_shadow_passwords)))
 
 (neverallow
-    not_associated_with_can_write_shadow_passwords_or_has_unconfined_access_to_auth_assets
+    not_associated_with_can_write_shadow_passwords
         shadow_t (file (create write)))
 
 (typeattributeset
-    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets
-        (not (has_unconfined_access_to_auth_assets
-            can_relabelto_shadow_passwords)))
+    not_associated_with_can_relabelto_shadow_passwords
+        (not (can_relabelto_shadow_passwords)))
 
 (neverallow
-    not_associated_with_can_relabelto_shadow_passwords_or_has_unconfined_access_to_auth_assets
+    not_associated_with_can_relabelto_shadow_passwords
         shadow_t (file (relabelto)))
 
 (allow is_login_program_subject self (capability (setuid setgid chown)))
@@ -312,9 +309,6 @@
 (call auth_relabel_shadow_files (is_auth_admin_subject))
 
 (allow has_unconfined_access_to_auth_assets self (passwd (all)))
-
-(allow has_unconfined_access_to_auth_assets shadow_t
-    all_file_perms_except_execmod_and_entrypoint)
 
 (macro auth_login_program_subject ((type ARG1))
     (call subject_common_subject (ARG1))
