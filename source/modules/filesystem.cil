@@ -347,6 +347,9 @@
 (macro filesystem_getattr_all_filesystems ((type ARG1))
     (allow ARG1 is_filesystem_object (filesystem (getattr))))
 
+(macro filesystem_read_cgroup_files ((type ARG1))
+    (call read_files_pattern (ARG1 cgroup_t cgroup_t)))
+
 (macro filesystem_list_hugetlbfs ((type ARG1))
     (allow ARG1 hugetlbfs_t (dirs (list))))
 

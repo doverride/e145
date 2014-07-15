@@ -67,6 +67,9 @@
 (optional mount_optional_storage
     (call storage_getattr_fixed_disk_nodes (mount_t)))
 
+(macro mount_exec ((type ARG1))
+    (call can_exec (ARG1 mount_exec_t)))
+
 (macro mount_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 mount_exec_t mount_t)))
 

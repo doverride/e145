@@ -1,0 +1,178 @@
+(typeattribute is_networkmgr_admin_subject)
+
+(typeattribute is_networkmgr_file_object)
+(typeattributeset is_networkmgr_file_object (networkmgr_conf_t
+    networkmgr_run_t networkmgr_var_lib_t networkmgr_dbus_conf_t
+    networkmgr_unit_t))
+
+(type networkmgr_t)
+(type networkmgr_exec_t)
+(call application_subject_entry (networkmgr_t networkmgr_exec_t)) ; temporary hack for object_roletype
+; (call systemd_daemon_subject_entry (networkmgr_t networkmgr_exec_t))
+
+(context file_networkmgr_exec (system_u object_r networkmgr_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/nm-dispatcher\.action" file file_networkmgr_exec)
+(filecon "/usr/sbin/NetworkManager" file file_networkmgr_exec)
+
+(type nm_helper_exec_t)
+(call commands_bin_object (nm_helper_exec_t))
+
+(context file_nm_helper_exec (system_u object_r nm_helper_exec_t ((s0)
+    (s0))))
+(filecon "/etc/NetworkManager/dispatcher\.d/.*" file file_nm_helper_exec)
+(filecon "/usr/libexec/nm-dhcp-helper" file file_nm_helper_exec)
+
+(type networkmgr_conf_t)
+(call files_etc_object (networkmgr_conf_t))
+
+(context file_networkmgr_conf (system_u object_r networkmgr_conf_t ((s0) (s0))))
+(filecon "/etc/NetworkManager(/.*)?" any file_networkmgr_conf)
+
+(type networkmgr_dbus_conf_t)
+(call files_etc_object (networkmgr_dbus_conf_t))
+
+(context file_networkmgr_dbus_conf (system_u object_r networkmgr_dbus_conf_t ((s0)
+    (s0))))
+(filecon "/etc/dbus-1/system\.d/nm-avahi-autoipd\.conf" file file_networkmgr_dbus_conf)
+(filecon "/etc/dbus-1/system\.d/nm-dispatcher\.conf" file file_networkmgr_dbus_conf)
+(filecon "/etc/dbus-1/system\.d/nm-ifcfg-rh\.conf" file file_networkmgr_dbus_conf)
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.NetworkManager\.conf" file
+    file_networkmgr_dbus_conf)
+
+(type networkmgr_run_t)
+(call files_run_object (networkmgr_run_t))
+
+(context file_networkmgr_run (system_u object_r networkmgr_run_t ((s0)
+    (s0))))
+(filecon "/run/NetworkManager(/.*)?" any file_networkmgr_run)
+(filecon "/run/netreport(/.*)?" any file_networkmgr_run)
+
+(type networkmgr_unit_t)
+(call files_object (networkmgr_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (networkmgr_unit_t))
+
+(context file_networkmgr_unit (system_u object_r networkmgr_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*NetworkManager.*" file file_networkmgr_unit)
+
+(type networkmgr_var_lib_t)
+(call files_var_lib_object (networkmgr_var_lib_t))
+
+(context file_networkmgr_var_lib (system_u object_r networkmgr_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/NetworkManager(/.*)?" any file_networkmgr_var_lib)
+
+(allow networkmgr_t self (process (signal setpgid)))
+(allow networkmgr_t self (capability (net_admin)))
+(allow networkmgr_t self create_netlink_socket_perms)
+(allow networkmgr_t self create_netlink_kobject_uevent_socket_perms)
+(allow networkmgr_t self (netlink_route_socket (nlmsg_write)))
+(allow networkmgr_t self create_unix_stream_stream_socket_perms)
+(allow networkmgr_t self rw_fifo_file_perms)
+
+(allow networkmgr_t networkmgr_run_t manage_dir_perms)
+(allow networkmgr_t networkmgr_run_t manage_sock_file_perms)
+(call files_run_filetrans (networkmgr_t networkmgr_run_t dir "*"))
+
+(allow networkmgr_t networkmgr_var_lib_t manage_dir_perms)
+(allow networkmgr_t networkmgr_var_lib_t manage_file_perms)
+(call files_var_lib_filetrans (networkmgr_t networkmgr_var_lib_t dir "*"))
+
+(call can_exec (networkmgr_t nm_helper_exec_t))
+
+(call system_read_generic_proc_files (networkmgr_t))
+(call system_read_proc_net_files (networkmgr_t))
+(call system_request_load_module (networkmgr_t))
+(call system_rw_sysctl_net_files (networkmgr_t))
+
+(call commands_mmap_shell_files (networkmgr_t))
+(call commands_read_bin_files (networkmgr_t))
+
+(call devices_read_sysfs_files (networkmgr_t))
+(call devices_read_urandom (networkmgr_t))
+(call devices_rw_wireless (networkmgr_t))
+
+(call files_read_generic_env_files (networkmgr_t)) ; /etc/sysconfig/init
+(call files_read_generic_etc_files (networkmgr_t)) ; /etc/libnl/classid
+
+(call filesystem_getattr_filesystems (networkmgr_t))
+(call filesystem_read_cgroup_files (networkmgr_t))
+
+(call selinux_get_filesystems_mount (networkmgr_t))
+
+(call networkmgr_read_config_files (networkmgr_t))
+
+(optional networkmgr_optional_auth
+    (call auth_nsswitch_client_subject (networkmgr_t)))
+
+(optional networkmgr_optional_dbus
+    (call dbus_acquire_service_system (networkmgr_t))
+    (call dbus_system_client_subject (networkmgr_t)))
+
+(optional networkmgr_optional_dhcp
+    (call dhcp_read_config_files (networkmgr_t))
+    (call dhcp_read_dhclient_var_lib_files (networkmgr_t))
+    (call dhcp_subtrans_dhclient (networkmgr_t)))
+
+(optional networkmgr_optional_dns
+    (call dns_etc_filetrans_resolv_conf_files (networkmgr_t))
+    (call dns_manage_resolv_config_files (networkmgr_t)))
+
+; (optional networkmgr_optional_hostnamed
+    ; (call hostnamed_read_config_files (networkmgr_t)))
+
+(optional networkmgr_optional_ip
+    (call ip_subtrans (networkmgr_t)))
+
+; (optional networkmgr_optional_journal
+    ; (call journal_client_subject (networkmgr_t)))
+
+; (optional networkmgr_optional_logind
+    ; (call logind_dbus_chat (networkmgr_t))
+    ; (call logind_write_inherited_run_fifo_files (networkmgr_t)))
+
+; (optional networkmgr_optional_machined
+    ; (call machine_read_run_files (networkmgr_t)))
+
+(optional networkmgr_optional_miscfiles
+    (call miscfiles_read_network_environ_files (networkmgr_t))
+    (call miscfiles_read_localization_files (networkmgr_t)))
+
+(optional networkmgr_optional_mount
+    (call mount_exec (networkmgr_t)))
+
+(optional networkmgr_optional_polkit
+    (call polkit_dbus_chat_polkitd (networkmgr_t)))
+
+; (optional networkmgr_optional_ssctl
+    ; (call sysctl_read_config_files (networkmgr_t)))
+
+; (optional networkmgr_optional_udev
+    ; (call udev_read_config_files (networkmgr_t))
+    ; (call udev_read_run_files (networkmgr_t)))
+
+(allow is_networkmgr_admin_subject networkmgr_t signal_perms)
+(call ps_subject_pattern (is_networkmgr_admin_subject networkmgr_t))
+
+(allow is_networkmgr_admin_subject networkmgr_unit_t (service (all)))
+
+(call admin_pattern (is_networkmgr_admin_subject is_networkmgr_file_object))
+
+(macro networkmgr_execute_helper_files ((type ARG1))
+    (call can_exec (ARG1 nm_helper_exec_t)))
+
+(macro networkmgr_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 networkmgr_conf_t networkmgr_conf_t)))
+
+(macro networkmgr_read_var_lib_files ((type ARG1))
+    (call read_files_pattern (ARG1 networkmgr_var_lib_t networkmgr_var_lib_t)))
+
+(macro networkmgr_manage_var_lib_files ((type ARG1))
+    (call manage_files_pattern (ARG1 networkmgr_var_lib_t networkmgr_var_lib_t)))
+
+(macro networkmgr_stream_connect ((type ARG1))
+    (call stream_connect_pattern (ARG1 networkmgr_run_t networkmgr_run_t
+        networkmgr_t)))
+
+(macro networkmgr_admin ((type ARG1))
+    (typeattributeset is_networkgr_admin_subject ARG1))

@@ -348,6 +348,9 @@
 (macro files_env_object ((type ARG1))
     (typeattributeset is_env_file_object ARG1))
 
+(macro files_read_generic_env_files ((type ARG1))
+    (call read_files_pattern (ARG1 etc_t env_t)))
+
 (macro files_run_lock_object ((type ARG1))
     (typeattributeset is_lock_file_object ARG1))
 

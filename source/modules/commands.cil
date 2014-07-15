@@ -55,10 +55,16 @@
     (call subject_entry (ARG1 bin_t)))
 
 (macro commands_execute_bin_files ((type ARG1))
-    (call can_exec (ARG1 bin_t)))
+    (call exec_files_pattern (ARG1 bin_t bin_t)))
+
+(macro commands_read_bin_files ((type ARG1))
+    (call read_files_pattern (ARG1 bin_t bin_t)))
 
 (macro commands_execute_shell_files ((type ARG1))
-    (call can_exec (ARG1 shell_t)))
+    (call exec_files_pattern (ARG1 bin_t shell_t)))
+
+(macro commands_mmap_shell_files ((type ARG1))
+    (call mmap_files_pattern (ARG1 bin_t shell_t)))
 
 (macro commands_mprot_read_shell_files ((type ARG1))
     (allow ARG1 shell_t (file (read))))

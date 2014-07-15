@@ -1,8 +1,8 @@
 (roleattribute is_dhclient_role)
 
 (typeattribute is_dhcp_admin_subject)
-(typeattribute is_dhcp_file_object)
 
+(typeattribute is_dhcp_file_object)
 (typeattributeset is_dhcp_file_object (dhcp_conf_t dhclient_run_t
     dhclient_var_lib_t))
 
@@ -83,11 +83,10 @@
     (call miscfiles_read_localization_files (dhclient_t))
     (call miscfiles_read_network_environ_files (dhclient_t)))
 
-; (optional dhclient_optional_networkmgr
-    ; (call networkmgr_execute_helper_files (dhclient_t))
-    ; (call networkmgr_list_config (dhclient_t))
-    ; (call networkmgr_manage_var_lib_files (dhclient_t))
-    ; (call networkmgr_stream_connect (dhclient_t)))
+(optional dhclient_optional_networkmgr
+    (call networkmgr_execute_helper_files (dhclient_t))
+    (call networkmgr_manage_var_lib_files (dhclient_t))
+    (call networkmgr_stream_connect (dhclient_t)))
 
 (call admin_pattern (is_dhcp_admin_subject is_dhcp_file_object))
 
@@ -100,6 +99,9 @@
 
 (macro dhcp_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 dhcp_conf_t dhcp_conf_t)))
+
+(macro dhcp_read_dhclient_var_lib_files ((type ARG1))
+    (call read_files_pattern (ARG1 dhclient_var_lib_t dhclient_var_lib_t)))
 
 (macro dhcp_udp_bind_dhcp_port ((type ARG1))
     (allow ARG1 port_dhcp_t (udp_socket (name_bind))))

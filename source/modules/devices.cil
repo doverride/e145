@@ -541,6 +541,9 @@
 (macro devices_rw_null ((type ARG1))
     (call rw_files_pattern (ARG1 device_t device_null_t)))
 
+(macro devices_rw_wireless ((type ARG1))
+    (call rw_files_pattern (ARG1 device_t device_wireless_t)))
+
 (macro devices_rw_zero ((type ARG1))
     (call rw_files_pattern (ARG1 device_t device_zero_t)))
 
