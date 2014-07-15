@@ -94,9 +94,9 @@
 (optional dbus_optional_miscfiles
     (call miscfiles_read_localization_files (dbusd_t)))
 
-; (optional dbus_optional_seutil
-    ; (call seutil_read_config_files (dbusd_t))
-    ; (call seutil_read_default_context_files (dbusd_t)))
+(optional dbus_optional_seutil
+    (call seutil_read_config_files (dbusd_t))
+    (call seutil_read_default_context_files (dbusd_t)))
 
 (allow is_dbus_admin_subject dbusd_t signal_perms)
 (call ps_subject_pattern (is_dbus_admin_subject dbusd_t))

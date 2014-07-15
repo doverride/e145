@@ -238,10 +238,9 @@
 (optional login_program_subject_optional_miscfiles
     (call miscfiles_read_localization_files (is_login_program_subject)))
 
-; (optional login_program_subject_optional_seutil
-    ; (call seutil_read_config_files (is_login_program_subject))
-    ; (call seutil_search_default_context (is_login_program_subject))
-    ; (call seutil_read_default_context_files (is_login_program_subject)))
+(optional login_program_subject_optional_seutil
+    (call seutil_read_config_files (is_login_program_subject))
+    (call seutil_read_default_context_files (is_login_program_subject)))
 
 (optional login_program_subject_optional_session
     (call session_create_keyring (is_login_program_subject))
