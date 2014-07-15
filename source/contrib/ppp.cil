@@ -1,0 +1,62 @@
+(typeattribute is_ppp_admin_subject)
+
+(typeattribute is_ppp_file_object)
+(typeattributeset is_ppp_file_object (pppd_conf_t pppd_pam_conf_t
+    pppd_lock_t pppd_log_t pppd_run_t))
+
+(type pppd_t)
+(call subject_common_subject (pppd_t))
+
+(type pppd_exec_t)
+(call subject_entry (pppd_t pppd_exec_t))
+(roletype system_r pppd_t)
+
+(context file_pppd_exec (system_u object_r pppd_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/pppd" file file_pppd_exec)
+
+(type pppd_conf_t)
+(call files_etc_object (pppd_conf_t))
+
+(context file_pppd_conf (system_u object_r pppd_conf_t ((s0) (s0))))
+(filecon "/etc/ppp(/.*)?" any file_pppd_conf)
+
+(type pppd_lock_t)
+(call files_run_lock_object (pppd_lock_t))
+
+(context file_pppd_lock (system_u object_r pppd_lock_t ((s0) (s0))))
+(filecon "/run/lock/ppp(/.*)?" any file_pppd_lock)
+
+(type pppd_log_t)
+(call files_var_log_object (pppd_log_t))
+
+(context file_pppd_log (system_u object_r pppd_log_t ((s0) (s0))))
+(filecon "/var/log/ppp(/.*)?" any file_pppd_log)
+
+(type pppd_pam_conf_t)
+(call files_etc_object (pppd_pam_conf_t))
+
+(context file_pppd_pam_conf (system_u object_r pppd_pam_conf_t ((s0)
+    (s0))))
+(filecon "/etc/pam\.d/ppp" file file_pppd_pam_conf)
+
+(type pppd_run_t)
+(call files_run_object (pppd_run_t))
+
+(context file_pppd_run (system_u object_r pppd_run_t ((s0) (s0))))
+(filecon "/run/ppp(/.*)?" any file_pppd_run)
+
+(type device_ppp_t)
+(call devices_object (device_ppp_t))
+
+(context device_ppp (system_u object_r device_ppp_t ((s0) (s0))))
+(filecon "/dev/ippp.*" char device_ppp)
+(filecon "/dev/ppp" char device_ppp)
+(filecon "/dev/pppox.*" char device_ppp)
+
+(call admin_pattern (is_ppp_admin_subject is_ppp_file_object))
+
+(macro ppp_subtrans_pppd ((type ARG1))
+    (call subtrans_pattern (ARG1 pppd_exec_t pppd_t)))
+
+(macro ppp_admin ((type ARG1))
+    (typeattributeset is_ppp_admin_subject ARG1))

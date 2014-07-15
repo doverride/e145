@@ -27,6 +27,7 @@ contrib/login.cil
 contrib/lvm.cil
 contrib/miscfiles.cil
 contrib/mount.cil
+contrib/ppp.cil
 modules/commands.cil
 modules/devices.cil
 modules/files.cil
