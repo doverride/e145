@@ -87,6 +87,9 @@
 
 ; others
 
+(optional session_optional_seutil_others
+    (call seutil_read_policy_config_files (session_t)))
+
 (optional session_optional_auth
     (call auth_manage_shadow_files (session_t))
     (call auth_relabel_shadow_files (session_t)))
