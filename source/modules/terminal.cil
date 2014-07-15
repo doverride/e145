@@ -117,11 +117,23 @@
     (call terminal_serial_object (ARG1))
     (typeattributeset is_tty_file_object ARG1))
 
+(macro terminal_setattr_console_nodes ((type ARG1))
+    (allow ARG1 device_console_t (chr_file (setattr))))
+
 (macro terminal_dontaudit_use_console_nodes ((type ARG1))
     (dontaudit ARG1 device_console_t rw_term_perms))
 
+(macro terminal_use_console_nodes ((type ARG1))
+    (allow ARG1 device_console_t rw_term_perms))
+
+(macro terminal_setattr_unallocated_tty_nodes ((type ARG1))
+    (allow ARG1 device_tty_t (chr_file (setattr))))
+
 (macro terminal_dontaudit_use_unallocated_tty_nodes ((type ARG1))
     (dontaudit ARG1 device_tty_t rw_term_perms))
+
+(macro terminal_use_unallocated_tty_nodes ((type ARG1))
+    (allow ARG1 device_tty_t rw_term_perms))
 
 (macro terminal_getattr_generic_pty_nodes ((type ARG1))
     (allow ARG1 devpts_t (chr_file (getattr))))

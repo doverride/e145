@@ -16,6 +16,7 @@ contrib/dhcp.cil
 contrib/dm.cil
 contrib/dns.cil
 contrib/fstools.cil
+contrib/getty.cil
 contrib/hostname.cil
 contrib/hwclock.cil
 contrib/ip.cil

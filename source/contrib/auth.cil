@@ -338,6 +338,9 @@
 (macro auth_read_wtmp_log_files ((type ARG1))
     (allow ARG1 wtmp_t read_file_perms))
 
+(macro auth_write_wtmp_log_files ((type ARG1))
+    (allow ARG1 wtmp_t write_file_perms))
+
 (macro auth_create_faillog_log_files ((type ARG1))
     (call files_add_entry_var_log_dirs (ARG1))
     (allow ARG1 faillog_t create_file_perms))

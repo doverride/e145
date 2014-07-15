@@ -1,0 +1,53 @@
+(typeattribute is_getty_admin_subject)
+
+(type getty_t)
+(type getty_exec_t)
+(call application_subject_entry (getty_t getty_exec_t)) ; temporary hack for object_roletype
+; (call systemd_daemon_subject_entry (getty_t getty_exec_t))
+
+(context file_getty_exec (system_u object_r getty_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/agetty" file file_getty_exec)
+
+(type getty_unit_t)
+(call files_object (getty_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (getty_unit_t))
+
+(context file_getty_unit (system_u object_r getty_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*getty.*" file file_getty_unit)
+
+(allow getty_t self (capability (chown fsetid sys_tty_config)))
+(allow getty_t self create_unix_stream_socket_perms)
+
+(call terminal_setattr_unallocated_tty_nodes (getty_t))
+(call terminal_use_unallocated_tty_nodes (getty_t))
+
+(call files_read_generic_etc_files (getty_t)) ; /etc/issue
+
+(booleanif console_login
+    (true
+        (call terminal_setattr_console_nodes (getty_t))
+        (call terminal_use_console_nodes (getty_t)))
+    (false
+        (call terminal_dontaudit_use_console_nodes (getty_t))))
+
+(optional getty_optional_auth
+    (call auth_nsswitch_client_subject (getty_t))
+    (call auth_write_wtmp_log_files (getty_t)))
+
+; (optional getty_optional_login
+    ; (call login_subtrans (getty_t)))
+
+(optional getty_optional_miscfiles
+    (call miscfiles_read_localization_files (getty_t)))
+
+; (optional getty_optional_utmp
+    ; (call utmp_rw_utmp_run_files (getty_t)))
+
+(allow is_getty_admin_subject getty_t signal_perms)
+(call ps_subject_pattern (is_getty_admin_subject getty_t))
+
+(call admin_pattern (is_getty_admin_subject getty_unit_t))
+(allow is_getty_admin_subject getty_unit_t (service (all)))
+
+(macro getty_admin ((type ARG1))
+    (typeattributeset is_getty_admin_subject ARG1))
