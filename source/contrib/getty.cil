@@ -34,8 +34,8 @@
     (call auth_nsswitch_client_subject (getty_t))
     (call auth_write_wtmp_log_files (getty_t)))
 
-; (optional getty_optional_login
-    ; (call login_subtrans (getty_t)))
+(optional getty_optional_login
+    (call login_subtrans (getty_t)))
 
 (optional getty_optional_miscfiles
     (call miscfiles_read_localization_files (getty_t)))

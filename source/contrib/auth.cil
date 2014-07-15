@@ -217,8 +217,8 @@
 
 (call auth_pam_client_subject (is_login_program_subject))
 
-; (optional login_program_subject_optional_dbus
-    ; (call dbus_system_client_subject (is_login_program_subject)))
+(optional login_program_subject_optional_dbus
+    (call dbus_system_client_subject (is_login_program_subject)))
 
 ; (optional login_program_subject_optional_logind
     ; (call logind_dbus_chat (is_login_program_subject))
