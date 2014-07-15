@@ -8,6 +8,17 @@
 (typeattribute is_nsswitch_client_subject)
 (typeattribute is_pam_client_subject)
 
+(typeattribute is_auth_admin_subject)
+
+(typeattribute is_auth_subject)
+(typeattributeset is_auth_subject (authconfig_t chkpwd_t pam_t
+    pam_console_t updpwd_t utempter_t))
+
+(typeattribute is_auth_file_object)
+(typeattributeset is_auth_file_object (authconfig_pam_conf_t authconfig_env_t
+    authconfig_var_lib_t nsswitch_conf_t pam_conf_t pam_run_t pam_console_run_t
+    password_t faillog_t lastlog_t wtmp_t shadow_t))
+
 (typeattribute has_unconfined_access_to_auth_assets)
 
 (typeattribute can_read_shadow_passwords)
@@ -293,6 +304,14 @@
 (optional chkpwd_optional_miscfiles
     (call miscfiles_read_localization_files (chkpwd_t)))
 
+(allow is_auth_admin_subject is_auth_subject signal_perms)
+(call ps_subject_pattern (is_auth_admin_subject is_auth_subject))
+
+(call admin_pattern (is_auth_admin_subject is_auth_file_object))
+
+(call auth_manage_shadow_files (is_auth_admin_subject))
+(call auth_relabel_shadow_files (is_auth_admin_subject))
+
 (allow has_unconfined_access_to_auth_assets self (passwd (all)))
 
 (allow has_unconfined_access_to_auth_assets shadow_t
@@ -377,6 +396,11 @@
 (macro auth_read_passwd_files ((type ARG1))
     (allow ARG1 password_t read_file_perms))
 
+(macro auth_manage_shadow_files ((type ARG1))
+    (allow ARG1 shadow_t manage_file_perms)
+    (typeattributeset can_read_shadow_passwords ARG1)
+    (typeattributeset can_write_shadow_passwords ARG1))
+
 (macro auth_dontaudit_read_shadow_files ((type ARG1))
     (dontaudit ARG1 shadow_t read_file_perms))
 
@@ -397,6 +421,9 @@
 
 (macro auth_pam_client_subject ((type ARG1))
     (typeattributeset is_pam_client_subject ARG1))
+
+(macro auth_admin ((type ARG1))
+    (typeattributeset is_auth_admin_subject ARG1))
 
 (macro auth_unconfined ((type ARG1))
     (typeattributeset has_unconfined_access_to_auth_assets ARG1))
