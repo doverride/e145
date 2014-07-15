@@ -1,0 +1,133 @@
+(typeattribute is_polkit_admin_subject)
+
+(typeattribute is_polkit_subject)
+(typeattributeset is_polkit_subject (polkitd_t polkitd_auth_t))
+
+(typeattribute is_polkit_file_object)
+(typeattributeset is_polkit_file_object (polkitd_conf_t polkitd_pam_conf_t
+    polkitd_var_lib_t polkitd_dbus_conf_t polkitd_unit_t))
+
+(type polkitd_t)
+(type polkitd_exec_t)
+(call application_subject_entry (polkitd_t polkitd_exec_t)) ; temporary hack for object_roletype
+; (call systemd_daemon_subject_entry (polkitd_t polkitd_exec_t))
+
+(context file_polkitd_exec (system_u object_r polkitd_exec_t ((s0) (s0))))
+(filecon "/usr/lib/polkit-1/polkitd" file file_polkitd_exec)
+
+(type polkitd_conf_t)
+(call files_etc_object (polkitd_conf_t))
+
+(context file_polkitd_conf (system_u object_r polkitd_conf_t ((s0) (s0))))
+(filecon "/etc/polkit-1(/.*)?" any file_polkitd_conf)
+
+(type polkitd_dbus_conf_t)
+(call files_etc_object (polkitd_dbus_conf_t))
+
+(context file_polkitd_dbus_conf (system_u object_r polkitd_dbus_conf_t ((s0)
+    (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.PolicyKit1\.conf" file
+    file_polkitd_dbus_conf)
+
+(type polkitd_pam_conf_t)
+(call files_etc_object (polkitd_pam_conf_t))
+
+(context file_polkitd_pam_conf (system_u object_r polkitd_pam_conf_t ((s0)
+    (s0))))
+(filecon "/etc/pam\.d/polkit-1" file file_polkitd_pam_conf)
+
+(type polkitd_var_lib_t)
+(call files_var_lib_object (polkitd_var_lib_t))
+
+(context file_polkitd_var_lib (system_u object_r polkitd_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/polkit-1(/.*)?" any file_polkitd_var_lib)
+
+(type polkitd_unit_t)
+(call files_object (polkitd_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (polkitd_unit_t))
+
+(context file_polkitd_unit (system_u object_r polkitd_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*polkit.*" file file_polkitd_unit)
+
+(type polkitd_auth_t)
+(call subject_common_subject (polkitd_auth_t))
+
+(type polkitd_auth_exec_t)
+(call subject_entry (polkitd_auth_t polkitd_auth_exec_t))
+(roletype system_r polkitd_auth_t)
+
+(context file_polkitd_auth_exec (system_u object_r polkitd_auth_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/pkla-check-authorization" any file_polkitd_auth_exec)
+(filecon "/usr/lib/polkit-1/polkit-agent-helper-1" file file_polkitd_auth_exec)
+
+(allow is_polkit_subject self create_unix_stream_socket_perms)
+
+(call filesystem_getattr_filesystems (is_polkit_subject))
+
+(call selinux_get_filesystems_mount (is_polkit_subject))
+
+(call polkit_read_config_files (is_polkit_subject))
+
+(optional polkit_optional_auth
+    (call auth_nsswitch_client_subject (is_polkit_subject)))
+
+(allow polkitd_t self (process (getsched setsched)))
+(allow polkitd_t self (capability (setuid setgid)))
+(allow polkitd_t self rw_fifo_file_perms)
+
+(allow polkitd_t polkitd_var_lib_t manage_dir_perms)
+(allow polkitd_t polkitd_var_lib_t manage_file_perms)
+(call files_var_lib_filetrans (polkitd_t polkitd_var_lib_t dir "*"))
+
+(call system_read_sysctl_kernel_files (polkitd_t))
+
+(call devices_read_sysfs_files (polkitd_t))
+
+(call subject_read_all_subjects_state (polkitd_t))
+
+(call files_read_generic_usr_files (polkitd_t))
+
+(call polkit_subtrans_auth (polkitd_t))
+
+(optional polkit_optional_dbus
+    (call dbus_acquire_service_system (polkitd_t))
+    (call dbus_system_client_subject (polkitd_t)))
+
+; (optional polkit_optional_journal
+    ; (call journal_client_subject (polkitd_t)))
+
+; (optional polkit_optional_logind
+    ; (call logind_read_run_files (polkitd_t)))
+
+; (optional polkit_optional_machined
+    ; (call machine_read_run_files (polkitd_t)))
+
+(optional polkit_optional_miscfiles
+    (call miscfiles_read_localization_files (polkitd_t)))
+
+(call polkit_read_var_lib_files (polkitd_auth_t))
+
+(allow is_polkit_admin_subject is_polkit_subject signal_perms)
+(call ps_subject_pattern (is_polkit_admin_subject is_polkit_subject))
+
+(allow is_polkit_admin_subject polkitd_unit_t (service (all)))
+
+(call admin_pattern (is_polkit_admin_subject is_polkit_file_object))
+
+(macro polkit_subtrans_auth ((type ARG1))
+    (call subtrans_pattern (ARG1 polkitd_auth_exec_t polkitd_auth_t)))
+
+(macro polkit_dbus_chat_polkitd ((type ARG1))
+    (allow ARG1 polkitd_t (dbus (send_msg)))
+    (allow polkitd_t ARG1 (dbus (send_msg))))
+
+(macro polkit_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 polkitd_conf_t polkitd_conf_t)))
+
+(macro polkit_read_var_lib_files ((type ARG1))
+    (call read_files_pattern (ARG1 polkitd_var_lib_t polkitd_var_lib_t)))
+
+(macro polkit_admin ((type ARG1))
+    (typeattributeset is_polkit_admin_subject ARG1))
