@@ -174,5 +174,4 @@
 ; others
 
 (class context (translate contains))
-(class dbus (acquire_svc send_msg))
 (class service (stop status disable enable reload start))

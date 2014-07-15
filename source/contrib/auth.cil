@@ -368,6 +368,9 @@
 (macro auth_read_pam_config_files ((type ARG1))
     (call read_files_pattern (ARG1 pam_conf_t pam_conf_t)))
 
+(macro auth_read_pam_console_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 pam_console_run_t pam_console_run_t)))
+
 (macro auth_read_passwd_files ((type ARG1))
     (allow ARG1 password_t read_file_perms))
 

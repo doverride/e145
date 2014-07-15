@@ -83,7 +83,6 @@
     ; others
 
     (allow ARG1 is_subject (context (all)))
-    (allow ARG1 is_subject (dbus (all)))
 
     (allow ARG1 is_subject (service (all)))
     (allow ARG1 is_file_object (service (all)))

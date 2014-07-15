@@ -91,6 +91,10 @@
 (macro selinux_boolean_object ((type ARG1))
     (typeattributeset is_bool_file_object ARG1))
 
+(macro selinux_compute_access_vector ((type ARG1))
+    (call rw_files_pattern (ARG1 security_t security_t))
+    (allow ARG1 security_t (security (compute_av))))
+
 (macro selinux_compute_relabel_context ((type ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (compute_relabel))))

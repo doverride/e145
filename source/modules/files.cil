@@ -371,6 +371,9 @@
 (macro files_usr_object ((type ARG1))
     (typeattributeset is_usr_file_object ARG1))
 
+(macro files_read_generic_usr_files ((type ARG1))
+    (call read_files_pattern (ARG1 usr_t usr_t)))
+
 (macro files_run_object ((type ARG1))
     (typeattributeset is_run_file_object ARG1))
 

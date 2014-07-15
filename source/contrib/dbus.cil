@@ -1,0 +1,146 @@
+(class dbus (acquire_svc send_msg))
+
+(typeattribute is_dbus_admin_subject)
+(typeattribute is_dbus_system_client_subject)
+
+(typeattribute is_dbus_file_object)
+(typeattributeset is_dbus_file_object (dbusd_conf_t dbusd_var_lib_t
+    dbusd_run_t dbusd_unit_t))
+
+(typeattribute has_unconfined_access_to_dbus_assets)
+
+(type dbusd_t)
+(type dbusd_exec_t)
+(call application_subject_entry (dbusd_t dbusd_exec_t)) ; temporary hack for object_roletype
+; (call systemd_daemon_subject_entry (dbusd_t dbusd_exec_t))
+
+; (call systemd_socket_activated_subject (dbusd_t dbusd_run_t))
+
+(context file_dbusd_exec (system_u object_r dbusd_exec_t ((s0) (s0))))
+(filecon "/usr/bin/dbus-daemon" file file_dbusd_exec)
+
+(type dbusd_conf_t)
+(call files_etc_object (dbusd_conf_t))
+
+(context file_dbusd_conf (system_u object_r dbusd_conf_t ((s0) (s0))))
+(filecon "/etc/dbus-1(/.*)?" any file_dbusd_conf)
+
+(type dbusd_run_t)
+(call files_run_object (dbusd_run_t))
+
+(context file_dbusd_run (system_u object_r dbusd_run_t ((s0) (s0))))
+(filecon "/run/dbus(/.*)?" any file_dbusd_run)
+
+(type dbusd_unit_t)
+(call files_object (dbusd_unit_t)) ; temporary hack for object_roletype
+; (call systemd_unit_object (dbusd_unit_t))
+
+(context file_dbusd_unit (system_u object_r dbusd_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*dbus.*" file file_dbusd_unit)
+
+(type dbusd_var_lib_t)
+(call files_var_lib_object (dbusd_var_lib_t))
+
+(context file_dbusd_var_lib (system_u object_r dbusd_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/dbus(/.*)?" any file_dbusd_var_lib)
+
+(allow is_dbus_system_client_subject self (dbus (send_msg)))
+
+(allow is_dbus_system_client_subject dbusd_t (dbus (send_msg)))
+(allow dbusd_t is_dbus_system_client_subject (dbus (send_msg)))
+
+(call dbus_read_config_files (is_dbus_system_client_subject))
+(call dbus_read_var_lib_files (is_dbus_system_client_subject))
+(call dbus_stream_connect_system (is_dbus_system_client_subject))
+
+(allow dbusd_t self (process (signal getcap setcap setrlimit)))
+(allow dbusd_t self (capability (setgid setuid)))
+(allow dbusd_t self create_netlink_selinux_socket_perms)
+(allow dbusd_t self create_unix_stream_stream_socket_perms)
+
+(allow dbusd_t dbusd_run_t manage_dir_perms)
+(call files_run_filetrans (dbusd_t dbusd_run_t dir "*"))
+
+(allow dbusd_t dbusd_var_lib_t manage_dir_perms)
+(call files_var_lib_filetrans (dbusd_t dbusd_var_lib_t dir "*"))
+
+(call devices_read_urandom (dbusd_t))
+
+(call files_read_generic_usr_files (dbusd_t))
+
+(call selinux_getattr_filesystems (dbusd_t))
+(call selinux_compute_access_vector (dbusd_t))
+
+(call dbus_read_config_files (dbusd_t))
+(call dbus_read_state_all_system_client_subjects (dbusd_t))
+(call dbus_read_state_all_unconfined_subjects (dbusd_t))
+
+; (call systemd_read_state_systemctl_client_subjects (dbusd_t))
+
+(optional dbus_optional_audit
+    (call audit_client_subject (dbusd_t)))
+
+(optional dbus_optional_auth
+    (call auth_read_pam_console_run_files (dbusd_t))
+    (call auth_nsswitch_client_subject (dbusd_t)))
+
+; (optional dbus_optional_journal
+    ; (call journal_client_subject (dbusd_t)))
+
+; (optional dbus_optional_logind
+    ; (call logind_write_inherited_run_fifo_files (dbusd_t)))
+
+(optional dbus_optional_miscfiles
+    (call miscfiles_read_localization_files (dbusd_t)))
+
+; (optional dbus_optional_seutil
+    ; (call seutil_read_config_files (dbusd_t))
+    ; (call seutil_read_default_context_files (dbusd_t)))
+
+(allow is_dbus_admin_subject dbusd_t signal_perms)
+(call ps_subject_pattern (is_dbus_admin_subject dbusd_t))
+
+(allow is_dbus_admin_subject dbusd_unit_t (service (all)))
+
+(call admin_pattern (is_dbus_admin_subject is_dbus_file_object))
+
+(allow has_unconfined_access_to_dbus_assets
+    has_unconfined_access_to_dbus_assets (dbus (send_msg)))
+
+(allow has_unconfined_access_to_dbus_assets dbusd_t (dbus (all)))
+(allow dbusd_t has_unconfined_access_to_dbus_assets (dbus (send_msg)))
+
+(allow has_unconfined_access_to_dbus_assets is_dbus_system_client_subject
+    (dbus (send_msg)))
+(allow is_dbus_system_client_subject has_unconfined_access_to_dbus_assets
+    (dbus (send_msg)))
+
+(macro dbus_acquire_service_system ((type ARG1))
+    (allow ARG1 dbusd_t (dbus (acquire_svc))))
+
+(macro dbus_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 dbusd_conf_t dbusd_conf_t)))
+
+(macro dbus_read_state_all_unconfined_subjects ((type ARG1))
+    (allow ARG1 has_unconfined_access_to_dbus_assets (dirs (list)))
+    (allow ARG1 has_unconfined_access_to_dbus_assets read_file_perms))
+
+(macro dbus_read_state_all_system_client_subjects ((type ARG1))
+    (allow ARG1 is_dbus_system_client_subject (dirs (list)))
+    (allow ARG1 is_dbus_system_client_subject read_file_perms))
+
+(macro dbus_read_var_lib_files ((type ARG1))
+    (call read_files_pattern (ARG1 dbusd_var_lib_t dbusd_var_lib_t)))
+
+(macro dbus_stream_connect_system ((type ARG1))
+    (call stream_connect_pattern (ARG1 dbusd_run_t dbusd_run_t dbusd_t)))
+
+(macro dbus_admin ((type ARG1))
+    (typeattributeset is_dbus_admin_subject ARG1))
+
+(macro dbus_system_client_subject ((type ARG1))
+    (typeattributeset is_dbus_system_client_subject ARG1))
+
+(macro dbus_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_dbus_assets ARG1))

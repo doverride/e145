@@ -11,6 +11,7 @@ mls.cil
 contrib/application.cil
 contrib/audit.cil
 contrib/auth.cil
+contrib/dbus.cil
 contrib/dhcp.cil
 contrib/dm.cil
 contrib/dns.cil
