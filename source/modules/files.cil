@@ -437,6 +437,39 @@
 (macro files_getattr_all_dirs ((type ARG1)) ; for auditctl to add watches
     (allow ARG1 is_file_object (dir (getattr))))
 
+(macro files_list_all ((type ARG1))
+    (allow ARG1 is_file_object (dirs (list))))
+
+(macro files_relabel_all_except ((type ARG1))
+    (call files_relabel_all_dirs_except (ARG1))
+    (call files_relabel_all_files_except (ARG1))
+    (call files_relabel_all_fifo_files_except (ARG1))
+    (call files_relabel_all_sock_files_except (ARG1))
+    (call files_relabel_all_lnk_files_except (ARG1))
+    (call files_relabel_all_blk_files_except (ARG1))
+    (call files_relabel_all_chr_files_except (ARG1)))
+
+(macro files_relabel_all_dirs_except ((type ARG1))
+    (allow ARG1 all_files_except relabel_dir_perms))
+
+(macro files_relabel_all_files_except ((type ARG1))
+    (allow ARG1 all_files_except relabel_file_perms))
+
+(macro files_relabel_all_fifo_files_except ((type ARG1))
+    (allow ARG1 all_files_except relabel_fifo_file_perms))
+
+(macro files_relabel_all_sock_files_except ((type ARG1))
+    (allow ARG1 all_files_except relabel_sock_file_perms))
+
+(macro files_relabel_all_lnk_files_except ((type ARG1))
+    (allow ARG1 all_files_except relabel_lnk_file_perms))
+
+(macro files_relabel_all_blk_files_except ((type ARG1))
+    (allow ARG1 all_files_except relabel_blk_file_perms))
+
+(macro files_relabel_all_chr_files_except ((type ARG1))
+    (allow ARG1 all_files_except relabel_chr_file_perms))
+
 (macro files_mounton_all_mnt_dirs ((type ARG1))
     (allow ARG1 is_mnt_file_object (dir (mounton))))
 

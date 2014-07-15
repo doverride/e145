@@ -173,5 +173,4 @@
 
 ; others
 
-(class context (translate contains))
 (class service (stop status disable enable reload start))

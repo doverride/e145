@@ -384,6 +384,14 @@
     (allow ARG1 shadow_t read_file_perms)
     (typeattributeset can_read_shadow_passwords ARG1))
 
+(macro auth_relabelto_shadow_files ((type ARG1))
+    (allow ARG1 shadow_t relabelto_file_perms)
+    (typeattributeset can_relabelto_shadow_passwords ARG1))
+
+(macro auth_relabel_shadow_files ((type ARG1))
+    (allow ARG1 shadow_t relabel_file_perms)
+    (typeattributeset can_relabelto_shadow_passwords ARG1))
+
 (macro auth_nsswitch_client_subject ((type ARG1))
     (typeattributeset is_nsswitch_client_subject ARG1))
 

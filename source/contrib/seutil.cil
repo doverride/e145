@@ -1,0 +1,241 @@
+(class context (translate contains))
+
+(roleattribute is_load_policy_role)
+(roleattribute is_secilc_role)
+(roleattribute is_setfiles_role)
+
+(typeattribute can_write_binary_policy)
+(typeattribute not_associated_with_can_write_binary_policy_or_has_unconfined_access_to_seutil_assets)
+
+(typeattribute can_relabelto_binary_policy)
+(typeattribute not_associated_with_can_relabelto_binary_policy_or_has_unconfined_access_to_seutil_assets)
+
+(typeattribute is_seutil_admin_subject)
+
+(typeattribute is_seutil_subject)
+(typeattributeset is_seutil_subject (load_policy_t secilc_t setfiles_t))
+
+(typeattribute is_seutil_file_object)
+(typeattributeset is_seutil_file_object (default_context_t selinux_conf_t
+    file_context_t policy_conf_t policy_src_t))
+
+(typeattribute has_unconfined_access_to_seutil_assets)
+
+(type load_policy_t)
+(type load_policy_exec_t)
+(call application_subject_entry (load_policy_t load_policy_exec_t))
+(roleattributeset is_load_policy_role system_r)
+(roletype is_load_policy_role load_policy_t)
+
+(context file_load_policy_exec (system_u object_r load_policy_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/load_policy" file file_load_policy_exec)
+
+(type secilc_t)
+(type secilc_exec_t)
+(call application_subject_entry (secilc_t secilc_exec_t))
+(typeattributeset can_write_binary_policy secilc_t)
+(roleattributeset is_secilc_role system_r)
+(roletype is_secilc_role secilc_t)
+
+(context file_secilc_exec (system_u object_r secilc_exec_t ((s0) (s0))))
+(filecon "/usr/bin/secilc" file file_secilc_exec)
+
+(type setfiles_t)
+(type setfiles_exec_t)
+(call application_subject_entry (setfiles_t setfiles_exec_t))
+(typeattributeset can_relabelto_binary_policy setfiles_t)
+(roleattributeset is_setfiles_role system_r)
+(roletype is_setfiles_role setfiles_t)
+
+(context file_setfiles_exec (system_u object_r setfiles_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/setfiles" file file_setfiles_exec)
+
+(type default_context_t)
+(call files_object (default_context_t))
+
+(context file_default_context (system_u object_r default_context_t ((s0) (s0))))
+(filecon "/etc/selinux/([^/]*/)?contexts(/.*)?" any file_default_context)
+
+(type file_context_t)
+(call files_object (file_context_t))
+
+(context file_file_context (system_u object_r file_context_t ((s0) (s0))))
+(filecon "/etc/selinux/([^/]*/)?contexts/files(/.*)?" any file_file_context)
+
+(type policy_conf_t)
+(call files_object (policy_conf_t))
+(call files_all_files_exception (policy_conf_t))
+
+(context file_policy_conf (system_u object_r policy_conf_t (mls_systemhigh
+    mls_systemhigh)))
+(filecon "/etc/selinux/([^/]*/)?policy(/.*)?" any file_policy_conf)
+
+(type policy_src_t)
+(call files_object (policy_src_t))
+
+(context file_policy_src (system_u object_r policy_src_t ((s0) (s0))))
+(filecon "/etc/selinux/([^/]*/)?source(/.*)?" any file_policy_src)
+
+(type selinux_conf_t)
+(call files_etc_object (selinux_conf_t))
+
+(context file_selinux_conf (system_u object_r selinux_conf_t ((s0) (s0))))
+(filecon "/etc/selinux(/.*)?" any file_selinux_conf)
+
+(filecon "/etc/selinux/([^/]*/)?seusers" file (system_u
+    object_r selinux_conf_t (mls_systemhigh mls_systemhigh)))
+(filecon "/etc/selinux/([^/]*/)?users(/.*)?" file (system_u
+    object_r selinux_conf_t (mls_systemhigh mls_systemhigh)))
+
+(typeattributeset
+    not_associated_with_can_relabelto_binary_policy_or_has_unconfined_access_to_seutil_assets
+        (not
+            (can_relabelto_binary_policy has_unconfined_access_to_seutil_assets)))
+
+(neverallow
+    not_associated_with_can_relabelto_binary_policy_or_has_unconfined_access_to_seutil_assets
+        policy_conf_t (file (relabelto)))
+
+(typeattributeset
+    not_associated_with_can_write_binary_policy_or_has_unconfined_access_to_seutil_assets
+        (not
+            (can_write_binary_policy has_unconfined_access_to_seutil_assets)))
+
+(neverallow
+    not_associated_with_can_write_binary_policy_or_has_unconfined_access_to_seutil_assets
+        policy_conf_t (file (create write)))
+
+(call selinux_getattr_filesystems (load_policy_t))
+(call selinux_load_policy (load_policy_t))
+
+(call seutil_read_config_files (load_policy_t))
+
+(call seutil_read_policy_config_files (load_policy_t))
+
+(optional seutil_optional_miscfiles
+    (call miscfiles_read_localization_files (load_policy_t)))
+
+(call system_read_generic_proc_files (secilc_t))
+
+(call seutil_create_file_context_files (secilc_t))
+(call seutil_read_file_context_files (secilc_t))
+(call seutil_write_file_context_files (secilc_t))
+
+(call seutil_create_policy_config_files (secilc_t))
+(call seutil_write_policy_config_files (secilc_t))
+
+(call seutil_read_source_files (secilc_t))
+
+(allow setfiles_t self (capability (dac_override)))
+
+(call devices_relabel_all_nodes (setfiles_t))
+
+(call files_list_all (setfiles_t))
+(call files_relabel_all_except (setfiles_t))
+
+(call filesystem_getattr_all_filesystems (setfiles_t))
+
+(call selinux_getattr_filesystems (setfiles_t))
+(call selinux_get_enforce_mode (setfiles_t))
+
+(call subject_obj_id_change_exemption (setfiles_t))
+
+(call seutil_read_config_files (setfiles_t))
+(call seutil_read_file_context_files (setfiles_t))
+(call seutil_relabelto_policy_config_files (setfiles_t))
+
+(optional seutil_optional_auth
+    (call auth_relabelto_shadow_files (setfiles_t)))
+
+(allow is_seutil_admin_subject is_seutil_subject signal_perms)
+(call ps_subject_pattern (is_seutil_admin_subject is_seutil_subject))
+
+(call admin_pattern (is_seutil_admin_subject is_seutil_file_object))
+
+(call seutil_manage_policy_config_files (is_seutil_admin_subject))
+(call seutil_relabel_policy_config_files (is_seutil_admin_subject))
+
+(allow has_unconfined_access_to_seutil_assets self (context (all)))
+
+(allow has_unconfined_access_to_seutil_assets policy_conf_t
+    all_file_perms_except_execmod_and_entrypoint)
+(allow has_unconfined_access_to_seutil_assets policy_conf_t
+    all_dir_perms_except_execmod)
+(allow has_unconfined_access_to_seutil_assets policy_conf_t
+    all_fifo_file_perms_except_execmod)
+(allow has_unconfined_access_to_seutil_assets policy_conf_t
+    all_lnk_file_perms_except_execmod)
+(allow has_unconfined_access_to_seutil_assets policy_conf_t
+    all_sock_file_perms_except_execmod)
+(allow has_unconfined_access_to_seutil_assets policy_conf_t
+    all_blk_file_perms_except_execmod)
+(allow has_unconfined_access_to_seutil_assets policy_conf_t
+    all_chr_file_perms_except_execmod)
+
+(macro seutil_subtrans_load_policy ((type ARG1))
+    (call subtrans_pattern (ARG1 load_policy_exec_t load_policy_t)))
+
+(macro seutil_run_load_policy ((type ARG1)(role ARG2))
+    (call seutil_subtrans_load_policy (ARG1))
+    (roleattributeset is_load_policy_role (ARG2)))
+
+(macro seutil_subtrans_secilc ((type ARG1))
+    (call subtrans_pattern (ARG1 secilc_exec_t secilc_t)))
+
+(macro seutil_run_secilc ((type ARG1)(role ARG2))
+    (call seutil_subtrans_secilc (ARG1))
+    (roleattributeset is_secilc_role (ARG2)))
+
+(macro seutil_subtrans_setfiles ((type ARG1))
+    (call subtrans_pattern (ARG1 setfiles_exec_t setfiles_t)))
+
+(macro seutil_run_setfiles ((type ARG1)(role ARG2))
+    (call seutil_subtrans_setfiles (ARG1))
+    (roleattributeset is_setfiles_role (ARG2)))
+
+(macro seutil_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 selinux_conf_t selinux_conf_t)))
+
+(macro seutil_read_default_context_files ((type ARG1))
+    (call read_files_pattern (ARG1 default_context_t default_context_t)))
+
+(macro seutil_read_file_context_files ((type ARG1))
+    (call read_files_pattern (ARG1 file_context_t file_context_t)))
+
+(macro seutil_write_file_context_files ((type ARG1))
+    (call write_files_pattern (ARG1 file_context_t file_context_t)))
+
+(macro seutil_create_file_context_files ((type ARG1))
+    (call create_files_pattern (ARG1 file_context_t file_context_t)))
+
+(macro seutil_read_source_files ((type ARG1))
+    (call read_files_pattern (ARG1 policy_src_t policy_src_t)))
+
+(macro seutil_read_policy_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 policy_conf_t policy_conf_t)))
+
+(macro seutil_write_policy_config_files ((type ARG1))
+    (call write_files_pattern (ARG1 policy_conf_t policy_conf_t))
+    (typeattributeset can_write_binary_policy ARG1))
+
+(macro seutil_create_policy_config_files ((type ARG1))
+    (call create_files_pattern (ARG1 policy_conf_t policy_conf_t))
+    (typeattributeset can_write_binary_policy ARG1))
+
+(macro seutil_manage_policy_config_files ((type ARG1))
+    (call manage_files_pattern (ARG1 policy_conf_t policy_conf_t))
+    (typeattributeset can_write_binary_policy ARG1))
+
+(macro seutil_relabelto_policy_config_files ((type ARG1))
+    (allow ARG1 policy_conf_t relabelto_file_perms)
+    (typeattributeset can_relabelto_binary_policy ARG1))
+
+(macro seutil_relabel_policy_config_files ((type ARG1))
+    (call seutil_relabelto_policy_config_files (ARG1))
+    (allow ARG1 policy_conf_t relabelfrom_file_perms))
+
+(macro seutil_admin ((type ARG1))
+    (typeattributeset is_seutil_admin_subject ARG1))
+
+(macro seutil_unconfined ((type ARG1))
+    (typeattributeset has_unconfined_access_to_seutil_assets ARG1))

@@ -30,6 +30,7 @@ contrib/mount.cil
 contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
+contrib/seutil.cil
 modules/commands.cil
 modules/devices.cil
 modules/files.cil

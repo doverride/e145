@@ -523,6 +523,10 @@
     (call read_files_pattern (ARG1 device_t is_dev_file_object))
     (typeattributeset can_read_memory_raw ARG1))
 
+(macro devices_relabel_all_nodes ((type ARG1))
+    (allow ARG1 is_dev_file_object relabel_blk_file_perms)
+    (allow ARG1 is_dev_file_object relabel_chr_file_perms))
+
 (macro devices_read_memory_raw ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))
     (call read_files_pattern (ARG1 device_t device_memory_t))

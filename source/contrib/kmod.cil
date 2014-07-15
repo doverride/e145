@@ -82,3 +82,6 @@
 
 (macro kmod_read_modules_dep_files ((type ARG1))
     (allow ARG1 modules_dep_t read_file_perms))
+
+(macro kmod_admin ((type ARG1))
+    (typeattributeset is_kmod_admin_subject ARG1))
