@@ -64,7 +64,7 @@
 
 (context file_iptables_var_lib (system_u object_r iptables_var_lib_t ((s0)
     (s0))))
-(filecon "/var/lib/ebtables(/.*)?" file file_iptables_var_lib)
+(filecon "/var/lib/ebtables(/.*)?" any file_iptables_var_lib)
 
 (allow iptables_t self (capability (net_raw net_admin)))
 (allow iptables_t self create_rawip_socket_perms)
