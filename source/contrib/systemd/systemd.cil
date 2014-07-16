@@ -307,8 +307,8 @@
     (call seutil_read_config_files (systemd_t))
     (call seutil_read_file_context_files (systemd_t)))
 
-; optional systemd_optional_shutdown
-    ; (call shutdown_share_state_shutdown (systemd_t)))
+(optional systemd_optional_shutdown
+    (call shutdown_share_state_shutdown (systemd_t)))
 
 (optional systemd_optional_storage
     (call storage_read_fixed_disk_nodes (systemd_t)))
@@ -320,9 +320,9 @@
     ; (call tmpfiles_read_config_files (systemd_t))
     ; (call tmpfiles_read_run_files (systemd_t)))
 
-; (optional systemd_optional_udev
-    ; (call udev_read_config_files (systemd_t))
-    ; (call udev_read_run_files (systemd_t)))
+(optional systemd_optional_udev
+    (call udev_read_config_files (systemd_t))
+    (call udev_read_run_files (systemd_t)))
 
 ; (optional systemd_optional_utmp
     ; (call utmp_rw_run_files (systemd_t)))

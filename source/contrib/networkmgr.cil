@@ -145,9 +145,9 @@
 ; (optional networkmgr_optional_ssctl
     ; (call sysctl_read_config_files (networkmgr_t)))
 
-; (optional networkmgr_optional_udev
-    ; (call udev_read_config_files (networkmgr_t))
-    ; (call udev_read_run_files (networkmgr_t)))
+(optional networkmgr_optional_udev
+    (call udev_read_config_files (networkmgr_t))
+    (call udev_read_run_files (networkmgr_t)))
 
 (allow is_networkmgr_admin_subject networkmgr_t signal_perms)
 (call ps_subject_pattern (is_networkmgr_admin_subject networkmgr_t))

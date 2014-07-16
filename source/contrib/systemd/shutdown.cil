@@ -107,8 +107,8 @@
     (call plymouth_getattr_plymouthd_exec_files (shutdown_t))
     (call plymouth_use_fd_plymouthd (shutdown_t)))
 
-; (optional shutdown_optional_udev
-    ; (call udev_read_config_files (shutdown_t)))
+(optional shutdown_optional_udev
+    (call udev_read_config_files (shutdown_t)))
 
 (optional shutdown_optional_session
     (call session_use_inherited_terminals (shutdown_t)))
