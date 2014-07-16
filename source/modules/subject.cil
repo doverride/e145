@@ -203,6 +203,9 @@
     (typeattributeset can_mmap_low ARG1)
     (allow ARG1 self (memprotect (mmap_zero))))
 
+(macro subject_getpgid_all_subjects ((type ARG1))
+    (allow ARG1 is_subject (process (getpgid))))
+
 (macro subject_read_all_subjects_state ((type ARG1))
     (allow ARG1 is_subject (dirs (list)))
     (allow ARG1 is_subject read_file_perms))
@@ -215,6 +218,9 @@
 
 (macro subject_signull_all_subjects ((type ARG1))
     (allow ARG1 is_subject (process (signull))))
+
+(macro subject_sigstop_all_subjects ((type ARG1))
+    (allow ARG1 is_subject (process (sigstop))))
 
 (macro subject_unconfined ((type ARG1))
     (call subject_mmap_low (ARG1))

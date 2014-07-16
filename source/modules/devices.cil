@@ -549,6 +549,9 @@
 (macro devices_read_urandom ((type ARG1))
     (call read_files_pattern (ARG1 device_t device_urandom_t)))
 
+(macro devices_read_loop_control ((type ARG1))
+    (call read_files_pattern (ARG1 device_t device_loop_control_t)))
+
 (macro devices_rw_lvm_control ((type ARG1))
     (call rw_files_pattern (ARG1 device_t device_lvm_control_t)))
 
@@ -560,6 +563,9 @@
 
 (macro devices_rw_zero ((type ARG1))
     (call rw_files_pattern (ARG1 device_t device_zero_t)))
+
+(macro devices_getattr_sysfs_filesystems ((type ARG1))
+    (allow ARG1 sysfs_t (filesystem (getattr))))
 
 (macro devices_read_sysfs_files ((type ARG1))
     (call read_files_pattern (ARG1 sysfs_t sysfs_t)))

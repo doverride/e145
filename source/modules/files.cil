@@ -457,6 +457,7 @@
     (allow ARG1 is_rootfs_mnt_file_object (dirs (list))))
 
 (macro files_mounton_all_rootfs_mnt_dirs ((type ARG1))
+    (call files_list_all_rootfs_mnt (ARG1))
     (allow ARG1 is_rootfs_mnt_file_object (dir (mounton))))
 
 (macro files_mnt_object ((type ARG1))
@@ -553,6 +554,9 @@
 
 (macro files_read_all_non_security_files ((type ARG1))
     (allow ARG1 not_associated_with_security_file_object read_file_perms))
+
+(macro files_getattr_all_mnt_dirs ((type ARG1))
+    (allow ARG1 is_mnt_file_object (dir (getattr))))
 
 (macro files_setattr_all_mnt_dirs ((type ARG1))
     (allow ARG1 is_mnt_file_object (dir (setattr))))

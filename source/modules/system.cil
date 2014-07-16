@@ -308,7 +308,6 @@
 (call devices_manage_generic_chr_files (system_t))
 
 (call files_mounton_all_rootfs_mnt_dirs (system_t))
-(call files_list_all_rootfs_mnt (system_t))
 
 (call filesystem_list_tmpfs (system_t)) ; /run/initramfs
 
@@ -386,6 +385,24 @@
 (macro system_link_keyring ((type ARG1))
     (allow ARG1 system_t (key (search link))))
 
+(macro system_setkeycreate ((type ARG1))
+    (allow ARG1 system_t (process (setkeycreate))))
+
+(macro system_setpgid ((type ARG1))
+    (allow ARG1 system_t (process (setpgid))))
+
+(macro system_setsched ((type ARG1))
+    (allow ARG1 system_t (process (setsched))))
+
+(macro system_share_state ((type ARG1))
+    (allow ARG1 system_t (process (share))))
+
+(macro system_sigchld ((type ARG1))
+    (allow ARG1 system_t (process (sigchld))))
+
+(macro system_subject_type_transition ((type ARG1))
+    (allow ARG1 system_t (process (transition))))
+
 (macro system_load_kernel_modules ((type ARG1))
     (typeattributeset can_load_kernel_modules ARG1))
 
@@ -419,6 +436,9 @@
 (macro system_read_sysctl_kernel_files ((type ARG1))
     (call read_files_pattern (ARG1 sysctl_kernel_t sysctl_kernel_t)))
 
+(macro system_rw_sysctl_kernel_files ((type ARG1))
+    (call rw_files_pattern (ARG1 sysctl_kernel_t sysctl_kernel_t)))
+
 (macro system_read_sysctl_net_files ((type ARG1))
     (call read_files_pattern (ARG1 sysctl_net_t sysctl_net_t)))
 
@@ -448,9 +468,6 @@
 
 (macro system_search_proc ((type ARG1))
     (allow ARG1 proc_t (dirs (search))))
-
-(macro system_setsched ((type ARG1))
-    (allow ARG1 system_t (process (setsched))))
 
 (macro system_stream_connectto ((type ARG1))
     (allow ARG1 system_t (unix_stream_socket (connectto))))

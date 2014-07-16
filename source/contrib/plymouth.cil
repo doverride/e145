@@ -111,6 +111,9 @@
     (call plymouth_subtrans (ARG1))
     (roleattributeset is_plymouth_role ARG2))
 
+(macro plymouth_getattr_plymouthd_exec_files ((type ARG1))
+    (allow ARG1 plymouthd_exec_t (file (getattr))))
+
 (macro plymouth_use_fd_plymouth ((type ARG1))
     (allow ARG1 plymouth_t (fd (use))))
 

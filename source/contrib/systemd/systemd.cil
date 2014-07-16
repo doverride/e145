@@ -442,6 +442,9 @@
 (macro systemd_search_run ((type ARG1))
     (allow ARG1 systemd_run_t (dirs (search))))
 
+(macro systemd_run_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
+    (call filetrans_pattern (ARG1 systemd_run_t ARG2 ARG3 ARG4)))
+
 (macro systemd_manage_all_services ((type ARG1))
     (allow ARG1 is_systemd_unit_file_object (service (all))))
 
@@ -460,6 +463,9 @@
 
 (macro systemd_getattr_exec_files ((type ARG1))
     (allow ARG1 systemd_exec_t (file (getattr))))
+
+(macro systemd_getattr_generic_unit_dirs ((type ARG1))
+    (allow ARG1 systemd_unit_t (dir (getattr))))
 
 (macro systemd_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 systemd_conf_t systemd_conf_t)))
