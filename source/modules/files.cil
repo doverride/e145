@@ -91,16 +91,16 @@
 
 (context file_mnt (system_u object_r mnt_t ((s0) (s0))))
 (filecon "/media/[^/]*/.*" any ())
-(filecon "/media(/[^/]*)" symlink file_mnt)
+(filecon "/media(/[^/]*)?" symlink file_mnt)
 (filecon "/media(/[^/]*)?" dir file_mnt)
 
 (filecon "/mnt/[^/]*/.*" any ())
-(filecon "/mnt(/[^/]*)" symlink file_mnt)
+(filecon "/mnt(/[^/]*)?" symlink file_mnt)
 (filecon "/mnt(/[^/]*)?" dir file_mnt)
 
-(filecon "/var/run/media/[^/]*/.*" any ())
-(filecon "/var/run/media(/[^/]*)" symlink file_mnt)
-(filecon "/var/run/media(/[^/]*)?" dir file_mnt)
+(filecon "/run/media/[^/]*/.*" any ())
+(filecon "/run/media(/[^/]*)?" symlink file_mnt)
+(filecon "/run/media(/[^/]*)?" dir file_mnt)
 
 (type recov_t)
 (call files_object (recov_t))
