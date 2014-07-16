@@ -74,13 +74,10 @@
     (call subject_entry (ARG1 shell_t)))
 
 (macro commands_shell_auto_subject_type_transition ((type ARG1)(type ARG2))
-    (call commands_shell_spec_subject_type_transition (ARG1 ARG2))
+    (call commands_shell_manual_subject_type_transition (ARG1 ARG2))
     (typetransition ARG1 shell_t process "*" ARG2))
 
 (macro commands_shell_manual_subject_type_transition ((type ARG1)(type ARG2))
-    (call manual_subject_type_transition_pattern (ARG1 shell_t ARG2)))
-
-(macro commands_shell_spec_subject_type_transition ((type ARG1)(type ARG2))
     (call manual_subject_type_transition_pattern (ARG1 shell_t ARG2)))
 
 (macro commands_execute_shell_files ((type ARG1))
