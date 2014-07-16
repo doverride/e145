@@ -1,5 +1,8 @@
 (class dbus (acquire_svc send_msg))
 
+(classorder (netlink_dnrt_socket dbus))
+(classorder (dbus association))
+
 (typeattribute is_dbus_admin_subject)
 (typeattribute is_dbus_system_client_subject)
 
