@@ -37,6 +37,12 @@
 (call subject_common_subject (system_t))
 (roletype system_r system_t)
 
+(type system_log_t)
+(call files_var_log_object (system_log_t))
+
+(context file_system_log (system_u object_r system_log_t ((s0) (s0))))
+(filecon "/var/log/boot\.log.*" file file_system_log)
+
 (sid kernel)
 (context kernel (system_u system_r system_t (mls_systemhigh
     mls_systemhigh)))
@@ -284,6 +290,9 @@
     not_associated_with_can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
         is_sysctl_security_or_sysctl_usermodehelper_file_object (file
             (append write)))
+
+(allow system_t system_log_t manage_file_perms)
+(call files_var_log_filetrans (system_t system_log_t file "*"))
 
 (booleanif (not secure_mode_insmod)
     (true

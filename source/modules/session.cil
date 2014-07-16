@@ -85,6 +85,14 @@
 (macro session_use_tty_nodes ((type ARG1))
     (allow ARG1 device_session_tty_t rw_term_perms))
 
+(macro session_use_terminals ((type ARG1))
+    (allow ARG1 device_session_pts_t rw_term_perms)
+    (allow ARG1 device_session_tty_t rw_term_perms))
+
+(macro session_use_inherited_terminals ((type ARG1))
+    (allow ARG1 device_session_pts_t rw_inherited_term_perms)
+    (allow ARG1 device_session_tty_t rw_inherited_term_perms))
+
 ; others
 
 (optional session_optional_seutil_others
