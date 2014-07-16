@@ -10,8 +10,6 @@
 (type login_exec_t)
 (call subject_entry (login_t login_exec_t))
 
-(call auth_login_program_subject (login_t))
-
 (context file_login_exec (system_u object_r login_exec_t ((s0) (s0))))
 (filecon "/usr/bin/login" file file_login_exec)
 
@@ -52,6 +50,9 @@
 
 (call systemd_search_run (login_t))
 
+(optional login_optional_auth
+    (call auth_login_program_subject (login_t)))
+
 (optional login_optional_session
     (call session_relabel_tty_nodes (login_t))
     (call session_search_home_dir (login_t))
@@ -84,7 +85,7 @@
 (call terminal_use_console_nodes (sulogin_t))
 (call terminal_use_unallocated_tty_nodes (sulogin_t))
 
-(optional login_optional_auth
+(optional sulogin_optional_auth
     (call auth_read_shadow_files (sulogin_t))
     (call auth_nsswitch_client_subject (sulogin_t)))
 
