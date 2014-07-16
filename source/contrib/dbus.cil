@@ -1,5 +1,3 @@
-(class dbus (acquire_svc send_msg))
-
 (typeattribute is_dbus_admin_subject)
 (typeattribute is_dbus_system_client_subject)
 

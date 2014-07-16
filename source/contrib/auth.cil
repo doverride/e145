@@ -1,5 +1,3 @@
-(class passwd (passwd chfn chsh rootok crontab))
-
 (roleattribute is_authconfig_role)
 (roleattribute is_chkpwd_role)
 (roleattribute is_updpwd_role)

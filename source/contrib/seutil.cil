@@ -1,5 +1,3 @@
-(class context (translate contains))
-
 (roleattribute is_load_policy_role)
 (roleattribute is_secilc_role)
 (roleattribute is_setfiles_role)

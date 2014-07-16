@@ -1,5 +1,3 @@
-(class service (stop status disable enable reload start))
-
 (roleattribute is_systemctl_role)
 
 (typeattribute is_systemd_unit_file_object)
