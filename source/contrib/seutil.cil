@@ -1,8 +1,5 @@
 (class context (translate contains))
 
-(classorder (key context))
-(classorder (context dccp_socket))
-
 (roleattribute is_load_policy_role)
 (roleattribute is_secilc_role)
 (roleattribute is_setfiles_role)
