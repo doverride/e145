@@ -1,0 +1,156 @@
+(typeattribute is_shutdown_admin_subject)
+
+(typeattribute is_shutdown_subject)
+(typeattributeset is_shutdown_subject (shutdown_t shutdownd_t))
+
+(typeattribute is_shutdown_file_object)
+(typeattributeset is_shutdown_file_object (shutdown_run_t
+    shutdownd_run_t shutdownd_unit_t))
+
+(type shutdown_t)
+(type shutdown_exec_t)
+(call systemd_oneshot_subject_entry (shutdown_t shutdown_exec_t))
+
+(context file_shutdown_exec (system_u object_r shutdown_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-shutdown" file file_shutdown_exec)
+
+(type shutdown_run_t)
+(call files_run_object (shutdown_run_t))
+
+(context file_shutdown_run (system_u object_r shutdown_exec_t ((s0) (s0))))
+(filecon "/run/systemd/shutdown(/.*)?" any file_shutdown_exec)
+
+(type shutdownd_t)
+(type shutdownd_exec_t)
+(call systemd_daemon_subject_entry (shutdownd_t shutdownd_exec_t))
+
+(context file_shutdownd_exec (system_u object_r shutdownd_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-shutdownd" file file_shutdownd_exec)
+
+(call systemd_socket_activated_subject (shutdownd_t shutdownd_run_t))
+
+(type shutdownd_unit_t)
+(call systemd_unit_object (shutdownd_unit_t))
+
+(context file_shutdownd_unit (system_u object_r shutdownd_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-shutdownd.*" file file_shutdownd_unit)
+
+(type shutdownd_run_t)
+(call files_run_object (shutdownd_run_t))
+
+(context file_shutdownd_run (system_u object_r shutdownd_run_t ((s0) (s0))))
+(filecon "/run/systemd/shutdownd" socket file_shutdownd_run)
+
+(call selinux_get_filesystems_mount (is_shutdown_subject))
+
+; (optional shutdown_optional_utmp
+    ; (call utmp_read_run_files (is_shutdown_subject)))
+
+(call system_request_load_module (shutdown_t))
+(call system_read_generic_proc_files (shutdown_t))
+(call system_rw_sysctl_kernel_files (shutdown_t))
+(call system_setkeycreate (shutdown_t))
+(call system_setpgid (shutdown_t))
+(call system_share_state (shutdown_t))
+(call system_setsched (shutdown_t))
+(call system_sigchld (shutdown_t))
+(call system_subject_type_transition (shutdown_t))
+(call system_use_fd (shutdown_t))
+
+(call commands_execute_bin_files (shutdown_t))
+(call commands_execute_shell_files (shutdown_t))
+
+(call devices_getattr_sysfs_filesystems (shutdown_t))
+(call devices_read_loop_control (shutdown_t))
+(call devices_read_sysfs_files (shutdown_t))
+(call devices_rw_lvm_control (shutdown_t))
+(call devices_write_kmsg (shutdown_t))
+
+(call files_getattr_all_mnt_dirs (shutdown_t))
+(call files_mounton_all_rootfs_mnt_dirs (shutdown_t))
+
+(call filesystem_delete_cgroup_dirs (shutdown_t))
+(call filesystem_execute_generic_tmpfs_files (shutdown_t)) ; /run/initramfs/shutdown
+(call filesystem_manage_generic_tmpfs_dirs (shutdown_t))
+(call filesystem_manage_generic_tmpfs_files (shutdown_t))
+(call filesystem_mounton_generic_tmpfs_dirs (shutdown_t))
+(call filesystem_read_cgroup_files (shutdown_t))
+(call filesystem_remount_all_filesystems (shutdown_t))
+(call filesystem_unmount_all_filesystems (shutdown_t))
+
+(call selinux_get_enforce_mode (shutdown_t))
+
+(call subject_getpgid_all_subjects (shutdown_t))
+(call subject_read_all_subjects_state (shutdown_t))
+(call subject_sigkill_all_subjects (shutdown_t))
+(call subject_signal_all_subjects (shutdown_t))
+(call subject_signull_all_subjects (shutdown_t))
+(call subject_sigstop_all_subjects (shutdown_t))
+
+(call terminal_use_console_nodes (shutdown_t))
+(call terminal_write_inherited_generic_pty_nodes (shutdown_t)) ; /dev/pts/ptmx
+
+(call systemd_getattr_generic_unit_dirs (shutdown_t))
+
+(optional shutdown_optional_fstools
+    (call fstools_exec (shutdown_t)))
+
+(optional shutdown_optional_lvm
+    (call lvm_exec_lvm (shutdown_t)))
+
+(optional shutdown_optional_mount
+    (call mount_exec (shutdown_t))
+    (call mount_manage_run_files (shutdown_t))
+    (call mount_rw_run_files (shutdown_t))) ; this one includes xs to mislabeled /run/mount/utab
+
+(optional shutdown_optional_plymouth
+    (call plymouth_getattr_plymouthd_exec_files (shutdown_t))
+    (call plymouth_use_fd_plymouthd (shutdown_t)))
+
+; (optional shutdown_optional_udev
+    ; (call udev_read_config_files (shutdown_t)))
+
+(optional shutdown_optional_session
+    (call session_use_inherited_terminals (shutdown_t)))
+
+(allow shutdownd_t self (capability (dac_override net_admin)))
+
+(allow shutdownd_t shutdownd_run_t manage_sock_file_perms)
+(call systemd_run_filetrans (shutdownd_t shutdownd_run_t sock_file "*"))
+
+(call shutdown_manage_run_files (shutdownd_t))
+
+(call systemd_dgram_send (shutdownd_t))
+(call systemd_subtrans_systemctl (shutdownd_t))
+
+; (optional shutdownd_optional_journal
+    ; (call journal_client_subject (shutdownd_t)))
+
+(optional shutdownd_optional_miscfiles
+    (call miscfiles_read_localization_files (shutdownd_t)))
+
+(optional shutdownd_optional_session
+    (call session_use_terminals (shutdownd_t)))
+
+; (optional shutdownd_optional_sessions
+    ; (call sessions_manage_run_files (shutdownd_t))
+    ; (call sessions_run_filetrans_run_files (shutdownd_t)))
+
+(allow is_shutdown_admin_subject is_shutdown_subject signal_perms)
+(call ps_subject_pattern (is_shutdown_admin_subject is_shutdown_subject))
+
+(allow is_shutdown_admin_subject shutdownd_unit_t (service (all)))
+
+(call admin_pattern (is_shutdown_admin_subject is_shutdown_file_object))
+
+(macro shutdown_manage_run_files ((type ARG1))
+    (call manage_files_pattern (ARG1 shutdown_run_t shutdown_run_t)))
+
+(macro shutdown_share_state_shutdown ((type ARG1))
+    (allow ARG1 shutdown_t (process (share))))
+
+(macro shutdown_sigchld_shutdown ((type ARG1))
+    (allow ARG1 shutdown_t (process (sigchld))))
+
+(macro shutdown_admin ((type ARG1))
+    (typeattributeset is_shutdown_admin_subject ARG1))
