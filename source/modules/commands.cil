@@ -55,10 +55,10 @@
     (call subject_entry (ARG1 bin_t)))
 
 (macro commands_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
-    (call commands_bin_spec_subject_type_transition (ARG1 ARG2))
+    (call commands_bin_manual_subject_type_transition (ARG1 ARG2))
     (typetransition ARG1 bin_t process "*" ARG2))
 
-(macro commands_bin_spec_subject_type_transition ((type ARG1)(type ARG2))
+(macro commands_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
     (call manual_subject_type_transition_pattern (ARG1 bin_t ARG2)))
 
 (macro commands_execute_bin_files ((type ARG1))
