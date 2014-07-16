@@ -325,6 +325,9 @@
 (macro files_boot_object ((type ARG1))
     (typeattributeset is_boot_file_object ARG1))
 
+(macro files_list_boot ((type ARG1))
+    (allow ARG1 boot_t (dirs (list))))
+
 (macro files_var_cache_object ((type ARG1))
     (typeattributeset is_cache_file_object ARG1))
 
@@ -348,11 +351,22 @@
 (macro files_env_object ((type ARG1))
     (typeattributeset is_env_file_object ARG1))
 
+(macro files_read_all_env_files ((type ARG1))
+    (call read_files_pattern (ARG1 is_env_file_object
+    is_env_file_object)))
+
 (macro files_read_generic_env_files ((type ARG1))
     (call read_files_pattern (ARG1 etc_t env_t)))
 
+(macro files_list_home_root ((type ARG1))
+    (allow ARG1 home_root_t (dirs (list))))
+
 (macro files_run_lock_object ((type ARG1))
     (typeattributeset is_lock_file_object ARG1))
+
+(macro files_read_all_lock_files ((type ARG1))
+    (call read_files_pattern (ARG1 is_lock_file_object
+    is_lock_file_object)))
 
 (macro files_run_lock_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
@@ -360,6 +374,18 @@
 
 (macro files_search_root ((type ARG1))
     (allow ARG1 root_t (dirs (search))))
+
+(macro files_tmp_object ((type ARG1))
+    (typeattributeset is_tmp_file_object ARG1))
+
+(macro files_manage_generic_tmp_dirs ((type ARG1))
+    (call manage_dirs_pattern (ARG1 tmp_t tmp_t)))
+
+(macro files_mounton_generic_tmp_dirs ((type ARG1))
+    (allow ARG1 tmp_t (dir (mounton))))
+
+(macro files_tmp_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
+    (call filetrans_pattern (ARG1 tmp_t ARG2 ARG3 ARG4)))
 
 (macro files_var_log_object ((type ARG1))
     (typeattributeset is_log_file_object ARG1))
@@ -419,9 +445,6 @@
 (macro files_var_lib_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 var_lib_t ARG2 ARG3 ARG4)))
-
-(macro files_tmp_object ((type ARG1))
-    (typeattributeset is_tmp_file_object ARG1))
 
 (macro files_tmpfs_object ((type ARG1))
     (typeattributeset is_tmpfs_file_object ARG1))
@@ -484,6 +507,42 @@
 
 (macro files_relabel_all_chr_files_except ((type ARG1))
     (allow ARG1 all_files_except relabel_chr_file_perms))
+
+(macro files_relabel_non_auth_except ((type ARG1))
+    (call files_relabel_all_non_auth_dirs_except (ARG1))
+    (call files_relabel_all_non_auth_files_except (ARG1))
+    (call files_relabel_all_non_auth_fifo_files_except (ARG1))
+    (call files_relabel_all_non_auth_sock_files_except (ARG1))
+    (call files_relabel_all_non_auth_lnk_files_except (ARG1))
+    (call files_relabel_all_non_auth_blk_files_except (ARG1))
+    (call files_relabel_all_non_auth_chr_files_except (ARG1)))
+
+(macro files_relabel_all_non_auth_dirs_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except
+        relabel_dir_perms))
+
+(macro files_relabel_all_non_auth_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except relabel_file_perms))
+
+(macro files_relabel_all_non_auth_fifo_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except
+        relabel_fifo_file_perms))
+
+(macro files_relabel_all_non_auth_sock_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except
+        relabel_sock_file_perms))
+
+(macro files_relabel_all_non_auth_lnk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except
+        relabel_lnk_file_perms))
+
+(macro files_relabel_all_non_auth_blk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except
+        relabel_blk_file_perms))
+
+(macro files_relabel_all_non_auth_chr_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except
+        relabel_chr_file_perms))
 
 (macro files_mounton_all_mnt_dirs ((type ARG1))
     (allow ARG1 is_mnt_file_object (dir (mounton))))

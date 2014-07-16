@@ -8,8 +8,7 @@
 
 (type kmod_t)
 (type kmod_exec_t)
-(call application_subject_entry (kmod_t kmod_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (kmod_t kmod_exec_t))
+(call systemd_oneshot_subject_entry (kmod_t kmod_exec_t))
 (roletype is_kmod_role kmod_t)
 
 (context file_kmod_exec (system_u object_r kmod_exec_t ((s0)
@@ -39,8 +38,7 @@
 (filecon "/var/run/tmpfiles\.d/kmod\.conf" file file_kmod_run)
 
 (type kmod_unit_t)
-(call files_object (kmod_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (kmod_unit_t))
+(call systemd_unit_object (kmod_unit_t))
 
 (context file_kmod_unit (system_u object_r kmod_unit_t ((s0)
     (s0))))

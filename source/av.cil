@@ -170,7 +170,3 @@
     netlink_audit_socket netlink_ip6fw_socket netlink_dnrt_socket dbus association
     netlink_kobject_uevent_socket appletalk_socket packet key context dccp_socket
     memprotect peer capability2 kernel_service tun_socket service))
-
-; others
-
-(class service (stop status disable enable reload start))

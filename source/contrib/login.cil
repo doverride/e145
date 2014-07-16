@@ -23,16 +23,14 @@
 
 (type sulogin_t)
 (type sulogin_exec_t)
-(call application_subject_entry (sulogin_t sulogin_exec_t)) ; temporary hack for object_roletype
-; (call systemd_daemon_subject_entry (sulogin_t sulogin_exec_t))
+(call systemd_daemon_subject_entry (sulogin_t sulogin_exec_t))
 
 (context file_sulogin_exec (system_u object_r sulogin_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/sulogin" file file_sulogin_exec)
 (filecon "/usr/sbin/sushell" file file_sulogin_exec)
 
 (type sulogin_unit_t)
-(call files_object (sulogin_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (sulogin_unit_t))
+(call systemd_unit_object (sulogin_unit_t))
 
 (context file_sulogin_unit (system_u object_r sulogin_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*emergency.*" file file_sulogin_unit)
@@ -52,7 +50,7 @@
 
 (call login_read_pam_config_files (login_t))
 
-; (call systemd_search_run (login_t))
+(call systemd_search_run (login_t))
 
 (optional login_optional_session
     (call session_relabel_tty_nodes (login_t))

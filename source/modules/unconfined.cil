@@ -83,10 +83,5 @@
         (call dbus_unconfined (ARG1)))
     (optional unconfined_optional_seutil
         (call seutil_unconfined (ARG1)))
-
-    ; others
-
-    (allow ARG1 is_subject (service (all)))
-    (allow ARG1 is_file_object (service (all)))
-
-    (allow ARG1 is_subject (system (all))))
+    (optional unconfined_optional_systemd
+        (call systemd_unconfined (ARG1))))

@@ -8,8 +8,7 @@
 
 (type dhclient_t)
 (type dhclient_exec_t)
-(call application_subject_entry (dhclient_t dhclient_exec_t)) ; temporary hack for object_roletype
-; (call systemd_daemon_subject_entry (dhclient_t dhclient_exec_t))
+(call systemd_daemon_subject_entry (dhclient_t dhclient_exec_t))
 (roletype is_dhclient_role dhclient_t)
 
 (context file_dhclient_exec (system_u object_r dhclient_exec_t ((s0) (s0))))

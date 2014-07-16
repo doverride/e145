@@ -7,8 +7,7 @@
 
 (type networkmgr_t)
 (type networkmgr_exec_t)
-(call application_subject_entry (networkmgr_t networkmgr_exec_t)) ; temporary hack for object_roletype
-; (call systemd_daemon_subject_entry (networkmgr_t networkmgr_exec_t))
+(call systemd_daemon_subject_entry (networkmgr_t networkmgr_exec_t))
 
 (context file_networkmgr_exec (system_u object_r networkmgr_exec_t ((s0)
     (s0))))
@@ -49,8 +48,7 @@
 (filecon "/run/netreport(/.*)?" any file_networkmgr_run)
 
 (type networkmgr_unit_t)
-(call files_object (networkmgr_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (networkmgr_unit_t))
+(call systemd_unit_object (networkmgr_unit_t))
 
 (context file_networkmgr_unit (system_u object_r networkmgr_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*NetworkManager.*" file file_networkmgr_unit)

@@ -20,8 +20,7 @@
 
 (type auditd_t)
 (type auditd_exec_t)
-(call application_subject_entry (auditd_t auditd_exec_t)) ; temporary hack for object_roletype
-; (call systemd_daemon_subject_entry (auditd_t auditd_exec_t))
+(call systemd_daemon_subject_entry (auditd_t auditd_exec_t))
 
 (context file_auditd_exec (system_u object_r auditd_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/auditd" file file_auditd_exec)
@@ -50,8 +49,7 @@
 (filecon "/run/audit_events" socket file_auditd_run)
 
 (type auditd_unit_t)
-(call files_object (auditd_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (auditd_unit_t))
+(call systemd_unit_object (auditd_unit_t))
 
 (context file_auditd_unit (system_u object_r auditd_unit_t
     ((s0) (s0))))
@@ -84,8 +82,7 @@
 
 (type auditctl_t)
 (type auditctl_exec_t)
-(call application_subject_entry (auditctl_t auditctl_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (auditctl_t auditctl_exec_t))
+(call systemd_oneshot_subject_entry (auditctl_t auditctl_exec_t))
 (roletype is_auditctl_role auditctl_t)
 
 (context file_auditctl_exec (system_u object_r auditctl_exec_t
@@ -94,8 +91,7 @@
 
 (type augenrules_t)
 (type augenrules_exec_t)
-(call application_subject_entry (augenrules_t augenrules_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (augenrules_t augenrules_exec_t))
+(call systemd_oneshot_subject_entry (augenrules_t augenrules_exec_t))
 (roletype is_augenrules_role augenrules_t)
 
 (context file_augenrules_exec (system_u object_r augenrules_exec_t

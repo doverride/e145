@@ -8,8 +8,7 @@
 
 (type iptables_t)
 (type iptables_exec_t)
-(call application_subject_entry (iptables_t iptables_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (iptables_t iptables_exec_t))
+(call systemd_oneshot_subject_entry (iptables_t iptables_exec_t))
 (roletype is_iptables_role iptables_t)
 
 (context file_iptables_exec (system_u object_r iptables_exec_t ((s0)
@@ -50,8 +49,7 @@
 (filecon "/run/lock/subsys/ip6tables" file file_iptables_lock)
 
 (type iptables_unit_t)
-(call files_object (iptables_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (iptables_unit_t))
+(call systemd_unit_object (iptables_unit_t))
 
 (context file_iptables_unit (system_u object_r iptables_unit_t ((s0)
     (s0))))

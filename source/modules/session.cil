@@ -1,4 +1,5 @@
 (typeattribute is_session_home_file_object)
+(typeattribute is_session_run_file_object)
 
 (user session_u)
 (role session_r)
@@ -29,6 +30,22 @@
 (filecon "/root" dir file_session_home_dir)
 (filecon "/home/joe" dir file_session_home_dir) ; hack
 
+(type session_run_user_dir_t)
+(call files_object (session_run_user_dir_t))
+
+(context file_session_run_user_dir (session_u object_r session_run_user_dir_t ((s0)
+    mls_systemhigh)))
+(filecon "/run/user/0" dir file_session_run_user_dir)
+(filecon "/run/user/1000" dir file_session_run_user_dir) ; hack
+
+(type session_run_t)
+(call session_run_object (session_run_t))
+
+(context file_session_run (session_u object_r session_run_t ((s0)
+    (s0))))
+(filecon "/run/user/0/.*" any file_session_run)
+(filecon "/run/user/1000/.*" any file_session_run) ; hack
+
 (type device_session_pts_t)
 (call terminal_user_pty_object (session_t device_session_pts_t))
 
@@ -52,9 +69,16 @@
     (call files_object (ARG1))
     (typeattributeset is_session_home_file_object ARG1))
 
+(macro session_run_object ((type ARG1))
+    (call files_object (ARG1))
+    (typeattributeset is_session_run_file_object ARG1))
+
 (macro session_create_keyring ((type ARG1))
     (allow ARG1 self (process (setkeycreate)))
     (allow ARG1 session_t (key (create search link write))))
+
+(macro session_link_keyring ((type ARG1))
+    (allow ARG1 session_t (key (link))))
 
 (macro session_dynamic_subject_type_transition ((type ARG1))
     (call subject_dynamic_type_transition_subject (ARG1))
@@ -63,6 +87,12 @@
 
 (macro session_search_home_dir ((type ARG1))
     (allow ARG1 session_home_dir_t (dirs (search))))
+
+(macro session_search_generic_home_content ((type ARG1))
+    (allow ARG1 session_home_t (dirs (search))))
+
+(macro session_search_run_user_dir ((type ARG1))
+    (allow ARG1 session_run_user_dir_t (dirs (search))))
 
 (macro session_send_signal ((type ARG1))
     (allow ARG1 session_t (process (signal))))

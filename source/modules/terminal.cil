@@ -120,8 +120,14 @@
 (macro terminal_getattr_devpts_filesystems ((type ARG1))
     (allow ARG1 devpts_t (filesystem (getattr))))
 
-(macro terminal_use_generic_pty_files ((type ARG1)) ; /dev/pts/ptmx
-    (allow ARG1 devpts_t rw_term_perms))
+(macro terminal_getattr_generic_pty_nodes ((type ARG1))
+    (allow ARG1 devpts_t (chr_file (getattr))))
+
+(macro terminal_use_generic_pty_nodes ((type ARG1)) ; /dev/pts/ptmx
+    (call read_chr_files_pattern (ARG1 devpts_t devpts_t)))
+
+(macro terminal_write_inherited_generic_pty_nodes ((type ARG1)) ; /dev/pts/ptmx
+    (allow ARG1 devpts_t write_inherited_chr_file_perms))
 
 (macro terminal_relabel_console_nodes ((type ARG1))
     (allow ARG1 device_console_t relabel_chr_file_perms))
@@ -149,9 +155,6 @@
 
 (macro terminal_use_unallocated_tty_nodes ((type ARG1))
     (allow ARG1 device_tty_t rw_term_perms))
-
-(macro terminal_getattr_generic_pty_nodes ((type ARG1))
-    (allow ARG1 devpts_t (chr_file (getattr))))
 
 (macro terminal_use_controlling_terminal ((type ARG1))
     (allow ARG1 device_devtty_t rw_term_perms))

@@ -207,6 +207,15 @@
     (allow ARG1 is_subject (dirs (list)))
     (allow ARG1 is_subject read_file_perms))
 
+(macro subject_sigkill_all_subjects ((type ARG1))
+    (allow ARG1 is_subject (process (sigkill))))
+
+(macro subject_signal_all_subjects ((type ARG1))
+    (allow ARG1 is_subject (process (signal))))
+
+(macro subject_signull_all_subjects ((type ARG1))
+    (allow ARG1 is_subject (process (signull))))
+
 (macro subject_unconfined ((type ARG1))
     (call subject_mmap_low (ARG1))
     (typeattributeset can_change_object_identity ARG1)

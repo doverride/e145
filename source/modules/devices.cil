@@ -527,6 +527,9 @@
     (allow ARG1 is_dev_file_object relabel_blk_file_perms)
     (allow ARG1 is_dev_file_object relabel_chr_file_perms))
 
+(macro devices_manage_dirs ((type ARG1))
+    (call manage_dirs_pattern (ARG1 device_t device_t)))
+
 (macro devices_manage_generic_blk_files ((type ARG1)) ; allows "kernel" to create nodes w/o type transition
     (allow ARG1 self (capability (mknod)))
     (call manage_blk_files_pattern (ARG1 device_t device_t)))
@@ -534,6 +537,9 @@
 (macro devices_manage_generic_chr_files ((type ARG1)) ; allows "kernel" to create nodes w/o type transition
     (allow ARG1 self (capability (mknod)))
     (call manage_chr_files_pattern (ARG1 device_t device_t)))
+
+(macro devices_read_autofs ((type ARG1))
+    (allow ARG1 device_autofs_t read_chr_file_perms))
 
 (macro devices_read_memory_raw ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))
@@ -557,6 +563,9 @@
 
 (macro devices_read_sysfs_files ((type ARG1))
     (call read_files_pattern (ARG1 sysfs_t sysfs_t)))
+
+(macro devices_write_kmsg ((type ARG1))
+    (allow ARG1 device_kmsg_t write_chr_file_perms))
 
 (macro devices_write_memory_raw ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))

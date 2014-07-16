@@ -11,10 +11,9 @@
 
 (type dbusd_t)
 (type dbusd_exec_t)
-(call application_subject_entry (dbusd_t dbusd_exec_t)) ; temporary hack for object_roletype
-; (call systemd_daemon_subject_entry (dbusd_t dbusd_exec_t))
+(call systemd_daemon_subject_entry (dbusd_t dbusd_exec_t))
 
-; (call systemd_socket_activated_subject (dbusd_t dbusd_run_t))
+(call systemd_socket_activated_subject (dbusd_t dbusd_run_t))
 
 (context file_dbusd_exec (system_u object_r dbusd_exec_t ((s0) (s0))))
 (filecon "/usr/bin/dbus-daemon" file file_dbusd_exec)
@@ -32,8 +31,7 @@
 (filecon "/run/dbus(/.*)?" any file_dbusd_run)
 
 (type dbusd_unit_t)
-(call files_object (dbusd_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (dbusd_unit_t))
+(call systemd_unit_object (dbusd_unit_t))
 
 (context file_dbusd_unit (system_u object_r dbusd_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*dbus.*" file file_dbusd_unit)

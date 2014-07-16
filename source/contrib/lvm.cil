@@ -15,18 +15,16 @@
 
 (type lvmetad_t)
 (type lvmetad_exec_t)
-(call application_subject_entry (lvmetad_t lvmetad_exec_t)) ; temporary hack for object_roletype
-; (call systemd_daemon_subject_entry (lvmetad_t lvmetad_exec_t))
+(call systemd_daemon_subject_entry (lvmetad_t lvmetad_exec_t))
 
-; (call systemd_socket_activated_subject (lvmetad_t lvmetad_run_t))
+(call systemd_socket_activated_subject (lvmetad_t lvmetad_run_t))
 
 (context file_lvmetad_exec (system_u object_r lvmetad_exec_t ((s0)
     (s0))))
 (filecon "/usr/sbin/lvmetad" file file_lvmetad_exec)
 
 (type lvmetad_unit_t)
-(call files_object (lvmetad_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (lvmetad_unit_t))
+(call systemd_unit_object (lvmetad_unit_t))
 
 (context file_lvmetad_unit (system_u object_r lvmetad_unit_t ((s0)
     (s0))))
@@ -42,8 +40,7 @@
 
 (type lvm_t)
 (type lvm_exec_t)
-(call application_subject_entry (lvm_t lvm_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (lvm_t lvm_exec_t))
+(call systemd_oneshot_subject_entry (lvm_t lvm_exec_t))
 (roletype is_lvm_role lvm_t)
 
 (context file_lvm_exec (system_u object_r lvm_exec_t ((s0)
@@ -88,8 +85,7 @@
 (filecon "/run/lvm(/.*)?" any file_lvm_run)
 
 (type lvm_unit_t)
-(call files_object (lvm_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (lvm_unit_t))
+(call systemd_unit_object (lvm_unit_t))
 
 (context file_lvm_unit (system_u object_r lvm_unit_t ((s0)
     (s0))))
@@ -103,9 +99,9 @@
 (call selinux_getattr_filesystems (is_lvm_subject))
 (call selinux_get_enforce_mode (is_lvm_subject))
 
-; (optional lvm_optional_seutil
-    ; (call seutil_read_config_files (is_lvm_subject))
-    ; (call seutil_read_file_context_files (is_lvm_subject)))
+(optional lvm_optional_seutil
+    (call seutil_read_config_files (is_lvm_subject))
+    (call seutil_read_file_context_files (is_lvm_subject)))
 
 (allow lvm_t self (capability (ipc_lock sys_nice sys_admin)))
 (allow lvm_t self (process (setsched)))

@@ -68,8 +68,7 @@
 
 (type chkpwd_t)
 (type chkpwd_exec_t)
-(call application_subject_entry (chkpwd_t chkpwd_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (chkpwd_t chkpwd_exec_t))
+(call systemd_oneshot_subject_entry (chkpwd_t chkpwd_exec_t))
 (roletype is_chkpwd_role chkpwd_t)
 
 (context file_chkpwd_exec (system_u object_r chkpwd_exec_t ((s0) (s0))))
@@ -107,8 +106,7 @@
 
 (type pam_console_t)
 (type pam_console_exec_t)
-(call application_subject_entry (pam_console_t pam_console_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (pam_console_t pam_console_exec_t))
+(call systemd_oneshot_subject_entry (pam_console_t pam_console_exec_t))
 
 (context file_pam_console_exec (system_u object_r pam_console_exec_t ((s0)
     (s0))))
@@ -379,6 +377,9 @@
 
 (macro auth_dontaudit_write_wtmp_log_files ((type ARG1))
     (dontaudit ARG1 wtmp_t write_file_perms))
+
+(macro auth_read_authconfig_pam_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 pam_conf_t authconfig_pam_conf_t)))
 
 (macro auth_read_pam_config_files ((type ARG1))
     (call read_files_pattern (ARG1 pam_conf_t pam_conf_t)))

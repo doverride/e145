@@ -2,8 +2,7 @@
 
 (type fstools_t)
 (type fstools_exec_t)
-(call application_subject_entry (fstools_t fstools_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (fstools_t fstools_exec_t))
+(call systemd_oneshot_subject_entry (fstools_t fstools_exec_t))
 (roletype is_fstools_role fstools_t)
 
 (context file_fstools_exec (system_u object_r fstools_exec_t ((s0)

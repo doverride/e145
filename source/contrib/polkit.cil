@@ -9,8 +9,7 @@
 
 (type polkitd_t)
 (type polkitd_exec_t)
-(call application_subject_entry (polkitd_t polkitd_exec_t)) ; temporary hack for object_roletype
-; (call systemd_daemon_subject_entry (polkitd_t polkitd_exec_t))
+(call systemd_daemon_subject_entry (polkitd_t polkitd_exec_t))
 
 (context file_polkitd_exec (system_u object_r polkitd_exec_t ((s0) (s0))))
 (filecon "/usr/lib/polkit-1/polkitd" file file_polkitd_exec)
@@ -44,8 +43,7 @@
 (filecon "/var/lib/polkit-1(/.*)?" any file_polkitd_var_lib)
 
 (type polkitd_unit_t)
-(call files_object (polkitd_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (polkitd_unit_t))
+(call systemd_unit_object (polkitd_unit_t))
 
 (context file_polkitd_unit (system_u object_r polkitd_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*polkit.*" file file_polkitd_unit)

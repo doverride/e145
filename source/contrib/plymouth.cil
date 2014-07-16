@@ -11,8 +11,7 @@
 
 (type plymouth_t)
 (type plymouth_exec_t)
-(call application_subject_entry (plymouth_t plymouth_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (plymouth_t plymouth_exec_t))
+(call systemd_oneshot_subject_entry (plymouth_t plymouth_exec_t))
 (roletype is_plymouth_role plymouth_t)
 
 (context file_plymouth_exec (system_u object_r plymouth_exec_t ((s0) (s0))))
@@ -20,8 +19,7 @@
 
 (type plymouthd_t)
 (type plymouthd_exec_t)
-(call application_subject_entry (plymouthd_t plymouthd_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (plymouthd_t plymouthd_exec_t))
+(call systemd_oneshot_subject_entry (plymouthd_t plymouthd_exec_t))
 
 (context file_plymouthd_exec (system_u object_r plymouthd_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/plymouthd" file file_plymouthd_exec)
@@ -39,8 +37,7 @@
 (filecon "/run/plymouth(/.*)?" any file_plymouthd_run)
 
 (type plymouthd_unit_t)
-(call files_object (plymouthd_unit_t)) ; temporary hack for object_roletype
-; (call systemd_unit_object (plymouthd_unit_t))
+(call systemd_unit_object (plymouthd_unit_t))
 
 (context file_plymouthd_unit (system_u object_r plymouthd_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*plymouth-.*" file file_plymouthd_unit)
@@ -91,11 +88,11 @@
 (call files_read_generic_usr_files (plymouthd_t))
 
 (call terminal_getattr_devpts_filesystems (plymouthd_t))
-(call terminal_use_generic_pty_files (plymouthd_t))
+(call terminal_use_generic_pty_nodes (plymouthd_t)) ; /dev/pts/ptmx
 (call terminal_use_ptmx_nodes (plymouthd_t))
 (call terminal_use_unallocated_tty_nodes (plymouthd_t))
 
-; (call systemd_send_signal (plymouthd_t))
+(call systemd_send_signal (plymouthd_t))
 
 (optional plymouthd_optional_auth
     (call auth_nsswitch_client_subject (plymouthd_t)))

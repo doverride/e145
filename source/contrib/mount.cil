@@ -5,8 +5,7 @@
 
 (type mount_t)
 (type mount_exec_t)
-(call application_subject_entry (mount_t mount_exec_t)) ; temporary hack for object_roletype
-; (call systemd_oneshot_subject_entry (mount_t mount_exec_t))
+(call systemd_oneshot_subject_entry (mount_t mount_exec_t))
 (roletype is_mount_role mount_t)
 
 (context file_mount_exec (system_u object_r mount_exec_t ((s0) (s0))))
