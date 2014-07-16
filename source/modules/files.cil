@@ -367,6 +367,9 @@
 (macro files_add_entry_var_log_dirs ((type ARG1))
     (allow ARG1 var_log_t add_entry_dir_perms))
 
+(macro files_list_var_log ((type ARG1))
+    (allow ARG1 var_log_t (dirs (list))))
+
 (macro files_var_log_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 var_log_t ARG2 ARG3 ARG4)))
@@ -396,6 +399,9 @@
 (macro files_var_object ((type ARG1))
     (typeattributeset is_var_file_object ARG1))
 
+(macro files_list_var ((type ARG1))
+    (allow ARG1 var_t (dirs (list))))
+
 (macro files_var_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 var_t ARG2 ARG3 ARG4)))
@@ -423,6 +429,12 @@
 (macro files_rootfs_mnt_object ((type ARG1))
     (call files_mnt_object (ARG1))
     (typeattributeset is_rootfs_mnt_file_object ARG1))
+
+(macro files_list_all_rootfs_mnt ((type ARG1))
+    (allow ARG1 is_rootfs_mnt_file_object (dirs (list))))
+
+(macro files_mounton_all_rootfs_mnt_dirs ((type ARG1))
+    (allow ARG1 is_rootfs_mnt_file_object (dir (mounton))))
 
 (macro files_mnt_object ((type ARG1))
     (typeattributeset is_mnt_file_object ARG1))

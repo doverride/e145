@@ -95,6 +95,10 @@
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (compute_av))))
 
+(macro selinux_compute_create_context ((type ARG1))
+    (call rw_files_pattern (ARG1 security_t security_t))
+    (allow ARG1 security_t (security (compute_create))))
+
 (macro selinux_compute_relabel_context ((type ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (compute_relabel))))

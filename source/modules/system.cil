@@ -291,8 +291,44 @@
         is_sysctl_security_or_sysctl_usermodehelper_file_object (file
             (append write)))
 
+(allow system_t self (capability (sys_tty_config sys_admin)))
+(allow system_t self (capability2 (block_suspend)))
+(allow system_t self create_unix_stream_socket_perms)
+
 (allow system_t system_log_t manage_file_perms)
 (call files_var_log_filetrans (system_t system_log_t file "*"))
+
+(call system_list_debugfs (system_t))
+(call system_list_proc (system_t))
+(call system_request_load_module (system_t))
+
+; might be able to narrow these down to "create" and "setattr"
+(call devices_manage_all_nodes (system_t))
+(call devices_manage_generic_blk_files (system_t))
+(call devices_manage_generic_chr_files (system_t))
+
+(call files_mounton_all_rootfs_mnt_dirs (system_t))
+(call files_list_all_rootfs_mnt (system_t))
+
+(call filesystem_list_tmpfs (system_t)) ; /run/initramfs
+
+(call selinux_compute_create_context (system_t))
+(call selinux_get_filesystems_mount (system_t))
+
+; (optional system_optional_cgroupagent
+    ; (call cgroupagent_subtrans (system_t)))
+
+(optional system_optional_kmod
+    (call kmod_subtrans (system_t)))
+
+(optional system_optional_plymouth
+    (call plymouth_manage_var_lib_files (system_t))
+    (call plymouth_manage_run_files (system_t)))
+
+; (optional system_optional_systemd
+    ; (call systemd_dynamic_subject_type_transition (system_t))
+    ; (call systemd_getattr_exec_files (system_t))
+    ; (call systemd_send_signal (system_t)))
 
 (booleanif (not secure_mode_insmod)
     (true
@@ -397,6 +433,9 @@
         can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
             ARG1)
     (call rw_files_pattern (ARG1 sysctl_usermodehelper_t sysctl_usermodehelper_t)))
+
+(macro system_list_proc ((type ARG1))
+    (allow ARG1 proc_t (dirs (list))))
 
 (macro system_search_proc ((type ARG1))
     (allow ARG1 proc_t (dirs (search))))
