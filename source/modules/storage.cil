@@ -193,6 +193,11 @@
     (allow ARG1 device_fixed_disk_t read_chr_file_perms)
     (typeattributeset can_read_fixed_disk_raw ARG1))
 
+(macro storage_update_timestamp_fixed_disk_nodes ((type ARG1))
+    (allow ARG1 device_fixed_disk_t (blk_file (write)))
+    (allow ARG1 device_fixed_disk_t (chr_file (write)))
+    (typeattributeset can_write_fixed_disk_raw ARG1))
+
 (macro storage_write_fixed_disk_nodes ((type ARG1))
     (allow ARG1 device_fixed_disk_t write_blk_file_perms)
     (allow ARG1 device_fixed_disk_t write_chr_file_perms)
@@ -207,6 +212,10 @@
 (macro storage_read_scsi_generic_nodes ((type ARG1))
     (allow ARG1 device_scsi_generic_t read_chr_file_perms)
     (typeattributeset can_read_scsi_generic ARG1))
+
+(macro storage_update_timestamp_scsi_generic_nodes ((type ARG1))
+    (allow ARG1 device_scsi_generic_t (chr_file (write)))
+    (typeattributeset can_write_scsi_generic ARG1))
 
 (macro storage_unconfined ((type ARG1))
     (typeattributeset has_unconfined_access_to_storage_assets ARG1))

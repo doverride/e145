@@ -527,8 +527,25 @@
     (allow ARG1 is_dev_file_object relabel_blk_file_perms)
     (allow ARG1 is_dev_file_object relabel_chr_file_perms))
 
+(macro devices_setattr_all_nodes ((type ARG1))
+    (allow ARG1 is_dev_file_object (blk_file (setattr)))
+    (allow ARG1 is_dev_file_object (chr_file (setattr))))
+
+(macro devices_update_timestamp_all_nodes ((type ARG1))
+    (allow ARG1 is_dev_file_object (chr_file (write)))
+    (typeattributeset can_write_memory_raw ARG1)
+    (optional devices_optional_storage
+        (call storage_update_timestamp_fixed_disk_nodes (ARG1))
+        (call storage_update_timestamp_scsi_generic_nodes (ARG1))))
+
 (macro devices_manage_dirs ((type ARG1))
     (call manage_dirs_pattern (ARG1 device_t device_t)))
+
+(macro devices_manage_files ((type ARG1))
+    (call manage_files_pattern (ARG1 device_t device_t)))
+
+(macro devices_manage_lnk_files ((type ARG1))
+    (call manage_lnk_files_pattern (ARG1 device_t device_t)))
 
 (macro devices_manage_generic_blk_files ((type ARG1)) ; allows "kernel" to create nodes w/o type transition
     (allow ARG1 self (capability (mknod)))
@@ -537,6 +554,10 @@
 (macro devices_manage_generic_chr_files ((type ARG1)) ; allows "kernel" to create nodes w/o type transition
     (allow ARG1 self (capability (mknod)))
     (call manage_chr_files_pattern (ARG1 device_t device_t)))
+
+(macro devices_relabelfrom_generic_nodes ((type ARG1))
+    (allow ARG1 device_t relabelfrom_chr_file_perms)
+    (allow ARG1 device_t relabelfrom_blk_file_perms))
 
 (macro devices_read_autofs ((type ARG1))
     (allow ARG1 device_autofs_t read_chr_file_perms))
@@ -569,6 +590,9 @@
 
 (macro devices_read_sysfs_files ((type ARG1))
     (call read_files_pattern (ARG1 sysfs_t sysfs_t)))
+
+(macro devices_rw_sysfs_files ((type ARG1))
+    (call rw_files_pattern (ARG1 sysfs_t sysfs_t)))
 
 (macro devices_write_kmsg ((type ARG1))
     (allow ARG1 device_kmsg_t write_chr_file_perms))

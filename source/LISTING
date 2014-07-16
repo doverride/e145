@@ -34,6 +34,7 @@ contrib/ppp.cil
 contrib/seutil.cil
 contrib/systemd/shutdown.cil
 contrib/systemd/systemd.cil
+contrib/systemd/udev.cil
 modules/commands.cil
 modules/devices.cil
 modules/files.cil
