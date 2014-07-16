@@ -218,7 +218,7 @@
 (call files_read_all_lock_files (systemd_t))
 (call files_read_generic_etc_files (systemd_t)) ; /etc/login.defs
 (call files_read_generic_usr_files (systemd_t))
-(call files_relabel_non_auth_except (systemd_t))
+(call files_relabel_non_auth_except (systemd_t)); most likely way too coarse
 
 (call filesystem_getattr_all_filesystems (systemd_t))
 (call filesystem_list_autofs (systemd_t))
