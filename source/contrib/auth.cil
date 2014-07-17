@@ -255,8 +255,6 @@
 (optional auth_optional_dns
     (call dns_resolve_client_subject (is_nsswitch_client_subject)))
 
-(call files_search_var (is_pam_client_subject))
-
 (call auth_subtrans_chkpwd (is_pam_client_subject))
 (call auth_subtrans_updpwd (is_pam_client_subject))
 
