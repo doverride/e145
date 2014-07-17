@@ -316,9 +316,9 @@
 ; (optional systemd_optional_sysctl
     ; (call sysctl_read_config_files (systemd_t)))
 
-; (optional systemd_optional_tmpfiles
-    ; (call tmpfiles_read_config_files (systemd_t))
-    ; (call tmpfiles_read_run_files (systemd_t)))
+(optional systemd_optional_tmpfiles
+    (call tmpfiles_read_config_files (systemd_t))
+    (call tmpfiles_read_run_files (systemd_t)))
 
 (optional systemd_optional_udevd
     (call udevd_read_config_files (systemd_t))

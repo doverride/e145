@@ -46,7 +46,6 @@
     file_kmod_unit)
 
 (allow kmod_t kmod_run_t manage_file_perms)
-; (call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*"))
 
 (call system_link_keyring (kmod_t))
 (call system_list_debugfs (kmod_t))
@@ -57,6 +56,9 @@
 
 (call kmod_read_modules_config_files (kmod_t))
 (call kmod_read_modules_dep_files (kmod_t))
+
+(optional kmod_optional_tmpfiles
+    (call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*")))
 
 (allow is_kmod_admin_subject kmod_t signal_perms)
 (call ps_subject_pattern (is_kmod_admin_subject kmod_t))

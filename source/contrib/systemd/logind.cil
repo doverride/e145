@@ -70,8 +70,6 @@
 (call devices_read_sysfs_files (logind_t))
 (call devices_rw_event (logind_t))
 
-(call files_rw_run_user_root_dirs (logind_t)) ; add and remove entries from /run/user
-
 (call selinux_getattr_filesystems (logind_t))
 (call selinux_get_enforce_mode (logind_t))
 

@@ -1,0 +1,81 @@
+(roleattribute is_tmpfiles_role)
+
+(typeattribute is_tmpfiles_admin_subject)
+
+(typeattribute is_tmpfiles_file_object)
+(typeattributeset is_tmpfiles_file_object (tmpfiles_conf_t
+    tmpfiles_run_t tmpfiles_unit_t))
+
+(type tmpfiles_t)
+(type tmpfiles_exec_t)
+(call systemd_oneshot_subject_entry (tmpfiles_t tmpfiles_exec_t))
+(roletype is_tmpfiles_role tmpfiles_t)
+
+(context file_tmpfiles_exec (system_u object_r tmpfiles_exec_t ((s0) (s0))))
+(filecon "/usr/bin/systemd-tmpfiles" file file_tmpfiles_exec)
+
+(type tmpfiles_conf_t)
+(call files_etc_object (tmpfiles_conf_t))
+
+(context file_tmpfiles_conf (system_u object_r tmpfiles_conf_t ((s0) (s0))))
+(filecon "/etc/tmpfiles\.d(/.*)?" any file_tmpfiles_conf)
+
+(type tmpfiles_run_t)
+(call files_run_object (tmpfiles_run_t))
+
+(context file_tmpfiles_run (system_u object_r tmpfiles_run_t ((s0) (s0))))
+(filecon "/var/run/tmpfiles\.d(/.*)?" any file_tmpfiles_run)
+
+(type tmpfiles_unit_t)
+(call systemd_unit_object (tmpfiles_unit_t))
+
+(context file_tmpfiles_unit (system_u object_r tmpfiles_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-tmpfiles.*" file file_tmpfiles_unit)
+
+(allow tmpfiles_t self (capability (net_admin fowner fsetid dac_override chown)))
+(allow tmpfiles_t self (process (getcap setfscreate)))
+(allow tmpfiles_t self create_unix_stream_socket_perms)
+
+(allow tmpfiles_t tmpfiles_run_t manage_dir_perms)
+(call files_run_filetrans (tmpfiles_t tmpfiles_run_t dir "*"))
+
+(call devices_manage_all_nodes (tmpfiles_t))
+(call devices_relabel_all_nodes (tmpfiles_t))
+
+(call files_manage_non_auth_except (tmpfiles_t))
+(call files_relabel_non_auth_except (tmpfiles_t))
+
+(call selinux_getattr_filesystems (tmpfiles_t))
+
+(optional tmpfiles_optional_journald
+    (call journald_client_subject (tmpfiles_t))
+
+(allow is_tmpfiles_admin_subject tmpfiles_t signal_perms)
+(call ps_subject_pattern (is_tmpfiles_admin_subject tmpfiles_t))
+
+(allow is_tmpfiles_admin_subject tmpfiles_unit_t (service (all))))
+
+(call admin_pattern (is_tmpfiles_admin_subject is_tmpfiles_file_object))
+
+(macro tmpfiles_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 tmpfiles_exec_t tmpfiles_t)))
+
+(macro tmpfiles_run ((type ARG1)(role ARG2))
+    (call tmpfiles_subtrans (ARG1))
+    (roleattributeset is_tmpfiles_role (ARG2)))
+
+(macro tmpfiles_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 tmpfiles_conf_t tmpfiles_conf_t)))
+
+(macro tmpfiles_read_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 tmpfiles_run_t tmpfiles_run_t)))
+
+(macro tmpfiles_manage_run_files ((type ARG1))
+    (call manage_files_pattern (ARG1 tmpfiles_run_t tmpfiles_run_t)))
+
+(macro tmpfiles_run_filetrans ((type ARG1)(type ARG2)(class ARG3)
+    (name ARG4))
+    (call filetrans_pattern (ARG1 tmpfiles_run_t ARG2 ARG3 ARG4)))
+
+(macro tmpfiles_admin ((type ARG1))
+    (typeattributeset is_tmpfiles_admin_subject ARG1))

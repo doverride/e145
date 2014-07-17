@@ -372,9 +372,6 @@
     ARG4))
     (call filetrans_pattern (ARG1 run_lock_t ARG2 ARG3 ARG4)))
 
-(macro files_rw_run_user_root_dirs ((type ARG1))
-    (allow ARG1 run_user_root_t rw_dir_perms))
-
 (macro files_run_user_root_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
     (call filetrans_pattern (ARG1 run_user_root_t ARG2 ARG3 ARG4)))
@@ -518,6 +515,47 @@
 
 (macro files_relabel_all_chr_files_except ((type ARG1))
     (allow ARG1 all_files_except relabel_chr_file_perms))
+
+(macro files_manage_non_auth_except ((type ARG1))
+    (call files_manage_all_non_auth_dirs_except (ARG1))
+    (call files_manage_all_non_auth_files_except (ARG1))
+    (call files_manage_all_non_auth_fifo_files_except (ARG1))
+    (call files_manage_all_non_auth_sock_files_except (ARG1))
+    (call files_manage_all_non_auth_lnk_files_except (ARG1))
+    (call files_manage_all_non_auth_blk_files_except (ARG1))
+    (call files_manage_all_non_auth_chr_files_except (ARG1)))
+
+(macro files_manage_all_non_auth_dirs_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except manage_dir_perms))
+
+(macro files_manage_all_non_auth_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except manage_file_perms))
+
+(macro files_manage_all_non_auth_fifo_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
+        manage_fifo_file_perms))
+
+(macro files_manage_all_non_auth_sock_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
+        manage_sock_file_perms))
+
+(macro files_manage_all_non_auth_lnk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
+        manage_lnk_file_perms))
+
+(macro files_manage_all_non_auth_blk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
+        manage_blk_file_perms))
+
+(macro files_manage_all_non_auth_chr_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
+        manage_chr_file_perms))
 
 (macro files_relabel_non_auth_except ((type ARG1))
     (call files_relabel_all_non_auth_dirs_except (ARG1))
