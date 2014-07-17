@@ -3,6 +3,7 @@
 (typeattribute is_systemd_unit_file_object)
 
 (typeattribute is_systemd_socket_activated_subject)
+(typeattribute is_systemd_socket_activated_object)
 
 (typeattribute is_systemd_daemon_subject)
 (typeattribute is_systemd_oneshot_subject)
@@ -137,13 +138,21 @@
 
 (call files_object (is_systemd_unit_file_object))
 
-(allow systemd_t is_systemd_socket_activated_subject manage_dir_perms)
+(allow systemd_t is_systemd_socket_activated_subject
+    create_unix_dgram_stream_socket_perms)
+(allow systemd_t is_systemd_socket_activated_subject
+    create_unix_stream_stream_socket_perms)
+(allow systemd_t is_systemd_socket_activated_subject
+    create_netlink_kobject_uevent_socket_perms)
+
+(allow systemd_t is_systemd_socket_activated_object manage_dir_perms)
+
 (call manage_fifo_files_pattern (systemd_t
-    is_systemd_socket_activated_subject
-        is_systemd_socket_activated_subject))
+    is_systemd_socket_activated_object
+        is_systemd_socket_activated_object))
 (call manage_sock_files_pattern (systemd_t
-    is_systemd_socket_activated_subject
-        is_systemd_socket_activated_subject))
+    is_systemd_socket_activated_object
+        is_systemd_socket_activated_object))
 
 (call commands_bin_files_entry_subject (systemd_daemon_t))
 (call commands_shell_files_entry_subject (systemd_daemon_t))
@@ -392,10 +401,8 @@
     (call subtrans_pattern (systemd_t ARG2 ARG1)))
 
 (macro systemd_socket_activated_subject ((type ARG1) (type ARG2))
-    (typeattributeset is_systemd_socket_activated_subject ARG2)
-    (allow systemd_t ARG1 create_unix_dgram_stream_socket_perms)
-    (allow systemd_t ARG1 create_unix_stream_stream_socket_perms)
-    (allow systemd_t ARG1 create_netlink_kobject_uevent_socket_perms))
+    (typeattributeset is_systemd_socket_activated_subject ARG1)
+    (typeattributeset is_systemd_socket_activated_object ARG2))
 
 (macro systemd_oneshot_subject_entry ((type ARG1) (type ARG2))
     (call subject_entry (ARG1 ARG2))
