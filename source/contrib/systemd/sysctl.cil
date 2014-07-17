@@ -5,7 +5,7 @@
 
 (type sd_sysctl_t)
 (type sysctl_exec_t)
-(call systemd_oneshot_subject_entry (sysctl_t sysctl_exec_t))
+(call systemd_oneshot_subject_entry (sd_sysctl_t sysctl_exec_t))
 
 (context file_sysctl_exec (system_u object_r sysctl_exec_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/systemd-sysctl" file file_sysctl_exec)

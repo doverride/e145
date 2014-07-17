@@ -143,8 +143,8 @@
 (optional networkmgr_optional_polkit
     (call polkit_dbus_chat_polkitd (networkmgr_t)))
 
-; (optional networkmgr_optional_ssctl
-    ; (call sysctl_read_config_files (networkmgr_t)))
+(optional networkmgr_optional_sysctl
+    (call sysctl_read_config_files (networkmgr_t)))
 
 (optional networkmgr_optional_udevd
     (call udevd_read_config_files (networkmgr_t))
