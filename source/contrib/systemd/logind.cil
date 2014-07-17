@@ -78,7 +78,7 @@
 (call logind_read_config_files (logind_t))
 
 (call systemd_dbus_chat (logind_t))
-(call systemd_get_system_status (logind_t))
+(call systemd_get_status_system (logind_t))
 (call systemd_search_var_lib (logind_t)) ; not sure where it wants to go
 (call systemd_start_generic_service (logind_t)) ; user@.service
 (call systemd_start_system (logind_t)) ; BUG: logind to start session

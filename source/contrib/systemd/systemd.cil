@@ -439,7 +439,7 @@
 (macro systemd_dgram_send ((type ARG1))
     (call dgram_send_pattern (ARG1 systemd_run_t systemd_run_t systemd_t)))
 
-(macro systemd_get_system_status ((type ARG1))
+(macro systemd_get_status_system ((type ARG1))
     (allow ARG1 systemd_t (system (status))))
 
 (macro systemd_halt_system ((type ARG1))
@@ -448,11 +448,11 @@
 (macro systemd_reboot_system ((type ARG1))
     (allow ARG1 systemd_t (system (reboot))))
 
-(macro systemd_start_generic_service ((type ARG1))
-    (allow ARG1 systemd_unit_t (service (start))))
-
 (macro systemd_start_system ((type ARG1)) ; BUG: logind to start session
     (allow ARG1 systemd_t (system (start))))
+
+(macro systemd_start_generic_service ((type ARG1))
+    (allow ARG1 systemd_unit_t (service (start))))
 
 (macro systemd_get_status_transient_system_service ((type ARG1))
     (allow ARG1 systemd_t (service (status))))
