@@ -344,6 +344,9 @@
 (macro files_rw_etc_dirs ((type ARG1))
     (allow ARG1 etc_t rw_dir_perms))
 
+(macro files_search_etc ((type ARG1))
+    (allow ARG1 etc_t (dirs (search))))
+
 (macro files_etc_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 etc_t ARG2 ARG3 ARG4)))
@@ -403,6 +406,9 @@
 (macro files_list_var_log ((type ARG1))
     (allow ARG1 var_log_t (dirs (list))))
 
+(macro files_search_var_log ((type ARG1))
+    (call search_dirs_pattern (ARG1 var_t var_log_t)))
+
 (macro files_var_log_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 var_log_t ARG2 ARG3 ARG4)))
@@ -437,6 +443,10 @@
 
 (macro files_list_var ((type ARG1))
     (allow ARG1 var_t (dirs (list))))
+
+(macro files_search_var ((type ARG1))
+    (allow ARG1 var_t (dirs (search))))
+
 
 (macro files_var_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))

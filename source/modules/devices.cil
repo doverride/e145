@@ -597,6 +597,9 @@
 (macro devices_read_sysfs_files ((type ARG1))
     (call read_files_pattern (ARG1 sysfs_t sysfs_t)))
 
+(macro devices_search_sysfs ((type ARG1))
+    (allow ARG1 sysfs_t (dirs (search))))
+
 (macro devices_rw_sysfs_files ((type ARG1))
     (call rw_files_pattern (ARG1 sysfs_t sysfs_t)))
 
