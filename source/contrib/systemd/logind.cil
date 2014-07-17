@@ -106,8 +106,8 @@
 
 (optional logind_optional_session
     (call session_manage_run_user_dir (logind_t)) ; BUG: would have preferred lsetfilecon by logind for identity
-    (call session_run_user_filetrans_run_user_dir (logind_t "0"))
-    (call session_run_user_filetrans_run_user_dir (logind_t "1000")))
+    (call session_run_user_root_filetrans_run_user_dir (logind_t "0"))
+    (call session_run_user_root_filetrans_run_user_dir (logind_t "1000")))
 
 (optional logind_optional_udevd
     (call udevd_read_config_files (logind_t))

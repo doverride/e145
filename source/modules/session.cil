@@ -97,7 +97,7 @@
 (macro session_search_run_user_dir ((type ARG1))
     (allow ARG1 session_run_user_dir_t (dirs (search))))
 
-(macro session_run_user_filetrans_run_user_dir ((type ARG1)(name ARG2))
+(macro session_run_user_root_filetrans_run_user_dir ((type ARG1)(name ARG2))
     (call files_run_user_root_filetrans (ARG1 session_run_user_dir_t dir ARG2)))
 
 (macro session_send_signal ((type ARG1))
