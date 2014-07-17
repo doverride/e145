@@ -7,6 +7,8 @@
 (type initctl_exec_t)
 (call systemd_oneshot_subject_entry (initctl_t initctl_exec_t))
 
+(call systemd_socket_activated_subject (initctl_t initctl_run_t))
+
 (context file_initctl_exec (system_u object_r initctl_exec_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/systemd-initctl" file file_initctl_exec)
 
@@ -31,9 +33,6 @@
 
 (macro initctl_getattr_run_fifo_files ((type ARG1))
     (call getattr_fifo_files_pattern (ARG1 initctl_run_t initctl_run_t)))
-
-(macro initctl_manage_run_fifo_files ((type ARG1))
-    (call manage_files_pattern (ARG1 initctl_run_t initctl_run_t)))
 
 (macro initctl_admin ((type ARG1))
     (typeattributeset is_initctl_admin_subject ARG1))
