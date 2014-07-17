@@ -36,6 +36,7 @@ contrib/systemd/initctl.cil
 contrib/systemd/journald.cil
 contrib/systemd/logind.cil
 contrib/systemd/shutdownd.cil
+contrib/systemd/sysctl.cil
 contrib/systemd/systemd.cil
 contrib/systemd/tmpfiles.cil
 contrib/systemd/udevd.cil

@@ -71,6 +71,8 @@
 (call terminal_write_console_nodes (is_journald_client_subject))
 (call terminal_dontaudit_use_console_nodes (is_journald_client_subject))
 
+(call systemd_search_run (is_journald_client_subject))
+
 (allow journald_t self (capability (setgid setuid sys_admin sys_ptrace)))
 (allow journald_t self (process (getcap)))
 (allow journald_t self create_unix_dgram_socket_perms)

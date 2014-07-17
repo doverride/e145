@@ -48,8 +48,6 @@
 
 (call login_read_pam_config_files (login_t))
 
-(call systemd_search_run (login_t))
-
 (optional login_optional_auth
     (call auth_login_program_subject (login_t)))
 

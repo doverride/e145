@@ -18,13 +18,13 @@
 (typeattribute
     not_associated_with_can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object)
 
-(typeattribute is_proc_file_object)
-(typeattribute is_sysctl_file_object)
+(typeattribute is_proc_object)
+(typeattribute is_sysctl_object)
 
 (typeattribute has_unconfined_access_to_system_assets)
 
-(call object_roletype (is_proc_file_object))
-(call object_roletype (is_sysctl_file_object))
+(call object_roletype (is_proc_object))
+(call object_roletype (is_sysctl_object))
 
 (user system_u)
 (role system_r)
@@ -342,13 +342,13 @@
     (ipc_info syslog_read syslog_mod syslog_console module_request)))
 
 (typeattributeset all_sysctl_file_objects_except_is_sysctl_security_or_sysctl_usermodehelper_file_object
-    (and (is_sysctl_file_object)
+    (and (is_sysctl_object)
        (not (is_sysctl_security_or_sysctl_usermodehelper_file_object))))
 
-(allow has_unconfined_access_to_system_assets is_proc_file_object
+(allow has_unconfined_access_to_system_assets is_proc_object
     rw_file_perms)
 (allow has_unconfined_access_to_system_assets
-    is_proc_file_object (dirs (list)))
+    is_proc_object (dirs (list)))
 
 (allow has_unconfined_access_to_system_assets
     all_sysctl_file_objects_except_is_sysctl_security_or_sysctl_usermodehelper_file_object
@@ -357,7 +357,7 @@
     is_sysctl_security_or_sysctl_usermodehelper_file_object
         rw_file_perms_except_append_and_write)
 (allow has_unconfined_access_to_system_assets
-    is_sysctl_file_object (dirs (list)))
+    is_sysctl_object (dirs (list)))
 
 (allow has_unconfined_access_to_system_assets invalid_t
     all_process_perms_except_transition_dyntransition_setcurrent_ptrace_setsched_execmem_execstack_and_execheap)
@@ -368,10 +368,10 @@
     (all)))
 
 (macro system_proc_object ((type ARG1))
-    (typeattributeset is_proc_file_object ARG1))
+    (typeattributeset is_proc_object ARG1))
 
 (macro system_sysctl_object ((type ARG1))
-    (typeattributeset is_sysctl_file_object ARG1))
+    (typeattributeset is_sysctl_object ARG1))
 
 (macro system_dgram_sendto ((type ARG1))
     (allow ARG1 system_t (unix_dgram_socket (sendto))))
@@ -442,6 +442,9 @@
 
 (macro system_read_sysctl_kernel_files ((type ARG1))
     (call read_files_pattern (ARG1 sysctl_kernel_t sysctl_kernel_t)))
+
+(macro system_rw_sysctl_fs_files ((type ARG1))
+    (call rw_files_pattern (ARG1 sysctl_fs_t sysctl_fs_t)))
 
 (macro system_rw_sysctl_kernel_files ((type ARG1))
     (call rw_files_pattern (ARG1 sysctl_kernel_t sysctl_kernel_t)))
