@@ -1,0 +1,39 @@
+(typeattribute is_initctl_admin_subject)
+
+(typeattribute is_initctl_file_object)
+(typeattributeset is_initctl_file_object (initctl_run_t initctl_unit_t))
+
+(type initctl_t)
+(type initctl_exec_t)
+(call systemd_oneshot_subject_entry (initctl_t initctl_exec_t))
+
+(context file_initctl_exec (system_u object_r initctl_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-initctl" file file_initctl_exec)
+
+(type initctl_run_t)
+(call files_run_object (initctl_run_t))
+
+(context file_initctl_run (system_u object_r initctl_run_t ((s0) (s0))))
+(filecon "/run/systemd/initctl(/.*)?" any file_initctl_run)
+
+(type initctl_unit_t)
+(call systemd_unit_object (initctl_unit_t))
+
+(context file_initctl_unit (system_u object_r initctl_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-initctl.*" file file_initctl_unit)
+
+(allow is_initctl_admin_subject initctl_t signal_perms)
+(call ps_subject_pattern (is_initctl_admin_subject initctl_t))
+
+(allow is_initctl_admin_subject initctl_unit_t (service (all)))
+
+(call admin_pattern (is_initctl_admin_subject is_initctl_file_object))
+
+(macro initctl_getattr_run_fifo_files ((type ARG1))
+    (call getattr_fifo_files_pattern (ARG1 initctl_run_t initctl_run_t)))
+
+(macro initctl_manage_run_fifo_files ((type ARG1))
+    (call manage_files_pattern (ARG1 initctl_run_t initctl_run_t)))
+
+(macro initctl_admin ((type ARG1))
+    (typeattributeset is_initctl_admin_subject ARG1))

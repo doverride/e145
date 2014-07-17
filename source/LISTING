@@ -32,6 +32,7 @@ contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
 contrib/seutil.cil
+contrib/systemd/initctl.cil
 contrib/systemd/journald.cil
 contrib/systemd/logind.cil
 contrib/systemd/shutdownd.cil
