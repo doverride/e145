@@ -520,7 +520,7 @@
         (call storage_manage_scsi_generic_nodes (ARG1))))
 
 (macro devices_read_all_nodes ((type ARG1))
-    (call read_files_pattern (ARG1 device_t is_dev_file_object))
+    (call read_chr_files_pattern (ARG1 device_t is_dev_file_object))
     (typeattributeset can_read_memory_raw ARG1))
 
 (macro devices_relabel_all_nodes ((type ARG1))
@@ -547,6 +547,9 @@
 (macro devices_manage_lnk_files ((type ARG1))
     (call manage_lnk_files_pattern (ARG1 device_t device_t)))
 
+(macro devices_read_lnk_files ((type ARG1)) ; /dev/log and /dev/initctl
+    (call read_lnk_files_pattern (ARG1 device_t device_t)))
+
 (macro devices_manage_generic_blk_files ((type ARG1)) ; allows "kernel" to create nodes w/o type transition
     (allow ARG1 self (capability (mknod)))
     (call manage_blk_files_pattern (ARG1 device_t device_t)))
@@ -560,30 +563,30 @@
     (allow ARG1 device_t relabelfrom_blk_file_perms))
 
 (macro devices_read_autofs ((type ARG1))
-    (allow ARG1 device_autofs_t read_chr_file_perms))
+    (call read_chr_files_pattern (ARG1 device_t device_autofs_t)))
 
 (macro devices_read_memory_raw ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))
-    (call read_files_pattern (ARG1 device_t device_memory_t))
+    (call read_chr_files_pattern (ARG1 device_t device_memory_t))
     (typeattributeset can_read_memory_raw ARG1))
 
 (macro devices_read_urandom ((type ARG1))
-    (call read_files_pattern (ARG1 device_t device_urandom_t)))
+    (call read_chr_files_pattern (ARG1 device_t device_urandom_t)))
 
 (macro devices_read_loop_control ((type ARG1))
-    (call read_files_pattern (ARG1 device_t device_loop_control_t)))
+    (call read_chr_files_pattern (ARG1 device_t device_loop_control_t)))
 
 (macro devices_rw_lvm_control ((type ARG1))
-    (call rw_files_pattern (ARG1 device_t device_lvm_control_t)))
+    (call rw_chr_files_pattern (ARG1 device_t device_lvm_control_t)))
 
 (macro devices_rw_null ((type ARG1))
-    (call rw_files_pattern (ARG1 device_t device_null_t)))
+    (call rw_chr_files_pattern (ARG1 device_t device_null_t)))
 
 (macro devices_rw_wireless ((type ARG1))
-    (call rw_files_pattern (ARG1 device_t device_wireless_t)))
+    (call rw_chr_files_pattern (ARG1 device_t device_wireless_t)))
 
 (macro devices_rw_zero ((type ARG1))
-    (call rw_files_pattern (ARG1 device_t device_zero_t)))
+    (call rw_chr_files_pattern (ARG1 device_t device_zero_t)))
 
 (macro devices_getattr_sysfs_filesystems ((type ARG1))
     (allow ARG1 sysfs_t (filesystem (getattr))))
@@ -594,12 +597,15 @@
 (macro devices_rw_sysfs_files ((type ARG1))
     (call rw_files_pattern (ARG1 sysfs_t sysfs_t)))
 
+(macro devices_rw_kmsg ((type ARG1))
+    (call rw_chr_files_pattern (ARG1 device_t device_kmsg_t)))
+
 (macro devices_write_kmsg ((type ARG1))
-    (allow ARG1 device_kmsg_t write_chr_file_perms))
+    (call write_chr_files_pattern (ARG1 device_t device_kmsg_t)))
 
 (macro devices_write_memory_raw ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))
-    (allow ARG1 device_memory_t write_chr_file_perms)
+    (call write_chr_files_pattern (ARG1 device_t device_memory_t))
     (typeattributeset can_write_memory_raw ARG1))
 
 (macro devices_unconfined ((type ARG1))

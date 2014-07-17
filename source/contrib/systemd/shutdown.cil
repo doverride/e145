@@ -123,8 +123,8 @@
 (call systemd_dgram_send (shutdownd_t))
 (call systemd_subtrans_systemctl (shutdownd_t))
 
-; (optional shutdownd_optional_journal
-    ; (call journal_client_subject (shutdownd_t)))
+(optional shutdownd_optional_journal
+    (call journal_client_subject (shutdownd_t)))
 
 (optional shutdownd_optional_miscfiles
     (call miscfiles_read_localization_files (shutdownd_t)))

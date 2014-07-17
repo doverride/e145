@@ -141,6 +141,9 @@
 (macro terminal_use_console_nodes ((type ARG1))
     (allow ARG1 device_console_t rw_term_perms))
 
+(macro terminal_write_console_nodes ((type ARG1))
+    (allow ARG1 device_console_t write_chr_file_perms))
+
 (macro terminal_use_ptmx_nodes ((type ARG1))
     (allow ARG1 device_ptmx_t rw_term_perms))
 

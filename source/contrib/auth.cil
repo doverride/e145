@@ -277,8 +277,8 @@
 (optional auth_optional_audit
     (call audit_client_subject (is_pam_client_subject)))
 
-; (optional auth_optional_journal
-    ; (call journal_client_subject (is_pam_client_subject)))
+(optional auth_optional_journal
+    (call journal_client_subject (is_pam_client_subject)))
 
 (allow chkpwd_t self (capability (dac_override)))
 (allow chkpwd_t self create_unix_stream_socket_perms)

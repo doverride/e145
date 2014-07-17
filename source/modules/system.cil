@@ -325,7 +325,7 @@
     (call plymouth_manage_run_files (system_t)))
 
 (optional system_optional_systemd
-    ; (call systemd_dynamic_subject_type_transition (system_t)) ; not yet
+    (call systemd_dynamic_subject_type_transition (system_t))
     (call systemd_getattr_exec_files (system_t))
     (call systemd_send_signal (system_t)))
 
@@ -373,6 +373,9 @@
 (macro system_sysctl_object ((type ARG1))
     (typeattributeset is_sysctl_file_object ARG1))
 
+(macro system_dgram_sendto ((type ARG1))
+    (allow ARG1 system_t (unix_dgram_socket (sendto))))
+
 (macro system_get_sysvipc_info ((type ARG1))
     (allow ARG1 system_t (system (ipc_info))))
 
@@ -410,6 +413,10 @@
     (allow ARG1 self (capability (sys_rawio)))
     (call read_files_pattern (ARG1 proc_t proc_kcore_t))
     (typeattributeset can_dump_kernel ARG1))
+
+(macro system_read_ring_buffer ((type ARG1))
+    (allow ARG1 self (capability2 (syslog)))
+    (allow ARG1 system_t (system (syslog_read))))
 
 (macro system_request_load_module ((type ARG1))
     (allow ARG1 system_t (system (module_request))))
@@ -471,6 +478,12 @@
 
 (macro system_stream_connectto ((type ARG1))
     (allow ARG1 system_t (unix_stream_socket (connectto))))
+
+(macro system_rw_inherited_unix_dgram_sockets ((type ARG1))
+    (allow ARG1 system_t (unix_dgram_socket (getattr read write))))
+
+(macro system_rw_inherited_unix_stream_sockets ((type ARG1))
+    (allow ARG1 system_t (unix_stream_socket (getattr read write))))
 
 (macro system_use_fd ((type ARG1))
     (allow ARG1 system_t (fd (use))))

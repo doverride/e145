@@ -75,8 +75,8 @@
 (optional dhclient_optional_auth
     (call auth_nsswitch_client_subject (dhclient_t)))
 
-; (optional dhclient_optional_journal
-   ; (call journal_client_subject (dhclient_t)))
+(optional dhclient_optional_journal
+   (call journal_client_subject (dhclient_t)))
 
 (optional dhclient_optional_miscfiles
     (call miscfiles_read_localization_files (dhclient_t))

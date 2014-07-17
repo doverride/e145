@@ -274,10 +274,10 @@
 ; (optional systemd_optional_initctl
     ; (call initctl_manage_initctl_fifo_files (systemd_t)))
 
-; (optional systemd_optional_journal
-    ; (call journal_client_subject (systemd_t))
-    ; (call journal_list_log (systemd_t)) ; /run/log
-    ; (call journal_read_run_files (systemd_t)))
+(optional systemd_optional_journal
+    (call journal_client_subject (systemd_t))
+    (call journal_list_log (systemd_t)) ; /run/log
+    (call journal_read_run_files (systemd_t)))
 
 ; (optional systemd_optional_logind
     ; (call logind_read_run_files (systemd_t)))

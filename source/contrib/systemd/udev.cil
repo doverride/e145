@@ -109,8 +109,8 @@
 (optional udevd_optional_auth
     (call auth_nsswitch_client_subject (udevd_t)))
 
-; (optional udevd_optional_journal
-    ; (call journal_client_subject (udevd_t)))
+(optional udevd_optional_journal
+    (call journal_client_subject (udevd_t)))
 
 (optional udevd_optional_lvm
     (call lvm_subtrans_lvm (udevd_t)))

@@ -104,8 +104,8 @@
 
 (call audit_read_auditd_config_files (is_auditd_or_auditctl_subject))
 
-; (optional audit_optional_journal
-    ; (call journal_client_subject (is_auditd_or_audispd_subject)))
+(optional audit_optional_journal
+    (call journal_client_subject (is_auditd_or_audispd_subject)))
 
 (optional audit_optional_miscfiles
     (call miscfiles_read_localization_files (is_auditd_or_audispd_subject)))

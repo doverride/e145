@@ -1,0 +1,154 @@
+(roleattribute is_journalctl_role)
+
+(typeattribute is_journal_admin_subject)
+(typeattribute is_journal_client_subject)
+
+(typeattribute is_journal_subject)
+(typeattributeset is_journal_subject (journald_t journalctl_t))
+
+(typeattribute is_journal_file_object)
+(typeattributeset is_journal_file_object (journald_conf_t journald_log_t
+    journald_run_t journald_unit_t))
+
+(type journalctl_t)
+(call subject_common_subject (journalctl_t))
+
+(type journalctl_exec_t)
+(call subject_entry (journalctl_t journalctl_exec_t))
+(roleattributeset is_journalctl_role system_r)
+(roletype is_journalctl_role journalctl_t)
+
+(context file_journalctl_exec (system_u object_r journalctl_exec_t ((s0) (s0))))
+(filecon "/usr/bin/journalctl" file file_journalctl_exec)
+
+(type journald_t)
+(type journald_exec_t)
+(call systemd_daemon_subject_entry (journald_t journald_exec_t))
+
+(context file_journald_exec (system_u object_r journald_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-journald" file file_journald_exec)
+(filecon "/usr/lib/systemd/systemd-kmsg-syslogd" file file_journald_exec)
+
+(type journald_conf_t)
+(call files_etc_object (journald_conf_t))
+
+(context file_journald_conf (system_u object_r journald_conf_t ((s0) (s0))))
+(filecon "/etc/rsyslog\.d/listen\.conf" file file_journald_conf)
+(filecon "/etc/systemd/journald\.conf" file file_journald_conf)
+
+(type journald_log_t)
+(call files_var_log_object (journald_log_t))
+(call files_mnt_object (journald_log_t))
+
+(context file_journald_log (system_u object_r journald_log_t ((s0) mls_systemhigh)))
+(filecon "/run/log(/.*)?" any file_journald_log)
+(filecon "/var/log/journal(/.*)?" any file_journald_log)
+
+(type journald_run_t)
+(call files_run_object (journald_run_t))
+
+(context file_journald_run (system_u object_r journald_run_t ((s0) mls_systemhigh)))
+(filecon "/run/systemd/journal(/.*)?" any file_journald_run)
+
+(type journald_unit_t)
+(call systemd_unit_object (journald_unit_t))
+
+(context file_journald_unit (system_u object_r journald_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*syslog.*" file file_journald_unit)
+(filecon "/usr/lib/systemd/system/[^/]*systemd-journal.*" file file_journald_unit)
+
+(allow is_journal_client_subject self create_unix_dgram_socket_perms)
+(allow is_journal_client_subject self (unix_dgram_socket (sendto)))
+
+(call dgram_send_pattern (is_journal_client_subject journald_run_t journald_run_t journald_t))
+
+(call system_dgram_sendto (is_journal_client_subject))
+
+(call devices_read_lnk_files (is_journal_client_subject)) ; /dev/log
+
+(call files_search_run (is_journal_client_subject))
+
+(call terminal_write_console_nodes (is_journal_client_subject))
+(call terminal_dontaudit_use_console_nodes (is_journal_client_subject))
+
+(allow journald_t self (capability (setgid setuid sys_admin sys_ptrace)))
+(allow journald_t self (process (getcap)))
+(allow journald_t self create_unix_dgram_socket_perms)
+
+(call manage_dirs_pattern (journald_t journald_log_t journald_log_t))
+(call manage_files_pattern (journald_t journald_log_t journald_log_t))
+(call files_var_log_filetrans (journald_t journald_log_t dir "*"))
+
+(allow journald_t journald_run_t manage_dir_perms)
+(allow journald_t journald_run_t manage_file_perms)
+(allow journald_t journald_run_t manage_sock_file_perms)
+(call systemd_run_filetrans (journald_t journald_run_t dir "*"))
+
+(call system_read_generic_proc_files (journald_t))
+(call system_read_ring_buffer (journald_t))
+(call system_read_sysctl_kernel_files (journald_t))
+(call system_rw_inherited_unix_dgram_sockets (journald_t))
+(call system_rw_inherited_unix_stream_sockets (journald_t))
+
+(call devices_read_sysfs_files (journald_t))
+(call devices_read_urandom (journald_t))
+(call devices_rw_kmsg (journald_t))
+
+(call filesystem_getattr_filesystems (journald_t))
+(call filesystem_getattr_tmpfs_filesystems (journald_t))
+(call filesystem_manage_generic_tmpfs_files (journald_t)) ; mislabeled /run/log
+
+(call selinux_getattr_filesystems (journald_t))
+(call selinux_get_enforce_mode (journald_t))
+
+(call subject_read_all_subjects_state (journald_t))
+
+(call terminal_write_console_nodes (journald_t))
+(call terminal_write_inherited_generic_pty_nodes (journald_t)) ; /dev/pts/ptmx
+
+(call journal_read_config_files (journald_t))
+
+(call systemd_dgram_send (journald_t))
+(call systemd_read_machineid_files (journald_t))
+
+(optional journal_optional_misciles
+    (call miscfiles_read_localization_files (journald_t)))
+
+(optional journal_optional_plymouthd
+    (call plymouth_use_fd_plymouthd (journald_t)))
+
+(optional journal_optional_udev
+    (call udev_read_config_files (journald_t))
+    (call udev_read_run_files (journald_t)))
+
+(allow is_journal_admin_subject is_journal_subject signal_perms)
+(call ps_subject_pattern (is_journal_admin_subject is_journal_subject))
+
+(allow is_journal_admin_subject journald_unit_t (service (all)))
+
+(call admin_pattern (is_journal_admin_subject is_journal_file_object))
+
+(macro journal_subtrans_journalctl ((type ARG1))
+    (call subtrans_pattern (ARG1 journalctl_exec_t journalctl_t)))
+
+(macro journal_run_journalctl ((type ARG1)(role ARG2))
+    (call journal_subtrans_journalctl (ARG1))
+    (roleattributeset is_journalctl_role (ARG2)))
+
+(macro journal_list_log ((type ARG1))
+    (allow ARG1 journald_log_t (dirs (list))))
+
+(macro journal_read_log_files ((type ARG1))
+    (call read_files_pattern (ARG1 journald_log_t journal_log_t)))
+
+(macro journal_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 journald_conf_t journald_conf_t)))
+
+(macro journal_read_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 journald_run_t journald_run_t)))
+
+(macro journal_client_subject ((type ARG1))
+    (typeattributeset is_journal_client_subject ARG1))
+
+(macro journal_admin ((type ARG1))
+    (typeattributeset is_journal_admin_subject ARG1))

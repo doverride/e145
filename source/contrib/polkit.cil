@@ -93,8 +93,8 @@
     (call dbus_acquire_service_system (polkitd_t))
     (call dbus_system_client_subject (polkitd_t)))
 
-; (optional polkit_optional_journal
-    ; (call journal_client_subject (polkitd_t)))
+(optional polkit_optional_journal
+    (call journal_client_subject (polkitd_t)))
 
 ; (optional polkit_optional_logind
     ; (call logind_read_run_files (polkitd_t)))

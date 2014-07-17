@@ -122,8 +122,8 @@
 (optional networkmgr_optional_ip
     (call ip_subtrans (networkmgr_t)))
 
-; (optional networkmgr_optional_journal
-    ; (call journal_client_subject (networkmgr_t)))
+(optional networkmgr_optional_journal
+    (call journal_client_subject (networkmgr_t)))
 
 ; (optional networkmgr_optional_logind
     ; (call logind_dbus_chat (networkmgr_t))
