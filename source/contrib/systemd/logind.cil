@@ -72,8 +72,6 @@
 
 (call files_rw_run_user_root_dirs (logind_t)) ; add and remove entries from /run/user
 
-(call subject_obj_id_change_exemption (logind_t))
-
 (call selinux_getattr_filesystems (logind_t))
 (call selinux_get_enforce_mode (logind_t))
 
