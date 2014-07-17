@@ -28,7 +28,7 @@
 (allow utmp_t utmp_run_t manage_file_perms)
 (call files_run_filetrans (utmp_t utmp_run_t file "*"))
 
-(call systemd_get_generic_service_status (utmp_t)) ; graphical.target
+(call systemd_get_status_transient_system_service (utmp_t)) ; graphical.target
 (call systemd_get_system_status (utmp_t))
 (call systemd_stream_connect (utmp_t))
 
