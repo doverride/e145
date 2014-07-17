@@ -43,8 +43,8 @@
 
 (call selinux_get_filesystems_mount (is_shutdownd_subject))
 
-; (optional shutdown_optional_utmp
-    ; (call utmp_read_run_files (is_shutdown_subject)))
+(optional shutdown_optional_utmp
+    (call utmp_read_run_files (is_shutdownd_subject)))
 
 (call system_request_load_module (shutdown_t))
 (call system_read_generic_proc_files (shutdown_t))

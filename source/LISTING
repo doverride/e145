@@ -40,6 +40,7 @@ contrib/systemd/sysctl.cil
 contrib/systemd/systemd.cil
 contrib/systemd/tmpfiles.cil
 contrib/systemd/udevd.cil
+contrib/systemd/utmp.cil
 modules/commands.cil
 modules/devices.cil
 modules/files.cil

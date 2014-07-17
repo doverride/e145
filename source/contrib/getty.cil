@@ -38,8 +38,8 @@
 (optional getty_optional_miscfiles
     (call miscfiles_read_localization_files (getty_t)))
 
-; (optional getty_optional_utmp
-    ; (call utmp_rw_run_files (getty_t)))
+(optional getty_optional_utmp
+    (call utmp_rw_run_files (getty_t)))
 
 (allow is_getty_admin_subject getty_t signal_perms)
 (call ps_subject_pattern (is_getty_admin_subject getty_t))

@@ -241,8 +241,8 @@
     (call session_create_keyring (is_login_program_subject))
     (call session_send_signal (is_login_program_subject)))
 
-; (optional login_program_subject_optional_utmp
-    ; (call utmp_rw_run_files (is_login_program_subject)))
+(optional login_program_subject_optional_utmp
+    (call utmp_rw_run_files (is_login_program_subject)))
 
 (allow is_nsswitch_client_subject self (key (all)))
 

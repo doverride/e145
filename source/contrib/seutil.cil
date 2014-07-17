@@ -110,7 +110,6 @@
 (call selinux_load_policy (load_policy_t))
 
 (call seutil_read_config_files (load_policy_t))
-
 (call seutil_read_policy_config_files (load_policy_t))
 
 (optional seutil_optional_miscfiles

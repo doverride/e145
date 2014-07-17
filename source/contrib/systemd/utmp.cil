@@ -1,0 +1,58 @@
+(typeattribute is_utmp_admin_subject)
+
+(typeattribute is_utmp_file_object)
+(typeattributeset is_utmp_file_object (utmp_run_t utmp_unit_t))
+
+(type utmp_t)
+(type utmp_exec_t)
+(call systemd_oneshot_subject_entry (utmp_t utmp_exec_t))
+
+(context file_utmp_exec (system_u object_r utmp_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-update-utmp" file file_utmp_exec)
+
+(type utmp_run_t)
+(call files_run_object (utmp_run_t))
+
+(context file_utmp_run (system_u object_r utmp_run_t ((s0) (s0))))
+(filecon "/run/utmp" file file_utmp_run)
+
+(type utmp_unit_t)
+(call systemd_unit_object (utmp_unit_t))
+
+(context file_utmp_unit (system_u object_r utmp_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-update-utmp.*" file file_utmp_unit)
+
+(allow utmp_t self (capability (net_admin)))
+(allow utmp_t self create_unix_stream_socket_perms)
+
+(allow utmp_t utmp_run_t manage_file_perms)
+(call files_run_filetrans (utmp_t utmp_run_t file "*"))
+
+(call systemd_get_generic_service_status (utmp_t)) ; graphical.target
+(call systemd_get_system_status (utmp_t))
+(call systemd_stream_connect (utmp_t))
+
+(optional utmp_optional_audit
+    (call audit_client_subject (utmp_t)))
+
+(optional utmp_optional_auth
+    (call auth_write_wtmp_log_files (utmp_t)))
+
+(optional utmp_optional_journald
+    (call journald_client_subject (utmp_t)))
+
+(allow is_utmp_admin_subject utmp_t signal_perms)
+(call ps_subject_pattern (is_utmp_admin_subject utmp_t))
+
+(allow is_utmp_admin_subject utmp_unit_t (service (all)))
+
+(call admin_pattern (is_utmp_admin_subject is_utmp_file_object))
+
+(macro utmp_read_run_files ((type ARG1))
+    (allow ARG1 utmp_run_t read_file_perms))
+
+(macro utmp_rw_run_files ((type ARG1))
+    (allow ARG1 utmp_run_t rw_file_perms))
+
+(macro utmp_admin ((type ARG1))
+    (typeattributeset is_utmp_admin_subject ARG1))

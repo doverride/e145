@@ -439,6 +439,9 @@
 (macro systemd_dgram_send ((type ARG1))
     (call dgram_send_pattern (ARG1 systemd_run_t systemd_run_t systemd_t)))
 
+(macro systemd_get_generic_service_status ((type ARG1))
+    (allow ARG1 systemd_t (service (status))))
+
 (macro systemd_get_system_status ((type ARG1))
     (allow ARG1 systemd_t (system (status))))
 
