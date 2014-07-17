@@ -122,7 +122,7 @@
     (call kmod_read_modules_config_files (udevd_t))
     (call kmod_read_modules_dep_files (udevd_t)))
 
-(optional udevd_optional_ssctl
+(optional udevd_optional_sysctl
     (call sysctl_subtrans (udevd_t)))
 
 (optional udevd_optional_storage
