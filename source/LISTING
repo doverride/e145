@@ -32,10 +32,11 @@ contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
 contrib/seutil.cil
-contrib/systemd/journal.cil
-contrib/systemd/shutdown.cil
+contrib/systemd/journald.cil
+contrib/systemd/logind.cil
+contrib/systemd/shutdownd.cil
 contrib/systemd/systemd.cil
-contrib/systemd/udev.cil
+contrib/systemd/udevd.cil
 modules/commands.cil
 modules/devices.cil
 modules/files.cil

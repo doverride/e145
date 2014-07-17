@@ -1,10 +1,10 @@
-(typeattribute is_shutdown_admin_subject)
+(typeattribute is_shutdownd_admin_subject)
 
-(typeattribute is_shutdown_subject)
-(typeattributeset is_shutdown_subject (shutdown_t shutdownd_t))
+(typeattribute is_shutdownd_subject)
+(typeattributeset is_shutdownd_subject (shutdown_t shutdownd_t))
 
-(typeattribute is_shutdown_file_object)
-(typeattributeset is_shutdown_file_object (shutdown_run_t
+(typeattribute is_shutdownd_file_object)
+(typeattributeset is_shutdownd_file_object (shutdown_run_t
     shutdownd_run_t shutdownd_unit_t))
 
 (type shutdown_t)
@@ -41,7 +41,7 @@
 (context file_shutdownd_run (system_u object_r shutdownd_run_t ((s0) (s0))))
 (filecon "/run/systemd/shutdownd" socket file_shutdownd_run)
 
-(call selinux_get_filesystems_mount (is_shutdown_subject))
+(call selinux_get_filesystems_mount (is_shutdownd_subject))
 
 ; (optional shutdown_optional_utmp
     ; (call utmp_read_run_files (is_shutdown_subject)))
@@ -107,8 +107,8 @@
     (call plymouth_getattr_plymouthd_exec_files (shutdown_t))
     (call plymouth_use_fd_plymouthd (shutdown_t)))
 
-(optional shutdown_optional_udev
-    (call udev_read_config_files (shutdown_t)))
+(optional shutdown_optional_udevd
+    (call udevd_read_config_files (shutdown_t)))
 
 (optional shutdown_optional_session
     (call session_use_inherited_terminals (shutdown_t)))
@@ -118,13 +118,13 @@
 (allow shutdownd_t shutdownd_run_t manage_sock_file_perms)
 (call systemd_run_filetrans (shutdownd_t shutdownd_run_t sock_file "*"))
 
-(call shutdown_manage_run_files (shutdownd_t))
+(call shutdownd_manage_run_files (shutdownd_t))
 
 (call systemd_dgram_send (shutdownd_t))
 (call systemd_subtrans_systemctl (shutdownd_t))
 
-(optional shutdownd_optional_journal
-    (call journal_client_subject (shutdownd_t)))
+(optional shutdownd_optional_journald
+    (call journald_client_subject (shutdownd_t)))
 
 (optional shutdownd_optional_miscfiles
     (call miscfiles_read_localization_files (shutdownd_t)))
@@ -136,21 +136,21 @@
     ; (call sessions_manage_run_files (shutdownd_t))
     ; (call sessions_run_filetrans_run_files (shutdownd_t)))
 
-(allow is_shutdown_admin_subject is_shutdown_subject signal_perms)
-(call ps_subject_pattern (is_shutdown_admin_subject is_shutdown_subject))
+(allow is_shutdownd_admin_subject is_shutdownd_subject signal_perms)
+(call ps_subject_pattern (is_shutdownd_admin_subject is_shutdownd_subject))
 
-(allow is_shutdown_admin_subject shutdownd_unit_t (service (all)))
+(allow is_shutdownd_admin_subject shutdownd_unit_t (service (all)))
 
-(call admin_pattern (is_shutdown_admin_subject is_shutdown_file_object))
+(call admin_pattern (is_shutdownd_admin_subject is_shutdownd_file_object))
 
-(macro shutdown_manage_run_files ((type ARG1))
+(macro shutdownd_manage_run_files ((type ARG1))
     (call manage_files_pattern (ARG1 shutdown_run_t shutdown_run_t)))
 
-(macro shutdown_share_state_shutdown ((type ARG1))
+(macro shutdownd_share_state_shutdown ((type ARG1))
     (allow ARG1 shutdown_t (process (share))))
 
-(macro shutdown_sigchld_shutdown ((type ARG1))
+(macro shutdownd_sigchld_shutdown ((type ARG1))
     (allow ARG1 shutdown_t (process (sigchld))))
 
-(macro shutdown_admin ((type ARG1))
-    (typeattributeset is_shutdown_admin_subject ARG1))
+(macro shutdownd_admin ((type ARG1))
+    (typeattributeset is_shutdownd_admin_subject ARG1))

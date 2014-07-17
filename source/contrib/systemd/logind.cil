@@ -1,0 +1,152 @@
+(roleattribute is_loginctl_role)
+
+(typeattribute is_logind_admin_subject)
+
+(typeattribute is_logind_subject)
+(typeattributeset is_logind_subject (logind_t loginctl_t))
+
+(typeattribute is_logind_file_object)
+(typeattributeset is_logind_file_object (logind_conf_t logind_run_t
+    logind_dbus_conf_t logind_unit_t))
+
+(type loginctl_t)
+(call subject_common_subject (loginctl_t))
+
+(type loginctl_exec_t)
+(call subject_entry (loginctl_t loginctl_exec_t))
+(roleattributeset is_loginctl_role system_r)
+(roletype is_loginctl_role loginctl_t)
+
+(context file_loginctl_exec (system_u object_r loginctl_exec_t ((s0) (s0))))
+(filecon "/usr/bin/loginctl" file file_loginctl_exec)
+
+(type logind_t)
+(type logind_exec_t)
+(call systemd_daemon_subject_entry (logind_t logind_exec_t))
+
+(context file_logind_exec (system_u object_r logind_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-logind" file file_logind_exec)
+
+(type logind_conf_t)
+(call files_etc_object (logind_conf_t))
+
+(context file_logind_conf (system_u object_r logind_conf_t ((s0) (s0))))
+(filecon "/etc/systemd/logind\.conf" file file_logind_conf)
+
+(type logind_dbus_conf_t)
+(call files_etc_object (logind_dbus_conf_t))
+
+(context file_logind_dbus_conf (system_u object_r logind_dbus_conf_t ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.login1\.conf"
+    file file_logind_dbus_conf)
+
+(type logind_run_t)
+(call files_run_object (logind_run_t))
+
+(context file_logind_run (system_u object_r logind_run_t ((s0) (s0))))
+(filecon "/run/systemd/seats(/.*)?" any file_logind_run)
+(filecon "/run/systemd/sessions(/.*)?" any file_logind_run)
+(filecon "/run/systemd/users(/.*)?" any file_logind_run)
+(filecon "/run/systemd/inhibit(/.*)?" any file_logind_run)
+
+(type logind_unit_t)
+(call systemd_unit_object (logind_unit_t))
+
+(context file_logind_unit (system_u object_r logind_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-logind.*" file file_logind_unit)
+
+(allow logind_t self (capability (chown fowner sys_tty_config)))
+(allow logind_t self (process (getcap setfscreate)))
+(allow logind_t self create_unix_stream_socket_perms)
+(allow logind_t self create_netlink_kobject_uevent_socket_perms)
+
+(allow logind_t logind_run_t manage_dir_perms)
+(allow logind_t logind_run_t manage_fifo_file_perms)
+(call systemd_run_filetrans (logind_t logind_run_t dir "*"))
+
+(allow logind_t logind_run_t manage_file_perms)
+(call systemd_run_filetrans (logind_t logind_run_t file "*"))
+
+(call devices_read_sysfs_files (logind_t))
+(call devices_rw_event (logind_t))
+
+(call files_rw_run_user_root_dirs (logind_t)) ; add and remove entries from /run/user
+
+(call subject_obj_id_change_exemption (logind_t))
+
+(call selinux_getattr_filesystems (logind_t))
+(call selinux_get_enforce_mode (logind_t))
+
+(call terminal_use_unallocated_tty_nodes (logind_t))
+
+(call logind_read_config_files (logind_t))
+
+(call systemd_dbus_chat (logind_t))
+(call systemd_get_system_status (logind_t))
+(call systemd_search_var_lib (logind_t)) ; not sure where it wants to go
+(call systemd_start_generic_service (logind_t)) ; user@.service
+(call systemd_start_system (logind_t)) ; BUG: logind to start session
+(call systemd_start_transient_system_service (logind_t))
+
+(optional logind_optional_auth
+    (call auth_read_all_login_program_subjects_state (logind_t))
+    (call auth_nsswitch_client_subject (logind_t)))
+
+(optional logind_optional_dbus
+    (call dbus_acquire_service_system (logind_t))
+    (call dbus_system_client_subject (logind_t)))
+
+(optional logind_optional_journald
+    (call journald_client_subject (logind_t)))
+
+(optional logind_optional_polkitd
+    (call polkit_dbus_chat_polkitd (logind_t)))
+
+(optional logind_optional_seutil
+    (call seutil_read_config_files (logind_t))
+    (call seutil_read_file_context_files (logind_t)))
+
+(optional logind_optional_session
+    (call session_manage_run_user_dir (logind_t)) ; BUG: would have preferred lsetfilecon by logind for identity
+    (call session_run_user_filetrans_run_user_dir (logind_t "0"))
+    (call session_run_user_filetrans_run_user_dir (logind_t "1000")))
+
+(optional logind_optional_udevd
+    (call udevd_read_config_files (logind_t))
+    (call udevd_read_run_files (logind_t)))
+
+(allow is_logind_admin_subject is_logind_subject signal_perms)
+(call ps_subject_pattern (is_logind_admin_subject is_logind_subject))
+
+(allow is_logind_admin_subject logind_unit_t (service (all)))
+
+(call admin_pattern (is_logind_admin_subject is_logind_file_object))
+
+(macro logind_subtrans_loginctl ((type ARG1))
+    (call subtrans_pattern (ARG1 loginctl_exec_t loginctl_t)))
+
+(macro logind_run_loginctl ((type ARG1)(role ARG2))
+    (call logind_subtrans_loginctl (ARG1))
+    (roleattributeset is_loginctl_role (ARG2)))
+
+(macro logind_dbus_chat ((type ARG1))
+    (allow ARG1 logind_t (dbus (send_msg)))
+    (allow logind_t ARG1 (dbus (send_msg))))
+
+(macro logind_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 logind_conf_t logind_conf_t)))
+
+(macro logind_read_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 logind_run_t logind_run_t)))
+
+(macro logind_use_fd ((type ARG1))
+    (allow ARG1 logind_t (fd (use))))
+
+(macro logind_write_inherited_run_fifo_files ((type ARG1))
+    (allow ARG1 logind_run_t (fifo_file (write))))
+
+(macro logind_manage_run_files ((type ARG1))
+    (call manage_files_pattern (ARG1 logind_run_t logind_run_t)))
+
+(macro logind_admin ((type ARG1))
+    (typeattributeset is_logind_admin_subject ARG1))

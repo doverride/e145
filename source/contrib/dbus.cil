@@ -81,8 +81,8 @@
     (call auth_read_pam_console_run_files (dbusd_t))
     (call auth_nsswitch_client_subject (dbusd_t)))
 
-(optional dbus_optional_journal
-    (call journal_client_subject (dbusd_t)))
+(optional dbus_optional_journald
+    (call journald_client_subject (dbusd_t)))
 
 ; (optional dbus_optional_logind
     ; (call logind_write_inherited_run_fifo_files (dbusd_t)))

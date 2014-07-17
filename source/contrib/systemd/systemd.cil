@@ -274,10 +274,10 @@
 ; (optional systemd_optional_initctl
     ; (call initctl_manage_initctl_fifo_files (systemd_t)))
 
-(optional systemd_optional_journal
-    (call journal_client_subject (systemd_t))
-    (call journal_list_log (systemd_t)) ; /run/log
-    (call journal_read_run_files (systemd_t)))
+(optional systemd_optional_journald
+    (call journald_client_subject (systemd_t))
+    (call journald_list_log (systemd_t)) ; /run/log
+    (call journald_read_run_files (systemd_t)))
 
 ; (optional systemd_optional_logind
     ; (call logind_read_run_files (systemd_t)))
@@ -307,8 +307,8 @@
     (call seutil_read_config_files (systemd_t))
     (call seutil_read_file_context_files (systemd_t)))
 
-(optional systemd_optional_shutdown
-    (call shutdown_share_state_shutdown (systemd_t)))
+(optional systemd_optional_shutdownd
+    (call shutdownd_share_state_shutdown (systemd_t)))
 
 (optional systemd_optional_storage
     (call storage_read_fixed_disk_nodes (systemd_t)))
@@ -320,9 +320,9 @@
     ; (call tmpfiles_read_config_files (systemd_t))
     ; (call tmpfiles_read_run_files (systemd_t)))
 
-(optional systemd_optional_udev
-    (call udev_read_config_files (systemd_t))
-    (call udev_read_run_files (systemd_t)))
+(optional systemd_optional_udevd
+    (call udevd_read_config_files (systemd_t))
+    (call udevd_read_run_files (systemd_t)))
 
 ; (optional systemd_optional_utmp
     ; (call utmp_rw_run_files (systemd_t)))
@@ -428,11 +428,33 @@
     (call can_exec (ARG1 systemctl_exec_t))
     (typeattributeset is_systemctl_client_subject ARG1))
 
+(macro systemd_dbus_chat ((type ARG1))
+    (allow ARG1 systemd_t (dbus (send_msg)))
+    (allow systemd_t ARG1 (dbus (send_msg))))
+
 (macro systemd_dgram_send ((type ARG1))
     (call dgram_send_pattern (ARG1 systemd_run_t systemd_run_t systemd_t)))
 
+(macro systemd_get_system_status ((type ARG1))
+    (allow ARG1 systemd_t (system (status))))
+
 (macro systemd_halt_system ((type ARG1))
     (allow ARG1 systemd_t (system (halt))))
+
+(macro systemd_reboot_system ((type ARG1))
+    (allow ARG1 systemd_t (system (reboot))))
+
+(macro systemd_start_generic_service ((type ARG1))
+    (allow ARG1 systemd_unit_t (service (start))))
+
+(macro systemd_start_system ((type ARG1)) ; BUG: logind to start session
+    (allow ARG1 systemd_t (system (start))))
+
+(macro systemd_start_transient_system_service ((type ARG1))
+    (allow ARG1 systemd_t (service (start))))
+
+(macro systemd_search_var_lib ((type ARG1))
+    (allow ARG1 systemd_var_lib_t (dirs (search))))
 
 (macro systemd_list_run ((type ARG1))
     (allow ARG1 systemd_run_t (dirs (list))))
@@ -477,9 +499,6 @@
 (macro systemd_read_state ((type ARG1))
     (allow ARG1 systemd_t (dirs (list)))
     (allow ARG1 systemd_t read_file_perms))
-
-(macro systemd_reboot_system ((type ARG1))
-    (allow ARG1 systemd_t (system (reboot))))
 
 (macro systemd_send_signal ((type ARG1))
     (allow ARG1 systemd_t (process (signal))))

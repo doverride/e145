@@ -1,13 +1,13 @@
 (roleattribute is_journalctl_role)
 
-(typeattribute is_journal_admin_subject)
-(typeattribute is_journal_client_subject)
+(typeattribute is_journald_admin_subject)
+(typeattribute is_journald_client_subject)
 
-(typeattribute is_journal_subject)
-(typeattributeset is_journal_subject (journald_t journalctl_t))
+(typeattribute is_journald_subject)
+(typeattributeset is_journald_subject (journald_t journalctl_t))
 
-(typeattribute is_journal_file_object)
-(typeattributeset is_journal_file_object (journald_conf_t journald_log_t
+(typeattribute is_journald_file_object)
+(typeattributeset is_journald_file_object (journald_conf_t journald_log_t
     journald_run_t journald_unit_t))
 
 (type journalctl_t)
@@ -57,19 +57,19 @@
 (filecon "/usr/lib/systemd/system/[^/]*syslog.*" file file_journald_unit)
 (filecon "/usr/lib/systemd/system/[^/]*systemd-journal.*" file file_journald_unit)
 
-(allow is_journal_client_subject self create_unix_dgram_socket_perms)
-(allow is_journal_client_subject self (unix_dgram_socket (sendto)))
+(allow is_journald_client_subject self create_unix_dgram_socket_perms)
+(allow is_journald_client_subject self (unix_dgram_socket (sendto)))
 
-(call dgram_send_pattern (is_journal_client_subject journald_run_t journald_run_t journald_t))
+(call dgram_send_pattern (is_journald_client_subject journald_run_t journald_run_t journald_t))
 
-(call system_dgram_sendto (is_journal_client_subject))
+(call system_dgram_sendto (is_journald_client_subject))
 
-(call devices_read_lnk_files (is_journal_client_subject)) ; /dev/log
+(call devices_read_lnk_files (is_journald_client_subject)) ; /dev/log
 
-(call files_search_run (is_journal_client_subject))
+(call files_search_run (is_journald_client_subject))
 
-(call terminal_write_console_nodes (is_journal_client_subject))
-(call terminal_dontaudit_use_console_nodes (is_journal_client_subject))
+(call terminal_write_console_nodes (is_journald_client_subject))
+(call terminal_dontaudit_use_console_nodes (is_journald_client_subject))
 
 (allow journald_t self (capability (setgid setuid sys_admin sys_ptrace)))
 (allow journald_t self (process (getcap)))
@@ -106,7 +106,7 @@
 (call terminal_write_console_nodes (journald_t))
 (call terminal_write_inherited_generic_pty_nodes (journald_t)) ; /dev/pts/ptmx
 
-(call journal_read_config_files (journald_t))
+(call journald_read_config_files (journald_t))
 
 (call systemd_dgram_send (journald_t))
 (call systemd_read_machineid_files (journald_t))
@@ -117,38 +117,38 @@
 (optional journal_optional_plymouthd
     (call plymouth_use_fd_plymouthd (journald_t)))
 
-(optional journal_optional_udev
-    (call udev_read_config_files (journald_t))
-    (call udev_read_run_files (journald_t)))
+(optional journal_optional_udevd
+    (call udevd_read_config_files (journald_t))
+    (call udevd_read_run_files (journald_t)))
 
-(allow is_journal_admin_subject is_journal_subject signal_perms)
-(call ps_subject_pattern (is_journal_admin_subject is_journal_subject))
+(allow is_journald_admin_subject is_journald_subject signal_perms)
+(call ps_subject_pattern (is_journald_admin_subject is_journald_subject))
 
-(allow is_journal_admin_subject journald_unit_t (service (all)))
+(allow is_journald_admin_subject journald_unit_t (service (all)))
 
-(call admin_pattern (is_journal_admin_subject is_journal_file_object))
+(call admin_pattern (is_journald_admin_subject is_journald_file_object))
 
-(macro journal_subtrans_journalctl ((type ARG1))
+(macro journald_subtrans_journalctl ((type ARG1))
     (call subtrans_pattern (ARG1 journalctl_exec_t journalctl_t)))
 
-(macro journal_run_journalctl ((type ARG1)(role ARG2))
-    (call journal_subtrans_journalctl (ARG1))
+(macro journald_run_journalctl ((type ARG1)(role ARG2))
+    (call journald_subtrans_journalctl (ARG1))
     (roleattributeset is_journalctl_role (ARG2)))
 
-(macro journal_list_log ((type ARG1))
+(macro journald_list_log ((type ARG1))
     (allow ARG1 journald_log_t (dirs (list))))
 
-(macro journal_read_log_files ((type ARG1))
+(macro journald_read_log_files ((type ARG1))
     (call read_files_pattern (ARG1 journald_log_t journal_log_t)))
 
-(macro journal_read_config_files ((type ARG1))
+(macro journald_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 journald_conf_t journald_conf_t)))
 
-(macro journal_read_run_files ((type ARG1))
+(macro journald_read_run_files ((type ARG1))
     (call read_files_pattern (ARG1 journald_run_t journald_run_t)))
 
-(macro journal_client_subject ((type ARG1))
-    (typeattributeset is_journal_client_subject ARG1))
+(macro journald_client_subject ((type ARG1))
+    (typeattributeset is_journald_client_subject ARG1))
 
-(macro journal_admin ((type ARG1))
-    (typeattributeset is_journal_admin_subject ARG1))
+(macro journald_admin ((type ARG1))
+    (typeattributeset is_journald_admin_subject ARG1))

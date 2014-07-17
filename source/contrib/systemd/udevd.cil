@@ -1,12 +1,12 @@
 (roleattribute is_udevadm_role)
 
-(typeattribute is_udev_admin_subject)
+(typeattribute is_udevd_admin_subject)
 
-(typeattribute is_udev_subject)
-(typeattributeset is_udev_subject (udevd_t udevadm_t))
+(typeattribute is_udevd_subject)
+(typeattributeset is_udevd_subject (udevd_t udevadm_t))
 
-(typeattribute is_udev_file_object)
-(typeattributeset is_udev_file_object (udevd_conf_t udevd_run_t
+(typeattribute is_udevd_file_object)
+(typeattributeset is_udevd_file_object (udevd_conf_t udevd_run_t
     udevd_unit_t))
 
 (type udevadm_t)
@@ -54,17 +54,17 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-udev.*" file
     file_udevd_unit)
 
-(call system_read_generic_proc_files (is_udev_subject))
+(call system_read_generic_proc_files (is_udevd_subject))
 
-(call devices_rw_sysfs_files (is_udev_subject))
+(call devices_rw_sysfs_files (is_udevd_subject))
 
-(call selinux_get_filesystems_mount (is_udev_subject))
+(call selinux_get_filesystems_mount (is_udevd_subject))
 
-(call udev_read_config_files (is_udev_subject))
+(call udevd_read_config_files (is_udevd_subject))
 
 (optional udev_optional_seutil
-    (call seutil_read_config_files (is_udev_subject))
-    (call seutil_read_file_context_files (is_udev_subject)))
+    (call seutil_read_config_files (is_udevd_subject))
+    (call seutil_read_file_context_files (is_udevd_subject)))
 
 (allow udevd_t self (capability (dac_override net_admin chown sys_admin)))
 (allow udevd_t self (capability2 (block_suspend)))
@@ -104,13 +104,13 @@
 
 (call systemd_dgram_send (udevd_t))
 
-(call udev_exec_helper (udevd_t))
+(call udevd_exec_helper (udevd_t))
 
 (optional udevd_optional_auth
     (call auth_nsswitch_client_subject (udevd_t)))
 
-(optional udevd_optional_journal
-    (call journal_client_subject (udevd_t)))
+(optional udevd_optional_journald
+    (call journald_client_subject (udevd_t)))
 
 (optional udevd_optional_lvm
     (call lvm_subtrans_lvm (udevd_t)))
@@ -131,34 +131,34 @@
 
 (allow udevadm_t self create_unix_stream_socket_perms)
 
-(call udev_read_run_files (udevadm_t))
-(call udev_stream_connect_udevd (udevadm_t))
+(call udevd_read_run_files (udevadm_t))
+(call udevd_stream_connect_udevd (udevadm_t))
 
-(allow is_udev_admin_subject is_udev_subject signal_perms)
-(call ps_subject_pattern (is_udev_admin_subject is_udev_subject))
+(allow is_udevd_admin_subject is_udevd_subject signal_perms)
+(call ps_subject_pattern (is_udevd_admin_subject is_udevd_subject))
 
-(allow is_udev_admin_subject udevd_unit_t (service (all)))
+(allow is_udevd_admin_subject udevd_unit_t (service (all)))
 
-(call admin_pattern (is_udev_admin_subject is_udev_file_object))
+(call admin_pattern (is_udevd_admin_subject is_udevd_file_object))
 
-(macro udev_exec_helper ((type ARG1))
+(macro udevd_exec_helper ((type ARG1))
     (call can_exec (ARG1 udev_helper_exec_t)))
 
-(macro udev_subtrans_udevadm ((type ARG1))
+(macro udevd_subtrans_udevadm ((type ARG1))
     (call subtrans_pattern (ARG1 udevadm_exec_t udevadm_t)))
 
-(macro udev_run_udevadm ((type ARG1)(role ARG2))
-    (call udev_subtrans_udevadm (ARG1))
+(macro udevd_run_udevadm ((type ARG1)(role ARG2))
+    (call udevd_subtrans_udevadm (ARG1))
     (roleattributeset is_udevadm_role (ARG2)))
 
-(macro udev_read_config_files ((type ARG1))
+(macro udevd_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 udevd_conf_t udevd_conf_t)))
 
-(macro udev_read_run_files ((type ARG1))
+(macro udevd_read_run_files ((type ARG1))
     (call read_files_pattern (ARG1 udevd_run_t udevd_run_t)))
 
-(macro udev_stream_connect_udevd ((type ARG1))
+(macro udevd_stream_connect_udevd ((type ARG1))
     (call stream_connect_pattern (ARG1 udevd_run_t udevd_run_t udevd_t)))
 
-(macro udev_admin ((type ARG1))
-    (typeattributeset is_udev_admin_subject ARG1))
+(macro udevd_admin ((type ARG1))
+    (typeattributeset is_udevd_admin_subject ARG1))

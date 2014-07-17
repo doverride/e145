@@ -122,8 +122,8 @@
 (optional networkmgr_optional_ip
     (call ip_subtrans (networkmgr_t)))
 
-(optional networkmgr_optional_journal
-    (call journal_client_subject (networkmgr_t)))
+(optional networkmgr_optional_journald
+    (call journald_client_subject (networkmgr_t)))
 
 ; (optional networkmgr_optional_logind
     ; (call logind_dbus_chat (networkmgr_t))
@@ -145,9 +145,9 @@
 ; (optional networkmgr_optional_ssctl
     ; (call sysctl_read_config_files (networkmgr_t)))
 
-(optional networkmgr_optional_udev
-    (call udev_read_config_files (networkmgr_t))
-    (call udev_read_run_files (networkmgr_t)))
+(optional networkmgr_optional_udevd
+    (call udevd_read_config_files (networkmgr_t))
+    (call udevd_read_run_files (networkmgr_t)))
 
 (allow is_networkmgr_admin_subject networkmgr_t signal_perms)
 (call ps_subject_pattern (is_networkmgr_admin_subject networkmgr_t))
