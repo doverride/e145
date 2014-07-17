@@ -279,8 +279,8 @@
     (call journald_list_log (systemd_t)) ; /run/log
     (call journald_read_run_files (systemd_t)))
 
-; (optional systemd_optional_logind
-    ; (call logind_read_run_files (systemd_t)))
+(optional systemd_optional_logind
+    (call logind_read_run_files (systemd_t)))
 
 (optional systemd_optional_miscfiles
     (call miscfiles_read_localization_files (systemd_t))

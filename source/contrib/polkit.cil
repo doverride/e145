@@ -96,8 +96,8 @@
 (optional polkit_optional_journald
     (call journald_client_subject (polkitd_t)))
 
-; (optional polkit_optional_logind
-    ; (call logind_read_run_files (polkitd_t)))
+(optional polkit_optional_logind
+    (call logind_read_run_files (polkitd_t)))
 
 ; (optional polkit_optional_machined
     ; (call machine_read_run_files (polkitd_t)))
