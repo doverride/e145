@@ -33,7 +33,7 @@
 (filecon "/etc/machine-info" file file_machined_conf)
 
 (type machined_dbus_conf_t)
-(call files_etc_object (machined_dbus_conf_t))
+(call dbus_etc_object (machined_dbus_conf_t))
 
 (context file_machined_dbus_conf (system_u object_r machined_dbus_conf_t ((s0)
     (s0))))

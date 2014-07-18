@@ -1,6 +1,8 @@
 (typeattribute is_dbus_admin_subject)
 (typeattribute is_dbus_system_client_subject)
 
+(typeattribute is_dbus_etc_file_object)
+
 (typeattribute is_dbus_file_object)
 (typeattributeset is_dbus_file_object (dbusd_conf_t dbusd_var_lib_t
     dbusd_run_t dbusd_unit_t))
@@ -17,7 +19,7 @@
 (filecon "/usr/bin/dbus-daemon" file file_dbusd_exec)
 
 (type dbusd_conf_t)
-(call files_etc_object (dbusd_conf_t))
+(call dbus_etc_object (dbusd_conf_t))
 
 (context file_dbusd_conf (system_u object_r dbusd_conf_t ((s0) (s0))))
 (filecon "/etc/dbus-1(/.*)?" any file_dbusd_conf)
@@ -46,7 +48,7 @@
 (allow is_dbus_system_client_subject dbusd_t (dbus (send_msg)))
 (allow dbusd_t is_dbus_system_client_subject (dbus (send_msg)))
 
-(call dbus_read_config_files (is_dbus_system_client_subject))
+(call dbus_read_generic_config_files (is_dbus_system_client_subject)) ; verify me
 (call dbus_read_var_lib_files (is_dbus_system_client_subject))
 (call dbus_stream_connect_system (is_dbus_system_client_subject))
 
@@ -68,7 +70,7 @@
 (call selinux_getattr_filesystems (dbusd_t))
 (call selinux_compute_access_vector (dbusd_t))
 
-(call dbus_read_config_files (dbusd_t))
+(call dbus_read_all_config_files (dbusd_t))
 (call dbus_read_state_all_system_client_subjects (dbusd_t))
 (call dbus_read_state_all_unconfined_subjects (dbusd_t))
 
@@ -115,10 +117,17 @@
 (allow is_dbus_system_client_subject has_unconfined_access_to_dbus_assets
     (dbus (send_msg)))
 
+(macro dbus_etc_object ((type ARG1))
+    (call files_etc_object (ARG1))
+    (typeattributeset is_dbus_etc_file_object ARG1))
+
 (macro dbus_acquire_service_system ((type ARG1))
     (allow ARG1 dbusd_t (dbus (acquire_svc))))
 
-(macro dbus_read_config_files ((type ARG1))
+(macro dbus_read_all_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 dbusd_conf_t is_dbus_etc_file_object)))
+
+(macro dbus_read_generic_config_files ((type ARG1))
     (call read_files_pattern (ARG1 dbusd_conf_t dbusd_conf_t)))
 
 (macro dbus_read_state_all_unconfined_subjects ((type ARG1))

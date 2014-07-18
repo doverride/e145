@@ -32,7 +32,7 @@
 (filecon "/etc/locale\.conf" file file_localed_conf)
 
 (type localed_dbus_conf_t)
-(call files_etc_object (localed_dbus_conf_t))
+(call dbus_etc_object (localed_dbus_conf_t))
 
 (context file_localed_dbus_conf (system_u object_r localed_dbus_conf_t ((s0) (s0))))
 (filecon "/etc/dbus-1/system\.d/org\.freedesktop\.locale1\.conf" file

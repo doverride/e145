@@ -34,7 +34,7 @@
 (filecon "/etc/systemd/logind\.conf" file file_logind_conf)
 
 (type logind_dbus_conf_t)
-(call files_etc_object (logind_dbus_conf_t))
+(call dbus_etc_object (logind_dbus_conf_t))
 
 (context file_logind_dbus_conf (system_u object_r logind_dbus_conf_t ((s0) (s0))))
 (filecon "/etc/dbus-1/system\.d/org\.freedesktop\.login1\.conf"
@@ -75,6 +75,9 @@
 
 (call terminal_use_unallocated_tty_nodes (logind_t))
 
+(call dbus_acquire_service_system (logind_t))
+(call dbus_system_client_subject (logind_t))
+
 (call logind_read_config_files (logind_t))
 
 (call systemd_dbus_chat (logind_t))
@@ -87,10 +90,6 @@
 (optional logind_optional_auth
     (call auth_read_all_login_program_subjects_state (logind_t))
     (call auth_nsswitch_client_subject (logind_t)))
-
-(optional logind_optional_dbus
-    (call dbus_acquire_service_system (logind_t))
-    (call dbus_system_client_subject (logind_t)))
 
 (optional logind_optional_journald
     (call journald_client_subject (logind_t)))

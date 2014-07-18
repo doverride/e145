@@ -21,7 +21,7 @@
 (filecon "/etc/polkit-1(/.*)?" any file_polkitd_conf)
 
 (type polkitd_dbus_conf_t)
-(call files_etc_object (polkitd_dbus_conf_t))
+(call dbus_etc_object (polkitd_dbus_conf_t))
 
 (context file_polkitd_dbus_conf (system_u object_r polkitd_dbus_conf_t ((s0)
     (s0))))
@@ -29,7 +29,7 @@
     file_polkitd_dbus_conf)
 
 (type polkitd_pam_conf_t)
-(call files_etc_object (polkitd_pam_conf_t))
+(call auth_pam_etc_object (polkitd_pam_conf_t))
 
 (context file_polkitd_pam_conf (system_u object_r polkitd_pam_conf_t ((s0)
     (s0))))
@@ -87,11 +87,10 @@
 
 (call files_read_generic_usr_files (polkitd_t))
 
-(call polkit_subtrans_auth (polkitd_t))
+(call dbus_acquire_service_system (polkitd_t))
+(call dbus_system_client_subject (polkitd_t))
 
-(optional polkit_optional_dbus
-    (call dbus_acquire_service_system (polkitd_t))
-    (call dbus_system_client_subject (polkitd_t)))
+(call polkit_subtrans_auth (polkitd_t))
 
 (optional polkit_optional_journald
     (call journald_client_subject (polkitd_t)))

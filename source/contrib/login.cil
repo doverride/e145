@@ -14,7 +14,7 @@
 (filecon "/usr/bin/login" file file_login_exec)
 
 (type login_pam_conf_t)
-(call files_etc_object (login_pam_conf_t))
+(call auth_pam_etc_object (login_pam_conf_t))
 
 (context file_login_pam_conf (system_u object_r login_pam_conf_t ((s0) (s0))))
 (filecon "/etc/pam\.d/login" file file_login_pam_conf)
@@ -46,10 +46,7 @@
 (call terminal_setattr_unallocated_tty_nodes (login_t))
 (call terminal_use_unallocated_tty_nodes (login_t))
 
-(call login_read_pam_config_files (login_t))
-
-(optional login_optional_auth
-    (call auth_login_program_subject (login_t)))
+(call auth_login_program_subject (login_t))
 
 (optional login_optional_session
     (call session_relabel_tty_nodes (login_t))
@@ -83,9 +80,8 @@
 (call terminal_use_console_nodes (sulogin_t))
 (call terminal_use_unallocated_tty_nodes (sulogin_t))
 
-(optional sulogin_optional_auth
-    (call auth_read_shadow_files (sulogin_t))
-    (call auth_nsswitch_client_subject (sulogin_t)))
+(call auth_read_shadow_files (sulogin_t))
+(call auth_nsswitch_client_subject (sulogin_t))
 
 (optional sulogin_optional_seutil
     (call seutil_read_config_files (sulogin_t))

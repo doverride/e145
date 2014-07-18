@@ -4,7 +4,9 @@
 
 (typeattribute is_login_program_subject)
 (typeattribute is_nsswitch_client_subject)
+
 (typeattribute is_pam_client_subject)
+(typeattribute is_pam_etc_file_object)
 
 (typeattribute is_auth_admin_subject)
 
@@ -40,7 +42,7 @@
 (filecon "/usr/sbin/authconfig" file file_authconfig_exec)
 
 (type authconfig_pam_conf_t)
-(call files_etc_object (authconfig_pam_conf_t))
+(call auth_pam_etc_object (authconfig_pam_conf_t))
 
 (context file_authconfig_pam_conf (system_u object_r authconfig_pam_conf_t
     ((s0) (s0))))
@@ -90,7 +92,7 @@
 (filecon "/usr/sbin/pam_timestamp_check" file file_pam_exec)
 
 (type pam_conf_t)
-(call files_etc_object (pam_conf_t))
+(call auth_pam_etc_object (pam_conf_t))
 
 (context file_pam_conf (system_u object_r pam_conf_t ((s0) (s0))))
 (filecon "/etc/pam\.d(/.*)?" any file_pam_conf)
@@ -264,7 +266,7 @@
 (call auth_read_wtmp_log_files (is_pam_client_subject))
 (call auth_dontaudit_write_wtmp_log_files (is_pam_client_subject))
 
-(call auth_read_pam_config_files (is_pam_client_subject))
+(call auth_read_all_pam_config_files (is_pam_client_subject)) ; verify me
 
 (call auth_create_faillog_log_files (is_pam_client_subject))
 (call auth_rw_faillog_log_files (is_pam_client_subject))
@@ -315,6 +317,10 @@
     (call subject_obj_id_change_exemption (ARG1))
     (typeattributeset is_login_program_subject ARG1)
     (roletype system_r ARG1))
+
+(macro auth_pam_etc_object ((type ARG1))
+    (call files_etc_object (ARG1))
+    (typeattributeset is_pam_etc_file_object ARG1))
 
 (macro auth_execute_pam_executable_files ((type ARG1))
     (call can_exec (ARG1 pam_exec_t)))
@@ -385,7 +391,10 @@
 (macro auth_read_authconfig_pam_config_files ((type ARG1))
     (call read_files_pattern (ARG1 pam_conf_t authconfig_pam_conf_t)))
 
-(macro auth_read_pam_config_files ((type ARG1))
+(macro auth_read_all_pam_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 pam_conf_t is_pam_etc_file_object)))
+
+(macro auth_read_generic_pam_config_files ((type ARG1))
     (call read_files_pattern (ARG1 pam_conf_t pam_conf_t)))
 
 (macro auth_read_pam_console_run_files ((type ARG1))

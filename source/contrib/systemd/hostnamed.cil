@@ -32,7 +32,7 @@
 (filecon "/etc/hostname" file file_hostnamed_conf)
 
 (type hostnamed_dbus_conf_t)
-(call files_etc_object (hostnamed_dbus_conf_t))
+(call dbus_etc_object (hostnamed_dbus_conf_t))
 
 (context file_hostnamed_dbus_conf (system_u object_r hostnamed_dbus_conf_t ((s0)
     (s0))))

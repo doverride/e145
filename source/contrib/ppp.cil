@@ -33,7 +33,7 @@
 (filecon "/var/log/ppp(/.*)?" any file_pppd_log)
 
 (type pppd_pam_conf_t)
-(call files_etc_object (pppd_pam_conf_t))
+(call auth_pam_etc_object (pppd_pam_conf_t))
 
 (context file_pppd_pam_conf (system_u object_r pppd_pam_conf_t ((s0)
     (s0))))

@@ -64,7 +64,7 @@
 (filecon "/etc/systemd/bootchart\.conf" file file_bootchart_conf)
 
 (type systemd_dbus_conf_t)
-(call files_etc_object (systemd_dbus_conf_t))
+(call dbus_etc_object (systemd_dbus_conf_t))
 
 (context file_systemd_dbus_conf (system_u object_r systemd_dbus_conf_t ((s0) (s0))))
 (filecon "/etc/dbus-1/system\.d/org\.freedesktop\.systemd1\.conf" file
@@ -87,7 +87,7 @@
     file_systemd_kexec_unit)
 
 (type systemd_pam_conf_t)
-(call files_etc_object (systemd_pam_conf_t))
+(call auth_pam_etc_object (systemd_pam_conf_t))
 
 (context file_systemd_pam_conf (system_u object_r systemd_pam_conf_t ((s0) (s0))))
 (filecon "/etc/pam\.d/systemd-user" file file_systemd_pam_conf)
@@ -243,6 +243,14 @@
 (call terminal_use_console_nodes (systemd_t))
 (call terminal_use_unallocated_tty_nodes (systemd_t))
 
+(call auth_read_authconfig_pam_config_files (systemd_t))
+(call auth_read_generic_pam_config_files (systemd_t)) ; verify me
+(call auth_nsswitch_client_subject (systemd_t))
+(call auth_write_wtmp_log_files (systemd_t))
+
+(call dbus_acquire_service_system (systemd_t))
+(call dbus_system_client_subject (systemd_t))
+
 (call systemd_exec (systemd_t))
 (call systemd_exec_helper (systemd_t))
 (call systemd_read_all_unit_files (systemd_t))
@@ -255,21 +263,11 @@
 (optional systemd_optional_audit
     (call audit_client_subject (systemd_t)))
 
-(optional systemd_optional_auth
-    (call auth_read_authconfig_pam_config_files (systemd_t))
-    (call auth_read_pam_config_files (systemd_t))
-    (call auth_nsswitch_client_subject (systemd_t))
-    (call auth_write_wtmp_log_files (systemd_t)))
-
 (optional systemd_optional_binfmt
     (call binfmt_read_config_files (systemd_t)))
 
 (optional systemd_optional_hwclock
     (call hwclock_read_adjtime_files (systemd_t)))
-
-(optional systemd_optional_dbus
-    (call dbus_acquire_service_system (systemd_t))
-    (call dbus_system_client_subject (systemd_t)))
 
 (optional systemd_optional_hostnamed
     (call hostnamed_read_config_files (systemd_t)))
