@@ -246,9 +246,6 @@
 (call files_var_lib_object (var_lib_t))
 (call files_mnt_object (var_lib_t))
 
-(macro files_search_var_lib ((type ARG1))
-    (call search_dirs_pattern (ARG1 var_t var_lib_t)))
-
 (context file_var_lib (system_u object_r var_lib_t ((s0) (s0))))
 (filecon "/var/lib/.*" any file_var_lib)
 (filecon "/var/lib" dir file_var_lib)
@@ -334,6 +331,9 @@
 (macro files_var_cache_object ((type ARG1))
     (typeattributeset is_cache_file_object ARG1))
 
+(macro files_search_var_cache ((type ARG1))
+    (call search_dirs_pattern (ARG1 var_t var_cache_t)))
+
 (macro files_var_cache_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 var_cache_t ARG2 ARG3 ARG4)))
@@ -374,6 +374,9 @@
     (call read_files_pattern (ARG1 is_lock_file_object
     is_lock_file_object)))
 
+(macro files_search_run_lock ((type ARG1))
+    (call search_dirs_pattern (ARG1 run_t run_lock_t)))
+
 (macro files_run_lock_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 run_lock_t ARG2 ARG3 ARG4)))
@@ -407,7 +410,7 @@
     (allow ARG1 var_log_t add_entry_dir_perms))
 
 (macro files_list_var_log ((type ARG1))
-    (allow ARG1 var_log_t (dirs (list))))
+    (call list_dirs_pattern (ARG1 var_t var_log_t)))
 
 (macro files_search_var_log ((type ARG1))
     (call search_dirs_pattern (ARG1 var_t var_log_t)))
@@ -419,6 +422,9 @@
 (macro files_usr_object ((type ARG1))
     (typeattributeset is_usr_file_object ARG1))
 
+(macro files_search_usr ((type ARG1))
+    (allow ARG1 usr_t (dirs (list))))
+
 (macro files_read_generic_usr_files ((type ARG1))
     (call read_files_pattern (ARG1 usr_t usr_t)))
 
@@ -426,13 +432,13 @@
     (typeattributeset is_run_file_object ARG1))
 
 (macro files_list_run ((type ARG1))
-    (allow ARG1 run_t (dirs (list))))
+    (call list_dirs_pattern (ARG1 var_t run_t)))
 
 (macro files_rw_run_dirs ((type ARG1))
     (allow ARG1 run_t rw_dir_perms))
 
 (macro files_search_run ((type ARG1))
-    (allow ARG1 run_t (dirs (search))))
+    (call search_dirs_pattern (ARG1 var_t run_t)))
 
 (macro files_run_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
@@ -453,7 +459,6 @@
 (macro files_search_var ((type ARG1))
     (allow ARG1 var_t (dirs (search))))
 
-
 (macro files_var_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 var_t ARG2 ARG3 ARG4)))
@@ -461,12 +466,18 @@
 (macro files_var_spool_object ((type ARG1))
     (typeattributeset is_spool_file_object ARG1))
 
+(macro files_search_var_spool ((type ARG1))
+    (call search_dirs_pattern (ARG1 var_t var_spool_t)))
+
 (macro files_var_spool_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 var_spool_t ARG2 ARG3 ARG4)))
 
 (macro files_var_lib_object ((type ARG1))
     (typeattributeset is_lib_file_object ARG1))
+
+(macro files_search_var_lib ((type ARG1))
+    (call search_dirs_pattern (ARG1 var_t var_lib_t)))
 
 (macro files_var_lib_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
@@ -575,6 +586,47 @@
     (allow ARG1 all_non_auth_files_except (dirs (rw)))
     (allow ARG1 all_non_auth_files_except
         manage_chr_file_perms))
+
+(macro files_read_non_auth_except ((type ARG1))
+    (call files_read_all_non_auth_dirs_except (ARG1))
+    (call files_read_all_non_auth_files_except (ARG1))
+    (call files_read_all_non_auth_fifo_files_except (ARG1))
+    (call files_read_all_non_auth_sock_files_except (ARG1))
+    (call files_read_all_non_auth_lnk_files_except (ARG1))
+    (call files_read_all_non_auth_blk_files_except (ARG1))
+    (call files_read_all_non_auth_chr_files_except (ARG1)))
+
+(macro files_read_all_non_auth_dirs_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except list_dir_perms))
+
+(macro files_read_all_non_auth_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except read_file_perms))
+
+(macro files_read_all_non_auth_fifo_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
+        read_fifo_file_perms))
+
+(macro files_read_all_non_auth_sock_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
+        read_sock_file_perms))
+
+(macro files_read_all_non_auth_lnk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
+        read_lnk_file_perms))
+
+(macro files_read_all_non_auth_blk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
+        read_blk_file_perms))
+
+(macro files_read_all_non_auth_chr_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
+        read_chr_file_perms))
 
 (macro files_relabel_non_auth_except ((type ARG1))
     (call files_relabel_all_non_auth_dirs_except (ARG1))

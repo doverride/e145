@@ -484,7 +484,7 @@
     (allow ARG1 systemd_t (unix_stream_socket (getattr))))
 
 (macro systemd_rw_unix_stream_socket ((type ARG1))
-    (allow ARG1 system_t (unix_stream_socket (read write ioctl))))
+    (allow ARG1 systemd_t (unix_stream_socket (read write ioctl))))
 
 (macro systemd_getattr_exec_files ((type ARG1))
     (allow ARG1 systemd_exec_t (file (getattr))))

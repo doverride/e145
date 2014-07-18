@@ -68,6 +68,7 @@
     (call read_files_pattern (ARG1 bin_t bin_t)))
 
 (macro commands_search_bin ((type ARG1))
+    (call files_search_usr (ARG1))
     (allow ARG1 bin_t (dirs (search))))
 
 (macro commands_shell_files_entry_subject ((type ARG1))

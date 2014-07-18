@@ -27,9 +27,9 @@
 
 (context file_dmeventd_run (system_u object_r dmeventd_run_t ((s0)
     (s0))))
-(filecon "/var/run/dmeventd-client" pipe file_dmeventd_run)
-(filecon "/var/run/dmeventd-server" pipe file_dmeventd_run)
-(filecon "/var/run/dmeventd\.pid" file file_dmeventd_run)
+(filecon "/run/dmeventd-client" pipe file_dmeventd_run)
+(filecon "/run/dmeventd-server" pipe file_dmeventd_run)
+(filecon "/run/dmeventd\.pid" file file_dmeventd_run)
 
 (type dmsetup_t)
 (type dmsetup_exec_t)

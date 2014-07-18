@@ -52,6 +52,7 @@
 (call system_load_kernel_modules (kmod_t))
 (call system_read_generic_proc_files (kmod_t))
 
+(call devices_list_sysfs (kmod_t))
 (call devices_read_sysfs_files (kmod_t))
 
 (call kmod_read_modules_config_files (kmod_t))

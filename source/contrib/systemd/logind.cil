@@ -67,6 +67,9 @@
 (allow logind_t logind_run_t manage_file_perms)
 (call systemd_run_filetrans (logind_t logind_run_t file "*"))
 
+(call system_read_generic_proc_files (logind_t))
+(call system_read_sysctl_kernel_files (logind_t))
+
 (call devices_read_sysfs_files (logind_t))
 (call devices_rw_event (logind_t))
 

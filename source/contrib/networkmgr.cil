@@ -86,6 +86,7 @@
 (call commands_mmap_shell_files (networkmgr_t))
 (call commands_read_bin_files (networkmgr_t))
 
+(call devices_list_sysfs (networkmgr_t))
 (call devices_read_sysfs_files (networkmgr_t))
 (call devices_read_urandom (networkmgr_t))
 (call devices_rw_wireless (networkmgr_t))

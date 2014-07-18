@@ -14,6 +14,8 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-readahead.*" file
     file_readahead_unit)
 
+(call files_read_all_non_auth_files_except (readahead_t))
+
 (allow is_readahead_admin_subject readahead_t signal_perms)
 (call ps_subject_pattern (is_readahead_admin_subject readahead_t))
 

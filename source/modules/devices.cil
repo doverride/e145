@@ -597,6 +597,9 @@
 (macro devices_getattr_sysfs_filesystems ((type ARG1))
     (allow ARG1 sysfs_t (filesystem (getattr))))
 
+(macro devices_list_sysfs ((type ARG1))
+    (allow ARG1 sysfs_t (dirs (list))))
+
 (macro devices_read_sysfs_files ((type ARG1))
     (call read_files_pattern (ARG1 sysfs_t sysfs_t)))
 
