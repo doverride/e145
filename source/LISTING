@@ -32,6 +32,7 @@ contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
 contrib/seutil.cil
+contrib/systemd/askpwd.cil
 contrib/systemd/binfmt.cil
 contrib/systemd/cgagent.cil
 contrib/systemd/hostnamed.cil

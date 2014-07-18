@@ -1,0 +1,84 @@
+(roleattribute is_askpwdagent_role)
+
+(typeattribute is_askpwd_admin_subject)
+
+(typeattribute is_askpwd_subject)
+(typeattributeset is_askpwd_subject (askpwd_t askpwdagent_t))
+
+(typeattribute is_askpwd_file_object)
+(typeattributeset is_askpwd_file_object (askpwd_run_t
+    askpwdagent_run_t askpwdagent_unit_t))
+
+(type askpwd_t)
+(type askpwd_exec_t)
+(call systemd_oneshot_subject_entry (askpwd_t askpwd_exec_t))
+
+(context file_askpwd_exec (system_u object_r askpwd_exec_t ((s0) (s0))))
+(filecon "/usr/bin/systemd-ask-password" file file_askpwd_exec)
+
+(type askpwd_run_t)
+(call files_run_object (askpwd_run_t))
+
+(context file_askpwd_run (system_u object_r askpwd_run_t ((s0) (s0))))
+(filecon "/run/systemd/ask-password(/.*)?" any file_askpwd_run)
+
+(type askpwdagent_t)
+(type askpwdagent_exec_t)
+(call systemd_oneshot_subject_entry (askpwdagent_t askpwdagent_exec_t))
+
+(context file_askpwdagent_exec (system_u object_r askpwdagent_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/systemd-tty-ask-password-agent" file
+    file_askpwdagent_exec)
+
+(type askpwdagent_unit_t)
+(call systemd_unit_object (askpwdagent_unit_t))
+
+(context file_askpwdagent_unit (system_u object_r askpwdagent_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-ask-password.*" file
+    file_askpwdagent_unit)
+
+(type askpwdagent_run_t)
+(call files_run_object (askpwdagent_run_t))
+
+(context file_askpwdagent_run (system_u object_r askpwdagent_run_t ((s0)
+    (s0))))
+(filecon "/run/systemd/ask-password-block(/.*)?" any file_askpwdagent_run)
+
+(call systemd_run_filetrans (askpwd_t askpwd_run_t dir "*"))
+
+(allow askpwdagent_t askpwdagent_run_t manage_dir_perms)
+(allow askpwdagent_t askpwdagent_run_t manage_fifo_file_perms)
+(call systemd_run_filetrans (askpwdagent_t askpwdagent_run_t dir "*"))
+
+(call selinux_get_filesystems_mount (askpwdagent_t))
+
+(call terminal_use_console_nodes (askpwdagent_t))
+
+(call askpwd_read_run_files (askpwdagent_t))
+
+(call systemd_use_fd (askpwdagent_t))
+
+(allow is_askpwd_admin_subject is_askpwd_subject signal_perms)
+(call ps_subject_pattern (is_askpwd_admin_subject is_askpwd_subject))
+
+(allow is_askpwd_admin_subject askpwdagent_unit_t (service (all)))
+
+(call admin_pattern (is_askpwd_admin_subject is_askpwd_file_object))
+
+(macro askpwd_subtrans_agent ((type ARG1))
+    (call subtrans_pattern (ARG1 askpwdagent_exec_t askpwdagent_t)))
+
+(macro askpwd_run_agent ((type ARG1)(role ARG2))
+    (call askpwd_subtrans_agent (ARG1))
+    (roleattributeset is_askpwdagent_role (ARG2)))
+
+(macro askpwd_read_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 askpwd_run_t askpwd_run_t)))
+
+(macro askpwd_send_signal_agent ((type ARG1))
+    (allow ARG1 askpwdagent_t (process (signal))))
+
+(macro askpwd_admin ((type ARG1))
+    (typeattributeset is_askpwd_admin_subject ARG1))

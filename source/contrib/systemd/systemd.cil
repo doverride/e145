@@ -248,8 +248,8 @@
 (call systemd_read_config_files (systemd_t))
 (call systemd_read_pam_config_files (systemd_t))
 
-; (optional systemd_optional_askpwd
-    ; (call askpwd_read_run_files (systemd_t)))
+(optional systemd_optional_askpwd
+    (call askpwd_read_run_files (systemd_t)))
 
 (optional systemd_optional_audit
     (call audit_client_subject (systemd_t)))
@@ -354,9 +354,9 @@
 (optional systemctl_optional_miscfiles
     (call miscfiles_read_localization_files (is_systemctl_client_subject)))
 
-; (optional systemctl_optional_pwdagent
-    ; (call pwdagent_run (systemctl_t is_systemctl_role))
-    ; (call pwdagent_send_signal (systemctl_t)))
+(optional systemctl_optional_askpwdagent
+    (call askpwd_run_agent (systemctl_t is_systemctl_role))
+    (call askpwd_send_signal_agent (systemctl_t)))
 
 (allow systemd_t is_systemd_daemon_or_systemd_oneshot_subject (process
     (signull)))
