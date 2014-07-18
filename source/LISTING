@@ -48,6 +48,7 @@ contrib/systemd/sessions.cil
 contrib/systemd/shutdownd.cil
 contrib/systemd/sysctl.cil
 contrib/systemd/systemd.cil
+contrib/systemd/timedated.cil
 contrib/systemd/tmpfiles.cil
 contrib/systemd/udevd.cil
 contrib/systemd/utmp.cil

@@ -1,0 +1,58 @@
+(roleattribute is_timedatectl_role)
+
+(typeattribute is_timedated_admin_subject)
+
+(typeattribute is_timedated_subject)
+(typeattributeset is_timedated_subject (timedatectl_t timedated_t))
+
+(typeattribute is_timedated_file_object)
+(typeattributeset is_timedated_file_object (timedated_dbus_conf_t
+    timedated_unit_t))
+
+(type timedatectl_t)
+(type timedatectl_exec_t)
+(call application_subject_entry (timedatectl_t timedatectl_exec_t))
+(roleattributeset is_timedatectl_role system_r)
+(roletype is_timedatectl_role timedatectl_t)
+
+(context file_timedatectl_exec (system_u object_r timedatectl_exec_t ((s0) (s0))))
+(filecon "/usr/bin/timedatectl" file file_timedatectl_exec)
+
+(type timedated_t)
+(type timedated_exec_t)
+(call systemd_oneshot_subject_entry (timedated_t timedated_exec_t))
+
+(context file_timedated_exec (system_u object_r timedated_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-timedated" file file_timedated_exec)
+
+(type timedated_dbus_conf_t)
+(call files_etc_object (timedated_dbus_conf_t))
+
+(context file_timedated_dbus_conf (system_u object_r timedated_dbus_conf_t ((s0)
+    (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.timedate1\.conf" file
+    file_timedated_dbus_conf)
+
+(type timedated_unit_t)
+(call systemd_unit_object (timedated_unit_t))
+
+(context file_timedated_unit (system_u object_r timedated_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-timedated.*" file
+    file_timedated_unit)
+
+(allow is_timedated_admin_subject is_timedated_subject signal_perms)
+(call ps_subject_pattern (is_timedated_admin_subject is_timedated_subject))
+
+(allow is_timedated_admin_subject timedated_unit_t (service (all)))
+
+(call admin_pattern (is_timedated_admin_subject is_timedated_file_object))
+
+(macro timedated_subtrans_timedatectl ((type ARG1))
+    (call subtrans_pattern (ARG1 timedatectl_exec_t timedatectl_t)))
+
+(macro timedated_run_timedatectl ((type ARG1)(role ARG2))
+    (call timedated_subtrans_timedatectl (ARG1))
+    (roleattributeset is_timedatectl_role (ARG2)))
+
+(macro timedated_admin ((type ARG1))
+    (typeattributeset is_timedated_admin_subject ARG1))
