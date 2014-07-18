@@ -1,0 +1,38 @@
+(typeattribute is_rfkill_admin_subject)
+
+(typeattribute is_rfkill_file_object)
+(typeattributeset is_rfkill_file_object (rfkill_unit_t
+    rfkill_var_lib_t))
+
+(type rfkill_t)
+(type rfkill_exec_t)
+(call systemd_oneshot_subject_entry (rfkill_t rfkill_exec_t))
+
+(context file_rfkill_exec (system_u object_r rfkill_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-rfkill" file file_rfkill_exec)
+
+(type rfkill_unit_t)
+(call systemd_unit_object (rfkill_unit_t))
+
+(context file_rfkill_unit (system_u object_r rfkill_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-rfkill.*" file
+    file_rfkill_unit)
+
+(type rfkill_var_lib_t)
+(call files_var_lib_object (rfkill_var_lib_t))
+
+(context file_rfkill_var_lib (system_u object_r rfkill_var_lib_t ((s0) (s0))))
+(filecon "/var/lib/systemd/rfkill(/.*)?" any file_rfkill_var_lib)
+
+(allow is_rfkill_admin_subject rfkill_t signal_perms)
+(call ps_subject_pattern (is_rfkill_admin_subject rfkill_t))
+
+(allow is_rfkill_admin_subject rfkill_unit_t (service (all)))
+
+(call admin_pattern (is_rfkill_admin_subject is_rfkill_file_object))
+
+(macro rfkill_read_var_lib_files ((type ARG1))
+    (call read_files_pattern (ARG1 rfkill_var_lib_t rfkill_var_lib_t)))
+
+(macro rfkill_admin ((type ARG1))
+    (typeattributeset is_rfkill_admin_subject ARG1))

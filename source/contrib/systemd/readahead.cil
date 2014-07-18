@@ -1,5 +1,9 @@
 (typeattribute is_readahead_admin_subject)
 
+(typeattribute is_readahead_file_object)
+(typeattributeset is_readahead_file_object (readahead_data_t
+    readahead_unit_t))
+
 (type readahead_t)
 (type readahead_exec_t)
 (call systemd_oneshot_subject_entry (readahead_t readahead_exec_t))
@@ -37,7 +41,7 @@
 
 (allow is_readahead_admin_subject readahead_unit_t (service (all)))
 
-(call admin_pattern (is_readahead_admin_subject readahead_unit_t))
+(call admin_pattern (is_readahead_admin_subject is_readahead_file_object))
 
 (macro readahead_admin ((type ARG1))
     (typeattributeset is_readahead_admin_subject ARG1))
