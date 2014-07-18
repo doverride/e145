@@ -39,14 +39,32 @@
 (context file_pcscd_unit (system_u object_r pcscd_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*pcscd.*" file file_pcscd_unit)
 
-(allow pcscd_t self create_unix_stream_socket_perms)
+(allow pcscd_t self create_unix_stream_stream_socket_perms)
+(allow pcscd_t self create_netlink_kobject_uevent_socket_perms)
+(allow pcscd_t self rw_fifo_file_perms)
 
+(call manage_dirs_pattern (pcscd_t pcscd_run_t pcscd_run_t))
 (call manage_files_pattern (pcscd_t pcscd_run_t pcscd_run_t))
 (call files_run_filetrans (pcscd_t pcscd_run_t dir "*"))
 
-(call devices_read_usb (pcscd_t))
+(call devices_list (pcscd_t))
+(call devices_list_sysfs (pcscd_t))
+(call devices_rw_usb (pcscd_t))
+(call devices_read_sysfs_files (pcscd_t))
+
+(call files_search_var (pcscd_t))
+
+(call selinux_getattr_filesystems (pcscd_t))
+
+(call dbus_system_client_subject (pcscd_t))
+
+(call pcsc_list_config (pcscd_t))
+(call pcsc_read_config_files (pcscd_t))
 
 (call polkit_dbus_chat_polkitd (pcscd_t))
+
+(optional pcscd_optional_udevd
+    (call udevd_read_config_files (pcscd_t)))
 
 (allow is_pcsc_admin_subject pcscd_t signal_perms)
 (call ps_subject_pattern (is_pcsc_admin_subject pcscd_t))
@@ -54,6 +72,12 @@
 (allow is_pcsc_admin_subject pcscd_unit_t (service (all)))
 
 (call admin_pattern (is_pcsc_admin_subject is_pcsc_file_object))
+
+(macro pcsc_list_config ((type ARG1))
+    (allow ARG1 pcscd_conf_t (dirs (list))))
+
+(macro pcsc_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 pcscd_conf_t pcscd_conf_t)))
 
 (macro pcsc_admin ((type ARG1))
     (typeattributeset is_pcsc_admin_subject ARG1))

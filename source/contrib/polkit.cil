@@ -110,6 +110,9 @@
 (optional polkit_optional_miscfiles
     (call miscfiles_read_localization_files (polkitd_t)))
 
+(call devices_search_sysfs (polkitd_auth_t))
+
+(call polkit_list_var_lib (polkitd_auth_t))
 (call polkit_read_var_lib_files (polkitd_auth_t))
 
 (allow is_polkit_admin_subject is_polkit_subject signal_perms)
@@ -138,6 +141,9 @@
 
 (macro polkit_read_generic_config_files ((type ARG1))
     (call read_files_pattern (ARG1 polkitd_conf_t polkitd_conf_t)))
+
+(macro polkit_list_var_lib ((type ARG1))
+    (allow ARG1 polkitd_var_lib_t (dirs (list))))
 
 (macro polkit_read_var_lib_files ((type ARG1))
     (call read_files_pattern (ARG1 polkitd_var_lib_t polkitd_var_lib_t)))

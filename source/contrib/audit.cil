@@ -130,6 +130,8 @@
 (allow auditd_t auditd_run_t manage_sock_file_perms)
 (call files_run_filetrans (auditd_t auditd_run_t sock_file "*"))
 
+(call devices_search_sysfs (auditd_t))
+
 (call filesystem_getattr_filesystems (auditd_t))
 
 (call selinux_get_filesystems_mount (auditd_t))

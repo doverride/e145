@@ -1,0 +1,24 @@
+(typeattribute is_cryptsetup_admin_subject)
+
+(type cryptsetup_t)
+(type cryptsetup_exec_t)
+(call systemd_oneshot_subject_entry (cryptsetup_t cryptsetup_exec_t))
+
+(context file_cryptsetup_exec (system_u object_r cryptsetup_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-cryptsetup" file file_cryptsetup_exec)
+
+(type cryptsetup_unit_t)
+(call systemd_unit_object (cryptsetup_unit_t))
+
+(context file_cryptsetup_unit (system_u object_r cryptsetup_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*cryptsetup.*" file file_cryptsetup_unit)
+
+(allow is_cryptsetup_admin_subject cryptsetup_t signal_perms)
+(call ps_subject_pattern (is_cryptsetup_admin_subject cryptsetup_t))
+
+(allow is_cryptsetup_admin_subject cryptsetup_unit_t (service (all)))
+
+(call admin_pattern (is_cryptsetup_admin_subject cryptsetup_unit_t))
+
+(macro cryptsetup_admin ((type ARG1))
+    (typeattributeset is_cryptsetup_admin_subject ARG1))

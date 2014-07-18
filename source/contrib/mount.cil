@@ -40,6 +40,7 @@
 (call files_run_filetrans (mount_t mount_run_t dir "*"))
 
 (call system_setsched (mount_t))
+(call system_request_load_module (mount_t))
 
 (call devices_read_sysfs_files (mount_t))
 

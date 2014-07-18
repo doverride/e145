@@ -538,6 +538,9 @@
         (call storage_update_timestamp_fixed_disk_nodes (ARG1))
         (call storage_update_timestamp_scsi_generic_nodes (ARG1))))
 
+(macro devices_list ((type ARG1))
+    (allow ARG1 device_t (dirs (list))))
+
 (macro devices_manage_dirs ((type ARG1))
     (call manage_dirs_pattern (ARG1 device_t device_t)))
 
@@ -635,6 +638,9 @@
 
 (macro devices_rw_kmsg ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_kmsg_t)))
+
+(macro devices_rw_usb ((type ARG1))
+    (call rw_chr_files_pattern (ARG1 device_t device_usb_t)))
 
 (macro devices_write_kmsg ((type ARG1))
     (call write_chr_files_pattern (ARG1 device_t device_kmsg_t)))

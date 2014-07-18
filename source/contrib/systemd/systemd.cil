@@ -351,8 +351,11 @@
 (optional systemd_optional_utmp
     (call utmp_rw_run_files (systemd_t)))
 
+(allow systemctl_t self (capability (net_admin)))
 (allow systemctl_t self (process (signal)))
 (allow is_systemctl_client_subject self create_unix_stream_socket_perms)
+
+(call system_read_generic_proc_files (is_systemctl_client_subject))
 
 (call devices_read_sysfs_files (systemctl_t))
 

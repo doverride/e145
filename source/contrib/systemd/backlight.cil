@@ -1,11 +1,22 @@
 (typeattribute is_backlight_admin_subject)
 
+(typeattribute is_backlight_file_object)
+(typeattributeset is_backlight_file_object (backlight_unit_t
+    backlight_var_lib_t))
+
 (type backlight_t)
 (type backlight_exec_t)
 (call systemd_oneshot_subject_entry (backlight_t backlight_exec_t))
 
 (context file_backlight_exec (system_u object_r backlight_exec_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/systemd-backlight" file file_backlight_exec)
+
+(type backlight_var_lib_t)
+(call files_var_lib_object (backlight_var_lib_t))
+
+(context file_backlight_var_lib (system_u object_r backlight_var_lib_t
+    ((s0) (s0))))
+(filecon "/var/lib/systemd/backlight(/.*)?" any file_backlight_var_lib)
 
 (type backlight_unit_t)
 (call systemd_unit_object (backlight_unit_t))
@@ -17,17 +28,33 @@
 
 (allow backlight_t self (capability (net_admin)))
 
+(allow backlight_t backlight_var_lib_t manage_dir_perms)
+(allow backlight_t backlight_var_lib_t manage_file_perms)
+(call systemd_var_lib_filetrans (backlight_t backlight_var_lib_t dir "*"))
+
 (call system_read_generic_proc_files (backlight_t))
+
+(call devices_read_sysfs_files (backlight_t))
 
 (optional backlight_optional_journald
     (call journald_client_subject (backlight_t)))
+
+(optional backlight_optional_udevd
+    (call udevd_read_run_files (backlight_t))
+    (call udevd_read_config_files (backlight_t)))
 
 (allow is_backlight_admin_subject backlight_t signal_perms)
 (call ps_subject_pattern (is_backlight_admin_subject backlight_t))
 
 (allow is_backlight_admin_subject backlight_unit_t (service (all)))
 
-(call admin_pattern (is_backlight_admin_subject backlight_unit_t))
+(call admin_pattern (is_backlight_admin_subject is_backlight_file_object))
+
+(macro backlight_list_var_lib ((type ARG1))
+    (allow ARG1 backlight_var_lib_t (dirs (list))))
+
+(macro backlight_read_var_lib_files ((type ARG1))
+    (call read_files_pattern (ARG1 backlight_var_lib_t backlight_var_lib_t)))
 
 (macro backlight_admin ((type ARG1))
     (typeattributeset is_backlight_admin_subject ARG1))
