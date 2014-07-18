@@ -203,6 +203,10 @@
     (allow ARG1 device_fixed_disk_t write_chr_file_perms)
     (typeattributeset can_write_fixed_disk_raw ARG1))
 
+(macro storage_getattr_scsi_generic_nodes ((type ARG1))
+    (allow ARG1 device_scsi_generic_t (blk_file (getattr)))
+    (allow ARG1 device_scsi_generic_t (chr_file (getattr))))
+
 (macro storage_manage_scsi_generic_nodes ((type ARG1))
     (allow ARG1 self (capability (mknod)))
     (allow ARG1 device_scsi_generic_t manage_chr_file_perms)

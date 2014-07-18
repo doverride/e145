@@ -1,0 +1,51 @@
+(typeattribute is_fsck_admin_subject)
+
+(type fsck_t)
+(type fsck_exec_t)
+(call systemd_oneshot_subject_entry (fsck_t fsck_exec_t))
+
+(context file_fsck_exec (system_u object_r fsck_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-fsck" file file_fsck_exec)
+
+(type fsck_unit_t)
+(call systemd_unit_object (fsck_unit_t))
+
+(context file_fsck_unit (system_u object_r fsck_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-fsck.*" file
+    file_fsck_unit)
+
+(allow fsck_t self (capability (net_admin)))
+(allow fsck_t self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (fsck_t))
+
+(call devices_read_sysfs_files (fsck_t))
+(call devices_write_kmsg (fsck_t))
+
+(call selinux_get_filesystems_mount (fsck_t))
+
+(call storage_getattr_fixed_disk_nodes (fsck_t))
+(call storage_getattr_scsi_generic_nodes (fsck_t))
+
+(optional fsck_optional_fstools
+    (call fstools_subtrans (fsck_t)))
+
+(optional fsck_optional_journald
+    (call journald_client_subject (fsck_t)))
+
+(optional fsck_optional_plymouth
+    (call plymouth_read_run_files (fsck_t)))
+
+(optional fsck_optional_udevd
+    (call udevd_read_config_files (fsck_t))
+    (call udevd_read_run_files (fsck_t)))
+
+(allow is_fsck_admin_subject fsck_t signal_perms)
+(call ps_subject_pattern (is_fsck_admin_subject fsck_t))
+
+(allow is_fsck_admin_subject fsck_unit_t (service (all)))
+
+(call admin_pattern (is_fsck_admin_subject fsck_unit_t))
+
+(macro fsck_admin ((type ARG1))
+    (typeattributeset is_fsck_admin_subject ARG1))

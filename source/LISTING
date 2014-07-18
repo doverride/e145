@@ -35,6 +35,7 @@ contrib/seutil.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/binfmt.cil
 contrib/systemd/cgagent.cil
+contrib/systemd/fsck.cil
 contrib/systemd/hostnamed.cil
 contrib/systemd/initctl.cil
 contrib/systemd/journald.cil
