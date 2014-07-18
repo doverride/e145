@@ -74,7 +74,7 @@
 (call dbus_read_state_all_system_client_subjects (dbusd_t))
 (call dbus_read_state_all_unconfined_subjects (dbusd_t))
 
-; (call systemd_read_state_systemctl_client_subjects (dbusd_t))
+(call systemd_read_state_systemctl_client_subjects (dbusd_t))
 
 (optional dbus_optional_audit
     (call audit_client_subject (dbusd_t)))

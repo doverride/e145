@@ -92,8 +92,8 @@
     (call libraries_use_ld_so (is_common_subject))
     (call libraries_use_shared_libs (is_common_subject)))
 
-; (optional subject_optional_systemd
-    ; (call systemd_send_sigchld (is_common_subject)))
+(optional subject_optional_systemd
+    (call systemd_send_sigchld (is_common_subject)))
 
 (allow has_unconfined_access_to_subject_assets is_subject (dccp_socket
     (all)))
