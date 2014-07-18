@@ -92,18 +92,22 @@
     (typeattributeset is_bool_file_object ARG1))
 
 (macro selinux_compute_access_vector ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (compute_av))))
 
 (macro selinux_compute_create_context ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (compute_create))))
 
 (macro selinux_compute_relabel_context ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (compute_relabel))))
 
 (macro selinux_compute_user_contexts ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (compute_user))))
 
@@ -111,13 +115,18 @@
     (allow ARG1 security_t (filesystem (getattr))))
 
 (macro selinux_get_enforce_mode ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call read_files_pattern (ARG1 security_t security_t)))
 
 (macro selinux_get_filesystems_mount ((type ARG1))
     (call selinux_getattr_filesystems (ARG1))
     (allow ARG1 security_t (dir (getattr))))
 
+(macro selinux_list ((type ARG1))
+    (allow ARG1 security_t (dirs (list))))
+
 (macro selinux_set_enforce_mode ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (typeattributeset can_setenforce ARG1)
     (booleanif (not secure_mode_policyload)
@@ -125,6 +134,7 @@
             (allow ARG1 security_t (security (setenforce))))))
 
 (macro selinux_load_policy ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (typeattributeset can_load_policy ARG1)
     (booleanif (not secure_mode_policyload)
@@ -132,6 +142,7 @@
             (allow ARG1 security_t (security (load_policy))))))
 
 (macro selinux_set_all_booleans ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (allow ARG1 all_bool_file_objects_except_secure_mode_policyload
         rw_file_perms)
     (call read_files_pattern (ARG1 security_t secure_mode_policyload_t))
@@ -142,12 +153,14 @@
                 write_file_perms))))
 
 (macro selinux_set_parameters ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (setsecparam)))
     (auditallow ARG1 security_t (security (setsecparam)))
     (typeattributeset can_setsecparam ARG1))
 
 (macro selinux_validate_context ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (check_context))))
 

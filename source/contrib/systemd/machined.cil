@@ -77,6 +77,9 @@
     (call files_etc_filetrans (ARG1 machined_conf_t file "machine-id"))
     (call files_etc_filetrans (ARG1 machined_conf_t file "machine-info")))
 
+(macro machined_list_run ((type ARG1))
+    (allow ARG1 machined_run_t (dirs (list))))
+
 (macro machined_read_run_files ((type ARG1))
     (call read_files_pattern (ARG1 machined_run_t machined_run_t)))
 

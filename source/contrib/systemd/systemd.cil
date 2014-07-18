@@ -221,6 +221,8 @@
 (call files_read_generic_etc_files (systemd_t)) ; /etc/login.defs
 (call files_read_generic_usr_files (systemd_t))
 (call files_relabel_non_auth_except (systemd_t)); most likely way too coarse
+(call files_search_run (systemd_t))
+(call files_search_var_lib (systemd_t))
 
 (call filesystem_create_generic_tmpfs_sock_files (systemd_t)) ; early /run/systemd/notify
 (call filesystem_getattr_all_filesystems (systemd_t))
@@ -235,6 +237,7 @@
 (call selinux_compute_access_vector (systemd_t))
 (call selinux_compute_create_context (systemd_t))
 
+(call subject_getattr_all_subjects (systemd_t))
 (call subject_read_all_subjects_state (systemd_t))
 (call subject_sigkill_all_subjects (systemd_t))
 (call subject_signal_all_subjects (systemd_t))
@@ -260,6 +263,7 @@
 (call systemd_read_pam_config_files (systemd_t))
 
 (optional systemd_optional_askpwd
+    (call askpwd_list_run (systemd_t))
     (call askpwd_read_run_files (systemd_t)))
 
 (optional systemd_optional_audit
@@ -450,6 +454,9 @@
 
 (macro systemd_start_generic_service ((type ARG1))
     (allow ARG1 systemd_unit_t (service (start))))
+
+(macro systemd_get_status_generic_service ((type ARG1))
+    (allow ARG1 systemd_unit_t (service (status))))
 
 (macro systemd_get_status_transient_system_service ((type ARG1))
     (allow ARG1 systemd_t (service (status))))

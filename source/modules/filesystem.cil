@@ -360,9 +360,11 @@
     (call manage_dirs_pattern (ARG1 cgroup_t cgroup_t)))
 
 (macro filesystem_read_cgroup_files ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call read_files_pattern (ARG1 cgroup_t cgroup_t)))
 
 (macro filesystem_rw_cgroup_files ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 cgroup_t cgroup_t)))
 
 (macro filesystem_setattr_cgroup_files ((type ARG1))
@@ -373,6 +375,9 @@
 
 (macro filesystem_list_tmpfs ((type ARG1))
     (allow ARG1 tmpfs_t (dirs (list))))
+
+(macro filesystem_search_tmpfs ((type ARG1))
+    (allow ARG1 tmpfs_t (dirs (search))))
 
 (macro filesystem_mount_tmpfs_filesystems ((type ARG1))
     (allow ARG1 tmpfs_t (filesystem (mount))))

@@ -203,6 +203,9 @@
     (typeattributeset can_mmap_low ARG1)
     (allow ARG1 self (memprotect (mmap_zero))))
 
+(macro subject_getattr_all_subjects ((type ARG1))
+    (allow ARG1 is_subject (process (getattr))))
+
 (macro subject_getpgid_all_subjects ((type ARG1))
     (allow ARG1 is_subject (process (getpgid))))
 

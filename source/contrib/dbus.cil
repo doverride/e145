@@ -63,17 +63,22 @@
 (allow dbusd_t dbusd_var_lib_t manage_dir_perms)
 (call files_var_lib_filetrans (dbusd_t dbusd_var_lib_t dir "*"))
 
+(call system_read_sysctl_kernel_files (dbusd_t))
+
 (call devices_read_urandom (dbusd_t))
 
 (call files_read_generic_usr_files (dbusd_t))
 
-(call selinux_getattr_filesystems (dbusd_t))
 (call selinux_compute_access_vector (dbusd_t))
+(call selinux_getattr_filesystems (dbusd_t))
+(call selinux_list (dbusd_t))
 
+(call dbus_list_config (dbusd_t))
 (call dbus_read_all_config_files (dbusd_t))
 (call dbus_read_state_all_system_client_subjects (dbusd_t))
 (call dbus_read_state_all_unconfined_subjects (dbusd_t))
 
+(call systemd_getattr_generic_unit_dirs (dbusd_t))
 (call systemd_read_state_systemctl_client_subjects (dbusd_t))
 
 (optional dbus_optional_audit
@@ -123,6 +128,9 @@
 
 (macro dbus_acquire_service_system ((type ARG1))
     (allow ARG1 dbusd_t (dbus (acquire_svc))))
+
+(macro dbus_list_config ((type ARG1))
+    (allow ARG1 dbusd_conf_t (dirs (list))))
 
 (macro dbus_read_all_config_files ((type ARG1))
     (call read_files_pattern (ARG1 dbusd_conf_t is_dbus_etc_file_object)))

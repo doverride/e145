@@ -81,6 +81,7 @@
 (call system_getattr_proc_filesystems (iptables_t))
 (call system_read_generic_proc_files (iptables_t))
 (call system_read_proc_net_files (iptables_t))
+(call system_read_sysctl_kernel_files (iptables_t))
 (call system_read_sysctl_usermodehelper_files (iptables_t))
 (call system_request_load_module (iptables_t))
 
@@ -98,6 +99,7 @@
     (call miscfiles_read_localization_files (iptables_t)))
 
 (optional iptables_optional_kmod
+    (call kmod_list_modules_config (iptables_t))
     (call kmod_read_modules_config_files (iptables_t))
     (call kmod_run (iptables_t is_iptables_role))) ; /usr/libexec/iptables6?.init
 

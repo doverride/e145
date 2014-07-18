@@ -74,6 +74,7 @@
 (call devices_getattr_sound (logind_t))
 (call devices_getattr_v4l (logind_t))
 (call devices_read_sysfs_files (logind_t))
+(call devices_read_urandom (logind_t))
 (call devices_rw_event (logind_t))
 (call devices_setattr_dri (logind_t))
 (call devices_setattr_sound (logind_t))
@@ -94,6 +95,7 @@
 (call logind_read_config_files (logind_t))
 
 (call systemd_dbus_chat (logind_t))
+(call systemd_get_status_generic_service (logind_t)) ; session-1.scope
 (call systemd_get_status_system (logind_t))
 (call systemd_search_var_lib (logind_t)) ; not sure where it wants to go
 (call systemd_start_generic_service (logind_t)) ; user@.service
@@ -147,6 +149,9 @@
 
 (macro logind_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 logind_conf_t logind_conf_t)))
+
+(macro logind_list_run ((type ARG1))
+    (allow ARG1 logind_run_t (dirs (list))))
 
 (macro logind_read_run_files ((type ARG1))
     (call read_files_pattern (ARG1 logind_run_t logind_run_t)))

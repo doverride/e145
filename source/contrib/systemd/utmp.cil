@@ -30,6 +30,7 @@
 
 (call system_read_generic_proc_files (utmp_t))
 
+(call systemd_get_status_generic_service (utmp_t)) ; graphical.target
 (call systemd_get_status_system (utmp_t))
 (call systemd_get_status_transient_system_service (utmp_t)) ; graphical.target
 (call systemd_stream_connect (utmp_t))

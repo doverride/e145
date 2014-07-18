@@ -55,6 +55,7 @@
 (call devices_list_sysfs (kmod_t))
 (call devices_read_sysfs_files (kmod_t))
 
+(call kmod_list_modules_config (kmod_t))
 (call kmod_read_modules_config_files (kmod_t))
 (call kmod_read_modules_dep_files (kmod_t))
 
@@ -77,6 +78,9 @@
 (macro kmod_run ((type ARG1)(role ARG2))
     (call kmod_subtrans (ARG1))
     (roleattributeset is_kmod_role (ARG2)))
+
+(macro kmod_list_modules_config ((type ARG1))
+    (allow ARG1 modules_conf_t (dirs (list))))
 
 (macro kmod_read_modules_config_files ((type ARG1))
     (call read_files_pattern (ARG1 modules_conf_t modules_conf_t)))

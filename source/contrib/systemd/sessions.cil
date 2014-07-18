@@ -29,6 +29,8 @@
 (allow sessions_t sessions_run_t manage_file_perms)
 (call files_run_filetrans (sessions_t sessions_run_t file "*"))
 
+(call system_read_generic_proc_files (sessions_t))
+
 (call devices_write_kmsg (sessions_t))
 
 (optional sessions_optional_journald

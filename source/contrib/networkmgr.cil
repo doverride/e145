@@ -92,6 +92,7 @@
 (call devices_read_urandom (networkmgr_t))
 (call devices_rw_wireless (networkmgr_t))
 
+(call files_list_tmp (networkmgr_t))
 (call files_read_generic_env_files (networkmgr_t)) ; /etc/sysconfig/init
 (call files_read_generic_etc_files (networkmgr_t)) ; /etc/libnl/classid
 
@@ -112,6 +113,7 @@
 (optional networkmgr_optional_dhcp
     (call dhcp_read_config_files (networkmgr_t))
     (call dhcp_read_dhclient_var_lib_files (networkmgr_t))
+    (call dhcp_send_signal_dhclient (networkmgr_t))
     (call dhcp_subtrans_dhclient (networkmgr_t)))
 
 (optional networkmgr_optional_dns
@@ -129,10 +131,12 @@
 
 (optional networkmgr_optional_logind
     (call logind_dbus_chat (networkmgr_t))
+    (call logind_list_run (networkmgr_t))
     (call logind_use_fd (networkmgr_t))
     (call logind_write_inherited_run_fifo_files (networkmgr_t)))
 
 (optional networkmgr_optional_machined
+    (call machined_list_run (networkmgr_t))
     (call machined_read_run_files (networkmgr_t)))
 
 (optional networkmgr_optional_miscfiles

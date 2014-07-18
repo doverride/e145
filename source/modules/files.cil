@@ -401,6 +401,9 @@
 (macro files_tmp_object ((type ARG1))
     (typeattributeset is_tmp_file_object ARG1))
 
+(macro files_list_tmp ((type ARG1))
+    (allow ARG1 tmp_t (dirs (list))))
+
 (macro files_manage_generic_tmp_dirs ((type ARG1))
     (call manage_dirs_pattern (ARG1 tmp_t tmp_t)))
 
@@ -437,6 +440,9 @@
 
 (macro files_run_object ((type ARG1))
     (typeattributeset is_run_file_object ARG1))
+
+(macro files_delete_entry_run_dirs ((type ARG1))
+    (allow ARG1 run_t del_entry_dir_perms))
 
 (macro files_list_run ((type ARG1))
     (call list_dirs_pattern (ARG1 var_t run_t)))

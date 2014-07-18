@@ -33,6 +33,7 @@
 (context file_udev_helper_exec (system_u object_r udev_helper_exec_t
     ((s0) (s0))))
 (filecon "/usr/lib/udev/[^/]*" file file_udev_helper_exec)
+(filecon "/usr/sbin/crda" file file_udev_helper_exec)
 
 (type udevd_conf_t)
 (call files_etc_object (udevd_conf_t))
@@ -71,6 +72,7 @@
 (allow udevd_t self (process (setfscreate signal getsched)))
 (allow udevd_t self rw_fifo_file_perms)
 (allow udevd_t self create_netlink_kobject_uevent_socket_perms)
+(allow udevd_t self create_netlink_socket_perms) ; crda
 (allow udevd_t self create_unix_stream_stream_socket_perms)
 
 (allow udevd_t udevd_run_t manage_dir_perms)
@@ -81,6 +83,8 @@
 
 (call system_list_debugfs (udevd_t))
 (call system_load_kernel_modules (udevd_t))
+(call system_read_proc_net_files (udevd_t)) ; crda
+(call system_read_sysctl_kernel_files (udevd_t)) ; crda
 (call system_request_load_module (udevd_t))
 (call system_link_keyring (udevd_t))
 
@@ -97,6 +101,7 @@
 (call devices_write_kmsg (udevd_t))
 
 (call filesystem_read_cgroup_files (udevd_t))
+(call filesystem_search_tmpfs (udevd_t))
 
 (call selinux_get_enforce_mode (udevd_t))
 

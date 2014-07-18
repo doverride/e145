@@ -20,7 +20,7 @@
 (call files_run_object (dhclient_run_t))
 
 (context file_dhclient_run (system_u object_r dhclient_run_t ((s0) (s0))))
-(filecon "/var/run/dhclient.*" file file_dhclient_run)
+(filecon "/run/dhclient.*" file file_dhclient_run)
 
 (type dhclient_var_lib_t)
 (call files_var_lib_object (dhclient_var_lib_t))
@@ -101,8 +101,15 @@
 (macro dhcp_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 dhcp_conf_t dhcp_conf_t)))
 
+(macro dhcp_delete_dhclient_run_files ((type ARG1))
+    (call files_delete_entry_run_dirs (ARG1))
+    (allow ARG1 dhclient_t delete_file_perms))
+
 (macro dhcp_read_dhclient_var_lib_files ((type ARG1))
     (call read_files_pattern (ARG1 dhclient_var_lib_t dhclient_var_lib_t)))
+
+(macro dhcp_send_signal_dhclient ((type ARG1))
+    (allow ARG1 dhclient_t (process (signal))))
 
 (macro dhcp_udp_bind_dhcp_port ((type ARG1))
     (allow ARG1 self (capability (net_bind_service)))

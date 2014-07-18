@@ -74,6 +74,9 @@
     (call askpwd_subtrans_agent (ARG1))
     (roleattributeset is_askpwdagent_role (ARG2)))
 
+(macro askpwd_list_run ((type ARG1))
+    (allow ARG1 askpwd_run_t (dirs (list))))
+
 (macro askpwd_read_run_files ((type ARG1))
     (call read_files_pattern (ARG1 askpwd_run_t askpwd_run_t)))
 

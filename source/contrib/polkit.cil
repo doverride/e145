@@ -66,6 +66,7 @@
 
 (call selinux_get_filesystems_mount (is_polkit_subject))
 
+(call polkit_list_config (is_polkit_subject))
 (call polkit_read_config_files (is_polkit_subject))
 
 (optional polkit_optional_auth
@@ -96,9 +97,11 @@
     (call journald_client_subject (polkitd_t)))
 
 (optional polkit_optional_logind
+    (call logind_list_run (polkitd_t))
     (call logind_read_run_files (polkitd_t)))
 
 (optional polkit_optional_machined
+    (call machined_list_run (polkitd_t))
     (call machined_read_run_files (polkitd_t)))
 
 (optional polkit_optional_miscfiles
@@ -119,6 +122,9 @@
 (macro polkit_dbus_chat_polkitd ((type ARG1))
     (allow ARG1 polkitd_t (dbus (send_msg)))
     (allow polkitd_t ARG1 (dbus (send_msg))))
+
+(macro polkit_list_config ((type ARG1))
+    (allow ARG1 polkitd_conf_t (dirs (list))))
 
 (macro polkit_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 polkitd_conf_t polkitd_conf_t)))

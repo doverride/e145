@@ -25,6 +25,8 @@
 (allow readahead_t readahead_data_t manage_file_perms)
 (call files_root_filetrans (readahead_t readahead_data_t file "*"))
 
+(call devices_read_urandom (readahead_t))
+
 (call files_dontaudit_read_auth_files (readahead_t))
 (call files_read_all_non_auth_files_except (readahead_t))
 

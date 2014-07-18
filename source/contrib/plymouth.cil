@@ -68,7 +68,7 @@
 (call plymouth_stream_connect_plymouthd (plymouth_t))
 
 (allow plymouthd_t self (capability (sys_tty_config sys_admin)))
-(allow plymouthd_t self (capability2 (block_suspend)))
+(allow plymouthd_t self (capability2 (block_suspend syslog)))
 (allow plymouthd_t self create_unix_stream_stream_socket_perms)
 (allow plymouthd_t self rw_fifo_file_perms)
 
@@ -84,6 +84,7 @@
 (call files_var_spool_filetrans (plymouthd_t plymouthd_var_spool_t dir "*"))
 
 (call devices_read_sysfs_files (plymouthd_t))
+(call devices_rw_dri (plymouthd_t))
 
 (call files_read_generic_usr_files (plymouthd_t))
 
@@ -91,6 +92,8 @@
 (call terminal_use_generic_pty_nodes (plymouthd_t)) ; /dev/pts/ptmx
 (call terminal_use_ptmx_nodes (plymouthd_t))
 (call terminal_use_unallocated_tty_nodes (plymouthd_t))
+
+(call plymouth_read_config_files (plymouthd_t))
 
 (call systemd_send_signal (plymouthd_t))
 
@@ -122,6 +125,9 @@
 
 (macro plymouth_use_fd_plymouthd ((type ARG1))
     (allow ARG1 plymouthd_t (fd (use))))
+
+(macro plymouth_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 plymouthd_conf_t plymouthd_conf_t)))
 
 (macro plymouth_read_var_lib_files ((type ARG1))
     (call read_files_pattern (ARG1 plymouthd_var_lib_t plymouthd_var_lib_t)))

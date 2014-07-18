@@ -594,6 +594,9 @@
 (macro devices_read_loop_control ((type ARG1))
     (call read_chr_files_pattern (ARG1 device_t device_loop_control_t)))
 
+(macro devices_rw_dri ((type ARG1))
+    (call rw_chr_files_pattern (ARG1 device_t device_dri_t)))
+
 (macro devices_rw_event ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_event_t)))
 
