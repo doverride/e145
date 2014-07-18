@@ -33,6 +33,7 @@ contrib/polkit.cil
 contrib/ppp.cil
 contrib/seutil.cil
 contrib/systemd/cgagent.cil
+contrib/systemd/hostnamed.cil
 contrib/systemd/initctl.cil
 contrib/systemd/journald.cil
 contrib/systemd/logind.cil

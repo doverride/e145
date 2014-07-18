@@ -1,0 +1,71 @@
+(roleattribute is_hostnamectl_role)
+
+(typeattribute is_hostnamed_admin_subject)
+
+(typeattribute is_hostnamed_subject)
+(typeattributeset is_hostnamed_subject (hostnamectl_t hostnamed_t))
+
+(typeattribute is_hostnamed_file_object)
+(typeattributeset is_hostnamed_file_object (hostnamed_conf_t
+    hostnamed_dbus_conf_t hostnamed_unit_t))
+
+(type hostnamectl_t)
+(type hostnamectl_exec_t)
+(call application_subject_entry (hostnamectl_t hostnamectl_exec_t))
+(roleattributeset is_hostnamectl_role system_r)
+(roletype is_hostnamectl_role hostnamectl_t)
+
+(context file_hostnamectl_exec (system_u object_r hostnamectl_exec_t ((s0) (s0))))
+(filecon "/usr/bin/hostnamectl" file file_hostnamectl_exec)
+
+(type hostnamed_t)
+(type hostnamed_exec_t)
+(call systemd_oneshot_subject_entry (hostnamed_t hostnamed_exec_t))
+
+(context file_hostnamed_exec (system_u object_r hostnamed_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-hostnamed" file file_hostnamed_exec)
+
+(type hostnamed_conf_t)
+(call files_etc_object (hostnamed_conf_t))
+
+(context file_hostnamed_conf (system_u object_r hostnamed_conf_t ((s0) (s0))))
+(filecon "/etc/hostname" file file_hostnamed_conf)
+(filecon "/etc/machine-info" file file_hostnamed_conf)
+
+(type hostnamed_dbus_conf_t)
+(call files_etc_object (hostnamed_dbus_conf_t))
+
+(context file_hostnamed_dbus_conf (system_u object_r hostnamed_dbus_conf_t ((s0)
+    (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.hostname1\.conf" file
+    file_hostnamed_dbus_conf)
+
+(type hostnamed_unit_t)
+(call systemd_unit_object (hostnamed_unit_t))
+
+(context file_hostnamed_unit (system_u object_r hostnamed_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-hostnamed.*" file
+    file_hostnamed_unit)
+
+(call files_etc_filetrans (hostnamed_t hostnamed_conf_t file "hostname" ))
+(call files_etc_filetrans (hostnamed_t hostnamed_conf_t file "machine-info"))
+
+(allow is_hostnamed_admin_subject is_hostnamed_subject signal_perms)
+(call ps_subject_pattern (is_hostnamed_admin_subject is_hostnamed_subject))
+
+(allow is_hostnamed_admin_subject hostnamed_unit_t (service (all)))
+
+(call admin_pattern (is_hostnamed_admin_subject is_hostnamed_file_object))
+
+(macro hostnamed_subtrans_hostnamectl ((type ARG1))
+    (call subtrans_pattern (ARG1 hostnamectl_exec_t hostnamectl_t)))
+
+(macro hostnamed_run_hostnamectl ((type ARG1)(role ARG2))
+    (call hostnamed_subtrans_hostnamectl (ARG1))
+    (roleattributeset is_hostnamectl_role (ARG2)))
+
+(macro hostnamed_read_config_files ((type ARG1))
+    (allow ARG1 hostnamed_conf_t read_file_perms))
+
+(macro hostnamed_admin ((type ARG1))
+    (typeattributeset is_hostnamed_admin_subject ARG1))

@@ -116,8 +116,8 @@
     (call dns_etc_filetrans_resolv_conf_files (networkmgr_t))
     (call dns_manage_resolv_config_files (networkmgr_t)))
 
-; (optional networkmgr_optional_hostnamed
-    ; (call hostnamed_read_config_files (networkmgr_t)))
+(optional networkmgr_optional_hostnamed
+    (call hostnamed_read_config_files (networkmgr_t)))
 
 (optional networkmgr_optional_ip
     (call ip_subtrans (networkmgr_t)))

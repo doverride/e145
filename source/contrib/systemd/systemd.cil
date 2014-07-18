@@ -277,8 +277,8 @@
     (call dbus_acquire_service_system (systemd_t))
     (call dbus_system_client_subject (systemd_t)))
 
-; optional systemd_optional_hostnamed
-    ; (call hostnamed_read_config_files (systemd_t)))
+(optional systemd_optional_hostnamed
+    (call hostnamed_read_config_files (systemd_t)))
 
 (optional systemd_optional_journald
     (call journald_client_subject (systemd_t))

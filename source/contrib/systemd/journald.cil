@@ -11,10 +11,8 @@
     journald_run_t journald_unit_t))
 
 (type journalctl_t)
-(call subject_common_subject (journalctl_t))
-
 (type journalctl_exec_t)
-(call subject_entry (journalctl_t journalctl_exec_t))
+(call application_subject_entry (journalctl_t journalctl_exec_t))
 (roleattributeset is_journalctl_role system_r)
 (roletype is_journalctl_role journalctl_t)
 
