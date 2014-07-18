@@ -314,8 +314,8 @@
 (call selinux_compute_create_context (system_t))
 (call selinux_get_filesystems_mount (system_t))
 
-; (optional system_optional_cgroupagent
-    ; (call cgroupagent_subtrans (system_t)))
+(optional system_optional_cgroupagent
+    (call cgagent_subtrans (system_t)))
 
 (optional system_optional_kmod
     (call kmod_subtrans (system_t)))

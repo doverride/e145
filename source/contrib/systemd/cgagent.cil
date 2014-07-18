@@ -1,0 +1,20 @@
+(type cgagent_t)
+(call subject_common_subject (cgagent_t))
+
+(type cgagent_exec_t)
+(call subject_entry (cgagent_t cgagent_exec_t))
+(roletype system_r cgagent_t)
+
+(context file_cgagent_exec (system_u object_r cgagent_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-cgroups-agent" file file_cgagent_exec)
+
+(allow cgagent_t self (capability (net_admin)))
+(allow cgagent_t self create_unix_stream_socket_perms)
+
+(call systemd_stream_connect (cgagent_t))
+
+(optional cgagent_optional_journald
+    (call journald_client_subject (cgagent_t)))
+
+(macro cgagent_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 cgagent_exec_t cgagent_t)))
