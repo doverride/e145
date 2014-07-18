@@ -132,9 +132,9 @@
 (optional shutdownd_optional_session
     (call session_use_terminals (shutdownd_t)))
 
-; (optional shutdownd_optional_sessions
-    ; (call sessions_manage_run_files (shutdownd_t))
-    ; (call sessions_run_filetrans_run_files (shutdownd_t)))
+(optional shutdownd_optional_sessions
+    (call sessions_manage_run_files (shutdownd_t))
+    (call sessions_run_filetrans_run_files (shutdownd_t)))
 
 (allow is_shutdownd_admin_subject is_shutdownd_subject signal_perms)
 (call ps_subject_pattern (is_shutdownd_admin_subject is_shutdownd_subject))

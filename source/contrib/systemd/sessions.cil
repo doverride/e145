@@ -1,0 +1,55 @@
+(typeattribute is_sessions_admin_subject)
+
+(typeattribute is_sessions_file_object)
+(typeattributeset is_sessions_file_object (sessions_run_t sessions_unit_t))
+
+(type sessions_t)
+(type sessions_exec_t)
+(call systemd_oneshot_subject_entry (sessions_t sessions_exec_t))
+
+(context file_sessions_exec (system_u object_r sessions_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-user-sessions" file file_sessions_exec)
+
+(type sessions_run_t)
+(call files_run_object (sessions_run_t))
+
+(context file_sessions_run (system_u object_r sessions_run_t ((s0) (s0))))
+(filecon "/run/\.nologin.*" file file_sessions_run)
+(filecon "/run/nologin" file file_sessions_run)
+
+(type sessions_unit_t)
+(call systemd_unit_object (sessions_unit_t))
+
+(context file_sessions_unit (system_u object_r sessions_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-user-sessions.*" file
+    file_sessions_unit)
+
+(allow sessions_t self (capability (net_admin)))
+
+(allow sessions_t sessions_run_t manage_file_perms)
+(call files_run_filetrans (sessions_t sessions_run_t file "*"))
+
+(call devices_write_kmsg (sessions_t))
+
+(optional sessions_optional_journald
+    (call journald_client_subject (sessions_t)))
+
+(allow is_sessions_admin_subject sessions_t signal_perms)
+(call ps_subject_pattern (is_sessions_admin_subject sessions_t))
+
+(allow is_sessions_admin_subject sessions_unit_t (service (all)))
+
+(call admin_pattern (is_sessions_admin_subject is_sessions_file_object))
+
+(macro sessions_read_run_files ((type ARG1))
+    (allow ARG1 sessions_run_t read_file_perms))
+
+(macro sessions_manage_run_files ((type ARG1))
+    (call files_rw_run_dirs (ARG1))
+    (allow ARG1 sessions_run_t manage_file_perms))
+
+(macro sessions_run_filetrans_run_files ((type ARG1))
+    (call files_run_filetrans (ARG1 sessions_run_t file "*")))
+
+(macro sessions_admin ((type ARG1))
+    (typeattributeset is_sessions_admin_subject ARG1))
