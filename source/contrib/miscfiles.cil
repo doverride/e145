@@ -89,9 +89,8 @@
 
 (macro miscfiles_read_localization_files ((type ARG1))
     (call read_files_pattern (ARG1 locale_t locale_t))
-    ; (optional miscfiles_optional_locale
-        ; (call locale_read_config_files (ARG1)))
-        )
+    (optional miscfiles_optional_localed
+        (call localed_read_config_files (ARG1))))
 
 (macro miscfiles_read_module_files ((type ARG1))
     (call read_files_pattern (ARG1 module_t module_t)))

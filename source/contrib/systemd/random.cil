@@ -1,0 +1,52 @@
+(typeattribute is_random_admin_subject)
+
+(typeattribute is_random_file_object)
+(typeattributeset is_random_file_object (random_unit_t
+    random_var_lib_t))
+
+(type random_t)
+(type random_exec_t)
+(call systemd_oneshot_subject_entry (random_t random_exec_t))
+
+(context file_random_exec (system_u object_r random_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-random-seed" file file_random_exec)
+
+(type random_unit_t)
+(call systemd_unit_object (random_unit_t))
+
+(context file_random_unit (system_u object_r random_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-random-seed.*" file
+    file_random_unit)
+
+(type random_var_lib_t)
+(call files_var_lib_object (random_var_lib_t))
+
+(context file_random_var_lib (system_u object_r random_var_lib_t
+    (mls_systemhigh mls_systemhigh)))
+(filecon "/var/lib/systemd/random-seed" file file_random_var_lib)
+
+(allow random_t self (capability (net_admin)))
+
+(allow random_t random_var_lib_t manage_file_perms)
+(call systemd_var_lib_filetrans (random_t random_var_lib_t file "*"))
+
+(call system_read_sysctl_kernel_files (random_t))
+
+(call devices_rw_urandom (random_t))
+
+(call files_search_var_lib (random_t))
+
+(call selinux_get_filesystems_mount (random_t))
+
+(optional random_optional_journald
+    (call journald_client_subject (random_t)))
+
+(allow is_random_admin_subject random_t signal_perms)
+(call ps_subject_pattern (is_random_admin_subject random_t))
+
+(allow is_random_admin_subject random_unit_t (service (all)))
+
+(call admin_pattern (is_random_admin_subject is_random_file_object))
+
+(macro random_admin ((type ARG1))
+    (typeattributeset is_random_admin_subject ARG1))

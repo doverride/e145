@@ -36,7 +36,9 @@ contrib/systemd/cgagent.cil
 contrib/systemd/hostnamed.cil
 contrib/systemd/initctl.cil
 contrib/systemd/journald.cil
+contrib/systemd/localed.cil
 contrib/systemd/logind.cil
+contrib/systemd/random.cil
 contrib/systemd/shutdownd.cil
 contrib/systemd/sysctl.cil
 contrib/systemd/systemd.cil

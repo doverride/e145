@@ -1,0 +1,65 @@
+(roleattribute is_localectl_role)
+
+(typeattribute is_localed_admin_subject)
+
+(typeattribute is_localed_subject)
+(typeattributeset is_localed_subject (localectl_t localed_t))
+
+(typeattribute is_localed_file_object)
+(typeattributeset is_localed_file_object (localed_conf_t
+    localed_dbus_conf_t localed_unit_t))
+
+(type localectl_t)
+(type localectl_exec_t)
+(call application_subject_entry (localectl_t localectl_exec_t))
+(roleattributeset is_localectl_role system_r)
+(roletype is_localectl_role localectl_t)
+
+(context file_localectl_exec (system_u object_r localectl_exec_t ((s0) (s0))))
+(filecon "/usr/bin/localectl" file file_localectl_exec)
+
+(type localed_t)
+(type localed_exec_t)
+(call systemd_oneshot_subject_entry (localed_t localed_exec_t))
+
+(context file_localed_exec (system_u object_r localed_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-localed" file file_localed_exec)
+
+(type localed_conf_t)
+(call files_etc_object (localed_conf_t))
+
+(context file_localed_conf (system_u object_r localed_conf_t ((s0) (s0))))
+(filecon "/etc/locale\.conf" file file_localed_conf)
+
+(type localed_dbus_conf_t)
+(call files_etc_object (localed_dbus_conf_t))
+
+(context file_localed_dbus_conf (system_u object_r localed_dbus_conf_t ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.locale1\.conf" file
+    file_localed_dbus_conf)
+
+(type localed_unit_t)
+(call systemd_unit_object (localed_unit_t))
+
+(context file_localed_unit (system_u object_r localed_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-localed.*" file file_localed_unit)
+
+(allow is_localed_admin_subject is_localed_subject signal_perms)
+(call ps_subject_pattern (is_localed_admin_subject is_localed_subject))
+
+(allow is_localed_admin_subject localed_unit_t (service (all)))
+
+(call admin_pattern (is_localed_admin_subject is_localed_file_object))
+
+(macro localed_subtrans_localectl ((type ARG1))
+    (call subtrans_pattern (ARG1 localectl_exec_t localectl_t)))
+
+(macro localed_run_localectl ((type ARG1)(role ARG2))
+    (call localed_subtrans_localectl (ARG1))
+    (roleattributeset is_localectl_role (ARG2)))
+
+(macro localed_read_config_files ((type ARG1))
+    (allow ARG1 localed_conf_t read_file_perms))
+
+(macro localed_admin ((type ARG1))
+    (typeattributeset is_localed_admin_subject ARG1))

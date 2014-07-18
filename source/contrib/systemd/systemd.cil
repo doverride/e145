@@ -319,8 +319,8 @@
 (optional systemd_optional_storage
     (call storage_read_fixed_disk_nodes (systemd_t)))
 
-; (optional systemd_optional_sysctl
-    ; (call sysctl_read_config_files (systemd_t)))
+(optional systemd_optional_sysctl
+    (call sysctl_read_config_files (systemd_t)))
 
 (optional systemd_optional_tmpfiles
     (call tmpfiles_read_config_files (systemd_t))
@@ -330,8 +330,8 @@
     (call udevd_read_config_files (systemd_t))
     (call udevd_read_run_files (systemd_t)))
 
-; (optional systemd_optional_utmp
-    ; (call utmp_rw_run_files (systemd_t)))
+(optional systemd_optional_utmp
+    (call utmp_rw_run_files (systemd_t)))
 
 (allow systemctl_t self (process (signal)))
 (allow is_systemctl_client_subject self create_unix_stream_socket_perms)
@@ -471,6 +471,9 @@
 
 (macro systemd_run_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
     (call filetrans_pattern (ARG1 systemd_run_t ARG2 ARG3 ARG4)))
+
+(macro systemd_var_lib_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
+    (call filetrans_pattern (ARG1 systemd_var_lib_t ARG2 ARG3 ARG4)))
 
 (macro systemd_manage_all_services ((type ARG1))
     (allow ARG1 is_systemd_unit_file_object (service (all))))

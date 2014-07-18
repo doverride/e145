@@ -246,6 +246,9 @@
 (call files_var_lib_object (var_lib_t))
 (call files_mnt_object (var_lib_t))
 
+(macro files_search_var_lib ((type ARG1))
+    (call search_dirs_pattern (ARG1 var_t var_lib_t)))
+
 (context file_var_lib (system_u object_r var_lib_t ((s0) (s0))))
 (filecon "/var/lib/.*" any file_var_lib)
 (filecon "/var/lib" dir file_var_lib)
