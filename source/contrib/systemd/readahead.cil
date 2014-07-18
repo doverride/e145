@@ -1,0 +1,25 @@
+(typeattribute is_readahead_admin_subject)
+
+(type readahead_t)
+(type readahead_exec_t)
+(call systemd_oneshot_subject_entry (readahead_t readahead_exec_t))
+
+(context file_readahead_exec (system_u object_r readahead_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-readahead" file file_readahead_exec)
+
+(type readahead_unit_t)
+(call systemd_unit_object (readahead_unit_t))
+
+(context file_readahead_unit (system_u object_r readahead_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-readahead.*" file
+    file_readahead_unit)
+
+(allow is_readahead_admin_subject readahead_t signal_perms)
+(call ps_subject_pattern (is_readahead_admin_subject readahead_t))
+
+(allow is_readahead_admin_subject readahead_unit_t (service (all)))
+
+(call admin_pattern (is_readahead_admin_subject readahead_unit_t))
+
+(macro readahead_admin ((type ARG1))
+    (typeattributeset is_readahead_admin_subject ARG1))
