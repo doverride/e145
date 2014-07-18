@@ -130,8 +130,8 @@
     (call logind_use_fd (networkmgr_t))
     (call logind_write_inherited_run_fifo_files (networkmgr_t)))
 
-; (optional networkmgr_optional_machined
-    ; (call machine_read_run_files (networkmgr_t)))
+(optional networkmgr_optional_machined
+    (call machined_read_run_files (networkmgr_t)))
 
 (optional networkmgr_optional_miscfiles
     (call miscfiles_read_network_environ_files (networkmgr_t))

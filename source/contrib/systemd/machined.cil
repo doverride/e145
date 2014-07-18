@@ -1,0 +1,84 @@
+(roleattribute is_machinectl_role)
+
+(typeattribute is_machined_admin_subject)
+
+(typeattribute is_machined_subject)
+(typeattributeset is_machined_subject (machinectl_t machined_t))
+
+(typeattribute is_machined_file_object)
+(typeattributeset is_machined_file_object (machined_conf_t
+    machined_dbus_conf_t machined_run_t machined_unit_t))
+
+(type machinectl_t)
+(type machinectl_exec_t)
+(call application_subject_entry (machinectl_t machinectl_exec_t))
+(roleattributeset is_machinectl_role system_r)
+(roletype is_machinectl_role machinectl_t)
+
+(context file_machinectl_exec (system_u object_r machinectl_exec_t ((s0) (s0))))
+(filecon "/usr/bin/machinectl" file file_machinectl_exec)
+
+(type machined_t)
+(type machined_exec_t)
+(call systemd_oneshot_subject_entry (machined_t machined_exec_t))
+
+(context file_machined_exec (system_u object_r machined_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-machined" file file_machined_exec)
+
+(type machined_conf_t)
+(call files_etc_object (machined_conf_t))
+
+(context file_machined_conf (system_u object_r machined_conf_t ((s0) (s0))))
+(filecon "/etc/machine-id" file file_machined_conf)
+(filecon "/etc/machine-info" file file_machined_conf)
+
+(type machined_dbus_conf_t)
+(call files_etc_object (machined_dbus_conf_t))
+
+(context file_machined_dbus_conf (system_u object_r machined_dbus_conf_t ((s0)
+    (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.machine1\.conf" file
+    file_machined_dbus_conf)
+
+(type machined_run_t)
+(call files_run_object (machined_run_t))
+
+(context file_machined_run (system_u object_r machined_run_t ((s0) (s0))))
+(filecon "/run/systemd/machines(/.*)?" any file_machined_run)
+
+(type machined_unit_t)
+(call systemd_unit_object (machined_unit_t))
+
+(context file_machined_unit (system_u object_r machined_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*machine.*" file file_machined_unit)
+
+(allow is_machined_admin_subject is_machined_subject signal_perms)
+(call ps_subject_pattern (is_machined_admin_subject is_machined_subject))
+
+(allow is_machined_admin_subject machined_unit_t (service (all)))
+
+(call admin_pattern (is_machined_admin_subject is_machined_file_object))
+
+(macro machined_subtrans_machinectl ((type ARG1))
+    (call subtrans_pattern (ARG1 machinectl_exec_t machinectl_t)))
+
+(macro machined_run_machinectl ((type ARG1)(role ARG2))
+    (call machined_subtrans_machinectl (ARG1))
+    (roleattributeset is_machinectl_role (ARG2)))
+
+(macro machined_manage_config_files ((type ARG1))
+    (call files_rw_etc_dirs (ARG1))
+    (allow ARG1 machined_conf_t manage_file_perms))
+
+(macro machined_read_config_files ((type ARG1))
+    (allow ARG1 machined_conf_t read_file_perms))
+
+(macro machined_etc_filetrans_config_files ((type ARG1))
+    (call files_etc_filetrans (ARG1 machined_conf_t file "machine-id"))
+    (call files_etc_filetrans (ARG1 machined_conf_t file "machine-info")))
+
+(macro machined_read_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 machined_run_t machined_run_t)))
+
+(macro machined_admin ((type ARG1))
+    (typeattributeset is_machined_admin_subject ARG1))

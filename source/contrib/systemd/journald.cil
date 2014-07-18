@@ -109,7 +109,9 @@
 (call journald_read_config_files (journald_t))
 
 (call systemd_dgram_send (journald_t))
-(call systemd_read_machineid_files (journald_t))
+
+(optional journald_optional_machined
+    (call machined_read_config_files (journald_t)))
 
 (optional journal_optional_misciles
     (call miscfiles_read_localization_files (journald_t)))

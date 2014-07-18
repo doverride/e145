@@ -38,6 +38,7 @@ contrib/systemd/initctl.cil
 contrib/systemd/journald.cil
 contrib/systemd/localed.cil
 contrib/systemd/logind.cil
+contrib/systemd/machined.cil
 contrib/systemd/random.cil
 contrib/systemd/sessions.cil
 contrib/systemd/shutdownd.cil

@@ -63,12 +63,6 @@
 (context file_bootchart_conf (system_u object_r bootchart_conf_t ((s0) (s0))))
 (filecon "/etc/systemd/bootchart\.conf" file file_bootchart_conf)
 
-(type machineid_t)
-(call files_etc_object (machineid_t)) ; belongs elsewhere
-
-(context file_machineid (system_u object_r machineid_t ((s0) (s0))))
-(filecon "/etc/machine-id" file file_machineid)
-
 (type systemd_dbus_conf_t)
 (call files_etc_object (systemd_dbus_conf_t))
 
@@ -252,7 +246,6 @@
 (call systemd_exec_helper (systemd_t))
 (call systemd_read_all_unit_files (systemd_t))
 (call systemd_read_config_files (systemd_t))
-(call systemd_read_machineid_files (systemd_t))
 (call systemd_read_pam_config_files (systemd_t))
 
 ; (optional systemd_optional_askpwd
@@ -287,6 +280,9 @@
 
 (optional systemd_optional_logind
     (call logind_read_run_files (systemd_t)))
+
+(optional systemd_optional_machined
+    (call machined_read_config_files (systemd_t)))
 
 (optional systemd_optional_miscfiles
     (call miscfiles_read_localization_files (systemd_t))
@@ -499,9 +495,6 @@
 
 (macro systemd_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 systemd_conf_t systemd_conf_t)))
-
-(macro systemd_read_machineid_files ((type ARG1))
-    (allow ARG1 machineid_t read_file_perms))
 
 (macro systemd_read_pam_config_files ((type ARG1))
     (allow ARG1 systemd_pam_conf_t read_file_perms))

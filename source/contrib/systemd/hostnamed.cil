@@ -30,7 +30,6 @@
 
 (context file_hostnamed_conf (system_u object_r hostnamed_conf_t ((s0) (s0))))
 (filecon "/etc/hostname" file file_hostnamed_conf)
-(filecon "/etc/machine-info" file file_hostnamed_conf)
 
 (type hostnamed_dbus_conf_t)
 (call files_etc_object (hostnamed_dbus_conf_t))
@@ -47,8 +46,11 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-hostnamed.*" file
     file_hostnamed_unit)
 
-(call files_etc_filetrans (hostnamed_t hostnamed_conf_t file "hostname" ))
-(call files_etc_filetrans (hostnamed_t hostnamed_conf_t file "machine-info"))
+(call files_etc_filetrans (hostnamed_t hostnamed_conf_t file "hostname"))
+
+(optional hostnamed_optional_machined
+    (call machined_manage_config_files (hostnamed_t))
+    (call machined_etc_filetrans_config_files (hostnamed_t)))
 
 (allow is_hostnamed_admin_subject is_hostnamed_subject signal_perms)
 (call ps_subject_pattern (is_hostnamed_admin_subject is_hostnamed_subject))
