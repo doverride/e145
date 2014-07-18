@@ -260,8 +260,8 @@
     (call auth_nsswitch_client_subject (systemd_t))
     (call auth_write_wtmp_log_files (systemd_t)))
 
-; (optional systemd_optional_binfmt
-    ; (call binfmt_read_config_files (systemd_t)))
+(optional systemd_optional_binfmt
+    (call binfmt_read_config_files (systemd_t)))
 
 (optional systemd_optional_hwclock
     (call hwclock_read_adjtime_files (systemd_t)))

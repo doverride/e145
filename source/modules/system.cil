@@ -335,9 +335,6 @@
             sys_nice_and_sys_module_capability_perms)
         (allow can_load_kernel_modules system_t (process (setsched)))))
 
-(optional system_optional_unconfined
-    (call unconfined_subject (system_t)))
-
 (allow has_unconfined_access_to_system_assets system_t (system
     (ipc_info syslog_read syslog_mod syslog_console module_request)))
 

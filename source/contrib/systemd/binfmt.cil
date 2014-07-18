@@ -1,0 +1,38 @@
+(typeattribute is_binfmt_admin_subject)
+
+(typeattribute is_binfmt_file_object)
+(typeattributeset is_binfmt_file_object (binfmt_conf_t
+    binfmt_unit_t))
+
+(type binfmt_t)
+(type binfmt_exec_t)
+(call systemd_oneshot_subject_entry (binfmt_t binfmt_exec_t))
+
+(context file_binfmt_exec (system_u object_r binfmt_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-binfmt" file file_binfmt_exec)
+
+(type binfmt_conf_t)
+(call files_etc_object (binfmt_conf_t))
+
+(context file_binfmt_conf (system_u object_r binfmt_conf_t ((s0) (s0))))
+(filecon "/etc/binfmt\.d(/.*)?" any file_binfmt_conf)
+
+(type binfmt_unit_t)
+(call systemd_unit_object (binfmt_unit_t))
+
+(context file_binfmt_unit (system_u object_r binfmt_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-binfmt.*" file
+    file_binfmt_unit)
+
+(allow is_binfmt_admin_subject binfmt_t signal_perms)
+(call ps_subject_pattern (is_binfmt_admin_subject binfmt_t))
+
+(allow is_binfmt_admin_subject binfmt_unit_t (service (all)))
+
+(call admin_pattern (is_binfmt_admin_subject is_binfmt_file_object))
+
+(macro binfmt_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 binfmt_conf_t binfmt_conf_t)))
+
+(macro binfmt_admin ((type ARG1))
+    (typeattributeset is_binfmt_admin_subject ARG1))
