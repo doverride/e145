@@ -1,0 +1,38 @@
+(typeattribute is_modules_admin_subject)
+
+(typeattribute is_modules_file_object)
+(typeattributeset is_modules_file_object (sd_modules_conf_t
+    modules_unit_t))
+
+(type modules_t)
+(type modules_exec_t)
+(call systemd_oneshot_subject_entry (modules_t modules_exec_t))
+
+(context file_modules_exec (system_u object_r modules_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/fedora-loadmodules" file file_modules_exec)
+(filecon "/usr/lib/systemd/systemd-modules-load" file file_modules_exec)
+
+(type sd_modules_conf_t)
+(call files_etc_object (sd_modules_conf_t))
+
+(context file_sd_modules_conf (system_u object_r sd_modules_conf_t ((s0) (s0))))
+(filecon "/etc/modules-load\.d(/.*)?" any file_sd_modules_conf)
+
+(type modules_unit_t)
+(call systemd_unit_object (modules_unit_t))
+
+(context file_modules_unit (system_u object_r modules_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*modules.*" file file_modules_unit)
+
+(allow is_modules_admin_subject modules_t signal_perms)
+(call ps_subject_pattern (is_modules_admin_subject modules_t))
+
+(allow is_modules_admin_subject modules_unit_t (service (all)))
+
+(call admin_pattern (is_modules_admin_subject is_modules_file_object))
+
+(macro modules_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 sd_modules_conf_t sd_modules_conf_t)))
+
+(macro modules_admin ((type ARG1))
+    (typeattributeset is_modules_admin_subject ARG1))

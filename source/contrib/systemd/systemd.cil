@@ -288,8 +288,8 @@
     (call miscfiles_read_localization_files (systemd_t))
     (call miscfiles_read_module_files (systemd_t)))
 
-; (optional systemd_optional_modules
-    ; (call modules_read_config_files (systemd_t)))
+(optional systemd_optional_modules
+    (call modules_read_config_files (systemd_t)))
 
 (optional systemd_optional_mount
     (call mount_read_run_files (systemd_t)))
