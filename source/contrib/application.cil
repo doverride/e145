@@ -21,3 +21,5 @@
     (call application_subject (ARG1))
     (call application_executable_object (ARG2))
     (call subject_entry (ARG1 ARG2)))
+
+(call auth_use_login_program_subject_fd (is_application_subject))

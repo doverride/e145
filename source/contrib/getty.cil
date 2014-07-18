@@ -16,6 +16,8 @@
 (allow getty_t self (capability (chown fsetid sys_tty_config)))
 (allow getty_t self create_unix_stream_socket_perms)
 
+(call system_read_generic_proc_files (getty_t))
+
 (call terminal_setattr_unallocated_tty_nodes (getty_t))
 (call terminal_use_unallocated_tty_nodes (getty_t))
 
@@ -37,6 +39,9 @@
 
 (optional getty_optional_miscfiles
     (call miscfiles_read_localization_files (getty_t)))
+
+(optional getty_optional_plymouth
+    (call plymouth_exec (getty_t)))
 
 (optional getty_optional_utmp
     (call utmp_rw_run_files (getty_t)))

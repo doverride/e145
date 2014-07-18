@@ -84,11 +84,13 @@
 (allow journald_t journald_run_t manage_sock_file_perms)
 (call systemd_run_filetrans (journald_t journald_run_t dir "*"))
 
+(call system_dgram_sendto (journald_t))
 (call system_read_generic_proc_files (journald_t))
 (call system_read_ring_buffer (journald_t))
 (call system_read_sysctl_kernel_files (journald_t))
 (call system_rw_inherited_unix_dgram_sockets (journald_t))
 (call system_rw_inherited_unix_stream_sockets (journald_t))
+(call system_use_fd (journald_t))
 
 (call devices_read_sysfs_files (journald_t))
 (call devices_read_urandom (journald_t))

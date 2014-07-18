@@ -104,6 +104,9 @@
 
 (call admin_pattern (is_plymouth_admin_subject is_plymouth_file_object))
 
+(macro plymouth_exec ((type ARG1))
+    (call can_exec (ARG1 plymouth_exec_t)))
+
 (macro plymouth_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 plymouth_exec_t plymouth_t)))
 

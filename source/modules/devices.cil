@@ -570,6 +570,24 @@
     (call read_chr_files_pattern (ARG1 device_t device_memory_t))
     (typeattributeset can_read_memory_raw ARG1))
 
+(macro devices_getattr_dri ((type ARG1))
+    (call getattr_chr_files_pattern (ARG1 device_t device_dri_t)))
+
+(macro devices_setattr_dri ((type ARG1))
+    (call setattr_chr_files_pattern (ARG1 device_t device_dri_t)))
+
+(macro devices_getattr_sound ((type ARG1))
+    (call getattr_chr_files_pattern (ARG1 device_t device_sound_t)))
+
+(macro devices_setattr_sound ((type ARG1))
+    (call setattr_chr_files_pattern (ARG1 device_t device_sound_t)))
+
+(macro devices_getattr_v4l ((type ARG1))
+    (call getattr_chr_files_pattern (ARG1 device_t device_v4l_t)))
+
+(macro devices_setattr_v4l ((type ARG1))
+    (call setattr_chr_files_pattern (ARG1 device_t device_v4l_t)))
+
 (macro devices_read_urandom ((type ARG1))
     (call read_chr_files_pattern (ARG1 device_t device_urandom_t)))
 

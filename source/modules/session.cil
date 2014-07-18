@@ -95,6 +95,9 @@
     (call files_rw_run_user_root_dirs (ARG1))
     (allow ARG1 session_run_user_dir_t manage_dir_perms))
 
+(macro session_mounton_run_user_dir ((type ARG1))
+    (allow ARG1 session_run_user_dir_t (dir (mounton))))
+
 (macro session_search_run_user_dir ((type ARG1))
     (allow ARG1 session_run_user_dir_t (dirs (search))))
 

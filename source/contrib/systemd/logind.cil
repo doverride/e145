@@ -70,8 +70,18 @@
 (call system_read_generic_proc_files (logind_t))
 (call system_read_sysctl_kernel_files (logind_t))
 
+(call devices_getattr_dri (logind_t))
+(call devices_getattr_sound (logind_t))
+(call devices_getattr_v4l (logind_t))
 (call devices_read_sysfs_files (logind_t))
 (call devices_rw_event (logind_t))
+(call devices_setattr_dri (logind_t))
+(call devices_setattr_sound (logind_t))
+(call devices_setattr_v4l (logind_t))
+
+(call files_setattr_run_user_root_dirs (logind_t))
+
+(call filesystem_mount_tmpfs_filesystems (logind_t))
 
 (call selinux_getattr_filesystems (logind_t))
 (call selinux_get_enforce_mode (logind_t))
@@ -89,6 +99,7 @@
 (call systemd_start_generic_service (logind_t)) ; user@.service
 (call systemd_start_system (logind_t)) ; BUG: logind to start session
 (call systemd_start_transient_system_service (logind_t))
+(call systemd_stream_connect (logind_t))
 
 (optional logind_optional_auth
     (call auth_read_all_login_program_subjects_state (logind_t))
@@ -106,10 +117,13 @@
 
 (optional logind_optional_session
     (call session_manage_run_user_dir (logind_t)) ; BUG: would have preferred lsetfilecon by logind for identity
+    (call session_mounton_run_user_dir (logind_t))
     (call session_run_user_root_filetrans_run_user_dir (logind_t "0"))
-    (call session_run_user_root_filetrans_run_user_dir (logind_t "1000")))
+    (call session_run_user_root_filetrans_run_user_dir (logind_t "1000"))
+    (call session_use_tty_nodes (logind_t)))
 
 (optional logind_optional_udevd
+    (call udevd_list_run (logind_t))
     (call udevd_read_config_files (logind_t))
     (call udevd_read_run_files (logind_t)))
 

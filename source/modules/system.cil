@@ -291,8 +291,9 @@
         is_sysctl_security_or_sysctl_usermodehelper_file_object (file
             (append write)))
 
-(allow system_t self (capability (sys_tty_config sys_admin)))
+(allow system_t self (capability (sys_tty_config sys_admin sys_nice net_admin)))
 (allow system_t self (capability2 (block_suspend)))
+(allow system_t self (process (setsched)))
 (allow system_t self create_unix_stream_socket_perms)
 
 (allow system_t system_log_t manage_file_perms)
@@ -369,9 +370,6 @@
 
 (macro system_sysctl_object ((type ARG1))
     (typeattributeset is_sysctl_object ARG1))
-
-(macro system_dgram_sendto ((type ARG1))
-    (allow ARG1 system_t (unix_dgram_socket (sendto))))
 
 (macro system_get_sysvipc_info ((type ARG1))
     (allow ARG1 system_t (system (ipc_info))))
@@ -475,6 +473,9 @@
 
 (macro system_search_proc ((type ARG1))
     (allow ARG1 proc_t (dirs (search))))
+
+(macro system_dgram_sendto ((type ARG1))
+    (allow ARG1 system_t (unix_dgram_socket (sendto))))
 
 (macro system_stream_connectto ((type ARG1))
     (allow ARG1 system_t (unix_stream_socket (connectto))))

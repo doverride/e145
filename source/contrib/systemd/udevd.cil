@@ -154,6 +154,9 @@
 (macro udevd_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 udevd_conf_t udevd_conf_t)))
 
+(macro udevd_list_run ((type ARG1))
+    (allow ARG1 udevd_run_t (dirs (list))))
+
 (macro udevd_read_run_files ((type ARG1))
     (call read_files_pattern (ARG1 udevd_run_t udevd_run_t)))
 

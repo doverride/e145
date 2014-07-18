@@ -205,7 +205,7 @@
 
 (call devices_manage_dirs (systemd_t))
 (call devices_manage_generic_chr_files (systemd_t))
-(call devices_read_sysfs_files (system_t))
+(call devices_read_sysfs_files (systemd_t))
 (call devices_read_autofs (systemd_t))
 (call devices_read_urandom (systemd_t))
 (call devices_relabel_all_nodes (systemd_t))
@@ -222,6 +222,7 @@
 (call files_read_generic_usr_files (systemd_t))
 (call files_relabel_non_auth_except (systemd_t)); most likely way too coarse
 
+(call filesystem_create_generic_tmpfs_sock_files (systemd_t)) ; early /run/systemd/notify
 (call filesystem_getattr_all_filesystems (systemd_t))
 (call filesystem_list_autofs (systemd_t))
 (call filesystem_manage_cgroup_dirs (systemd_t))
@@ -243,6 +244,7 @@
 (call terminal_use_console_nodes (systemd_t))
 (call terminal_use_unallocated_tty_nodes (systemd_t))
 
+(call auth_list_pam_config (systemd_t))
 (call auth_read_authconfig_pam_config_files (systemd_t))
 (call auth_read_generic_pam_config_files (systemd_t)) ; verify me
 (call auth_nsswitch_client_subject (systemd_t))

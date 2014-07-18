@@ -384,12 +384,19 @@
 (macro files_rw_run_user_root_dirs ((type ARG1))
     (allow ARG1 run_user_root_t rw_dir_perms))
 
+(macro files_setattr_run_user_root_dirs ((type ARG1))
+    (allow ARG1 run_user_root_t (dir (setattr))))
+
 (macro files_run_user_root_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
     (call filetrans_pattern (ARG1 run_user_root_t ARG2 ARG3 ARG4)))
 
 (macro files_search_root ((type ARG1))
     (allow ARG1 root_t (dirs (search))))
+
+(macro files_root_filetrans ((type ARG1)(type ARG2)(class ARG3)
+    (name ARG4))
+    (call filetrans_pattern (ARG1 root_t ARG2 ARG3 ARG4)))
 
 (macro files_tmp_object ((type ARG1))
     (typeattributeset is_tmp_file_object ARG1))
@@ -545,6 +552,9 @@
 
 (macro files_relabel_all_chr_files_except ((type ARG1))
     (allow ARG1 all_files_except relabel_chr_file_perms))
+
+(macro files_dontaudit_read_auth_files ((type ARG1))
+    (dontaudit ARG1 is_authentication_file_object read_file_perms))
 
 (macro files_manage_non_auth_except ((type ARG1))
     (call files_manage_all_non_auth_dirs_except (ARG1))

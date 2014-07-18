@@ -55,6 +55,7 @@
 (call files_var_lib_filetrans (dhclient_t dhclient_var_lib_t dir "*"))
 
 (call system_read_generic_proc_files (dhclient_t))
+(call system_read_sysctl_kernel_files (dhclient_t))
 
 (call commands_execute_bin_files (dhclient_t))
 (call commands_mprot_read_shell_files (dhclient_t))
@@ -79,6 +80,7 @@
    (call journald_client_subject (dhclient_t)))
 
 (optional dhclient_optional_miscfiles
+    (call miscfiles_read_generic_cert_files (dhclient_t))
     (call miscfiles_read_localization_files (dhclient_t))
     (call miscfiles_read_network_environ_files (dhclient_t)))
 
@@ -103,6 +105,7 @@
     (call read_files_pattern (ARG1 dhclient_var_lib_t dhclient_var_lib_t)))
 
 (macro dhcp_udp_bind_dhcp_port ((type ARG1))
+    (allow ARG1 self (capability (net_bind_service)))
     (allow ARG1 port_dhcp_t (udp_socket (name_bind))))
 
 (macro dhcp_admin ((type ARG1))

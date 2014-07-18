@@ -61,11 +61,12 @@
 (filecon "/var/lib/NetworkManager(/.*)?" any file_networkmgr_var_lib)
 
 (allow networkmgr_t self (process (signal setpgid)))
-(allow networkmgr_t self (capability (net_admin)))
+(allow networkmgr_t self (capability (net_admin net_raw)))
 (allow networkmgr_t self create_netlink_socket_perms)
 (allow networkmgr_t self create_netlink_kobject_uevent_socket_perms)
 (allow networkmgr_t self (netlink_route_socket (nlmsg_write)))
 (allow networkmgr_t self create_unix_stream_stream_socket_perms)
+(allow networkmgr_t self create_rawip_socket_perms)
 (allow networkmgr_t self rw_fifo_file_perms)
 
 (allow networkmgr_t networkmgr_run_t manage_dir_perms)
@@ -102,6 +103,7 @@
 (call dbus_acquire_service_system (networkmgr_t))
 (call dbus_system_client_subject (networkmgr_t))
 
+(call networkmgr_list_config (networkmgr_t))
 (call networkmgr_read_config_files (networkmgr_t))
 
 (optional networkmgr_optional_auth
@@ -134,6 +136,7 @@
     (call machined_read_run_files (networkmgr_t)))
 
 (optional networkmgr_optional_miscfiles
+    (call miscfiles_read_network_config_files (networkmgr_t))
     (call miscfiles_read_network_environ_files (networkmgr_t))
     (call miscfiles_read_localization_files (networkmgr_t)))
 
@@ -159,6 +162,9 @@
 
 (macro networkmgr_execute_helper_files ((type ARG1))
     (call can_exec (ARG1 nm_helper_exec_t)))
+
+(macro networkmgr_list_config ((type ARG1))
+    (allow ARG1 networkmgr_conf_t (dirs (list))))
 
 (macro networkmgr_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 networkmgr_conf_t networkmgr_conf_t)))

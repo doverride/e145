@@ -374,8 +374,14 @@
 (macro filesystem_list_tmpfs ((type ARG1))
     (allow ARG1 tmpfs_t (dirs (list))))
 
+(macro filesystem_mount_tmpfs_filesystems ((type ARG1))
+    (allow ARG1 tmpfs_t (filesystem (mount))))
+
 (macro filesystem_execute_generic_tmpfs_files ((type ARG1))
     (call exec_files_pattern (ARG1 tmpfs_t tmpfs_t)))
+
+(macro filesystem_create_generic_tmpfs_sock_files ((type ARG1)) ; early /run/systemd/notify
+    (call create_sock_files_pattern (ARG1 tmpfs_t tmpfs_t)))
 
 (macro filesystem_read_generic_tmpfs_files ((type ARG1))
     (call read_files_pattern (ARG1 tmpfs_t tmpfs_t)))

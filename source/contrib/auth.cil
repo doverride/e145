@@ -230,7 +230,9 @@
 
 (optional login_program_subject_optional_logind
     (call logind_dbus_chat (is_login_program_subject))
-    (call logind_read_run_files (is_login_program_subject)))
+    (call logind_read_run_files (is_login_program_subject))
+    (call logind_use_fd (is_login_program_subject))
+    (call logind_write_inherited_run_fifo_files (is_login_program_subject)))
 
 (optional login_program_subject_optional_miscfiles
     (call miscfiles_read_localization_files (is_login_program_subject)))
@@ -266,6 +268,7 @@
 (call auth_read_wtmp_log_files (is_pam_client_subject))
 (call auth_dontaudit_write_wtmp_log_files (is_pam_client_subject))
 
+(call auth_list_pam_config (is_pam_client_subject))
 (call auth_read_all_pam_config_files (is_pam_client_subject)) ; verify me
 
 (call auth_create_faillog_log_files (is_pam_client_subject))
@@ -391,6 +394,9 @@
 (macro auth_read_authconfig_pam_config_files ((type ARG1))
     (call read_files_pattern (ARG1 pam_conf_t authconfig_pam_conf_t)))
 
+(macro auth_list_pam_config ((type ARG1))
+    (allow ARG1 pam_conf_t (dirs (list))))
+
 (macro auth_read_all_pam_config_files ((type ARG1))
     (call read_files_pattern (ARG1 pam_conf_t is_pam_etc_file_object)))
 
@@ -399,6 +405,9 @@
 
 (macro auth_read_pam_console_run_files ((type ARG1))
     (call read_files_pattern (ARG1 pam_console_run_t pam_console_run_t)))
+
+(macro auth_manage_pam_console_run_files ((type ARG1))
+    (call manage_files_pattern (ARG1 pam_console_run_t pam_console_run_t)))
 
 (macro auth_read_passwd_files ((type ARG1))
     (allow ARG1 password_t read_file_perms))
@@ -422,6 +431,9 @@
 (macro auth_relabel_shadow_files ((type ARG1))
     (allow ARG1 shadow_t relabel_file_perms)
     (typeattributeset can_relabelto_shadow_passwords ARG1))
+
+(macro auth_use_login_program_subject_fd ((type ARG1))
+    (allow ARG1 is_login_program_subject (fd (use))))
 
 (macro auth_nsswitch_client_subject ((type ARG1))
     (typeattributeset is_nsswitch_client_subject ARG1))
