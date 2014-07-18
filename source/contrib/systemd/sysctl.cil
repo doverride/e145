@@ -25,6 +25,7 @@
 
 (allow sd_sysctl_t self (capability (net_admin)))
 
+(call system_read_generic_proc_files (sd_sysctl_t))
 (call system_rw_sysctl_fs_files (sd_sysctl_t))
 (call system_rw_sysctl_kernel_files (sd_sysctl_t))
 (call system_rw_sysctl_net_files (sd_sysctl_t))

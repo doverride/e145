@@ -231,9 +231,7 @@
 (call files_read_generic_etc_files (systemd_t)) ; /etc/login.defs
 (call files_read_generic_usr_files (systemd_t))
 (call files_relabel_non_auth_except (systemd_t)); most likely way too coarse
-(call files_search_run (systemd_t))
 (call files_list_run_lock (systemd_t))
-(call files_search_var_lib (systemd_t))
 
 (call filesystem_create_generic_tmpfs_sock_files (systemd_t)) ; early /run/systemd/notify
 (call filesystem_getattr_all_filesystems (systemd_t))
@@ -248,7 +246,6 @@
 
 (call selinux_compute_access_vector (systemd_t))
 (call selinux_compute_create_context (systemd_t))
-(call selinux_list (systemd_t))
 
 (call subject_getattr_all_subjects (systemd_t))
 (call subject_read_all_subjects_state (systemd_t))

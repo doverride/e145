@@ -565,11 +565,10 @@
 (macro files_relabel_all_chr_files_except ((type ARG1))
     (allow ARG1 all_files_except relabel_chr_file_perms))
 
-(macro files_dontaudit_read_auth_files ((type ARG1))
-    (dontaudit ARG1 is_authentication_file_object read_file_perms))
-
-(macro files_dontaudit_read_security_files ((type ARG1))
-    (dontaudit ARG1 is_security_file_object read_file_perms))
+(macro files_dontaudit_read_auth ((type ARG1))
+    (dontaudit ARG1 is_authentication_file_object list_dir_perms)
+    (dontaudit ARG1 is_authentication_file_object read_file_perms)
+    (dontaudit ARG1 is_authentication_file_object read_lnk_file_perms))
 
 (macro files_manage_non_auth_except ((type ARG1))
     (call files_manage_all_non_auth_dirs_except (ARG1))

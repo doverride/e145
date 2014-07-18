@@ -1,0 +1,26 @@
+(typeattribute is_backlight_admin_subject)
+
+(type backlight_t)
+(type backlight_exec_t)
+(call systemd_oneshot_subject_entry (backlight_t backlight_exec_t))
+
+(context file_backlight_exec (system_u object_r backlight_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-backlight" file file_backlight_exec)
+
+(type backlight_unit_t)
+(call systemd_unit_object (backlight_unit_t))
+
+(context file_backlight_unit (system_u object_r backlight_unit_t
+    ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-backlight.*" file
+    file_backlight_unit)
+
+(allow is_backlight_admin_subject backlight_t signal_perms)
+(call ps_subject_pattern (is_backlight_admin_subject backlight_t))
+
+(allow is_backlight_admin_subject backlight_unit_t (service (all)))
+
+(call admin_pattern (is_backlight_admin_subject backlight_unit_t))
+
+(macro backlight_admin ((type ARG1))
+    (typeattributeset is_backlight_admin_subject ARG1))

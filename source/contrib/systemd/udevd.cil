@@ -67,7 +67,7 @@
     (call seutil_read_config_files (is_udevd_subject))
     (call seutil_read_file_context_files (is_udevd_subject)))
 
-(allow udevd_t self (capability (dac_override net_admin chown sys_admin sys_rawio)))
+(allow udevd_t self (capability (dac_override net_admin chown sys_admin sys_rawio fsetid)))
 (allow udevd_t self (capability2 (block_suspend)))
 (allow udevd_t self (process (setfscreate signal getsched)))
 (allow udevd_t self rw_fifo_file_perms)
@@ -117,6 +117,9 @@
 
 (optional udevd_optional_auth
     (call auth_nsswitch_client_subject (udevd_t)))
+
+(optional udevd_optional_dm
+    (call dm_subtrans_dmsetup (udevd_t)))
 
 (optional udevd_optional_ip
     (call ip_exec (udevd_t)))
