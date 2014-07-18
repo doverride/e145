@@ -121,6 +121,7 @@
     (call auth_nsswitch_client_subject (networkmgr_t)))
 
 (optional networkmgr_optional_dhcp
+    (call dhcp_delete_dhclient_run_files (networkmgr_t))
     (call dhcp_read_config_files (networkmgr_t))
     (call dhcp_read_dhclient_var_lib_files (networkmgr_t))
     (call dhcp_send_signal_dhclient (networkmgr_t))

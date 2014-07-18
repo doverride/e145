@@ -591,6 +591,9 @@
 (macro devices_read_urandom ((type ARG1))
     (call read_chr_files_pattern (ARG1 device_t device_urandom_t)))
 
+(macro devices_read_usb ((type ARG1))
+    (call read_chr_files_pattern (ARG1 device_t device_usb_t)))
+
 (macro devices_read_loop_control ((type ARG1))
     (call read_chr_files_pattern (ARG1 device_t device_loop_control_t)))
 

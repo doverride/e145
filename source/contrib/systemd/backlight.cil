@@ -15,6 +15,13 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-backlight.*" file
     file_backlight_unit)
 
+(allow backlight_t self (capability (net_admin)))
+
+(call system_read_generic_proc_files (backlight_t))
+
+(optional backlight_optional_journald
+    (call journald_client_subject (backlight_t)))
+
 (allow is_backlight_admin_subject backlight_t signal_perms)
 (call ps_subject_pattern (is_backlight_admin_subject backlight_t))
 

@@ -41,6 +41,14 @@
     (s0))))
 (filecon "/usr/sbin/dmsetup" file file_dmsetup_exec)
 
+(call system_read_generic_proc_files (dmsetup_t))
+(call system_get_sysvipc_info (dmsetup_t))
+
+(call devices_rw_lvm_control (dmsetup_t))
+
+(optional dmsetup_optional_udevd
+    (call udevd_read_config_files (dmsetup_t)))
+
 (call files_run_filetrans (dmeventd_t dmeventd_run_t fifo_file "*"))
 (call files_run_filetrans (dmeventd_t dmeventd_run_t file "*"))
 

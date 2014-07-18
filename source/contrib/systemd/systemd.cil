@@ -323,7 +323,8 @@
 (optional systemd_optional_session
     (call session_link_keyring (systemd_t))
     (call session_search_run_user_dir (systemd_t))
-    (call session_search_generic_home_content (systemd_t))) ; temporary for ~/.local/share/systemd
+    (call session_search_generic_home_content (systemd_t)) ; temporary for ~/.local/share/systemd
+    (call session_use_tty_nodes (systemd_t)))
 
 (optional systemd_optional_seutil
     (call seutil_read_config_files (systemd_t))

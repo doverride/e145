@@ -39,6 +39,13 @@
 (context file_pcscd_unit (system_u object_r pcscd_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*pcscd.*" file file_pcscd_unit)
 
+(allow pcscd_t self create_unix_stream_socket_perms)
+
+(call manage_files_pattern (pcscd_t pcscd_run_t pcscd_run_t))
+(call files_run_filetrans (pcscd_t pcscd_run_t dir "*"))
+
+(call devices_read_usb (pcscd_t))
+
 (call polkit_dbus_chat_polkitd (pcscd_t))
 
 (allow is_pcsc_admin_subject pcscd_t signal_perms)
