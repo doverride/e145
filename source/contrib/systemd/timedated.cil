@@ -7,7 +7,7 @@
 
 (typeattribute is_timedated_file_object)
 (typeattributeset is_timedated_file_object (timedated_dbus_conf_t
-    timedated_unit_t))
+    timedated_polkit_conf_t timedated_unit_t))
 
 (type timedatectl_t)
 (type timedatectl_exec_t)
@@ -33,12 +33,22 @@
 (filecon "/etc/dbus-1/system\.d/org\.freedesktop\.timedate1\.conf" file
     file_timedated_dbus_conf)
 
+(type timedated_polkit_conf_t)
+(call polkit_etc_object (timedated_polkit_conf_t))
+
+(context file_timedated_polkit_conf (system_u object_r timedated_polkit_conf_t
+    ((s0) (s0))))
+(filecon "/usr/share/polkit-1/actions/[^/]*timedate1.policy" file
+    file_timedated_polkit_conf)
+
 (type timedated_unit_t)
 (call systemd_unit_object (timedated_unit_t))
 
 (context file_timedated_unit (system_u object_r timedated_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-timedated.*" file
     file_timedated_unit)
+
+(call polkit_dbus_chat_polkitd (timedated_t))
 
 (allow is_timedated_admin_subject is_timedated_subject signal_perms)
 (call ps_subject_pattern (is_timedated_admin_subject is_timedated_subject))

@@ -67,7 +67,7 @@
     (call seutil_read_config_files (is_udevd_subject))
     (call seutil_read_file_context_files (is_udevd_subject)))
 
-(allow udevd_t self (capability (dac_override net_admin chown sys_admin)))
+(allow udevd_t self (capability (dac_override net_admin chown sys_admin sys_rawio)))
 (allow udevd_t self (capability2 (block_suspend)))
 (allow udevd_t self (process (setfscreate signal getsched)))
 (allow udevd_t self rw_fifo_file_perms)
@@ -84,10 +84,14 @@
 (call system_list_debugfs (udevd_t))
 (call system_load_kernel_modules (udevd_t))
 (call system_read_proc_net_files (udevd_t)) ; crda
+(call system_read_sysctl_crypto_files (udevd_t)) ; crda
 (call system_read_sysctl_kernel_files (udevd_t)) ; crda
 (call system_request_load_module (udevd_t))
 (call system_link_keyring (udevd_t))
 
+(call commands_execute_shell_files (udevd_t))
+
+(call devices_list_sysfs (udevd_t))
 (call devices_manage_dirs (udevd_t))
 (call devices_manage_files (udevd_t))
 (call devices_manage_generic_blk_files (udevd_t))
@@ -114,6 +118,9 @@
 (optional udevd_optional_auth
     (call auth_nsswitch_client_subject (udevd_t)))
 
+(optional udevd_optional_ip
+    (call ip_exec (udevd_t)))
+
 (optional udevd_optional_journald
     (call journald_client_subject (udevd_t)))
 
@@ -121,6 +128,7 @@
     (call lvm_subtrans_lvm (udevd_t)))
 
 (optional udevd_optional_miscfiles
+    (call miscfiles_read_localization_files (udevd_t))
     (call miscfiles_read_module_files (udevd_t)))
 
 (optional udevd_optional_modutil

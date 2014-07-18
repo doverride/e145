@@ -1,0 +1,52 @@
+(typeattribute is_pcsc_admin_subject)
+
+(typeattribute is_pcsc_file_object)
+(typeattributeset is_pcsc_file_object (pcscd_conf_t pcscd_polkit_conf_t
+    pcscd_run_t pcscd_unit_t))
+
+(type pcscd_t)
+(type pcscd_exec_t)
+(call systemd_daemon_subject_entry (pcscd_t pcscd_exec_t))
+
+(call systemd_socket_activated_subject (pcscd_t pcscd_run_t))
+
+(context file_pcscd_exec (system_u object_r pcscd_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/pcscd" file file_pcscd_exec)
+
+(type pcscd_conf_t)
+(call dbus_etc_object (pcscd_conf_t))
+
+(context file_pcscd_conf (system_u object_r pcscd_conf_t ((s0) (s0))))
+(filecon "/etc/reader\.conf\.d(/.*)?" any file_pcscd_conf)
+
+(type pcscd_polkit_conf_t)
+(call polkit_etc_object (pcscd_polkit_conf_t))
+
+(context file_pcscd_polkit_conf (system_u object_r pcscd_polkit_conf_t
+    ((s0) (s0))))
+(filecon "/usr/share/polkit-1/actions/[^/]*pcsc-lite.policy" any
+    file_pcscd_polkit_conf)
+
+(type pcscd_run_t)
+(call files_run_object (pcscd_run_t))
+
+(context file_pcscd_run (system_u object_r pcscd_run_t ((s0) (s0))))
+(filecon "/run/pcscd(/.*)?" any file_pcscd_run)
+
+(type pcscd_unit_t)
+(call systemd_unit_object (pcscd_unit_t))
+
+(context file_pcscd_unit (system_u object_r pcscd_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*pcscd.*" file file_pcscd_unit)
+
+(call polkit_dbus_chat_polkitd (pcscd_t))
+
+(allow is_pcsc_admin_subject pcscd_t signal_perms)
+(call ps_subject_pattern (is_pcsc_admin_subject pcscd_t))
+
+(allow is_pcsc_admin_subject pcscd_unit_t (service (all)))
+
+(call admin_pattern (is_pcsc_admin_subject is_pcsc_file_object))
+
+(macro pcsc_admin ((type ARG1))
+    (typeattributeset is_pcsc_admin_subject ARG1))

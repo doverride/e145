@@ -28,6 +28,7 @@ contrib/lvm.cil
 contrib/miscfiles.cil
 contrib/mount.cil
 contrib/networkmgr.cil
+contrib/pcsc.cil
 contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil

@@ -292,6 +292,8 @@
 
 (call system_read_sysctl_crypto_files (chkpwd_t))
 
+(call devices_search_sysfs (chkpwd_t))
+
 (call selinux_get_filesystems_mount (chkpwd_t))
 
 (call terminal_dontaudit_use_console_nodes (chkpwd_t))

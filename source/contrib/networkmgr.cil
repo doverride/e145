@@ -3,7 +3,7 @@
 (typeattribute is_networkmgr_file_object)
 (typeattributeset is_networkmgr_file_object (networkmgr_conf_t
     networkmgr_run_t networkmgr_var_lib_t networkmgr_dbus_conf_t
-    networkmgr_unit_t))
+    networkmgr_polkit_conf_t networkmgr_unit_t))
 
 (type networkmgr_t)
 (type networkmgr_exec_t)
@@ -38,6 +38,14 @@
 (filecon "/etc/dbus-1/system\.d/nm-ifcfg-rh\.conf" file file_networkmgr_dbus_conf)
 (filecon "/etc/dbus-1/system\.d/org\.freedesktop\.NetworkManager\.conf" file
     file_networkmgr_dbus_conf)
+
+(type networkmgr_polkit_conf_t)
+(call polkit_etc_object (networkmgr_polkit_conf_t))
+
+(context file_networkmgr_polkit_conf (system_u object_r networkmgr_polkit_conf_t ((s0)
+    (s0))))
+(filecon "/usr/share/polkit-1/actions/[^/]*NetworkManager.policy" file
+    file_networkmgr_polkit_conf)
 
 (type networkmgr_run_t)
 (call files_run_object (networkmgr_run_t))
@@ -107,6 +115,8 @@
 (call networkmgr_list_config (networkmgr_t))
 (call networkmgr_read_config_files (networkmgr_t))
 
+(call polkit_dbus_chat_polkitd (networkmgr_t))
+
 (optional networkmgr_optional_auth
     (call auth_nsswitch_client_subject (networkmgr_t)))
 
@@ -146,9 +156,6 @@
 
 (optional networkmgr_optional_mount
     (call mount_exec (networkmgr_t)))
-
-(optional networkmgr_optional_polkit
-    (call polkit_dbus_chat_polkitd (networkmgr_t)))
 
 (optional networkmgr_optional_sysctl
     (call sysctl_read_config_files (networkmgr_t)))

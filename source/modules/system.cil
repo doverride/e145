@@ -409,6 +409,10 @@
     (call read_files_pattern (ARG1 proc_t proc_kcore_t))
     (typeattributeset can_dump_kernel ARG1))
 
+(macro system_change_ring_buffer_level ((type ARG1))
+    (allow ARG1 self (capability2 (syslog)))
+    (allow ARG1 system_t (system (syslog_console))))
+
 (macro system_read_ring_buffer ((type ARG1))
     (allow ARG1 self (capability2 (syslog)))
     (allow ARG1 system_t (system (syslog_read))))

@@ -1,5 +1,7 @@
 (typeattribute is_polkit_admin_subject)
 
+(typeattribute is_polkit_etc_file_object)
+
 (typeattribute is_polkit_subject)
 (typeattributeset is_polkit_subject (polkitd_t polkitd_auth_t))
 
@@ -15,10 +17,11 @@
 (filecon "/usr/lib/polkit-1/polkitd" file file_polkitd_exec)
 
 (type polkitd_conf_t)
-(call files_etc_object (polkitd_conf_t))
+(call polkit_etc_object (polkitd_conf_t))
 
 (context file_polkitd_conf (system_u object_r polkitd_conf_t ((s0) (s0))))
 (filecon "/etc/polkit-1(/.*)?" any file_polkitd_conf)
+(filecon "/usr/share/polkit-1(/.*)?" any file_polkitd_conf)
 
 (type polkitd_dbus_conf_t)
 (call dbus_etc_object (polkitd_dbus_conf_t))
@@ -67,7 +70,7 @@
 (call selinux_get_filesystems_mount (is_polkit_subject))
 
 (call polkit_list_config (is_polkit_subject))
-(call polkit_read_config_files (is_polkit_subject))
+(call polkit_read_all_config_files (is_polkit_subject))
 
 (optional polkit_optional_auth
     (call auth_nsswitch_client_subject (is_polkit_subject)))
@@ -116,6 +119,10 @@
 
 (call admin_pattern (is_polkit_admin_subject is_polkit_file_object))
 
+(macro polkit_etc_object ((type ARG1))
+    (call files_etc_object (ARG1))
+    (typeattributeset is_polkit_etc_file_object ARG1))
+
 (macro polkit_subtrans_auth ((type ARG1))
     (call subtrans_pattern (ARG1 polkitd_auth_exec_t polkitd_auth_t)))
 
@@ -126,7 +133,10 @@
 (macro polkit_list_config ((type ARG1))
     (allow ARG1 polkitd_conf_t (dirs (list))))
 
-(macro polkit_read_config_files ((type ARG1))
+(macro polkit_read_all_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 polkitd_conf_t is_polkit_etc_file_object)))
+
+(macro polkit_read_generic_config_files ((type ARG1))
     (call read_files_pattern (ARG1 polkitd_conf_t polkitd_conf_t)))
 
 (macro polkit_read_var_lib_files ((type ARG1))

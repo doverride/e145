@@ -87,6 +87,8 @@
 (call devices_rw_dri (plymouthd_t))
 
 (call files_read_generic_usr_files (plymouthd_t))
+(call files_search_var_lib (plymouthd_t))
+(call files_search_run (plymouthd_t))
 
 (call terminal_getattr_devpts_filesystems (plymouthd_t))
 (call terminal_use_generic_pty_nodes (plymouthd_t)) ; /dev/pts/ptmx
@@ -95,6 +97,7 @@
 
 (call plymouth_read_config_files (plymouthd_t))
 
+(call system_change_ring_buffer_level (plymouthd_t))
 (call systemd_send_signal (plymouthd_t))
 
 (optional plymouthd_optional_auth
@@ -134,6 +137,9 @@
 
 (macro plymouth_manage_var_lib_files ((type ARG1))
     (call manage_files_pattern (ARG1 plymouthd_var_lib_t plymouthd_var_lib_t)))
+
+(macro plymouth_list_run ((type ARG1))
+    (allow ARG1 plymouthd_run_t (dirs (list))))
 
 (macro plymouth_read_run_files ((type ARG1))
     (call read_files_pattern (ARG1 plymouthd_run_t plymouthd_run_t)))

@@ -379,6 +379,9 @@
 (macro filesystem_search_tmpfs ((type ARG1))
     (allow ARG1 tmpfs_t (dirs (search))))
 
+(macro filesystem_remount_tmpfs_filesystems ((type ARG1))
+    (allow ARG1 tmpfs_t (filesystem (remount))))
+
 (macro filesystem_mount_tmpfs_filesystems ((type ARG1))
     (allow ARG1 tmpfs_t (filesystem (mount))))
 

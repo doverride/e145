@@ -103,6 +103,9 @@
     (call kmod_read_modules_config_files (iptables_t))
     (call kmod_run (iptables_t is_iptables_role))) ; /usr/libexec/iptables6?.init
 
+(optional iptables_optional_plymouth
+    (call plymouth_exec (iptables_t)))
+
 (allow is_iptables_admin_subject iptables_t signal_perms)
 (call ps_subject_pattern (is_iptables_admin_subject iptables_t))
 

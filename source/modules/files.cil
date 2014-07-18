@@ -350,6 +350,9 @@
 (macro files_search_etc ((type ARG1))
     (allow ARG1 etc_t (dirs (search))))
 
+(macro files_list_etc ((type ARG1))
+    (allow ARG1 etc_t (dirs (list))))
+
 (macro files_etc_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call filetrans_pattern (ARG1 etc_t ARG2 ARG3 ARG4)))
@@ -373,6 +376,9 @@
 (macro files_read_all_lock_files ((type ARG1))
     (call read_files_pattern (ARG1 is_lock_file_object
     is_lock_file_object)))
+
+(macro files_list_run_lock ((type ARG1))
+    (call list_dirs_pattern (ARG1 run_t run_lock_t)))
 
 (macro files_search_run_lock ((type ARG1))
     (call search_dirs_pattern (ARG1 run_t run_lock_t)))
@@ -561,6 +567,9 @@
 
 (macro files_dontaudit_read_auth_files ((type ARG1))
     (dontaudit ARG1 is_authentication_file_object read_file_perms))
+
+(macro files_dontaudit_read_security_files ((type ARG1))
+    (dontaudit ARG1 is_security_file_object read_file_perms))
 
 (macro files_manage_non_auth_except ((type ARG1))
     (call files_manage_all_non_auth_dirs_except (ARG1))

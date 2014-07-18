@@ -14,6 +14,9 @@
 (filecon "/usr/sbin/iwconfig" file file_ip_exec)
 (filecon "/usr/sbin/tc" file file_ip_exec)
 
+(macro ip_exec ((type ARG1))
+    (call can_exec (ARG1 ip_exec_t)))
+
 (macro ip_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 ip_exec_t ip_t)))
 

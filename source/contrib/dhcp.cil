@@ -60,6 +60,8 @@
 (call commands_execute_bin_files (dhclient_t))
 (call commands_mprot_read_shell_files (dhclient_t))
 
+(call devices_search_sysfs (dhclient_t))
+
 (call network_udp_bind_all_unreserved_ports (dhclient_t))
 (call network_udp_bind_generic_node (dhclient_t))
 
