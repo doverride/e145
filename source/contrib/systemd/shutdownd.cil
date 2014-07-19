@@ -46,6 +46,14 @@
 (optional shutdown_optional_utmp
     (call utmp_read_run_files (is_shutdownd_subject)))
 
+(allow shutdown_t self (capability (sys_boot ipc_lock kill sys_admin sys_chroot sys_ptrace)))
+(allow shutdown_t self (process (setfscreate)))
+(allow shutdown_t self create_unix_stream_socket_perms)
+(allow shutdown_t self manage_fifo_file_perms)
+
+(allow shutdown_t shutdown_run_t manage_dir_perms)
+(call systemd_run_filetrans (shutdown_t shutdown_run_t dir "*"))
+
 (call system_request_load_module (shutdown_t))
 (call system_read_generic_proc_files (shutdown_t))
 (call system_rw_sysctl_kernel_files (shutdown_t))
@@ -108,6 +116,7 @@
     (call plymouth_use_fd_plymouthd (shutdown_t)))
 
 (optional shutdown_optional_udevd
+    (call udevd_list_config (shutdown_t))
     (call udevd_read_config_files (shutdown_t)))
 
 (optional shutdown_optional_session

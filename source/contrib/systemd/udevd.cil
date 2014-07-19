@@ -167,6 +167,9 @@
     (call udevd_subtrans_udevadm (ARG1))
     (roleattributeset is_udevadm_role (ARG2)))
 
+(macro udevd_list_config ((type ARG1))
+    (allow ARG1 udevd_conf_t (dirs (list))))
+
 (macro udevd_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 udevd_conf_t udevd_conf_t)))
 
