@@ -194,6 +194,8 @@
 (filecon "/run/lock" symlink file_run_lock)
 (filecon "/run/lock" dir file_run_lock)
 
+(filecon "/var/lock" symlink file_run_lock)
+
 (type run_user_root_t)
 (call files_mnt_object (run_user_root_t))
 

@@ -24,6 +24,14 @@
 (context file_rfkill_var_lib (system_u object_r rfkill_var_lib_t ((s0) (s0))))
 (filecon "/var/lib/systemd/rfkill(/.*)?" any file_rfkill_var_lib)
 
+(call system_read_generic_proc_files (rfkill_t))
+
+(optional rfkill_optional_journald
+    (call journald_client_subject (rfkill_t)))
+
+(optional rfkill_optional_udevd
+    (call udevd_read_config_files (rfkill_t)))
+
 (allow is_rfkill_admin_subject rfkill_t signal_perms)
 (call ps_subject_pattern (is_rfkill_admin_subject rfkill_t))
 

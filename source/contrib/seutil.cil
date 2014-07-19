@@ -126,7 +126,7 @@
 
 (call seutil_read_source_files (secilc_t))
 
-(allow setfiles_t self (capability (dac_override)))
+(allow setfiles_t self (capability (dac_override fowner)))
 
 (call devices_relabel_all_nodes (setfiles_t))
 
@@ -144,7 +144,10 @@
 (call seutil_read_file_context_files (setfiles_t))
 (call seutil_relabelto_policy_config_files (setfiles_t))
 
-(optional seutil_optional_auth
+(optional setfiles_optional_audit
+    (call audit_client_subject (setfiles_t)))
+
+(optional setfiles_optional_auth
     (call auth_relabelto_shadow_files (setfiles_t)))
 
 (allow is_seutil_admin_subject is_seutil_subject signal_perms)
