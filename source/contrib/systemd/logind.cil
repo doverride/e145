@@ -1,3 +1,5 @@
+(call unconfined_subject (logind_t))
+
 (roleattribute is_loginctl_role)
 
 (typeattribute is_logind_admin_subject)
@@ -159,9 +161,6 @@
 (macro logind_list_run ((type ARG1))
     (allow ARG1 logind_run_t (dirs (list))))
 
-(macro logind_read_run_files ((type ARG1))
-    (call read_files_pattern (ARG1 logind_run_t logind_run_t)))
-
 (macro logind_use_fd ((type ARG1))
     (allow ARG1 logind_t (fd (use))))
 
@@ -170,6 +169,9 @@
 
 (macro logind_manage_run_files ((type ARG1))
     (call manage_files_pattern (ARG1 logind_run_t logind_run_t)))
+
+(macro logind_read_run_files ((type ARG1))
+    (call read_files_pattern (ARG1 logind_run_t logind_run_t)))
 
 (macro logind_admin ((type ARG1))
     (typeattributeset is_logind_admin_subject ARG1))

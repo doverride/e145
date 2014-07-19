@@ -1,3 +1,5 @@
+(call unconfined_subject (sd_sysctl_t))
+
 (typeattribute is_sysctl_admin_subject)
 
 (typeattribute is_sysctl_file_object)

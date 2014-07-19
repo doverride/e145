@@ -1,3 +1,5 @@
+(call unconfined_subject (utmp_t))
+
 (typeattribute is_utmp_admin_subject)
 
 (typeattribute is_utmp_file_object)

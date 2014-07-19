@@ -1,3 +1,6 @@
+(call unconfined_subject (askpwd_t))
+(call unconfined_subject (askpwdagent_t))
+
 (roleattribute is_askpwdagent_role)
 
 (typeattribute is_askpwd_admin_subject)

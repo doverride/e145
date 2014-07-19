@@ -1,3 +1,5 @@
+(call unconfined_subject (cryptsetup_t))
+
 (typeattribute is_cryptsetup_admin_subject)
 
 (type cryptsetup_t)
@@ -19,7 +21,8 @@
 
 (call selinux_getattr_filesystems (cryptsetup_t))
 
-(call systemd_search_run (cryptsetup_t))
+(optional cryptsetup_optional_journald
+    (call journald_client_subject (cryptsetup_t)))
 
 (allow is_cryptsetup_admin_subject cryptsetup_t signal_perms)
 (call ps_subject_pattern (is_cryptsetup_admin_subject cryptsetup_t))

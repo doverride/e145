@@ -1,3 +1,5 @@
+(call unconfined_subject (modules_t))
+
 (typeattribute is_modules_admin_subject)
 
 (typeattribute is_modules_file_object)

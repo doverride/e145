@@ -1,3 +1,5 @@
+(call unconfined_subject (timedated_t))
+
 (roleattribute is_timedatectl_role)
 
 (typeattribute is_timedated_admin_subject)

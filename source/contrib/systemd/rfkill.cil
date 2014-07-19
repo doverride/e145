@@ -1,3 +1,5 @@
+(call unconfined_subject (rfkill_t))
+
 (typeattribute is_rfkill_admin_subject)
 
 (typeattribute is_rfkill_file_object)

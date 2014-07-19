@@ -1,3 +1,5 @@
+(call unconfined_subject (random_t))
+
 (typeattribute is_random_admin_subject)
 
 (typeattribute is_random_file_object)

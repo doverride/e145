@@ -63,6 +63,7 @@
 
 (call selinux_get_filesystems_mount (is_udevd_subject))
 
+(call udevd_list_config (is_udevd_subject))
 (call udevd_read_config_files (is_udevd_subject))
 
 (optional udev_optional_seutil
@@ -153,6 +154,7 @@
     (call miscfiles_read_network_config_files (udevd_t)))
 
 (optional udevd_optional_modutil
+    (call kmod_list_modules_config (udevd_t))
     (call kmod_read_modules_config_files (udevd_t))
     (call kmod_read_modules_dep_files (udevd_t))
     (call kmod_subtrans (udevd_t)))

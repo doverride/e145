@@ -433,34 +433,48 @@
     (call read_files_pattern (ARG1 proc_t proc_kmsg_t))
     (typeattributeset can_receive_kernel_messages ARG1))
 
+(macro system_search_sysctl ((type ARG1))
+    (call read_files_pattern (ARG1 proc_t sysctl_t)))
+
+(macro system_search_sysctl_kernel ((type ARG1))
+    (call system_search_sysctl (ARG1))
+    (allow ARG1 sysctl_kernel_t (dirs (search))))
+
 (macro system_read_proc_net_files ((type ARG1))
     (call read_files_pattern (ARG1 proc_net_t proc_net_t)))
 
 (macro system_read_sysctl_crypto_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
     (call read_files_pattern (ARG1 sysctl_crypto_t sysctl_crypto_t)))
 
 (macro system_mounton_sysctl_fs_dirs ((type ARG1))
     (allow ARG1 sysctl_fs_t (dir (mounton))))
 
 (macro system_read_sysctl_kernel_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
     (call read_files_pattern (ARG1 sysctl_kernel_t sysctl_kernel_t)))
 
 (macro system_rw_sysctl_fs_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
     (call rw_files_pattern (ARG1 sysctl_fs_t sysctl_fs_t)))
 
 (macro system_rw_sysctl_kernel_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
     (call rw_files_pattern (ARG1 sysctl_kernel_t sysctl_kernel_t)))
 
 (macro system_read_sysctl_net_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
     (call read_files_pattern (ARG1 sysctl_net_t sysctl_net_t)))
 
 (macro system_rw_sysctl_net_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
     (call rw_files_pattern (ARG1 sysctl_net_t sysctl_net_t)))
 
 (macro system_rw_sysctl_security_files ((type ARG1))
     (typeattributeset
         can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
             ARG1)
+    (call system_search_sysctl_kernel (ARG1))
     (allow ARG1 sysctl_security_t rw_file_perms))
 
 (macro system_read_sysctl_usermodehelper_files ((type ARG1))
@@ -470,9 +484,11 @@
     (typeattributeset
         can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object
             ARG1)
+    (call system_search_sysctl_kernel (ARG1))
     (call rw_files_pattern (ARG1 sysctl_usermodehelper_t sysctl_usermodehelper_t)))
 
 (macro system_read_sysctl_vm_overcommit_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
     (allow ARG1 sysctl_vm_overcommit_t read_file_perms))
 
 (macro system_list_proc ((type ARG1))
