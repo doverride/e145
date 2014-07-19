@@ -270,7 +270,7 @@
 (filecon "/var/spool/.*" any file_var_spool)
 (filecon "/var/spool" dir file_var_spool)
 
-(filecon "/var/run/initramfs(/.*)?" any ())
+(filecon "/run/initramfs(/.*)?" any ())
 
 (typeattributeset
     is_boot_cache_etc_env_lock_log_mnt_usr_run_spool_tmp_tmpfs_var_or_lib_file_object
