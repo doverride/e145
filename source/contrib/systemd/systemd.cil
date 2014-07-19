@@ -344,6 +344,7 @@
 
 (optional systemd_optional_tmpfiles
     (call tmpfiles_read_config_files (systemd_t))
+    (call tmpfiles_list_run (systemd_t))
     (call tmpfiles_read_run_files (systemd_t)))
 
 (optional systemd_optional_udevd
@@ -557,6 +558,9 @@
 
 (macro systemd_use_fd ((type ARG1))
     (allow ARG1 systemd_t (fd (use))))
+
+(macro systemd_getpgid ((type ARG1))
+    (allow ARG1 systemd_t (process (getpgid))))
 
 (macro systemd_admin ((type ARG1))
     (typeattributeset is_systemd_admin_subject ARG1))

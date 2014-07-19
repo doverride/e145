@@ -33,10 +33,21 @@
 (context file_sulogin_unit (system_u object_r sulogin_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*emergency.*" file file_sulogin_unit)
 
-(allow login_t self (capability (sys_tty_config kill fsetid fowner net_admin dac_override)))
-(allow login_t self (process (signal)))
-(allow login_t self create_unix_stream_socket_perms)
-(allow login_t self rw_fifo_file_perms)
+(allow is_login_subject self (capability (sys_tty_config dac_override)))
+(allow is_login_subject self (process (signal)))
+(allow is_login_subject self create_unix_stream_socket_perms)
+(allow is_login_subject self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (is_login_subject))
+
+(optional login_subject_optional_miscfiles
+	(call miscfiles_read_localization_files (is_login_subject)))
+
+(optional login_subject_optional_session
+    (call session_search_home_dir (is_login_subject))
+    (call session_shell_manual_subject_type_transition (is_login_subject)))
+
+(allow login_t self (capability (kill fsetid fowner net_admin)))
 
 (call system_link_keyring (login_t))
 (call system_read_sysctl_kernel_files (login_t))
@@ -54,9 +65,7 @@
 
 (optional login_optional_session
     (call session_relabel_tty_nodes (login_t))
-    (call session_search_home_dir (login_t))
     (call session_setattr_tty_nodes (login_t))
-    (call session_shell_manual_subject_type_transition (login_t))
     (call session_use_tty_nodes (login_t)))
 
 (booleanif console_login
@@ -67,11 +76,14 @@
     (false
         (call terminal_dontaudit_use_console_nodes (login_t))))
 
-(allow sulogin_t self (capability (dac_override sys_tty_config)))
-(allow sulogin_t self (process (setexec setsched sigkill signull signal)))
-(allow sulogin_t self rw_fifo_file_perms)
+(allow sulogin_t self (capability (sys_admin)))
+(allow sulogin_t self (process (setexec setsched sigkill signull)))
 
 (call system_read_sysctl_crypto_files (sulogin_t))
+
+(call devices_list (sulogin_t))
+(call devices_getattr_all_nodes (sulogin_t))
+(call devices_read_sysfs_files (sulogin_t))
 
 (call subject_obj_id_change_exemption (sulogin_t))
 (call subject_subj_id_change_exemption (sulogin_t))
@@ -87,13 +99,14 @@
 (call auth_read_shadow_files (sulogin_t))
 (call auth_nsswitch_client_subject (sulogin_t))
 
+(call systemd_getpgid (sulogin_t))
+
+(optional sulogin_optional_plymouth
+	(call plymouth_subtrans (sulogin_t)))
+
 (optional sulogin_optional_seutil
     (call seutil_read_config_files (sulogin_t))
     (call seutil_read_default_context_files (sulogin_t)))
-
-(optional sulogin_optional_session
-    (call session_search_home_dir (sulogin_t))
-    (call session_shell_manual_subject_type_transition (sulogin_t)))
 
 (allow is_login_admin_subject is_login_subject signal_perms)
 (call ps_subject_pattern (is_login_admin_subject is_login_subject))

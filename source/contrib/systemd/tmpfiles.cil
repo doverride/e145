@@ -72,6 +72,10 @@
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 tmpfiles_conf_t tmpfiles_conf_t)))
 
+(macro tmpfiles_list_run ((type ARG1))
+    (call files_search_run (ARG1))
+    (allow ARG1 tmpfiles_run_t (dirs (list))))
+
 (macro tmpfiles_read_run_files ((type ARG1))
     (call files_search_run (ARG1))
     (call read_files_pattern (ARG1 tmpfiles_run_t tmpfiles_run_t)))

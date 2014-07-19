@@ -17,7 +17,7 @@
 (type lvmetad_exec_t)
 (call systemd_daemon_subject_entry (lvmetad_t lvmetad_exec_t))
 
-(call systemd_socket_activated_subject (lvmetad_t lvmetad_run_t))
+(call systemd_socket_activated_subject (lvmetad_t lvm_run_t))
 
 (context file_lvmetad_exec (system_u object_r lvmetad_exec_t ((s0)
     (s0))))
@@ -172,6 +172,10 @@
 (macro lvm_manage_metadata_files ((type ARG1))
     (call lvm_search_config (ARG1))
     (call manage_files_pattern (ARG1 lvm_metadata_t lvm_metadata_t)))
+
+(macro lvm_manage_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call manage_files_pattern (ARG1 lvm_run_t lvm_run_t)))
 
 (macro lvm_rw_lvm_semaphores ((type ARG1))
     (allow ARG1 lvm_t rw_sem_perms))
