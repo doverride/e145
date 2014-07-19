@@ -183,6 +183,8 @@
 (filecon "/run" symlink file_run)
 (filecon "/run" dir file_run)
 
+(filecon "/var/run" symlink file_run)
+
 (type run_lock_t)
 (call files_run_lock_object (run_lock_t))
 (call files_mnt_object (run_lock_t))
