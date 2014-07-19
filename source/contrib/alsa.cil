@@ -1,0 +1,64 @@
+(roleattribute is_alsactl_role)
+
+(typeattribute is_alsa_admin_subject)
+
+(typeattribute is_alsa_file_object)
+(typeattributeset is_alsa_file_object (alsa_conf_t alsa_unit_t
+    alsa_var_lib_t))
+
+(type alsactl_t)
+(type alsactl_exec_t)
+(call systemd_daemon_subject_entry (alsactl_t alsactl_exec_t))
+(roletype is_alsactl_role alsactl_t)
+
+(context file_alsactl_exec (system_u object_r alsactl_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/alsactl" file file_alsactl_exec)
+
+(type alsa_conf_t)
+(call files_etc_object (alsa_conf_t))
+
+(context file_alsa_conf (system_u object_r alsa_conf_t ((s0)
+    (s0))))
+(filecon "/etc/alsa(/.*)?" any file_alsa_conf)
+
+(type alsa_var_lib_t)
+(call files_var_lib_object (alsa_var_lib_t))
+
+(context file_alsa_var_lib (system_u object_r alsa_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/alsa(/.*)?" any file_alsa_var_lib)
+
+(type alsa_unit_t)
+(call systemd_unit_object (alsa_unit_t))
+
+(context file_alsa_unit (system_u object_r alsa_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*alsa-state.*" file file_alsa_unit)
+(filecon "/usr/lib/systemd/system/[^/]*alsa-restore.*" file file_alsa_unit)
+
+(allow is_alsa_admin_subject alsactl_t signal_perms)
+(call ps_subject_pattern (is_alsa_admin_subject alsactl_t))
+
+(allow is_alsa_admin_subject alsa_unit_t (service (all)))
+
+(call admin_pattern (is_alsa_admin_subject is_alsa_file_object))
+
+(macro alsa_exec_alsactl ((type ARG1))
+    (call can_exec (ARG1 alsactl_exec_t)))
+
+(macro alsa_subtrans_alsactl ((type ARG1))
+    (call subtrans_pattern (ARG1 alsactl_exec_t alsactl_t)))
+
+(macro alsa_run_alsactl ((type ARG1)(role ARG2))
+    (call alsa_subtrans_alsactl (ARG1))
+    (roleattributeset is_alsactl_role ARG2))
+
+(macro alsa_read_config_files ((type ARG1))
+    (call read_files_pattern (ARG1 alsa_conf_t alsa_conf_t)))
+
+(macro alsa_read_var_lib_files ((type ARG1))
+    (call read_files_pattern (ARG1 alsa_var_lib_t alsa_var_lib_t)))
+
+(macro alsa_admin ((type ARG1))
+    (typeattributeset is_alsa_admin_subject ARG1))

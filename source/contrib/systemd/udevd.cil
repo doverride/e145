@@ -116,6 +116,9 @@
 
 (call udevd_exec_helper (udevd_t))
 
+(optional udevd_optional_alsa
+    (call alsa_exec_alsactl (udevd_t)))
+
 (optional udevd_optional_auth
     (call auth_nsswitch_client_subject (udevd_t)))
 
