@@ -38,7 +38,7 @@
 
 (context file_timedated_polkit_conf (system_u object_r timedated_polkit_conf_t
     ((s0) (s0))))
-(filecon "/usr/share/polkit-1/actions/[^/]*timedate1.policy" file
+(filecon "/usr/share/polkit-1/actions/[^/]*timedate1\.policy" file
     file_timedated_polkit_conf)
 
 (type timedated_unit_t)

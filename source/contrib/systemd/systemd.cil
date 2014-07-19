@@ -75,7 +75,7 @@
 
 (context file_systemd_polkit_conf (system_u object_r systemd_polkit_conf_t ((s0)
     (s0))))
-(filecon "/usr/share/polkit-1/actions/[^/]*systemd1.policy" file
+(filecon "/usr/share/polkit-1/actions/[^/]*systemd1\.policy" file
     file_systemd_polkit_conf)
 
 (type systemd_conf_t)
@@ -323,6 +323,7 @@
 
 (optional systemd_optional_session
     (call session_link_keyring (systemd_t))
+    (call session_search_home_dir (systemd_t)) ; temporary
     (call session_search_run_user_dir (systemd_t))
     (call session_search_generic_home_content (systemd_t)) ; temporary for ~/.local/share/systemd
     (call session_use_tty_nodes (systemd_t)))

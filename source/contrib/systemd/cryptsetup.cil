@@ -13,6 +13,8 @@
 (context file_cryptsetup_unit (system_u object_r cryptsetup_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*cryptsetup.*" file file_cryptsetup_unit)
 
+(call selinux_getattr_filesystems (cryptsetup_t))
+
 (allow is_cryptsetup_admin_subject cryptsetup_t signal_perms)
 (call ps_subject_pattern (is_cryptsetup_admin_subject cryptsetup_t))
 

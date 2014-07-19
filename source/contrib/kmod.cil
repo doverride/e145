@@ -55,6 +55,9 @@
 (call devices_list_sysfs (kmod_t))
 (call devices_read_sysfs_files (kmod_t))
 
+(call files_search_etc (kmod_t))
+(call files_search_run (kmod_t))
+
 (call kmod_list_modules_config (kmod_t))
 (call kmod_read_modules_config_files (kmod_t))
 (call kmod_read_modules_dep_files (kmod_t))

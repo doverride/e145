@@ -15,6 +15,13 @@
     (s0))))
 (filecon "/usr/sbin/alsactl" file file_alsactl_exec)
 
+(type alsactl_run_t)
+(call files_run_object (alsactl_run_t))
+
+(context file_alsactl_run (system_u object_r alsactl_run_t ((s0)
+    (s0))))
+(filecon "/run/alsactl\.pid" file file_alsactl_run)
+
 (type alsa_conf_t)
 (call files_etc_object (alsa_conf_t))
 
@@ -37,6 +44,22 @@
 (filecon "/usr/lib/systemd/system/[^/]*alsa-state.*" file file_alsa_unit)
 (filecon "/usr/lib/systemd/system/[^/]*alsa-restore.*" file file_alsa_unit)
 
+(allow alsactl_t self (process (getsched setsched signal)))
+
+(allow alsactl_t alsactl_run_t manage_file_perms)
+(call files_run_filetrans (alsactl_t alsactl_run_t file "*"))
+
+(call devices_rw_sound (alsactl_t))
+
+(call alsa_read_config_files (alsactl_t))
+(call alsa_manage_var_lib_files (alsactl_t))
+
+(optional alsactl_optional_journald
+    (call journald_client_subject (alsactl_t)))
+
+(optional alsactl_optional_miscfiles
+    (call miscfiles_read_localization_files (alsactl_t)))
+
 (allow is_alsa_admin_subject alsactl_t signal_perms)
 (call ps_subject_pattern (is_alsa_admin_subject alsactl_t))
 
@@ -56,6 +79,9 @@
 
 (macro alsa_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 alsa_conf_t alsa_conf_t)))
+
+(macro alsa_manage_var_lib_files ((type ARG1))
+    (call manage_files_pattern (ARG1 alsa_var_lib_t alsa_var_lib_t)))
 
 (macro alsa_read_var_lib_files ((type ARG1))
     (call read_files_pattern (ARG1 alsa_var_lib_t alsa_var_lib_t)))

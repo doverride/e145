@@ -32,12 +32,19 @@
 (call system_rw_sysctl_security_files (sd_sysctl_t))
 (call system_rw_sysctl_usermodehelper_files (sd_sysctl_t))
 
+(call devices_read_urandom (sd_sysctl_t))
 (call devices_write_kmsg (sd_sysctl_t))
 
+(call files_search_etc (sd_sysctl_t))
+
+(call sysctl_list_config (sd_sysctl_t))
 (call sysctl_read_config_files (sd_sysctl_t))
 
 (optional sd_sysctl_optional_journald
     (call journald_client_subject (sd_sysctl_t)))
+
+(optional sd_sysctl_optional_udevd
+    (call udevd_rw_inherited_udp_socket (sd_sysctl_t)))
 
 (allow is_sysctl_admin_subject sd_sysctl_t signal_perms)
 (call ps_subject_pattern (is_sysctl_admin_subject sd_sysctl_t))
@@ -48,6 +55,9 @@
 
 (macro sysctl_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 sysctl_exec_t sd_sysctl_t)))
+
+(macro sysctl_list_config ((type ARG1))
+    (allow ARG1 sysctl_conf_t (dirs (list))))
 
 (macro sysctl_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 sysctl_conf_t sysctl_conf_t)))

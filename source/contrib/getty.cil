@@ -41,7 +41,7 @@
     (call miscfiles_read_localization_files (getty_t)))
 
 (optional getty_optional_plymouth
-    (call plymouth_exec (getty_t)))
+    (call plymouth_subtrans (getty_t)))
 
 (optional getty_optional_utmp
     (call utmp_rw_run_files (getty_t)))

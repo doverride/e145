@@ -370,6 +370,9 @@
 (macro filesystem_setattr_cgroup_files ((type ARG1))
     (allow ARG1 cgroup_t (file (setattr))))
 
+(macro filesystem_search_efivarfs ((type ARG1))
+    (allow ARG1 efivarfs_t (dirs (search))))
+
 (macro filesystem_list_hugetlbfs ((type ARG1))
     (allow ARG1 hugetlbfs_t (dirs (list))))
 

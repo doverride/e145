@@ -172,6 +172,9 @@
 (macro lvm_manage_metadata_files ((type ARG1))
     (call manage_files_pattern (ARG1 lvm_metadata_t lvm_metadata_t)))
 
+(macro lvm_rw_lvm_semaphores ((type ARG1))
+    (allow ARG1 lvm_t rw_sem_perms))
+
 (macro lvm_read_config_files ((type ARG1))
     (call read_files_pattern (ARG1 lvm_conf_t lvm_conf_t)))
 

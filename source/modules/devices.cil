@@ -594,6 +594,9 @@
 (macro devices_read_event ((type ARG1))
     (call read_chr_files_pattern (ARG1 device_t device_event_t)))
 
+(macro devices_read_sound ((type ARG1))
+    (call read_chr_files_pattern (ARG1 device_t device_sound_t)))
+
 (macro devices_read_urandom ((type ARG1))
     (call read_chr_files_pattern (ARG1 device_t device_urandom_t)))
 
@@ -614,6 +617,9 @@
 
 (macro devices_rw_null ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_null_t)))
+
+(macro devices_rw_sound ((type ARG1))
+    (call rw_chr_files_pattern (ARG1 device_t device_sound_t)))
 
 (macro devices_rw_urandom ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_urandom_t)))

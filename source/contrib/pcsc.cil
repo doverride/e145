@@ -24,7 +24,7 @@
 
 (context file_pcscd_polkit_conf (system_u object_r pcscd_polkit_conf_t
     ((s0) (s0))))
-(filecon "/usr/share/polkit-1/actions/[^/]*pcsc-lite.policy" any
+(filecon "/usr/share/polkit-1/actions/[^/]*pcsc-lite\.policy" any
     file_pcscd_polkit_conf)
 
 (type pcscd_run_t)

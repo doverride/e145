@@ -45,7 +45,7 @@
 
 (context file_logind_polkit_conf (system_u object_r logind_polkit_conf_t ((s0)
     (s0))))
-(filecon "/usr/share/polkit-1/actions/[^/]*login1.policy" file file_logind_polkit_conf)
+(filecon "/usr/share/polkit-1/actions/[^/]*login1\.policy" file file_logind_polkit_conf)
 
 (type logind_run_t)
 (call files_run_object (logind_run_t))

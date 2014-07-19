@@ -48,8 +48,13 @@
 
 (call selinux_getattr_filesystems (dmsetup_t))
 
+(optional dmsetup_optional_lvm
+    (call lvm_rw_lvm_semaphores (dmsetup_t)))
+
 (optional dmsetup_optional_udevd
-    (call udevd_read_config_files (dmsetup_t)))
+    (call udevd_read_config_files (dmsetup_t))
+    (call udevd_read_run_files (dmsetup_t))
+    (call udevd_rw_inherited_udp_socket (dmsetup_t)))
 
 (call files_run_filetrans (dmeventd_t dmeventd_run_t fifo_file "*"))
 (call files_run_filetrans (dmeventd_t dmeventd_run_t file "*"))

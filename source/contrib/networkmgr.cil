@@ -44,7 +44,7 @@
 
 (context file_networkmgr_polkit_conf (system_u object_r networkmgr_polkit_conf_t ((s0)
     (s0))))
-(filecon "/usr/share/polkit-1/actions/[^/]*NetworkManager.policy" file
+(filecon "/usr/share/polkit-1/actions/[^/]*NetworkManager\.policy" file
     file_networkmgr_polkit_conf)
 
 (type networkmgr_run_t)

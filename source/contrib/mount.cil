@@ -51,6 +51,7 @@
 (call files_setattr_all_mnt_dirs (mount_t)) ; syscall=utimensat
 (call files_rw_generic_run_files (mount_t)) ; early mislabeled /run/mount/utab
 
+(call filesystem_getattr_all_filesystems (mount_t))
 (call filesystem_mount_all_filesystems (mount_t))
 (call filesystem_remount_all_filesystems (mount_t))
 (call filesystem_unmount_all_filesystems (mount_t))

@@ -33,7 +33,9 @@
 (context file_udev_helper_exec (system_u object_r udev_helper_exec_t
     ((s0) (s0))))
 (filecon "/usr/lib/udev/[^/]*" file file_udev_helper_exec)
+(filecon "/usr/sbin/biosdevname" file file_udev_helper_exec)
 (filecon "/usr/sbin/crda" file file_udev_helper_exec)
+(filecon "/usr/sbin/setregdomain" file file_udev_helper_exec)
 
 (type udevd_conf_t)
 (call files_etc_object (udevd_conf_t))
@@ -72,6 +74,7 @@
 (allow udevd_t self (process (setfscreate signal getsched)))
 (allow udevd_t self rw_fifo_file_perms)
 (allow udevd_t self create_netlink_kobject_uevent_socket_perms)
+(allow udevd_t self (netlink_route_socket (nlmsg_write)))
 (allow udevd_t self create_netlink_socket_perms) ; crda
 (allow udevd_t self create_unix_stream_stream_socket_perms)
 
@@ -89,7 +92,10 @@
 (call system_request_load_module (udevd_t))
 (call system_link_keyring (udevd_t))
 
+(call commands_execute_bin_files (udevd_t))
 (call commands_execute_shell_files (udevd_t))
+
+(auditallow udevd_t bin_t (file (execute_no_trans))) ; temporary hack for audit purpose
 
 (call devices_list_sysfs (udevd_t))
 (call devices_manage_dirs (udevd_t))
@@ -98,6 +104,8 @@
 (call devices_manage_generic_chr_files (udevd_t))
 (call devices_manage_lnk_files (udevd_t))
 (call devices_read_event (udevd_t))
+(call devices_read_memory_raw (udevd_t))
+(call devices_read_sound (udevd_t)) ; alsactl
 (call devices_read_urandom (udevd_t))
 (call devices_relabel_all_nodes (udevd_t))
 (call devices_relabelfrom_generic_nodes (udevd_t))
@@ -105,7 +113,10 @@
 (call devices_update_timestamp_all_nodes (udevd_t))
 (call devices_write_kmsg (udevd_t))
 
+(call files_list_etc (udevd_t))
+
 (call filesystem_read_cgroup_files (udevd_t))
+(call filesystem_search_efivarfs (udevd_t))
 (call filesystem_search_tmpfs (udevd_t))
 
 (call selinux_get_enforce_mode (udevd_t))
@@ -117,7 +128,9 @@
 (call udevd_exec_helper (udevd_t))
 
 (optional udevd_optional_alsa
-    (call alsa_exec_alsactl (udevd_t)))
+    (call alsa_exec_alsactl (udevd_t))
+    (call alsa_manage_var_lib_files (udevd_t))
+    (call alsa_read_config_files (udevd_t)))
 
 (optional udevd_optional_auth
     (call auth_nsswitch_client_subject (udevd_t)))
@@ -136,7 +149,8 @@
 
 (optional udevd_optional_miscfiles
     (call miscfiles_read_localization_files (udevd_t))
-    (call miscfiles_read_module_files (udevd_t)))
+    (call miscfiles_read_module_files (udevd_t))
+    (call miscfiles_read_network_config_files (udevd_t)))
 
 (optional udevd_optional_modutil
     (call kmod_read_modules_config_files (udevd_t))
@@ -171,6 +185,9 @@
 (macro udevd_run_udevadm ((type ARG1)(role ARG2))
     (call udevd_subtrans_udevadm (ARG1))
     (roleattributeset is_udevadm_role (ARG2)))
+
+(macro udevd_rw_inherited_udp_socket ((type ARG1)) ; dmsetup leak?
+    (allow ARG1 udevd_t (udp_socket (read write))))
 
 (macro udevd_list_config ((type ARG1))
     (allow ARG1 udevd_conf_t (dirs (list))))

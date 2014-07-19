@@ -44,7 +44,7 @@
 
 (context file_hostnamed_polkit_conf (system_u object_r hostnamed_polkit_conf_t ((s0)
     (s0))))
-(filecon "/usr/share/polkit-1/actions/[^/]*hostname1.policy" file
+(filecon "/usr/share/polkit-1/actions/[^/]*hostname1\.policy" file
     file_hostnamed_polkit_conf)
 
 (type hostnamed_unit_t)
