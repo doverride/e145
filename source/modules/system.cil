@@ -309,8 +309,6 @@
 (call devices_manage_generic_chr_files (system_t))
 
 (call files_mounton_all_rootfs_mnt_dirs (system_t))
-(call files_search_run (system_t))
-(call files_search_var_lib (system_t))
 
 (call filesystem_list_tmpfs (system_t)) ; /run/initramfs
 
