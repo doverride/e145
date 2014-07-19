@@ -1,3 +1,5 @@
+(call unconfined_subject (networkmgr_t))
+
 (typeattribute is_networkmgr_admin_subject)
 
 (typeattribute is_networkmgr_file_object)

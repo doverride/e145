@@ -1,3 +1,5 @@
+(call unconfined_subject (iptables_t))
+
 (roleattribute is_iptables_role)
 
 (typeattribute is_iptables_admin_subject)

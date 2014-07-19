@@ -1,3 +1,5 @@
+(call unconfined_subject (kmod_t))
+
 (roleattribute is_kmod_role)
 
 (typeattribute is_kmod_admin_subject)

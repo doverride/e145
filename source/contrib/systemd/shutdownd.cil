@@ -1,3 +1,6 @@
+(call unconfined_subject (shutdown_t))
+(call unconfined_subject (shutdownd_t))
+
 (typeattribute is_shutdownd_admin_subject)
 
 (typeattribute is_shutdownd_subject)

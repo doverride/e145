@@ -1,3 +1,6 @@
+(call unconfined_subject (login_t))
+(call unconfined_subject (sulogin_t))
+
 (typeattribute is_login_admin_subject)
 
 (typeattribute is_login_subject)

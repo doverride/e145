@@ -28,15 +28,13 @@
 
 (allow rfkill_t self (capability (net_admin)))
 
-(call manage_files_pattern (rfkill_t rfkill_var_lib_t rfkill_var_lib_t))
-
 (call system_read_generic_proc_files (rfkill_t))
 
 (call devices_list_sysfs (rfkill_t))
 (call devices_rw_sysfs_files (rfkill_t))
 (call devices_read_event (rfkill_t))
 
-(call systemd_search_var_lib (rfkill_t))
+(call rfkill_manage_var_lib_files (rfkill_t))
 
 (optional rfkill_optional_journald
     (call journald_client_subject (rfkill_t)))
@@ -55,6 +53,10 @@
 (macro rfkill_read_var_lib_files ((type ARG1))
     (call systemd_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 rfkill_var_lib_t rfkill_var_lib_t)))
+
+(macro rfkill_manage_var_lib_files ((type ARG1))
+    (call systemd_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 rfkill_var_lib_t rfkill_var_lib_t)))
 
 (macro rfkill_admin ((type ARG1))
     (typeattributeset is_rfkill_admin_subject ARG1))
