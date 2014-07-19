@@ -79,6 +79,7 @@
     (roleattributeset is_hostnamectl_role (ARG2)))
 
 (macro hostnamed_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 hostnamed_conf_t read_file_perms))
 
 (macro hostnamed_admin ((type ARG1))

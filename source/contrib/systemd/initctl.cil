@@ -34,6 +34,7 @@
 (call admin_pattern (is_initctl_admin_subject is_initctl_file_object))
 
 (macro initctl_getattr_run_fifo_files ((type ARG1))
+    (call systemd_search_run (ARG1))
     (call getattr_fifo_files_pattern (ARG1 initctl_run_t initctl_run_t)))
 
 (macro initctl_admin ((type ARG1))

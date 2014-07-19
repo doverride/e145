@@ -131,12 +131,15 @@
     (allow ARG1 dbusd_t (dbus (acquire_svc))))
 
 (macro dbus_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 dbusd_conf_t (dirs (list))))
 
 (macro dbus_read_all_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 dbusd_conf_t is_dbus_etc_file_object)))
 
 (macro dbus_read_generic_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 dbusd_conf_t dbusd_conf_t)))
 
 (macro dbus_read_state_all_unconfined_subjects ((type ARG1))
@@ -148,9 +151,11 @@
     (allow ARG1 is_dbus_system_client_subject read_file_perms))
 
 (macro dbus_read_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 dbusd_var_lib_t dbusd_var_lib_t)))
 
 (macro dbus_stream_connect_system ((type ARG1))
+    (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 dbusd_run_t dbusd_run_t dbusd_t)))
 
 (macro dbus_admin ((type ARG1))

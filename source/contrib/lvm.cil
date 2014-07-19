@@ -170,15 +170,22 @@
     (roleattributeset is_lvm_role (ARG2)))
 
 (macro lvm_manage_metadata_files ((type ARG1))
+    (call lvm_search_config (ARG1))
     (call manage_files_pattern (ARG1 lvm_metadata_t lvm_metadata_t)))
 
 (macro lvm_rw_lvm_semaphores ((type ARG1))
     (allow ARG1 lvm_t rw_sem_perms))
 
+(macro lvm_search_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 lvm_conf_t (dirs (search))))
+
 (macro lvm_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 lvm_conf_t lvm_conf_t)))
 
 (macro lvm_stream_connect_lvmetad ((type ARG1))
+    (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 lvm_run_t
         lvm_run_t lvmetad_t)))
 

@@ -99,6 +99,7 @@
     (roleattributeset is_dhclient_role (ARG2)))
 
 (macro dhcp_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 dhcp_conf_t dhcp_conf_t)))
 
 (macro dhcp_delete_dhclient_run_files ((type ARG1))
@@ -106,6 +107,7 @@
     (allow ARG1 dhclient_run_t delete_file_perms))
 
 (macro dhcp_read_dhclient_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 dhclient_var_lib_t dhclient_var_lib_t)))
 
 (macro dhcp_send_signal_dhclient ((type ARG1))

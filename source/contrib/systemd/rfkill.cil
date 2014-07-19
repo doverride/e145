@@ -53,6 +53,7 @@
 (call admin_pattern (is_rfkill_admin_subject is_rfkill_file_object))
 
 (macro rfkill_read_var_lib_files ((type ARG1))
+    (call systemd_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 rfkill_var_lib_t rfkill_var_lib_t)))
 
 (macro rfkill_admin ((type ARG1))

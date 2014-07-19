@@ -508,6 +508,7 @@
     (typeattributeset is_dev_file_object ARG1))
 
 (macro devices_getattr_all_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 is_dev_file_object (chr_file (getattr)))
     (allow ARG1 is_dev_file_object (blk_file (getattr))))
 
@@ -524,14 +525,17 @@
     (typeattributeset can_read_memory_raw ARG1))
 
 (macro devices_relabel_all_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 is_dev_file_object relabel_blk_file_perms)
     (allow ARG1 is_dev_file_object relabel_chr_file_perms))
 
 (macro devices_setattr_all_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 is_dev_file_object (blk_file (setattr)))
     (allow ARG1 is_dev_file_object (chr_file (setattr))))
 
 (macro devices_update_timestamp_all_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 is_dev_file_object (chr_file (write)))
     (typeattributeset can_write_memory_raw ARG1)
     (optional devices_optional_storage
@@ -540,6 +544,9 @@
 
 (macro devices_list ((type ARG1))
     (allow ARG1 device_t (dirs (list))))
+
+(macro devices_search ((type ARG1))
+    (allow ARG1 device_t (dirs (search))))
 
 (macro devices_manage_dirs ((type ARG1))
     (call manage_dirs_pattern (ARG1 device_t device_t)))
@@ -562,6 +569,7 @@
     (call manage_chr_files_pattern (ARG1 device_t device_t)))
 
 (macro devices_relabelfrom_generic_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_t relabelfrom_chr_file_perms)
     (allow ARG1 device_t relabelfrom_blk_file_perms))
 
@@ -631,6 +639,7 @@
     (call rw_chr_files_pattern (ARG1 device_t device_zero_t)))
 
 (macro devices_getattr_sysfs_filesystems ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (allow ARG1 sysfs_t (filesystem (getattr))))
 
 (macro devices_list_sysfs ((type ARG1))

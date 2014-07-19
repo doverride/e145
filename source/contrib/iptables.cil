@@ -121,6 +121,7 @@
     (roleattributeset is_iptables_role ARG2))
 
 (macro iptables_read_env_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 iptables_env_t read_file_perms))
 
 (macro iptables_admin ((type ARG1))

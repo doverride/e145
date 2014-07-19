@@ -54,9 +54,11 @@
 (call admin_pattern (is_backlight_admin_subject is_backlight_file_object))
 
 (macro backlight_list_var_lib ((type ARG1))
+    (call systemd_search_var_lib (ARG1))
     (allow ARG1 backlight_var_lib_t (dirs (list))))
 
 (macro backlight_read_var_lib_files ((type ARG1))
+    (call systemd_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 backlight_var_lib_t backlight_var_lib_t)))
 
 (macro backlight_admin ((type ARG1))

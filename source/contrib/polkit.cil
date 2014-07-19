@@ -132,18 +132,23 @@
     (allow polkitd_t ARG1 (dbus (send_msg))))
 
 (macro polkit_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 polkitd_conf_t (dirs (list))))
 
 (macro polkit_read_all_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 polkitd_conf_t is_polkit_etc_file_object)))
 
 (macro polkit_read_generic_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 polkitd_conf_t polkitd_conf_t)))
 
 (macro polkit_list_var_lib ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (allow ARG1 polkitd_var_lib_t (dirs (list))))
 
 (macro polkit_read_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 polkitd_var_lib_t polkitd_var_lib_t)))
 
 (macro polkit_admin ((type ARG1))

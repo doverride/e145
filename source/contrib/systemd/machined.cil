@@ -73,6 +73,7 @@
     (allow ARG1 machined_conf_t manage_file_perms))
 
 (macro machined_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 machined_conf_t read_file_perms))
 
 (macro machined_etc_filetrans_config_files ((type ARG1))
@@ -80,9 +81,11 @@
     (call files_etc_filetrans (ARG1 machined_conf_t file "machine-info")))
 
 (macro machined_list_run ((type ARG1))
+    (call systemd_search_run (ARG1))
     (allow ARG1 machined_run_t (dirs (list))))
 
 (macro machined_read_run_files ((type ARG1))
+    (call systemd_search_run (ARG1))
     (call read_files_pattern (ARG1 machined_run_t machined_run_t)))
 
 (macro machined_admin ((type ARG1))

@@ -34,6 +34,7 @@
 (call admin_pattern (is_modules_admin_subject is_modules_file_object))
 
 (macro modules_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 sd_modules_conf_t sd_modules_conf_t)))
 
 (macro modules_admin ((type ARG1))

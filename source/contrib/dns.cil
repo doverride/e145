@@ -48,6 +48,7 @@
     (allow ARG1 resolv_conf_t manage_file_perms))
 
 (macro dns_read_resolv_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 resolv_conf_t read_file_perms))
 
 (macro dns_resolve_client_subject ((type ARG1))

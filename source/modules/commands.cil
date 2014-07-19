@@ -59,12 +59,15 @@
     (typetransition ARG1 bin_t process "*" ARG2))
 
 (macro commands_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
+    (call commands_search_bin (ARG1))
     (call manual_subject_type_transition_pattern (ARG1 bin_t ARG2)))
 
 (macro commands_execute_bin_files ((type ARG1))
+    (call files_search_usr (ARG1))
     (call exec_files_pattern (ARG1 bin_t bin_t)))
 
 (macro commands_read_bin_files ((type ARG1))
+    (call files_search_usr (ARG1))
     (call read_files_pattern (ARG1 bin_t bin_t)))
 
 (macro commands_search_bin ((type ARG1))
@@ -79,12 +82,15 @@
     (typetransition ARG1 shell_t process "*" ARG2))
 
 (macro commands_shell_manual_subject_type_transition ((type ARG1)(type ARG2))
+    (call commands_search_bin (ARG1))
     (call manual_subject_type_transition_pattern (ARG1 shell_t ARG2)))
 
 (macro commands_execute_shell_files ((type ARG1))
+    (call files_search_usr (ARG1))
     (call exec_files_pattern (ARG1 bin_t shell_t)))
 
 (macro commands_mmap_shell_files ((type ARG1))
+    (call files_search_usr (ARG1))
     (call mmap_files_pattern (ARG1 bin_t shell_t)))
 
 (macro commands_mprot_read_shell_files ((type ARG1))

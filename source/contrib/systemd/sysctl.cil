@@ -59,9 +59,11 @@
     (call subtrans_pattern (ARG1 sysctl_exec_t sd_sysctl_t)))
 
 (macro sysctl_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 sysctl_conf_t (dirs (list))))
 
 (macro sysctl_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 sysctl_conf_t sysctl_conf_t)))
 
 (macro sysctl_admin ((type ARG1))

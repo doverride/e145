@@ -460,6 +460,7 @@
     (allow systemd_t ARG1 (dbus (send_msg))))
 
 (macro systemd_dgram_send ((type ARG1))
+    (call files_search_run (ARG1))
     (call dgram_send_pattern (ARG1 systemd_run_t systemd_run_t systemd_t)))
 
 (macro systemd_get_status_system ((type ARG1))
@@ -487,12 +488,15 @@
     (allow ARG1 systemd_t (service (start))))
 
 (macro systemd_search_var_lib ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (allow ARG1 systemd_var_lib_t (dirs (search))))
 
 (macro systemd_list_run ((type ARG1))
+    (call files_search_run (ARG1))
     (allow ARG1 systemd_run_t (dirs (list))))
 
 (macro systemd_search_run ((type ARG1))
+    (call files_search_run (ARG1))
     (allow ARG1 systemd_run_t (dirs (search))))
 
 (macro systemd_run_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
@@ -526,9 +530,11 @@
     (allow ARG1 systemd_unit_t (dir (getattr))))
 
 (macro systemd_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 systemd_conf_t systemd_conf_t)))
 
 (macro systemd_read_pam_config_files ((type ARG1))
+    (call auth_search_pam_config (ARG1))
     (allow ARG1 systemd_pam_conf_t read_file_perms))
 
 (macro systemd_read_state ((type ARG1))
@@ -546,6 +552,7 @@
     (allow ARG1 systemd_t (process (signal))))
 
 (macro systemd_stream_connect ((type ARG1))
+    (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 systemd_run_t systemd_run_t systemd_t)))
 
 (macro systemd_use_fd ((type ARG1))

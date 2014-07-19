@@ -394,9 +394,11 @@
     (call filetrans_pattern (ARG1 run_lock_t ARG2 ARG3 ARG4)))
 
 (macro files_rw_run_user_root_dirs ((type ARG1))
+    (call files_search_run (ARG1))
     (allow ARG1 run_user_root_t rw_dir_perms))
 
 (macro files_setattr_run_user_root_dirs ((type ARG1))
+    (call files_search_run (ARG1))
     (allow ARG1 run_user_root_t (dir (setattr))))
 
 (macro files_run_user_root_filetrans ((type ARG1)(type ARG2)(class ARG3)
@@ -415,7 +417,7 @@
     (typeattributeset is_tmp_file_object ARG1))
 
 (macro files_list_tmp ((type ARG1))
-    (allow ARG1 tmp_t (dirs (list))))
+    (call list_dirs_pattern (ARG1 var_t tmp_t)))
 
 (macro files_manage_generic_tmp_dirs ((type ARG1))
     (call manage_dirs_pattern (ARG1 tmp_t tmp_t)))
@@ -424,6 +426,7 @@
     (allow ARG1 tmp_t (dir (mounton))))
 
 (macro files_tmp_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
+    (call files_search_var (ARG1))
     (call filetrans_pattern (ARG1 tmp_t ARG2 ARG3 ARG4)))
 
 (macro files_var_log_object ((type ARG1))
@@ -538,13 +541,16 @@
     (dontaudit ARG1 is_mnt_file_object (dir (audit_access))))
 
 (macro files_getattr_all_files ((type ARG1)) ; for auditctl to add watches
-    (allow ARG1 is_file_object (file (getattr))))
+    (call getattr_files_pattern (ARG1 is_file_object
+        is_file_object)))
 
 (macro files_getattr_all_dirs ((type ARG1)) ; for auditctl to add watches
-    (allow ARG1 is_file_object (dir (getattr))))
+    (call getattr_dirs_pattern (ARG1 is_file_object
+        is_file_object)))
 
 (macro files_list_all ((type ARG1))
-    (allow ARG1 is_file_object (dirs (list))))
+    (call list_dirs_pattern (ARG1 is_file_object
+        is_file_object)))
 
 (macro files_relabel_all_except ((type ARG1))
     (call files_relabel_all_dirs_except (ARG1))
@@ -556,25 +562,32 @@
     (call files_relabel_all_chr_files_except (ARG1)))
 
 (macro files_relabel_all_dirs_except ((type ARG1))
-    (allow ARG1 all_files_except relabel_dir_perms))
+    (call relabel_dirs_pattern (ARG1 all_files_except
+        all_files_except)))
 
 (macro files_relabel_all_files_except ((type ARG1))
-    (allow ARG1 all_files_except relabel_file_perms))
+    (call relabel_files_pattern (ARG1 all_files_except
+        all_files_except)))
 
 (macro files_relabel_all_fifo_files_except ((type ARG1))
-    (allow ARG1 all_files_except relabel_fifo_file_perms))
+    (call relabel_fifo_files_pattern (ARG1 all_files_except
+        all_files_except)))
 
 (macro files_relabel_all_sock_files_except ((type ARG1))
-    (allow ARG1 all_files_except relabel_sock_file_perms))
+    (call relabel_sock_files_pattern (ARG1 all_files_except
+        all_files_except)))
 
 (macro files_relabel_all_lnk_files_except ((type ARG1))
-    (allow ARG1 all_files_except relabel_lnk_file_perms))
+    (call relabel_lnk_files_pattern (ARG1 all_files_except
+        all_files_except)))
 
 (macro files_relabel_all_blk_files_except ((type ARG1))
-    (allow ARG1 all_files_except relabel_blk_file_perms))
+    (call relabel_blk_files_pattern (ARG1 all_files_except
+        all_files_except)))
 
 (macro files_relabel_all_chr_files_except ((type ARG1))
-    (allow ARG1 all_files_except relabel_chr_file_perms))
+    (call relabel_chr_files_pattern (ARG1 all_files_except
+        all_files_except)))
 
 (macro files_dontaudit_read_auth ((type ARG1))
     (dontaudit ARG1 is_authentication_file_object list_dir_perms)
@@ -673,31 +686,32 @@
     (call files_relabel_all_non_auth_chr_files_except (ARG1)))
 
 (macro files_relabel_all_non_auth_dirs_except ((type ARG1))
-    (allow ARG1 all_non_auth_files_except
-        relabel_dir_perms))
+    (call relabel_dirs_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
 (macro files_relabel_all_non_auth_files_except ((type ARG1))
-    (allow ARG1 all_non_auth_files_except relabel_file_perms))
+    (call relabel_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
 (macro files_relabel_all_non_auth_fifo_files_except ((type ARG1))
-    (allow ARG1 all_non_auth_files_except
-        relabel_fifo_file_perms))
+    (call relabel_fifo_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
 (macro files_relabel_all_non_auth_sock_files_except ((type ARG1))
-    (allow ARG1 all_non_auth_files_except
-        relabel_sock_file_perms))
+    (call relabel_sock_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
 (macro files_relabel_all_non_auth_lnk_files_except ((type ARG1))
-    (allow ARG1 all_non_auth_files_except
-        relabel_lnk_file_perms))
+    (call relabel_lnk_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
 (macro files_relabel_all_non_auth_blk_files_except ((type ARG1))
-    (allow ARG1 all_non_auth_files_except
-        relabel_blk_file_perms))
+    (call relabel_blk_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
 (macro files_relabel_all_non_auth_chr_files_except ((type ARG1))
-    (allow ARG1 all_non_auth_files_except
-        relabel_chr_file_perms))
+    (call relabel_chr_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
 (macro files_mounton_all_mnt_dirs ((type ARG1))
     (allow ARG1 is_mnt_file_object (dir (mounton))))
@@ -707,7 +721,8 @@
         (dir_file (mounton))))
 
 (macro files_read_all_non_security_files ((type ARG1))
-    (allow ARG1 not_associated_with_security_file_object read_file_perms))
+    (call read_files_pattern (ARG1 not_associated_with_security_file_object
+        not_associated_with_security_file_object)))
 
 (macro files_getattr_all_mnt_dirs ((type ARG1))
     (allow ARG1 is_mnt_file_object (dir (getattr))))

@@ -208,12 +208,15 @@
     (roleattributeset is_augenrules_role (ARG2)))
 
 (macro audit_read_auditd_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 auditd_conf_t auditd_conf_t)))
 
 (macro audit_list_audispd_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 audispd_conf_t (dirs (list))))
 
 (macro audit_read_audispd_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 audispd_conf_t audispd_conf_t)))
 
 (macro audit_admin ((type ARG1))

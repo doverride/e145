@@ -354,9 +354,11 @@
     (allow ARG1 autofs_t (dirs (list))))
 
 (macro filesystem_delete_cgroup_dirs ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call delete_dirs_pattern (ARG1 cgroup_t cgroup_t)))
 
 (macro filesystem_manage_cgroup_dirs ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (call manage_dirs_pattern (ARG1 cgroup_t cgroup_t)))
 
 (macro filesystem_read_cgroup_files ((type ARG1))

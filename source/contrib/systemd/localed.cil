@@ -71,6 +71,7 @@
     (roleattributeset is_localectl_role (ARG2)))
 
 (macro localed_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 localed_conf_t read_file_perms))
 
 (macro localed_admin ((type ARG1))

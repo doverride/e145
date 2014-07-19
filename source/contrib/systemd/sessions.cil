@@ -46,6 +46,7 @@
 (call admin_pattern (is_sessions_admin_subject is_sessions_file_object))
 
 (macro sessions_read_run_files ((type ARG1))
+    (call files_search_run (ARG1))
     (allow ARG1 sessions_run_t read_file_perms))
 
 (macro sessions_manage_run_files ((type ARG1))

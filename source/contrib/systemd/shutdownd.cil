@@ -153,6 +153,7 @@
 (call admin_pattern (is_shutdownd_admin_subject is_shutdownd_file_object))
 
 (macro shutdownd_manage_run_files ((type ARG1))
+    (call systemd_search_run (ARG1))
     (call manage_files_pattern (ARG1 shutdown_run_t shutdown_run_t)))
 
 (macro shutdownd_share_state_shutdown ((type ARG1))

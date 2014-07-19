@@ -83,12 +83,15 @@
     (roleattributeset is_kmod_role (ARG2)))
 
 (macro kmod_list_modules_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 modules_conf_t (dirs (list))))
 
 (macro kmod_read_modules_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 modules_conf_t modules_conf_t)))
 
 (macro kmod_read_modules_dep_files ((type ARG1))
+    (call files_search_usr (ARG1))
     (allow ARG1 modules_dep_t read_file_perms))
 
 (macro kmod_admin ((type ARG1))

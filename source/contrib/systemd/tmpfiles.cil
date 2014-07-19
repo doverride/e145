@@ -26,7 +26,7 @@
 (call files_run_object (tmpfiles_run_t))
 
 (context file_tmpfiles_run (system_u object_r tmpfiles_run_t ((s0) (s0))))
-(filecon "/var/run/tmpfiles\.d(/.*)?" any file_tmpfiles_run)
+(filecon "/run/tmpfiles\.d(/.*)?" any file_tmpfiles_run)
 
 (type tmpfiles_unit_t)
 (call systemd_unit_object (tmpfiles_unit_t))
@@ -69,16 +69,20 @@
     (roleattributeset is_tmpfiles_role (ARG2)))
 
 (macro tmpfiles_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 tmpfiles_conf_t tmpfiles_conf_t)))
 
 (macro tmpfiles_read_run_files ((type ARG1))
+    (call files_search_run (ARG1))
     (call read_files_pattern (ARG1 tmpfiles_run_t tmpfiles_run_t)))
 
 (macro tmpfiles_manage_run_files ((type ARG1))
+    (call files_search_run (ARG1))
     (call manage_files_pattern (ARG1 tmpfiles_run_t tmpfiles_run_t)))
 
 (macro tmpfiles_run_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
+    (call files_search_run (ARG1))
     (call filetrans_pattern (ARG1 tmpfiles_run_t ARG2 ARG3 ARG4)))
 
 (macro tmpfiles_admin ((type ARG1))

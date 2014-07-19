@@ -77,9 +77,11 @@
 (call admin_pattern (is_pcsc_admin_subject is_pcsc_file_object))
 
 (macro pcsc_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 pcscd_conf_t (dirs (list))))
 
 (macro pcsc_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 pcscd_conf_t pcscd_conf_t)))
 
 (macro pcsc_admin ((type ARG1))

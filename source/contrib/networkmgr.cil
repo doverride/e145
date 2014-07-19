@@ -176,18 +176,23 @@
     (call can_exec (ARG1 nm_helper_exec_t)))
 
 (macro networkmgr_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 networkmgr_conf_t (dirs (list))))
 
 (macro networkmgr_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 networkmgr_conf_t networkmgr_conf_t)))
 
 (macro networkmgr_read_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 networkmgr_var_lib_t networkmgr_var_lib_t)))
 
 (macro networkmgr_manage_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 networkmgr_var_lib_t networkmgr_var_lib_t)))
 
 (macro networkmgr_stream_connect ((type ARG1))
+    (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 networkmgr_run_t networkmgr_run_t
         networkmgr_t)))
 

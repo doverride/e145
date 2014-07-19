@@ -128,24 +128,31 @@
     (allow ARG1 plymouthd_t (fd (use))))
 
 (macro plymouth_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 plymouthd_conf_t plymouthd_conf_t)))
 
 (macro plymouth_read_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 plymouthd_var_lib_t plymouthd_var_lib_t)))
 
 (macro plymouth_manage_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 plymouthd_var_lib_t plymouthd_var_lib_t)))
 
 (macro plymouth_list_run ((type ARG1))
+    (call files_search_run (ARG1))
     (allow ARG1 plymouthd_run_t (dirs (list))))
 
 (macro plymouth_read_run_files ((type ARG1))
+    (call files_search_run (ARG1))
     (call read_files_pattern (ARG1 plymouthd_run_t plymouthd_run_t)))
 
 (macro plymouth_manage_run_files ((type ARG1))
+    (call files_search_run (ARG1))
     (call manage_files_pattern (ARG1 plymouthd_run_t plymouthd_run_t)))
 
 (macro plymouth_stream_connect_plymouthd ((type ARG1))
+    (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 plymouthd_run_t plymouthd_run_t plymouthd_t)))
 
 (macro plymouth_admin ((type ARG1))

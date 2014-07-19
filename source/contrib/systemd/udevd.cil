@@ -192,18 +192,23 @@
     (allow ARG1 udevd_t (udp_socket (read write))))
 
 (macro udevd_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 udevd_conf_t (dirs (list))))
 
 (macro udevd_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 udevd_conf_t udevd_conf_t)))
 
 (macro udevd_list_run ((type ARG1))
+    (call files_search_run (ARG1))
     (allow ARG1 udevd_run_t (dirs (list))))
 
 (macro udevd_read_run_files ((type ARG1))
+    (call files_search_run (ARG1))
     (call read_files_pattern (ARG1 udevd_run_t udevd_run_t)))
 
 (macro udevd_stream_connect_udevd ((type ARG1))
+    (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 udevd_run_t udevd_run_t udevd_t)))
 
 (macro udevd_admin ((type ARG1))

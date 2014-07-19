@@ -23,4 +23,5 @@
     (roleattributeset is_clock_role (ARG2)))
 
 (macro hwclock_read_adjtime_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 adjtime_t read_file_perms))

@@ -156,21 +156,30 @@
     (allow logind_t ARG1 (dbus (send_msg))))
 
 (macro logind_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 logind_conf_t logind_conf_t)))
 
 (macro logind_list_run ((type ARG1))
+    (call systemd_search_run (ARG1))
     (allow ARG1 logind_run_t (dirs (list))))
 
 (macro logind_use_fd ((type ARG1))
     (allow ARG1 logind_t (fd (use))))
 
 (macro logind_write_inherited_run_fifo_files ((type ARG1))
+    (call logind_search_run (ARG1))
     (allow ARG1 logind_run_t (fifo_file (write))))
 
 (macro logind_manage_run_files ((type ARG1))
+    (call systemd_search_run (ARG1))
     (call manage_files_pattern (ARG1 logind_run_t logind_run_t)))
 
+(macro logind_search_run ((type ARG1))
+    (call systemd_search_run (ARG1))
+    (allow ARG1 logind_run_t (dirs (search))))
+
 (macro logind_read_run_files ((type ARG1))
+    (call systemd_search_run (ARG1))
     (call read_files_pattern (ARG1 logind_run_t logind_run_t)))
 
 (macro logind_admin ((type ARG1))

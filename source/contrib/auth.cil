@@ -357,19 +357,24 @@
     (allow ARG1 is_login_program_subject read_file_perms))
 
 (macro auth_append_wtmp_log_files ((type ARG1))
+    (call files_search_var_log (ARG1))
     (allow ARG1 wtmp_t append_file_perms))
 
 (macro auth_read_wtmp_log_files ((type ARG1))
+    (call files_search_var_log (ARG1))
     (allow ARG1 wtmp_t read_file_perms))
 
 (macro auth_write_wtmp_log_files ((type ARG1))
+    (call files_search_var_log (ARG1))
     (allow ARG1 wtmp_t write_file_perms))
 
 (macro auth_create_faillog_log_files ((type ARG1))
+    (call files_search_var (ARG1))
     (call files_add_entry_var_log_dirs (ARG1))
     (allow ARG1 faillog_t create_file_perms))
 
 (macro auth_rw_faillog_log_files ((type ARG1))
+    (call files_search_var_log (ARG1))
     (allow ARG1 faillog_t rw_file_perms))
 
 (macro auth_var_log_filetrans_faillog_files ((type ARG1))
@@ -377,43 +382,59 @@
     (call files_var_log_filetrans (ARG1 faillog_t file "btmp")))
 
 (macro auth_create_lastlog_log_files ((type ARG1))
+    (call files_search_var (ARG1))
     (call files_add_entry_var_log_dirs (ARG1))
     (allow ARG1 lastlog_t create_file_perms))
 
 (macro auth_rw_lastlog_log_files ((type ARG1))
+    (call files_search_var_log (ARG1))
     (allow ARG1 lastlog_t rw_file_perms))
 
 (macro auth_var_log_filetrans_lastlog_files ((type ARG1))
     (call files_var_log_filetrans (ARG1 lastlog_t file "lastlog")))
 
 (macro auth_read_nsswitch_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 nsswitch_conf_t read_file_perms))
 
 (macro auth_dontaudit_write_wtmp_log_files ((type ARG1))
+    (call files_search_var_log (ARG1))
     (dontaudit ARG1 wtmp_t write_file_perms))
 
 (macro auth_read_authconfig_pam_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 pam_conf_t authconfig_pam_conf_t)))
 
 (macro auth_list_pam_config ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 pam_conf_t (dirs (list))))
 
+(macro auth_search_pam_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 pam_conf_t (dirs (search))))
+
 (macro auth_read_all_pam_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 pam_conf_t is_pam_etc_file_object)))
 
 (macro auth_read_generic_pam_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 pam_conf_t pam_conf_t)))
 
 (macro auth_read_pam_console_run_files ((type ARG1))
+    (call files_search_run (ARG1))
     (call read_files_pattern (ARG1 pam_console_run_t pam_console_run_t)))
 
 (macro auth_manage_pam_console_run_files ((type ARG1))
+    (call files_search_run (ARG1))
     (call manage_files_pattern (ARG1 pam_console_run_t pam_console_run_t)))
 
 (macro auth_read_passwd_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 password_t read_file_perms))
 
 (macro auth_manage_shadow_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 shadow_t manage_file_perms)
     (typeattributeset can_read_shadow_passwords ARG1)
     (typeattributeset can_write_shadow_passwords ARG1))
@@ -422,14 +443,17 @@
     (dontaudit ARG1 shadow_t read_file_perms))
 
 (macro auth_read_shadow_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 shadow_t read_file_perms)
     (typeattributeset can_read_shadow_passwords ARG1))
 
 (macro auth_relabelto_shadow_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 shadow_t relabelto_file_perms)
     (typeattributeset can_relabelto_shadow_passwords ARG1))
 
 (macro auth_relabel_shadow_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 shadow_t relabel_file_perms)
     (typeattributeset can_relabelto_shadow_passwords ARG1))
 

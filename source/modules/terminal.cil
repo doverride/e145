@@ -120,7 +120,12 @@
 (macro terminal_getattr_devpts_filesystems ((type ARG1))
     (allow ARG1 devpts_t (filesystem (getattr))))
 
+(macro terminal_search_devpts ((type ARG1))
+    (call devices_search (ARG1))
+    (allow ARG1 devpts_t (dirs (search))))
+
 (macro terminal_getattr_generic_pty_nodes ((type ARG1))
+    (call terminal_search_devpts (ARG1))
     (allow ARG1 devpts_t (chr_file (getattr))))
 
 (macro terminal_use_generic_pty_nodes ((type ARG1)) ; /dev/pts/ptmx
@@ -130,36 +135,45 @@
     (allow ARG1 devpts_t write_inherited_chr_file_perms))
 
 (macro terminal_relabel_console_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_console_t relabel_chr_file_perms))
 
 (macro terminal_setattr_console_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_console_t (chr_file (setattr))))
 
 (macro terminal_dontaudit_use_console_nodes ((type ARG1))
     (dontaudit ARG1 device_console_t rw_term_perms))
 
 (macro terminal_use_console_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_console_t rw_term_perms))
 
 (macro terminal_write_console_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_console_t write_chr_file_perms))
 
 (macro terminal_use_ptmx_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_ptmx_t rw_term_perms))
 
 (macro terminal_relabel_unallocated_tty_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_tty_t relabel_chr_file_perms))
 
 (macro terminal_setattr_unallocated_tty_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_tty_t (chr_file (setattr))))
 
 (macro terminal_dontaudit_use_unallocated_tty_nodes ((type ARG1))
     (dontaudit ARG1 device_tty_t rw_term_perms))
 
 (macro terminal_use_unallocated_tty_nodes ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_tty_t rw_term_perms))
 
 (macro terminal_use_controlling_terminal ((type ARG1))
+    (call devices_search (ARG1))
     (allow ARG1 device_devtty_t rw_term_perms))
 
 (macro terminal_user_pty_object ((type ARG1)(type ARG2))

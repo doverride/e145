@@ -34,6 +34,7 @@
 (call admin_pattern (is_binfmt_admin_subject is_binfmt_file_object))
 
 (macro binfmt_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 binfmt_conf_t binfmt_conf_t)))
 
 (macro binfmt_admin ((type ARG1))

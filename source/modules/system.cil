@@ -424,7 +424,7 @@
     (allow ARG1 system_t (system (module_request))))
 
 (macro system_list_debugfs ((type ARG1))
-    (allow ARG1 debugfs_t (dirs (list))))
+    (call list_dirs_pattern (ARG1 proc_t debugfs_t)))
 
 (macro system_read_generic_proc_files ((type ARG1))
     (allow ARG1 proc_t read_file_perms))
@@ -434,7 +434,7 @@
     (typeattributeset can_receive_kernel_messages ARG1))
 
 (macro system_search_sysctl ((type ARG1))
-    (call read_files_pattern (ARG1 proc_t sysctl_t)))
+    (call search_dirs_pattern (ARG1 proc_t sysctl_t)))
 
 (macro system_search_sysctl_kernel ((type ARG1))
     (call system_search_sysctl (ARG1))

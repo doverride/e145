@@ -78,12 +78,15 @@
     (roleattributeset is_alsactl_role ARG2))
 
 (macro alsa_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 alsa_conf_t alsa_conf_t)))
 
 (macro alsa_manage_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 alsa_var_lib_t alsa_var_lib_t)))
 
 (macro alsa_read_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 alsa_var_lib_t alsa_var_lib_t)))
 
 (macro alsa_admin ((type ARG1))
