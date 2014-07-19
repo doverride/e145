@@ -34,6 +34,7 @@
 
 (call system_read_generic_proc_files (backlight_t))
 
+(call devices_list_sysfs (backlight_t))
 (call devices_rw_sysfs_files (backlight_t))
 
 (optional backlight_optional_journald

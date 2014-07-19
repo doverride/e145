@@ -137,6 +137,7 @@
 
 (call selinux_getattr_filesystems (setfiles_t))
 (call selinux_get_enforce_mode (setfiles_t))
+(call selinux_validate_context (setfiles_t))
 
 (call subject_obj_id_change_exemption (setfiles_t))
 

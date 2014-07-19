@@ -104,8 +104,15 @@
 (macro session_run_user_root_filetrans_run_user_dir ((type ARG1)(name ARG2))
     (call files_run_user_root_filetrans (ARG1 session_run_user_dir_t dir ARG2)))
 
+(macro session_read_state ((type ARG1))
+    (allow ARG1 session_t (dirs (list)))
+    (allow ARG1 session_t read_file_perms))
+
 (macro session_send_signal ((type ARG1))
     (allow ARG1 session_t (process (signal))))
+
+(macro session_getattr ((type ARG1))
+    (allow ARG1 session_t (process (getattr))))
 
 (macro session_setsched ((type ARG1))
     (allow ARG1 session_t (process (setsched))))

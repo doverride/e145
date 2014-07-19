@@ -45,6 +45,7 @@
 
 (call manage_dirs_pattern (pcscd_t pcscd_run_t pcscd_run_t))
 (call manage_files_pattern (pcscd_t pcscd_run_t pcscd_run_t))
+(call manage_sock_files_pattern (pcscd_t pcscd_run_t pcscd_run_t))
 (call files_run_filetrans (pcscd_t pcscd_run_t dir "*"))
 
 (call devices_list (pcscd_t))
@@ -62,6 +63,10 @@
 (call pcsc_read_config_files (pcscd_t))
 
 (call polkit_dbus_chat_polkitd (pcscd_t))
+
+(optional pcscd_optional_session
+    (call session_getattr (pcscd_t))
+    (call session_read_state (pcscd_t)))
 
 (optional pcscd_optional_udevd
     (call udevd_read_config_files (pcscd_t)))
