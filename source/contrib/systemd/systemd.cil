@@ -246,6 +246,7 @@
 
 (call selinux_compute_access_vector (systemd_t))
 (call selinux_compute_create_context (systemd_t))
+(call selinux_list (systemd_t))
 
 (call subject_getattr_all_subjects (systemd_t))
 (call subject_read_all_subjects_state (systemd_t))

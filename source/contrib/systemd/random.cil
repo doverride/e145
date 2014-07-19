@@ -30,6 +30,7 @@
 (allow random_t random_var_lib_t manage_file_perms)
 (call systemd_var_lib_filetrans (random_t random_var_lib_t file "*"))
 
+(call system_read_generic_proc_files (random_t))
 (call system_read_sysctl_kernel_files (random_t))
 
 (call devices_search_sysfs (random_t))

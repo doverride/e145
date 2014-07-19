@@ -45,6 +45,9 @@
 (call system_get_sysvipc_info (dmsetup_t))
 
 (call devices_rw_lvm_control (dmsetup_t))
+(call devices_search_sysfs (dmsetup_t))
+
+(call selinux_getattr_filesystems (dmsetup_t))
 
 (optional dmsetup_optional_udevd
     (call udevd_read_config_files (dmsetup_t)))

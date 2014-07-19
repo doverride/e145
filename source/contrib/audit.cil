@@ -155,6 +155,7 @@
 (allow audispd_t audispd_run_t manage_sock_file_perms)
 (call files_run_filetrans (audispd_t audispd_run_t sock_file "*"))
 
+(call audit_list_audispd_config (audispd_t))
 (call audit_read_audispd_config_files (audispd_t))
 
 (allow is_audit_admin_subject is_audit_subject signal_perms)
@@ -210,6 +211,9 @@
 
 (macro audit_read_auditd_config_files ((type ARG1))
     (call read_files_pattern (ARG1 auditd_conf_t auditd_conf_t)))
+
+(macro audit_list_audispd_config ((type ARG1))
+    (allow ARG1 audispd_conf_t (dirs (list))))
 
 (macro audit_read_audispd_config_files ((type ARG1))
     (call read_files_pattern (ARG1 audispd_conf_t audispd_conf_t)))

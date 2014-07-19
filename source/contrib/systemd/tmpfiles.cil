@@ -39,6 +39,8 @@
 (allow tmpfiles_t tmpfiles_run_t manage_dir_perms)
 (call files_run_filetrans (tmpfiles_t tmpfiles_run_t dir "*"))
 
+(call system_read_sysctl_kernel_files (tmpfiles_t))
+
 (call devices_manage_all_nodes (tmpfiles_t))
 (call devices_relabel_all_nodes (tmpfiles_t))
 

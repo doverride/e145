@@ -302,6 +302,9 @@
 (call auth_read_shadow_files (chkpwd_t))
 (call auth_nsswitch_client_subject (chkpwd_t))
 
+(optional chkpwd_optional_journald
+    (call journald_client_subject (chkpwd_t)))
+
 (optional chkpwd_optional_miscfiles
     (call miscfiles_read_localization_files (chkpwd_t)))
 
