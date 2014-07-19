@@ -216,8 +216,6 @@
 
 (call system_read_generic_proc_files (is_login_program_subject))
 
-(call devices_search_sysfs (is_login_program_subject))
-
 (call selinux_getattr_filesystems (is_login_program_subject))
 (call selinux_compute_user_contexts (is_login_program_subject))
 (call selinux_compute_relabel_context (is_login_program_subject))
@@ -291,8 +289,6 @@
 (allow chkpwd_t self create_unix_stream_socket_perms)
 
 (call system_read_sysctl_crypto_files (chkpwd_t))
-
-(call devices_search_sysfs (chkpwd_t))
 
 (call selinux_get_filesystems_mount (chkpwd_t))
 

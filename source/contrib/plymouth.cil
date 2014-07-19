@@ -87,8 +87,6 @@
 (call devices_rw_dri (plymouthd_t))
 
 (call files_read_generic_usr_files (plymouthd_t))
-(call files_search_var_lib (plymouthd_t))
-(call files_search_run (plymouthd_t))
 
 (call terminal_getattr_devpts_filesystems (plymouthd_t))
 (call terminal_use_generic_pty_nodes (plymouthd_t)) ; /dev/pts/ptmx

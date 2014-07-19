@@ -110,8 +110,6 @@
 (optional polkit_optional_miscfiles
     (call miscfiles_read_localization_files (polkitd_t)))
 
-(call devices_search_sysfs (polkitd_auth_t))
-
 (call polkit_list_var_lib (polkitd_auth_t))
 (call polkit_read_var_lib_files (polkitd_auth_t))
 

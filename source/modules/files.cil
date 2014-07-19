@@ -340,6 +340,7 @@
 
 (macro files_var_cache_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
+    (call files_search_var (ARG1))
     (call filetrans_pattern (ARG1 var_cache_t ARG2 ARG3 ARG4)))
 
 (macro files_etc_object ((type ARG1))
@@ -389,6 +390,7 @@
 
 (macro files_run_lock_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
+    (call files_search_run (ARG1))
     (call filetrans_pattern (ARG1 run_lock_t ARG2 ARG3 ARG4)))
 
 (macro files_rw_run_user_root_dirs ((type ARG1))
@@ -399,6 +401,7 @@
 
 (macro files_run_user_root_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
+    (call files_search_run (ARG1))
     (call filetrans_pattern (ARG1 run_user_root_t ARG2 ARG3 ARG4)))
 
 (macro files_search_root ((type ARG1))
@@ -437,6 +440,7 @@
 
 (macro files_var_log_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
+    (call files_search_var (ARG1))
     (call filetrans_pattern (ARG1 var_log_t ARG2 ARG3 ARG4)))
 
 (macro files_usr_object ((type ARG1))
@@ -465,6 +469,7 @@
 
 (macro files_run_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
+    (call files_search_var (ARG1))
     (call filetrans_pattern (ARG1 run_t ARG2 ARG3 ARG4)))
 
 (macro files_read_generic_run_files ((type ARG1)) ; /run/mount/utab
@@ -494,6 +499,7 @@
 
 (macro files_var_spool_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
+    (call files_search_var (ARG1))
     (call filetrans_pattern (ARG1 var_spool_t ARG2 ARG3 ARG4)))
 
 (macro files_var_lib_object ((type ARG1))
@@ -504,6 +510,7 @@
 
 (macro files_var_lib_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
+    (call files_search_var (ARG1))
     (call filetrans_pattern (ARG1 var_lib_t ARG2 ARG3 ARG4)))
 
 (macro files_tmpfs_object ((type ARG1))

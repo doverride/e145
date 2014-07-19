@@ -495,9 +495,11 @@
     (allow ARG1 systemd_run_t (dirs (search))))
 
 (macro systemd_run_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
+    (call files_search_run (ARG1))
     (call filetrans_pattern (ARG1 systemd_run_t ARG2 ARG3 ARG4)))
 
 (macro systemd_var_lib_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
+    (call files_search_var_lib (ARG1))
     (call filetrans_pattern (ARG1 systemd_var_lib_t ARG2 ARG3 ARG4)))
 
 (macro systemd_manage_all_services ((type ARG1))

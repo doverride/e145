@@ -112,6 +112,7 @@
     (allow ARG1 security_t (security (compute_user))))
 
 (macro selinux_getattr_filesystems ((type ARG1))
+    (call devices_search_sysfs (ARG1))
     (allow ARG1 security_t (filesystem (getattr))))
 
 (macro selinux_get_enforce_mode ((type ARG1))

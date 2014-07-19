@@ -33,10 +33,7 @@
 (call system_read_generic_proc_files (random_t))
 (call system_read_sysctl_kernel_files (random_t))
 
-(call devices_search_sysfs (random_t))
 (call devices_rw_urandom (random_t))
-
-(call files_search_var_lib (random_t))
 
 (call selinux_list (random_t))
 (call selinux_get_filesystems_mount (random_t))
