@@ -13,7 +13,7 @@
 (context file_getty_unit (system_u object_r getty_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*getty.*" file file_getty_unit)
 
-(allow getty_t self (capability (chown fsetid sys_tty_config)))
+(allow getty_t self (capability (chown fsetid sys_tty_config sys_admin)))
 (allow getty_t self create_unix_stream_socket_perms)
 
 (call system_read_generic_proc_files (getty_t))
