@@ -85,6 +85,7 @@
 (call system_read_sysctl_crypto_files (sulogin_t))
 
 (call devices_list (sulogin_t))
+(call devices_dontaudit_getattr_generic_nodes (sulogin_t)) ; mislabeled nodes
 (call devices_getattr_all_nodes (sulogin_t))
 (call devices_read_sysfs_files (sulogin_t))
 
@@ -124,6 +125,9 @@
 (macro login_read_pam_config_files ((type ARG1))
     (call auth_search_pam_config (ARG1))
     (allow ARG1 login_pam_conf_t read_file_perms))
+
+(macro login_use_fd_sulogin ((type ARG1))
+    (allow ARG1 sulogin_t (fd (use))))
 
 (macro login_admin ((type ARG1))
     (typeattributeset is_login_admin_subject ARG1))

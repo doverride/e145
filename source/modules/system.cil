@@ -305,6 +305,7 @@
 (call system_list_proc (system_t))
 (call system_request_load_module (system_t))
 
+(call devices_manage_dirs (system_t))
 ; might be able to narrow these down to "create" and "setattr"
 (call devices_manage_all_nodes (system_t))
 (call devices_manage_generic_blk_files (system_t))

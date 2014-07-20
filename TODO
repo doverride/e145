@@ -1,0 +1,18 @@
+systemd.cil: 
+    files_relabel_non_auth_except() is too coarse, and is a temporary solution
+
+    hopefully this can be trimmed to for example files_relabel_all_run_files(), or less
+
+    systemd needs to at least be able to relabel the sock files of socket activated subjects
+    there is probably more but the current solution can hopefully be improved
+
+various:
+    systemd uses tmpfs a lot but does not fix labels right after it mounts, or is not able to
+    this causes content to at least temporarily end up with inappropriate contexts
+
+    examples: /run/mount/mtab, /run/tmpfiles.d/kmod.conf, run/user/$UID
+
+    currently access to tmpfs_t is allowed where this is required
+    this needs to be monitored over time and be corrected when possible
+
+    /run/initramfs may be an exception to that rule

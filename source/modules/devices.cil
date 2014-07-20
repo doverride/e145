@@ -560,6 +560,10 @@
 (macro devices_read_lnk_files ((type ARG1)) ; /dev/log and /dev/initctl
     (call read_lnk_files_pattern (ARG1 device_t device_t)))
 
+(macro devices_dontaudit_getattr_generic_nodes ((type ARG1)) ; sulogin gets attributes of all nodes
+    (allow ARG1 device_t (blk_file (getattr)))
+    (allow ARG1 device_t (chr_file (getattr))))
+
 (macro devices_manage_generic_blk_files ((type ARG1)) ; allows "kernel" to create nodes w/o type transition
     (allow ARG1 self (capability (mknod)))
     (call manage_blk_files_pattern (ARG1 device_t device_t)))
@@ -613,6 +617,9 @@
 
 (macro devices_read_loop_control ((type ARG1))
     (call read_chr_files_pattern (ARG1 device_t device_loop_control_t)))
+
+(macro devices_read_v4l ((type ARG1))
+    (call read_chr_files_pattern (ARG1 device_t device_v4l_t)))
 
 (macro devices_rw_dri ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_dri_t)))

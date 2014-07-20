@@ -1,6 +1,3 @@
-(typepermissive udevd_t)
-(typepermissive udevadm_t)
-
 (roleattribute is_udevadm_role)
 
 (typeattribute is_udevd_admin_subject)
@@ -62,6 +59,7 @@
 
 (call system_read_generic_proc_files (is_udevd_subject))
 
+(call devices_list_sysfs (is_udevd_subject))
 (call devices_rw_sysfs_files (is_udevd_subject))
 
 (call selinux_get_filesystems_mount (is_udevd_subject))
@@ -73,7 +71,8 @@
     (call seutil_read_config_files (is_udevd_subject))
     (call seutil_read_file_context_files (is_udevd_subject)))
 
-(allow udevd_t self (capability (dac_override net_admin chown sys_admin sys_rawio fsetid)))
+(allow udevd_t self (capability (dac_override net_admin chown sys_admin
+	sys_rawio fsetid fowner)))
 (allow udevd_t self (capability2 (block_suspend)))
 (allow udevd_t self (process (setfscreate signal getsched)))
 (allow udevd_t self rw_fifo_file_perms)
@@ -111,6 +110,7 @@
 (call devices_read_memory_raw (udevd_t))
 (call devices_read_sound (udevd_t)) ; alsactl
 (call devices_read_urandom (udevd_t))
+(call devices_read_v4l (udevd_t))
 (call devices_relabel_all_nodes (udevd_t))
 (call devices_relabelfrom_generic_nodes (udevd_t))
 (call devices_setattr_all_nodes (udevd_t))
@@ -127,13 +127,16 @@
 
 (call terminal_use_unallocated_tty_nodes (udevd_t))
 
+(call systemd_search_config (udevd_t)) ; what is it looking for?
 (call systemd_dgram_send (udevd_t))
 
 (call udevd_exec_helper (udevd_t))
 
 (optional udevd_optional_alsa
     (call alsa_exec_alsactl (udevd_t))
+    (call alsa_signal_alsactl (udevd_t))
     (call alsa_manage_var_lib_files (udevd_t))
+    (call alsa_read_alsactl_run_files (udevd_t))
     (call alsa_read_config_files (udevd_t)))
 
 (optional udevd_optional_auth
@@ -147,6 +150,9 @@
 
 (optional udevd_optional_journald
     (call journald_client_subject (udevd_t)))
+
+(optional udevd_optional_logind
+    (call logind_read_run_files (udevd_t)))
 
 (optional udevd_optional_lvm
     (call lvm_subtrans_lvm (udevd_t)))
@@ -171,8 +177,10 @@
 
 (allow udevadm_t self create_unix_stream_socket_perms)
 
-(call udevd_read_run_files (udevadm_t))
+(call udevd_manage_run_files (udevadm_t))
 (call udevd_stream_connect_udevd (udevadm_t))
+
+(call systemd_search_run (udevadm_t)) ; /run/systemd/container
 
 (allow is_udevd_admin_subject is_udevd_subject signal_perms)
 (call ps_subject_pattern (is_udevd_admin_subject is_udevd_subject))
@@ -205,6 +213,10 @@
 (macro udevd_list_run ((type ARG1))
     (call files_search_run (ARG1))
     (allow ARG1 udevd_run_t (dirs (list))))
+
+(macro udevd_manage_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call manage_files_pattern (ARG1 udevd_run_t udevd_run_t)))
 
 (macro udevd_read_run_files ((type ARG1))
     (call files_search_run (ARG1))

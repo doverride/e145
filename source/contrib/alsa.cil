@@ -91,5 +91,12 @@
     (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 alsa_var_lib_t alsa_var_lib_t)))
 
+(macro alsa_read_alsactl_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (allow ARG1 alsactl_run_t read_file_perms))
+
+(macro alsa_signal_alsactl ((type ARG1))
+    (allow ARG1 alsactl_t (process (signal))))
+
 (macro alsa_admin ((type ARG1))
     (typeattributeset is_alsa_admin_subject ARG1))
