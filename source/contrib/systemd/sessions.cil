@@ -1,4 +1,4 @@
-(call unconfined_subject (session_t))
+(typepermissive sessions_t)
 
 (typeattribute is_sessions_admin_subject)
 
@@ -34,6 +34,8 @@
 (call system_read_generic_proc_files (sessions_t))
 
 (call devices_write_kmsg (sessions_t))
+
+(call files_search_run (sessions_t))
 
 (optional sessions_optional_journald
     (call journald_client_subject (sessions_t)))

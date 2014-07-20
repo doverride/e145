@@ -1,4 +1,4 @@
-(call unconfined_subject (networkmgr_t))
+(typepermissive networkmgr_t)
 
 (typeattribute is_networkmgr_admin_subject)
 

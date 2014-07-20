@@ -375,6 +375,9 @@
 (macro files_list_home_root ((type ARG1))
     (allow ARG1 home_root_t (dirs (list))))
 
+(macro files_search_home_root ((type ARG1))
+    (allow ARG1 home_root_t (dirs (search))))
+
 (macro files_run_lock_object ((type ARG1))
     (typeattributeset is_lock_file_object ARG1))
 

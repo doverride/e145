@@ -1,4 +1,4 @@
-(call unconfined_subject (fsck_t))
+(typepermissive fsck_t)
 
 (typeattribute is_fsck_admin_subject)
 

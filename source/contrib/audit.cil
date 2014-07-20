@@ -1,4 +1,6 @@
-(call unconfined_subject (auditd_t))
+(typepermissive auditd_t)
+(typepermissive auditctl_t)
+(typepermissive augenrules_t)
 
 (roleattribute is_auditctl_role)
 (roleattribute is_augenrules_role)

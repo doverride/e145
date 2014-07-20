@@ -1,4 +1,4 @@
-(call unconfined_subject (system_t))
+(typepermissive system_t)
 
 (boolean secure_mode_insmod false)
 

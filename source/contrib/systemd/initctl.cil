@@ -1,4 +1,4 @@
-(call unconfined_subject (initctl_t))
+(typepermissive initctl_t)
 
 (typeattribute is_initctl_admin_subject)
 

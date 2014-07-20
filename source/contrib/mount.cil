@@ -1,4 +1,4 @@
-(call unconfined_subject (mount_t))
+(typepermissive mount_t)
 
 (boolean mount_any_file false)
 

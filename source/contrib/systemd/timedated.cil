@@ -1,4 +1,5 @@
-(call unconfined_subject (timedated_t))
+(typepermissive timedated_t)
+(typepermissive timedatectl_t)
 
 (roleattribute is_timedatectl_role)
 

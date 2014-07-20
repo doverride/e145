@@ -1,4 +1,4 @@
-(call unconfined_subject (alsactl_t))
+(typepermissive alsactl_t)
 
 (roleattribute is_alsactl_role)
 

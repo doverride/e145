@@ -1,3 +1,6 @@
+; (typepermissive journald_t)
+; (typepermissive journalctl_t)
+
 (roleattribute is_journalctl_role)
 
 (typeattribute is_journald_admin_subject)
@@ -148,7 +151,7 @@
     (call read_files_pattern (ARG1 journald_log_t journal_log_t)))
 
 (macro journald_read_config_files ((type ARG1))
-    (call files_search_etc (ARG1))
+    (call systemd_search_config (ARG1))
     (call read_files_pattern (ARG1 journald_conf_t journald_conf_t)))
 
 (macro journald_list_run ((type ARG1))

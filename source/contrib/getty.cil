@@ -1,4 +1,4 @@
-(call unconfined_subject (getty_t))
+(typepermissive getty_t)
 
 (typeattribute is_getty_admin_subject)
 

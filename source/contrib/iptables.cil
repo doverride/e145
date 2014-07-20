@@ -1,4 +1,4 @@
-(call unconfined_subject (iptables_t))
+(typepermissive iptables_t)
 
 (roleattribute is_iptables_role)
 

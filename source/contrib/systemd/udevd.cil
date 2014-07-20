@@ -1,5 +1,5 @@
-(call unconfined_subject (udevd_t))
-(call unconfined_subject (udevadm_t))
+(typepermissive udevd_t)
+(typepermissive udevadm_t)
 
 (roleattribute is_udevadm_role)
 

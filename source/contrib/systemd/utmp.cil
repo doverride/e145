@@ -1,4 +1,4 @@
-(call unconfined_subject (utmp_t))
+(typepermissive utmp_t)
 
 (typeattribute is_utmp_admin_subject)
 

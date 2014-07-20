@@ -190,20 +190,24 @@
     (call files_search_etc (ARG1))
     (allow ARG1 selinux_conf_t (dirs (search))))
 
+(macro seutil_search_default_context ((type ARG1))
+    (call seutil_search_config (ARG1))
+    (allow ARG1 default_context_t (dirs (search))))
+
 (macro seutil_read_default_context_files ((type ARG1))
     (call seutil_search_config (ARG1))
     (call read_files_pattern (ARG1 default_context_t default_context_t)))
 
 (macro seutil_read_file_context_files ((type ARG1))
-    (call seutil_search_config (ARG1))
+    (call seutil_search_default_context (ARG1))
     (call read_files_pattern (ARG1 file_context_t file_context_t)))
 
 (macro seutil_write_file_context_files ((type ARG1))
-    (call seutil_search_config (ARG1))
+    (call seutil_search_default_context (ARG1))
     (call write_files_pattern (ARG1 file_context_t file_context_t)))
 
 (macro seutil_create_file_context_files ((type ARG1))
-    (call seutil_search_config (ARG1))
+    (call seutil_search_default_context (ARG1))
     (call create_files_pattern (ARG1 file_context_t file_context_t)))
 
 (macro seutil_read_source_files ((type ARG1))

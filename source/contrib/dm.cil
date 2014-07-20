@@ -1,5 +1,5 @@
-(call unconfined_subject (dmsetup_t))
-(call unconfined_subject (dmeventd_t))
+(typepermissive dmsetup_t)
+(typepermissive dmeventd_t)
 
 (roleattribute is_dmsetup_role)
 

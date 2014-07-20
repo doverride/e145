@@ -1,4 +1,4 @@
-(call unconfined_subject (pcscd_t))
+(typepermissive pcscd_t)
 
 (typeattribute is_pcsc_admin_subject)
 

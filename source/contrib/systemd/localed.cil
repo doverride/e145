@@ -1,4 +1,5 @@
-(call unconfined_subject (localed_t))
+(typepermissive localed_t)
+(typepermissive localectl_t)
 
 (roleattribute is_localectl_role)
 

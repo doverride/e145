@@ -1,4 +1,4 @@
-(call unconfined_subject (random_t))
+(typepermissive random_t)
 
 (typeattribute is_random_admin_subject)
 

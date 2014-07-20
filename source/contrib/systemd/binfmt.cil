@@ -1,4 +1,4 @@
-(call unconfined_subject (binfmt_t))
+(typepermissive binfmt_t)
 
 (typeattribute is_binfmt_admin_subject)
 

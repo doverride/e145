@@ -1,5 +1,5 @@
-(call unconfined_subject (askpwd_t))
-(call unconfined_subject (askpwdagent_t))
+(typepermissive askpwd_t)
+(typepermissive askpwdagent_t)
 
 (roleattribute is_askpwdagent_role)
 

@@ -1,5 +1,5 @@
-(call unconfined_subject (polkitd_t))
-(call unconfined_subject (polkitd_auth_t))
+(typepermissive polkitd_t)
+(typepermissive polkitd_auth_t)
 
 (typeattribute is_polkit_admin_subject)
 

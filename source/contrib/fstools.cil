@@ -1,3 +1,5 @@
+(typepermissive fstools_t)
+
 (roleattribute is_fstools_role)
 
 (type fstools_t)

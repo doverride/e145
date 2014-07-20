@@ -1,4 +1,4 @@
-(call unconfined_subject (hostnamed_t))
+(typepermissive hostnamed_t)
 
 (roleattribute is_hostnamectl_role)
 

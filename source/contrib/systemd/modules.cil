@@ -1,4 +1,4 @@
-(call unconfined_subject (modules_t))
+(typepermissive modules_t)
 
 (typeattribute is_modules_admin_subject)
 

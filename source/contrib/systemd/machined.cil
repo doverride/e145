@@ -1,4 +1,5 @@
-(call unconfined_subject (machined_t))
+(typepermissive machined_t)
+(typepermissive machinectl_t)
 
 (roleattribute is_machinectl_role)
 

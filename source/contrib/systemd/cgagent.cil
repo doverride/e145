@@ -1,4 +1,4 @@
-(call unconfined_subject (cgagent_t))
+(typepermissive cgagent_t)
 
 (type cgagent_t)
 (call subject_common_subject (cgagent_t))

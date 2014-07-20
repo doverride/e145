@@ -1,4 +1,5 @@
-(call unconfined_subject (logind_t))
+; (typepermissive logind_t)
+; (typepermissive loginctl_t)
 
 (roleattribute is_loginctl_role)
 
@@ -64,7 +65,7 @@
 (context file_logind_unit (system_u object_r logind_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-logind.*" file file_logind_unit)
 
-(allow logind_t self (capability (chown fowner sys_tty_config)))
+(allow logind_t self (capability (chown fowner sys_tty_config sys_admin)))
 (allow logind_t self (process (getcap setfscreate)))
 (allow logind_t self create_unix_stream_socket_perms)
 (allow logind_t self create_netlink_kobject_uevent_socket_perms)
@@ -89,8 +90,10 @@
 (call devices_setattr_sound (logind_t))
 (call devices_setattr_v4l (logind_t))
 
+(call files_search_home_root (logind_t))
 (call files_setattr_run_user_root_dirs (logind_t))
 
+(call filesystem_list_tmpfs (logind_t)) ; may be related to misslabeled /run/user/$UID
 (call filesystem_mount_tmpfs_filesystems (logind_t))
 
 (call selinux_getattr_filesystems (logind_t))
@@ -156,7 +159,7 @@
     (allow logind_t ARG1 (dbus (send_msg))))
 
 (macro logind_read_config_files ((type ARG1))
-    (call files_search_etc (ARG1))
+    (call systemd_search_config (ARG1))
     (call read_files_pattern (ARG1 logind_conf_t logind_conf_t)))
 
 (macro logind_list_run ((type ARG1))

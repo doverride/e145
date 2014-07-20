@@ -1,5 +1,5 @@
-(call unconfined_subject (lvm_t))
-(call unconfined_subject (lvmetad_t))
+(typepermissive lvm_t)
+(typepermissive lvmetad_t)
 
 (roleattribute is_lvm_role)
 
