@@ -41,7 +41,7 @@
 (call system_read_generic_proc_files (is_login_subject))
 
 (optional login_subject_optional_miscfiles
-	(call miscfiles_read_localization_files (is_login_subject)))
+    (call miscfiles_read_localization_files (is_login_subject)))
 
 (optional login_subject_optional_session
     (call session_search_home_dir (is_login_subject))
@@ -103,7 +103,7 @@
 (call systemd_getpgid (sulogin_t))
 
 (optional sulogin_optional_plymouth
-	(call plymouth_subtrans (sulogin_t)))
+    (call plymouth_subtrans (is_login_subject)))
 
 (optional sulogin_optional_seutil
     (call seutil_read_config_files (sulogin_t))

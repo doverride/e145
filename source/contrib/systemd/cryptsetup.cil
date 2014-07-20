@@ -19,6 +19,7 @@
 (call system_get_sysvipc_info (cryptsetup_t))
 (call system_read_generic_proc_files (cryptsetup_t))
 
+(call devices_list (cryptsetup_t))
 (call devices_rw_lvm_control (cryptsetup_t))
 
 (call files_search_etc (cryptsetup_t))
@@ -30,6 +31,10 @@
 
 (optional cryptsetup_optional_seutil
     (call seutil_search_config (cryptsetup_t)))
+
+(optional cryptsetup_optional_storage
+    (call storage_getattr_scsi_generic_nodes (cryptsetup_t))
+    (call storage_getattr_fixed_disk_nodes (cryptsetup_t)))
 
 (optional cryptsetop_optional_udevd
     (call udevd_read_config_files (cryptsetup_t))

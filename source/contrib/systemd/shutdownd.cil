@@ -75,6 +75,7 @@
 (call devices_write_kmsg (shutdown_t))
 
 (call files_getattr_all_mnt_dirs (shutdown_t))
+(call files_list_all (shutdown_t)) ; see TODO
 (call files_mounton_all_rootfs_mnt_dirs (shutdown_t))
 
 (call filesystem_delete_cgroup_dirs (shutdown_t))

@@ -6,6 +6,10 @@ systemd.cil:
     systemd needs to at least be able to relabel the sock files of socket activated subjects
     there is probably more but the current solution can hopefully be improved
 
+    update:
+        it is not as easy as a thought it would be
+        systemd relabels almost all over the place
+
 various:
     systemd uses tmpfs a lot but does not fix labels right after it mounts, or is not able to
     this causes content to at least temporarily end up with inappropriate contexts
@@ -16,3 +20,9 @@ various:
     this needs to be monitored over time and be corrected when possible
 
     /run/initramfs may be an exception to that rule
+
+shutdownd.cil
+    files_list_all() is too coarse, and needs to be trimmed
+
+    this macro call fixes an unclean shutdown though
+    grep -i recover /var/log/boot.log shows that fsck recovers /root without this rule

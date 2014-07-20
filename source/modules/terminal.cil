@@ -129,7 +129,7 @@
     (allow ARG1 devpts_t (chr_file (getattr))))
 
 (macro terminal_use_generic_pty_nodes ((type ARG1)) ; /dev/pts/ptmx
-    (call read_chr_files_pattern (ARG1 devpts_t devpts_t)))
+    (call rw_chr_files_pattern (ARG1 devpts_t devpts_t)))
 
 (macro terminal_write_inherited_generic_pty_nodes ((type ARG1)) ; /dev/pts/ptmx
     (allow ARG1 devpts_t write_inherited_chr_file_perms))
