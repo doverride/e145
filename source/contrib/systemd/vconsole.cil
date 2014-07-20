@@ -1,5 +1,3 @@
-(typepermissive vconsole_t)
-
 (typeattribute is_vconsole_admin_subject)
 
 (typeattribute is_vconsole_file_object)

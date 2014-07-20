@@ -1,6 +1,3 @@
-; (typepermissive shutdown_t)
-; (typepermissive shutdownd_t)
-
 (typeattribute is_shutdownd_admin_subject)
 
 (typeattribute is_shutdownd_subject)

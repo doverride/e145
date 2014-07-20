@@ -1,6 +1,3 @@
-; (typepermissive logind_t)
-; (typepermissive loginctl_t)
-
 (roleattribute is_loginctl_role)
 
 (typeattribute is_logind_admin_subject)
@@ -65,7 +62,7 @@
 (context file_logind_unit (system_u object_r logind_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-logind.*" file file_logind_unit)
 
-(allow logind_t self (capability (chown fowner sys_tty_config sys_admin)))
+(allow logind_t self (capability (chown fowner sys_tty_config sys_admin dac_override)))
 (allow logind_t self (process (getcap setfscreate)))
 (allow logind_t self create_unix_stream_socket_perms)
 (allow logind_t self create_netlink_kobject_uevent_socket_perms)
@@ -83,7 +80,8 @@
 (call devices_getattr_dri (logind_t))
 (call devices_getattr_sound (logind_t))
 (call devices_getattr_v4l (logind_t))
-(call devices_read_sysfs_files (logind_t))
+(call devices_list_sysfs (logind_t))
+(call devices_rw_sysfs_files (logind_t))
 (call devices_read_urandom (logind_t))
 (call devices_rw_event (logind_t))
 (call devices_setattr_dri (logind_t))
@@ -113,6 +111,7 @@
 (call systemd_get_status_system (logind_t))
 (call systemd_search_var_lib (logind_t)) ; not sure where it wants to go
 (call systemd_start_generic_service (logind_t)) ; user@.service
+(call systemd_start_power_service (logind_t)) ; sleep
 (call systemd_start_system (logind_t)) ; BUG: logind to start session
 (call systemd_start_transient_system_service (logind_t))
 (call systemd_stream_connect (logind_t))
@@ -123,6 +122,10 @@
 
 (optional logind_optional_journald
     (call journald_client_subject (logind_t)))
+
+(optional logind_optional_networkmgr
+    (call networkmgr_getattr (logind_t))
+    (call networkmgr_read_state (logind_t)))
 
 (optional logind_optional_seutil
     (call seutil_read_config_files (logind_t))

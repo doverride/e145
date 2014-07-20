@@ -57,6 +57,9 @@
 
 (call subject_user_exemption_target (session_t))
 
+(optional session_optional_auth
+    (call auth_run_chkpwd (session_t session_r)))
+
 (optional session_optional_seutil
     (call seutil_run_load_policy (session_t session_r))
     (call seutil_run_secilc (session_t session_r))
@@ -86,9 +89,11 @@
         session_t)))
 
 (macro session_search_home_dir ((type ARG1))
+    (call files_search_home_root (ARG1))
     (allow ARG1 session_home_dir_t (dirs (search))))
 
 (macro session_search_generic_home_content ((type ARG1))
+    (call session_search_home_dir (ARG1))
     (allow ARG1 session_home_t (dirs (search))))
 
 (macro session_manage_run_user_dir ((type ARG1))
@@ -99,6 +104,7 @@
     (allow ARG1 session_run_user_dir_t (dir (mounton))))
 
 (macro session_search_run_user_dir ((type ARG1))
+    (call files_search_run (ARG1))
     (allow ARG1 session_run_user_dir_t (dirs (search))))
 
 (macro session_run_user_root_filetrans_run_user_dir ((type ARG1)(name ARG2))
@@ -139,12 +145,3 @@
 (macro session_use_inherited_terminals ((type ARG1))
     (allow ARG1 device_session_pts_t rw_inherited_term_perms)
     (allow ARG1 device_session_tty_t rw_inherited_term_perms))
-
-; others
-
-(optional session_optional_seutil_others
-    (call seutil_read_policy_config_files (session_t)))
-
-(optional session_optional_auth
-    (call auth_manage_shadow_files (session_t))
-    (call auth_relabel_shadow_files (session_t)))

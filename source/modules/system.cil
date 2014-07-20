@@ -1,5 +1,3 @@
-(typepermissive system_t)
-
 (boolean secure_mode_insmod false)
 
 (typeattribute can_load_kernel_modules)
@@ -500,6 +498,13 @@
 
 (macro system_dgram_sendto ((type ARG1))
     (allow ARG1 system_t (unix_dgram_socket (sendto))))
+
+(macro system_manage_var_log_files ((type ARG1))
+    (call files_rw_var_log_dirs (ARG1))
+    (allow ARG1 system_log_t manage_file_perms))
+
+(macro system_var_log_filetrans_boot_log_files ((type ARG1))
+    (call files_var_log_filetrans (ARG1 system_log_t file "boot.log")))
 
 (macro system_stream_connectto ((type ARG1))
     (allow ARG1 system_t (unix_stream_socket (connectto))))

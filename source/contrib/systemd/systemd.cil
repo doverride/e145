@@ -1,5 +1,3 @@
-(typepermissive systemctl_t)
-
 (roleattribute is_systemctl_role)
 
 (typeattribute is_systemd_unit_file_object)
@@ -232,7 +230,7 @@
 (call files_read_all_lock_files (systemd_t))
 (call files_read_generic_etc_files (systemd_t)) ; /etc/login.defs
 (call files_read_generic_usr_files (systemd_t))
-(call files_relabel_non_auth_except (systemd_t)); most likely way too coarse
+(call files_relabel_non_auth_except (systemd_t)) ; hard to trim
 (call files_list_run_lock (systemd_t))
 
 (call filesystem_create_generic_tmpfs_sock_files (systemd_t)) ; early /run/systemd/notify
@@ -303,6 +301,11 @@
     (call logind_list_run (systemd_t))
     (call logind_read_run_files (systemd_t)))
 
+; hack: needs to read, and unlink any pid file
+(optional systemd_optional_lvmetad
+    (call lvm_delete_lvmetad_run_files (systemd_t))
+    (call lvm_read_lvmetad_run_files (systemd_t)))
+
 (optional systemd_optional_machined
     (call machined_read_config_files (systemd_t)))
 
@@ -311,6 +314,7 @@
     (call miscfiles_read_module_files (systemd_t)))
 
 (optional systemd_optional_modules
+    (call modules_list_config (systemd_t))
     (call modules_read_config_files (systemd_t)))
 
 (optional systemd_optional_mount
@@ -480,6 +484,9 @@
 
 (macro systemd_start_generic_service ((type ARG1))
     (allow ARG1 systemd_unit_t (service (start))))
+
+(macro systemd_start_power_service ((type ARG1))
+    (allow ARG1 systemd_power_unit_t (service (start))))
 
 (macro systemd_get_status_generic_service ((type ARG1))
     (allow ARG1 systemd_unit_t (service (status))))

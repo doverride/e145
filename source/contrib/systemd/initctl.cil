@@ -1,5 +1,3 @@
-(typepermissive initctl_t)
-
 (typeattribute is_initctl_admin_subject)
 
 (typeattribute is_initctl_file_object)

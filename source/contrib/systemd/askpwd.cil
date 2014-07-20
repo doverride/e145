@@ -1,6 +1,3 @@
-(typepermissive askpwd_t)
-(typepermissive askpwdagent_t)
-
 (roleattribute is_askpwdagent_role)
 
 (typeattribute is_askpwd_admin_subject)
@@ -55,10 +52,15 @@
 (allow askpwdagent_t askpwdagent_run_t manage_fifo_file_perms)
 (call systemd_run_filetrans (askpwdagent_t askpwdagent_run_t dir "*"))
 
+(call system_read_generic_proc_files (askpwdagent_t))
+
+(call files_search_etc (askpwdagent_t))
+
 (call selinux_get_filesystems_mount (askpwdagent_t))
 
 (call terminal_use_console_nodes (askpwdagent_t))
 
+(call askpwd_list_run (askpwdagent_t))
 (call askpwd_read_run_files (askpwdagent_t))
 
 (call systemd_use_fd (askpwdagent_t))

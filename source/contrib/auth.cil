@@ -304,6 +304,9 @@
 (optional chkpwd_optional_miscfiles
     (call miscfiles_read_localization_files (chkpwd_t)))
 
+(optional chkpwd_optional_session
+    (call session_use_inherited_terminals (chkpwd_t)))
+
 (allow is_auth_admin_subject is_auth_subject signal_perms)
 (call ps_subject_pattern (is_auth_admin_subject is_auth_subject))
 

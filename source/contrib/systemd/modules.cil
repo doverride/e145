@@ -1,5 +1,3 @@
-(typepermissive modules_t)
-
 (typeattribute is_modules_admin_subject)
 
 (typeattribute is_modules_file_object)
@@ -26,12 +24,26 @@
 (context file_modules_unit (system_u object_r modules_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*modules.*" file file_modules_unit)
 
+(call system_read_generic_proc_files (modules_t))
+
+(call devices_write_kmsg (modules_t))
+
+(call modules_list_config (modules_t))
+(call modules_read_config_files (modules_t))
+
+(optional modules_optional_journald
+    (call journald_client_subject (modules_t)))
+
 (allow is_modules_admin_subject modules_t signal_perms)
 (call ps_subject_pattern (is_modules_admin_subject modules_t))
 
 (allow is_modules_admin_subject modules_unit_t (service (all)))
 
 (call admin_pattern (is_modules_admin_subject is_modules_file_object))
+
+(macro modules_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 sd_modules_conf_t (dirs (list))))
 
 (macro modules_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))

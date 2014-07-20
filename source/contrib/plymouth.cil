@@ -1,6 +1,3 @@
-(typepermissive plymouth_t)
-(typepermissive plymouthd_t)
-
 (roleattribute is_plymouth_role)
 
 (typeattribute is_plymouth_admin_subject)
@@ -93,6 +90,7 @@
 (call devices_read_sysfs_files (plymouthd_t))
 (call devices_rw_dri (plymouthd_t))
 
+(call files_read_generic_etc_files (plymouthd_t)) ; fedora-release
 (call files_read_generic_usr_files (plymouthd_t))
 
 (call terminal_getattr_devpts_filesystems (plymouthd_t))
@@ -100,6 +98,8 @@
 (call terminal_use_ptmx_nodes (plymouthd_t))
 
 (call system_change_ring_buffer_level (plymouthd_t))
+(call system_manage_var_log_files (plymouthd_t))
+(call system_var_log_filetrans_boot_log_files (plymouthd_t))
 (call systemd_send_signal (plymouthd_t))
 
 (optional plymouthd_optional_auth

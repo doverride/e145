@@ -1,4 +1,4 @@
-(boolean console_login true)
+(boolean console_login false)
 
 (typeattribute is_pty_file_object)
 (typeattribute is_serial_file_object)

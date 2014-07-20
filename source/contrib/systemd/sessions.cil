@@ -1,5 +1,3 @@
-(typepermissive sessions_t)
-
 (typeattribute is_sessions_admin_subject)
 
 (typeattribute is_sessions_file_object)
@@ -35,7 +33,7 @@
 
 (call devices_write_kmsg (sessions_t))
 
-(call files_search_run (sessions_t))
+(call files_search_etc (sessions_t))
 
 (optional sessions_optional_journald
     (call journald_client_subject (sessions_t)))

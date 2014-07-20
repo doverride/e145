@@ -332,6 +332,9 @@
 (macro files_list_boot ((type ARG1))
     (allow ARG1 boot_t (dirs (list))))
 
+(macro files_search_boot ((type ARG1))
+    (allow ARG1 boot_t (dirs (search))))
+
 (macro files_var_cache_object ((type ARG1))
     (typeattributeset is_cache_file_object ARG1))
 
@@ -434,6 +437,9 @@
 
 (macro files_var_log_object ((type ARG1))
     (typeattributeset is_log_file_object ARG1))
+
+(macro files_rw_var_log_dirs ((type ARG1))
+    (allow ARG1 var_log_t rw_dir_perms))
 
 (macro files_add_entry_var_log_dirs ((type ARG1))
     (allow ARG1 var_log_t add_entry_dir_perms))
@@ -542,6 +548,9 @@
 
 (macro files_audit_access_all_mnt_dirs ((type ARG1))
     (dontaudit ARG1 is_mnt_file_object (dir (audit_access))))
+
+(macro files_search_all_mnt_dirs ((type ARG1))
+    (allow ARG1 is_mnt_file_object (dirs (search))))
 
 (macro files_getattr_all_files ((type ARG1)) ; for auditctl to add watches
     (call getattr_files_pattern (ARG1 is_file_object

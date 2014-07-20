@@ -1,5 +1,3 @@
-(typepermissive dbusd_t)
-
 (typeattribute is_dbus_admin_subject)
 (typeattribute is_dbus_system_client_subject)
 

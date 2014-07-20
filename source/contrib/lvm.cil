@@ -1,5 +1,4 @@
 (typepermissive lvm_t)
-(typepermissive lvmetad_t)
 
 (roleattribute is_lvm_role)
 
@@ -179,6 +178,14 @@
 (macro lvm_manage_run_files ((type ARG1))
     (call files_search_run (ARG1))
     (call manage_files_pattern (ARG1 lvm_run_t lvm_run_t)))
+
+(macro lvm_read_lvmetad_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (allow ARG1 lvmetad_run_t read_file_perms))
+
+(macro lvm_delete_lvmetad_run_files ((type ARG1))
+    (call files_delete_entry_run_dirs (ARG1))
+    (allow ARG1 lvmetad_run_t delete_file_perms))
 
 (macro lvm_rw_lvm_semaphores ((type ARG1))
     (allow ARG1 lvm_t rw_sem_perms))

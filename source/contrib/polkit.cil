@@ -1,6 +1,3 @@
-(typepermissive polkitd_t)
-(typepermissive polkitd_auth_t)
-
 (typeattribute is_polkit_admin_subject)
 
 (typeattribute is_polkit_etc_file_object)

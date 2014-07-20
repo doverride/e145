@@ -1,5 +1,3 @@
-(typepermissive cgagent_t)
-
 (type cgagent_t)
 (call subject_common_subject (cgagent_t))
 
@@ -14,6 +12,8 @@
 (allow cgagent_t self create_unix_stream_socket_perms)
 
 (call system_read_generic_proc_files (cgagent_t))
+
+(call files_search_etc (cgagent_t))
 
 (call systemd_stream_connect (cgagent_t))
 
