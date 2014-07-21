@@ -1,0 +1,90 @@
+(roleattribute is_screen_role)
+
+(typeattribute is_screen_subject)
+(typeattribute is_screen_home_file_object)
+
+(type screen_exec_t)
+(call application_subject_entry (is_screen_subject screen_exec_t))
+
+(context file_screen_exec (system_u object_r screen_exec_t ((s0)(s0))))
+(filecon "/usr/bin/screen" file file_screen_exec)
+
+(type screen_conf_t)
+(call files_etc_object (screen_conf_t))
+
+(context file_screen_conf (system_u object_r screen_conf_t ((s0)(s0))))
+(filecon "/etc/screenrc" file file_screen_conf)
+
+(type screen_pam_conf_t)
+(call auth_pam_etc_object (screen_pam_conf_t))
+
+(context file_screen_pam_conf (system_u object_r screen_pam_conf_t ((s0)
+    (s0))))
+(filecon "/etc/pam\.d/screen" file file_screen_pam_conf)
+
+(type screen_run_t)
+(call files_run_object (screen_run_t))
+
+(context file_screen_run (system_u object_r screen_run_t ((s0)
+    (s0))))
+(filecon "/run/screen(/.*)?" any file_screen_run)
+
+(allow is_screen_subject self (process (signal signull)))
+(allow is_screen_subject self create_unix_stream_stream_socket_perms)
+(allow is_screen_subject self (unix_stream_socket (connectto)))
+(allow is_screen_subject self rw_fifo_file_perms)
+
+(allow is_screen_subject screen_run_t manage_dir_perms)
+(allow is_screen_subject screen_run_t manage_file_perms)
+(allow is_screen_subject screen_run_t manage_lnk_file_perms)
+(allow is_screen_subject screen_run_t manage_fifo_file_perms)
+(allow is_screen_subject screen_run_t manage_sock_file_perms)
+
+(call system_read_generic_proc_files (is_screen_subject))
+
+(call files_dontaudit_search_all (is_screen_subject)) ; cwd
+(call files_read_generic_etc_files (is_screen_subject))
+(call files_read_generic_usr_files (is_screen_subject))
+(call files_search_run (is_screen_subject))
+
+(call screen_read_config_files (is_screen_subject))
+
+(optional screen_optional_auth
+    (call auth_nsswitch_client_subject (is_screen_subject)))
+
+(optional screen_optional_miscfiles
+    (call miscfiles_read_localization_files (is_screen_subject)))
+
+(optional screen_optional_utmp
+    (call utmp_read_run_files (is_screen_subject)))
+
+(macro screen_role_template ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_screen_role ARG1)
+    (typeattributeset is_screen_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 screen_exec_t ARG3))
+    (optional screen_role_template_optional_utempter
+        (call auth_run_utempter (ARG3 ARG1))))
+
+(macro screen_home_template ((type ARG1)(type ARG2))
+    (typeattributeset is_screen_home_file_object ARG2)
+    (allow ARG1 ARG2 list_dir_perms)
+    (allow ARG1 ARG2 read_file_perms)
+    (allow ARG1 ARG2 read_lnk_file_perms))
+
+(macro screen_tmp_template ((type ARG1)(type ARG2))
+    (allow ARG1 ARG2 manage_file_perms)
+    (call files_tmp_filetrans (ARG1 ARG2 file "*")))
+
+(macro screen_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 screen_conf_t read_file_perms))
+
+(macro screen_dontaudit_read_all_inherited_home_files ((type ARG1))
+    (dontaudit ARG1 is_screen_home_file_object read_inherited_file_perms))
+
+(macro screen_dontaudit_rw_all_inherited_unix_stream_socket ((type ARG1))
+    (dontaudit ARG1 is_screen_subject (unix_stream_socket (read write))))
+
+(macro screen_use_fd ((type ARG1))
+    (allow ARG1 is_screen_subject (fd (use))))

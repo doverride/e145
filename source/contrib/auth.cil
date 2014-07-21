@@ -1,6 +1,7 @@
 (roleattribute is_authconfig_role)
 (roleattribute is_chkpwd_role)
 (roleattribute is_updpwd_role)
+(roleattribute is_utempter_role)
 
 (typeattribute is_login_program_subject)
 (typeattribute is_nsswitch_client_subject)
@@ -130,11 +131,9 @@
 (filecon "/usr/sbin/unix_update" file file_updpwd_exec)
 
 (type utempter_t)
-(call subject_common_subject (utempter_t))
-
 (type utempter_exec_t)
-(call subject_entry (utempter_t utempter_exec_t))
-(roletype system_r utempter_t)
+(call application_subject_entry (utempter_t utempter_exec_t))
+(roletype is_utempter_role utempter_t)
 
 (context file_utempter_exec (system_u object_r utempter_exec_t ((s0)
     (s0))))
@@ -310,6 +309,22 @@
 (optional chkpwd_optional_session
     (call session_use_inherited_terminals (chkpwd_t)))
 
+(allow utempter_t self create_unix_stream_socket_perms)
+
+(call terminal_dontaudit_use_all_inherited_pty_nodes (utempter_t))
+(call terminal_dontaudit_use_all_inherited_tty_nodes (utempter_t))
+(call terminal_dontaudit_use_inherited_ptmx_nodes (utempter_t))
+
+(call auth_nsswitch_client_subject (utempter_t))
+(call auth_write_wtmp_log_files (utempter_t))
+
+(optional utempter_optional_screen
+    (call screen_dontaudit_rw_all_inherited_unix_stream_socket (utempter_t))
+    (call screen_dontaudit_read_all_inherited_home_files (utempter_t)))
+
+(optional utempter_optional_utmp
+    (call utmp_rw_run_files (utempter_t)))
+
 (allow is_auth_admin_subject is_auth_subject signal_perms)
 (call ps_subject_pattern (is_auth_admin_subject is_auth_subject))
 
@@ -357,6 +372,13 @@
 (macro auth_run_updpwd ((type ARG1)(role ARG2))
     (call auth_subtrans_updpwd (ARG1))
     (roleattributeset is_updpwd_role (ARG2)))
+
+(macro auth_subtrans_utempter ((type ARG1))
+    (call subtrans_pattern (ARG1 utempter_exec_t utempter_t)))
+
+(macro auth_run_utempter ((type ARG1)(role ARG2))
+    (call auth_subtrans_utempter (ARG1))
+    (roleattributeset is_utempter_role (ARG2)))
 
 (macro auth_read_all_login_program_subjects_state ((type ARG1))
     (allow ARG1 is_login_program_subject (dirs (list)))

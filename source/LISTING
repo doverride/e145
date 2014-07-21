@@ -34,6 +34,7 @@ contrib/pcsc.cil
 contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
+contrib/screen.cil
 contrib/seutil.cil
 contrib/tune.cil
 contrib/upower.cil

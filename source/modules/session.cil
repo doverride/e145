@@ -24,6 +24,15 @@
 (filecon "/root/.*" any file_session_home)
 (filecon "/home/joe/.*" any file_session_home) ; hack
 
+(type session_home_bin_t)
+(call session_home_object (session_home_bin_t))
+(call subject_entry (session_t session_home_bin_t))
+
+(context file_session_home_bin (session_u object_r session_home_bin_t ((s0)
+    (s0))))
+(filecon "/home/joe/bin" symlink file_session_home_bin) ; hack
+(filecon "/home/joe/\.local/bin(/.*)?" any file_session_home_bin) ; hack
+
 (type session_home_dir_t)
 (call files_object (session_home_dir_t))
 
@@ -105,6 +114,25 @@
     (call seutil_run_secilc (session_t session_r))
     (call seutil_run_setfiles (session_t session_r)))
 
+(optional session_optional_screen
+    (type session_screen_t)
+    (call screen_role_template (session_r session_t session_screen_t))
+    (call session_use_terminals (session_screen_t))
+    (call session_setattr_terminals (session_screen_t))
+    (call session_search_generic_home_content (session_screen_t))
+    (type session_screen_home_t)
+    (call session_home_object (session_screen_home_t))
+    (call screen_home_template (session_screen_t session_screen_home_t))
+    (context file_session_screen_home (session_u object_r session_screen_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.screenrc" file file_session_screen_home)
+    (type session_screen_tmp_t)
+    (call session_tmp_object (session_screen_tmp_t))
+    (call screen_tmp_template (session_screen_t session_screen_tmp_t))
+    (call session_create_pty_node (session_screen_t))
+    (call session_home_bin_auto_subject_type_transition (session_screen_t session_t))
+    (call commands_bin_auto_subject_type_transition (session_screen_t session_t))
+    (call commands_shell_auto_subject_type_transition (session_screen_t session_t)))
+
 (optional session_optional_unconfined
     (call unconfined_subject (session_t)))
 
@@ -128,6 +156,9 @@
     (allow ARG1 self (process (setkeycreate)))
     (allow ARG1 session_t (key (create search link write))))
 
+(macro session_create_pty_node ((type ARG1))
+    (call terminal_create_pty_node (ARG1 device_session_pts_t)))
+
 (macro session_link_keyring ((type ARG1))
     (allow ARG1 session_t (key (link))))
 
@@ -135,6 +166,18 @@
     (call subject_dynamic_type_transition_subject (ARG1))
     (call dynamic_subject_type_transition_pattern (ARG1
         session_t)))
+
+(macro session_search_home_bin ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (allow ARG1 session_home_bin_t (dirs (search))))
+
+(macro session_home_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
+    (call session_home_bin_manual_subject_type_transition (ARG1 ARG2))
+    (typetransition ARG1 session_home_bin_t process "*" ARG2))
+
+(macro session_home_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
+    (call session_search_home_bin (ARG1))
+    (call manual_subject_type_transition_pattern (ARG1 session_home_bin_t ARG2)))
 
 (macro session_search_home_dir ((type ARG1))
     (call files_search_home_root (ARG1))
@@ -213,3 +256,7 @@
 (macro session_use_inherited_terminals ((type ARG1))
     (allow ARG1 device_session_pts_t rw_inherited_term_perms)
     (allow ARG1 device_session_tty_t rw_inherited_term_perms))
+
+(macro session_setattr_terminals ((type ARG1))
+    (allow ARG1 device_session_pts_t (chr_file (setattr)))
+    (allow ARG1 device_session_tty_t (chr_file (setattr))))

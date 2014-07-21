@@ -117,6 +117,11 @@
     (call terminal_serial_object (ARG1))
     (typeattributeset is_tty_file_object ARG1))
 
+(macro terminal_create_pty_node ((type ARG1)(type ARG2))
+    (call terminal_use_ptmx_nodes (ARG1))
+    (call terminal_getattr_devpts_filesystems (ARG1))
+    (call filetrans_pattern (ARG1 devpts_t ARG2 chr_file "*")))
+
 (macro terminal_getattr_devpts_filesystems ((type ARG1))
     (allow ARG1 devpts_t (filesystem (getattr))))
 
@@ -175,6 +180,16 @@
 (macro terminal_use_controlling_terminal ((type ARG1))
     (call devices_search (ARG1))
     (allow ARG1 device_devtty_t rw_term_perms))
+
+(macro terminal_dontaudit_use_all_inherited_pty_nodes ((type ARG1))
+    (call terminal_search_devpts (ARG1))
+    (dontaudit ARG1 is_pty_file_object rw_inherited_term_perms))
+
+(macro terminal_dontaudit_use_all_inherited_tty_nodes ((type ARG1))
+    (dontaudit ARG1 is_tty_file_object rw_inherited_term_perms))
+
+(macro terminal_dontaudit_use_inherited_ptmx_nodes ((type ARG1))
+    (dontaudit ARG1 device_ptmx_t rw_inherited_term_perms))
 
 (macro terminal_user_pty_object ((type ARG1)(type ARG2))
     (call terminal_pty_object (ARG2))

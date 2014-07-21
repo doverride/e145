@@ -1,3 +1,6 @@
+systemd-coredump:
+    this utility is executed by a kernel worker thread (system_t)
+
 tmpfiles.cil:
     implement a tmpfiles_config_object(), and apply that to targeted subjects where possible
     this is for administration purposes

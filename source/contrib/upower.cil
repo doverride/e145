@@ -67,6 +67,8 @@
 
 (call filesystem_getattr_filesystems (upowerd_t))
 
+(call selinux_getattr_filesystems (upowerd_t))
+
 (call dbus_system_client_subject (upowerd_t))
 (call dbus_acquire_service_system (upowerd_t))
 
@@ -110,6 +112,10 @@
 (macro upower_manage_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 upowerd_var_lib_t upowerd_var_lib_t)))
+
+(macro upower_dbus_chat ((type ARG1))
+    (allow ARG1 upowerd_t (dbus (send_msg)))
+    (allow upowerd_t ARG1 (dbus (send_msg))))
 
 (macro upower_admin ((type ARG1))
     (typeattributeset is_upower_admin_subject ARG1))
