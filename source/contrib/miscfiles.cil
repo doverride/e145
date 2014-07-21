@@ -58,6 +58,7 @@
 
 (context file_net_conf (system_u object_r net_conf_t ((s0) (s0))))
 (filecon "/etc/hosts" file file_net_conf)
+(filecon "/etc/host\.conf" file file_net_conf)
 (filecon "/etc/sysconfig/network-scripts(/.*)?" file file_net_conf)
 
 (type net_env_t)

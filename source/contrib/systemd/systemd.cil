@@ -5,6 +5,8 @@
 (typeattribute is_systemd_socket_activated_subject)
 (typeattribute is_systemd_socket_activated_object)
 
+(typeattribute is_systemd_pid_file_object)
+
 (typeattribute is_systemd_daemon_subject)
 (typeattribute is_systemd_oneshot_subject)
 
@@ -156,6 +158,10 @@
     is_systemd_socket_activated_object
         is_systemd_socket_activated_object))
 
+(call files_delete_entry_run_dirs (systemd_t))
+(allow systemd_t is_systemd_pid_file_object read_file_perms)
+(allow systemd_t is_systemd_pid_file_object delete_file_perms)
+
 (call commands_bin_files_entry_subject (systemd_daemon_t))
 (call commands_shell_files_entry_subject (systemd_daemon_t))
 
@@ -301,11 +307,6 @@
 (optional systemd_optional_logind
     (call logind_list_run (systemd_t))
     (call logind_read_run_files (systemd_t)))
-
-; hack: needs to read, and unlink any pid file
-(optional systemd_optional_lvmetad
-    (call lvm_delete_lvmetad_run_files (systemd_t))
-    (call lvm_read_lvmetad_run_files (systemd_t)))
 
 (optional systemd_optional_machined
     (call machined_read_config_files (systemd_t)))
@@ -575,6 +576,9 @@
 
 (macro systemd_getpgid ((type ARG1))
     (allow ARG1 systemd_t (process (getpgid))))
+
+(macro systemd_pid_object ((type ARG1))
+    (typeattributeset is_systemd_pid_file_object ARG1))
 
 (macro systemd_admin ((type ARG1))
     (typeattributeset is_systemd_admin_subject ARG1))

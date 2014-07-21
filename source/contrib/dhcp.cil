@@ -106,6 +106,10 @@
     (call files_delete_entry_run_dirs (ARG1))
     (allow ARG1 dhclient_run_t delete_file_perms))
 
+(macro dhcp_list_dhclient_var_lib ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (allow ARG1 dhclient_var_lib_t (dirs (list))))
+
 (macro dhcp_read_dhclient_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 dhclient_var_lib_t dhclient_var_lib_t)))

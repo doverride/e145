@@ -5,6 +5,7 @@
 
 (context bin (system_u object_r bin_t ((s0) (s0))))
 (filecon "/bin" symlink bin)
+(filecon "/etc/dhcp/dhclient\.d/chrony\.sh" file bin)
 (filecon "/etc/profile\.d/.*" file bin)
 (filecon "/etc/rc\.d/rc\.local" file bin)
 (filecon "/etc/rc\.d/init\.d/.*" file bin)
