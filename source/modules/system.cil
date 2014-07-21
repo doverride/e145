@@ -469,6 +469,10 @@
     (call system_search_sysctl (ARG1))
     (call rw_files_pattern (ARG1 sysctl_net_t sysctl_net_t)))
 
+(macro system_rw_sysctl_vm_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
+    (call rw_files_pattern (ARG1 sysctl_vm_t sysctl_vm_t)))
+
 (macro system_rw_sysctl_security_files ((type ARG1))
     (typeattributeset
         can_write_and_append_is_sysctl_security_or_sysctl_usermodehelper_file_object

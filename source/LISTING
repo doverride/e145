@@ -35,6 +35,7 @@ contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
 contrib/seutil.cil
+contrib/tune.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/backlight.cil
 contrib/systemd/binfmt.cil

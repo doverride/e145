@@ -12,6 +12,7 @@
 (filecon "/usr/sbin/ip" file file_ip_exec)
 (filecon "/usr/sbin/iw" file file_ip_exec)
 (filecon "/usr/sbin/iwconfig" file file_ip_exec)
+(filecon "/usr/sbin/iwpriv" file file_ip_exec)
 (filecon "/usr/sbin/tc" file file_ip_exec)
 
 (macro ip_exec ((type ARG1))

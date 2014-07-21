@@ -1,0 +1,164 @@
+(roleattribute is_tuneadm_role)
+
+(typeattribute is_tune_admin_subject)
+
+(typeattribute is_tune_subject)
+(typeattributeset is_tune_subject (tuneadm_t tuned_t))
+
+(typeattribute is_tune_file_object)
+(typeattributeset is_tune_file_object (tuned_conf_t tuned_dbus_conf_t
+    tuned_unit_t tuned_run_t tuned_log_t))
+
+(type tuneadm_t)
+(type tuneadm_exec_t)
+(call application_subject_entry (tuneadm_t tuneadm_exec_t))
+(roletype is_tuneadm_role tuneadm_t)
+
+(context file_tuneadm_exec (system_u object_r tuneadm_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/tuned-adm" file file_tuneadm_exec)
+
+(type tuned_t)
+(type tuned_exec_t)
+(call systemd_daemon_subject_entry (tuned_t tuned_exec_t))
+
+(context file_tuned_exec (system_u object_r tuned_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/tuned" file file_tuned_exec)
+
+(type tuned_run_t)
+(call files_run_object (tuned_run_t))
+
+(context file_tuned_run (system_u object_r tuned_run_t ((s0)
+    (s0))))
+(filecon "/run/tuned(/.*)?" any file_tuned_run)
+
+(type tuned_conf_t)
+(call files_etc_object (tuned_conf_t))
+
+(context file_tuned_conf (system_u object_r tuned_conf_t ((s0)
+    (s0))))
+(filecon "/etc/tuned(/.*)?" any file_tuned_conf)
+
+(type tuned_dbus_conf_t)
+(call dbus_etc_object (tuned_dbus_conf_t))
+
+(context file_tuned_dbus_conf (system_u object_r tuned_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/com\.redhat\.tuned\.conf" file
+    file_tuned_dbus_conf)
+
+(type tuned_log_t)
+(call files_var_log_object (tuned_log_t))
+
+(context file_tuned_log (system_u object_r tuned_log_t ((s0)
+    (s0))))
+(filecon "/var/log/tuned(/.*)?" any file_tuned_log)
+
+(type tuned_unit_t)
+(call systemd_unit_object (tuned_unit_t))
+
+(context file_tuned_unit (system_u object_r tuned_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*tuned.*" file file_tuned_unit)
+
+(type tuned_tmp_t)
+(call files_tmp_object (tuned_tmp_t))
+
+(allow tuned_t self (capability (sys_rawio net_admin)))
+(allow tuned_t self create_unix_stream_socket_perms)
+(allow tuned_t self create_netlink_kobject_uevent_socket_perms)
+(allow tuned_t self create_udp_socket_perms)
+(allow tuned_t self rw_fifo_file_perms)
+
+(allow tuned_t tuned_run_t manage_dir_perms)
+(allow tuned_t tuned_run_t manage_file_perms)
+(call files_run_filetrans (tuned_t tuned_run_t dir "*"))
+
+(allow tuned_t tuned_tmp_t mmap_file_perms)
+(allow tuned_t tuned_tmp_t manage_file_perms)
+(call files_tmp_filetrans (tuned_t tuned_tmp_t file "*"))
+
+(allow tuned_t tuned_log_t manage_dir_perms)
+(allow tuned_t tuned_log_t (file (setattr)))
+(allow tuned_t tuned_log_t append_file_perms)
+(allow tuned_t tuned_log_t create_file_perms)
+(allow tuned_t tuned_log_t read_file_perms)
+
+(call system_read_generic_proc_files (tuned_t))
+(call system_read_proc_net_files (tuned_t))
+(call system_rw_sysctl_vm_files (tuned_t))
+(call system_rw_sysctl_kernel_files (tuned_t))
+
+(call commands_execute_bin_files (tuned_t)) ; /usr/bin/cpupower
+(call commands_execute_shell_files (tuned_t))
+
+(auditallow tuned_t bin_t (file (execute_no_trans))) ; temporary hack for auditing
+
+(call devices_list (tuned_t))
+(call devices_list_sysfs (tuned_t))
+(call devices_read_cpu (tuned_t))
+(call devices_rw_sysfs_files (tuned_t))
+(call devices_read_urandom (tuned_t))
+(call devices_write_net_control (tuned_t))
+
+(call files_search_var_log (tuned_t))
+
+(call selinux_getattr_filesystems (tuned_t))
+
+(call dbus_system_client_subject (tuned_t))
+(call dbus_acquire_service_system (tuned_t))
+
+(call tune_rw_config_files (tuned_t))
+
+(optional tuned_optional_auth
+    (call auth_nsswitch_client_subject (tuned_t)))
+
+(optional tuned_optional_ip
+    (call ip_exec (tuned_t)))
+
+(optional tuned_optional_libraries
+    (call libraries_exec_ldconfig (tuned_t)))
+
+(optional tuned_optional_miscfiles
+    (call miscfiles_read_localization_files (tuned_t)))
+
+(optional tuned_optional_storage
+    (call storage_getattr_fixed_disk_nodes (tuned_t))
+    (call storage_getattr_scsi_generic_nodes (tuned_t)))
+
+(optional tuned_optional_udevd
+    (call udevd_read_run_files (tuned_t))
+    (call udevd_read_config_files (tuned_t)))
+
+(allow is_tune_admin_subject is_tune_subject signal_perms)
+(call ps_subject_pattern (is_tune_admin_subject is_tune_subject))
+
+(allow is_tune_admin_subject tuned_unit_t (service (all)))
+
+(call admin_pattern (is_tune_admin_subject is_tune_file_object))
+
+(macro tune_exec_tuneadm ((type ARG1))
+    (call can_exec (ARG1 tuneadm_exec_t)))
+
+(macro tune_subtrans_tuneadm ((type ARG1))
+    (call subtrans_pattern (ARG1 tuneadm_exec_t tuneadm_t)))
+
+(macro tune_run_tuneadm ((type ARG1)(role ARG2))
+    (call tune_subtrans_tuneadm (ARG1))
+    (roleattributeset is_tuneadm_role ARG2))
+
+(macro tune_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call read_files_pattern (ARG1 tuned_conf_t tuned_conf_t)))
+
+(macro tune_rw_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call rw_files_pattern (ARG1 tuned_conf_t tuned_conf_t)))
+
+(macro tune_read_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call read_files_pattern (ARG1 tuned_run_t tuned_run_t)))
+
+(macro tune_admin ((type ARG1))
+    (typeattributeset is_tune_admin_subject ARG1))
