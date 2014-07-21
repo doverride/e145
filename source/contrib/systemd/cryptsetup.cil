@@ -13,13 +13,17 @@
 (context file_cryptsetup_unit (system_u object_r cryptsetup_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*cryptsetup.*" file file_cryptsetup_unit)
 
-(allow cryptsetup_t self (capability (net_admin sys_admin)))
+(allow cryptsetup_t self (capability (net_admin sys_admin ipc_lock)))
 (allow cryptsetup_t self create_sem_perms)
 
 (call system_get_sysvipc_info (cryptsetup_t))
 (call system_read_generic_proc_files (cryptsetup_t))
+(call system_read_sysctl_crypto_files (cryptsetup_t))
 
+(call devices_getattr_device_filesystems (cryptsetup_t))
 (call devices_list (cryptsetup_t))
+(call devices_read_random (cryptsetup_t))
+(call devices_read_urandom (cryptsetup_t))
 (call devices_rw_lvm_control (cryptsetup_t))
 
 (call files_search_etc (cryptsetup_t))
@@ -33,8 +37,8 @@
     (call seutil_search_config (cryptsetup_t)))
 
 (optional cryptsetup_optional_storage
-    (call storage_getattr_scsi_generic_nodes (cryptsetup_t))
-    (call storage_getattr_fixed_disk_nodes (cryptsetup_t)))
+    (call storage_read_fixed_disk_nodes (cryptsetup_t))
+    (call storage_read_scsi_generic_nodes (cryptsetup_t)))
 
 (optional cryptsetop_optional_udevd
     (call udevd_read_config_files (cryptsetup_t))

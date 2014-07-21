@@ -124,6 +124,7 @@
 (call devices_read_sysfs_files (lvm_t))
 (call devices_read_urandom (lvm_t))
 (call devices_rw_lvm_control (lvm_t))
+(call devices_write_kmsg (lvm_t))
 
 (call filesystem_list_tmpfs (lvm_t))
 (call filesystem_list_hugetlbfs (lvm_t))
