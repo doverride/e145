@@ -67,7 +67,8 @@
     (call session_read_state (pcscd_t)))
 
 (optional pcscd_optional_udevd
-    (call udevd_read_config_files (pcscd_t)))
+    (call udevd_read_config_files (pcscd_t))
+    (call udevd_read_run_files (pcscd_t)))
 
 (allow is_pcsc_admin_subject pcscd_t signal_perms)
 (call ps_subject_pattern (is_pcsc_admin_subject pcscd_t))
