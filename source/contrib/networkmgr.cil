@@ -143,6 +143,7 @@
 (optional networkmgr_optional_logind
     (call logind_dbus_chat (networkmgr_t))
     (call logind_list_run (networkmgr_t))
+    (call logind_read_run_files (networkmgr_t))
     (call logind_use_fd (networkmgr_t))
     (call logind_write_inherited_run_fifo_files (networkmgr_t)))
 
@@ -157,6 +158,10 @@
 
 (optional networkmgr_optional_mount
     (call mount_exec (networkmgr_t)))
+
+(optional networkmgr_optional_session
+    (call session_getattr (networkmgr_t))
+    (call session_read_state (networkmgr_t)))
 
 (optional networkmgr_optional_sysctl
     (call sysctl_read_config_files (networkmgr_t)))
