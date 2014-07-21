@@ -1,0 +1,135 @@
+(roleattribute is_wpacli_role)
+
+(typeattribute is_wpa_admin_subject)
+
+(typeattribute is_wpa_subject)
+(typeattributeset is_wpa_subject (wpacli_t wpa_t))
+
+(typeattribute is_wpa_file_object)
+(typeattributeset is_wpa_file_object (wpa_conf_t wpa_unit_t
+    wpa_dbus_conf_t wpa_run_t wpa_log_t wpa_env_t))
+
+(type wpacli_t)
+(type wpacli_exec_t)
+(call application_subject_entry (wpacli_t wpacli_exec_t))
+(roletype is_wpacli_role ntp_t)
+
+(context file_wpacli_exec (system_u object_r wpacli_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/wpa_cli" file file_wpacli_exec)
+
+(type wpa_t)
+(type wpa_exec_t)
+(call systemd_daemon_subject_entry (wpa_t wpa_exec_t))
+
+(context file_wpa_exec (system_u object_r wpa_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/wpa_supplicant" file file_wpa_exec)
+
+(type wpa_run_t) ; is missing tmpfiles config in rawhide
+(call files_run_object (wpa_run_t))
+
+(context file_wpa_run (system_u object_r ntpd_run_t ((s0)
+    (s0))))
+(filecon "/run/wpa_supplicant(/.*)?" any file_wpa_run)
+
+(type wpa_conf_t)
+(call files_etc_object (wpa_conf_t))
+
+(context file_wpa_conf (system_u object_r wpa_conf_t ((s0)
+    (s0))))
+(filecon "/etc/wpa_supplicant(/.*)?" any file_wpa_conf)
+
+(type wpa_env_t)
+(call files_env_object (wpa_env_t))
+
+(context file_wpa_env (system_u object_r wpa_env_t ((s0)
+    (s0))))
+(filecon "/etc/sysconfig/wpa_supplicant" file file_wpa_env)
+
+(type wpa_dbus_conf_t)
+(call dbus_etc_object (wpa_dbus_conf_t))
+
+(context file_wpa_dbus_conf (system_u object_r wpa_dbus_conf_t ((s0)
+    (s0))))
+(filecon "/etc/dbus-1/system\.d/wpa_supplicant\.conf" any file_wpa_dbus_conf)
+
+(type wpa_log_t)
+(call files_var_log_object (wpa_log_t))
+
+(context file_wpa_log (system_u object_r wpa_log_t ((s0)
+    (s0))))
+(filecon "/var/log/wpa_supplicant\.log.*" file file_wpa_log)
+
+(type wpa_unit_t)
+(call systemd_unit_object (wpa_unit_t))
+
+(context file_wpa_unit (system_u object_r wpa_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*wpa_supplicant.*" file file_wpa_unit)
+
+(allow wpa_t self (capability (net_raw net_admin)))
+(allow wpa_t self (process (signal)))
+(allow wpa_t self create_unix_dgram_socket_perms)
+(allow wpa_t self create_unix_stream_socket_perms)
+(allow wpa_t self create_udp_socket_perms)
+(allow wpa_t self create_netlink_socket_perms)
+(allow wpa_t self create_netlink_route_socket_perms)
+(allow wpa_t self create_packet_socket_perms)
+
+(allow wpa_t wpa_log_t (file (setattr)))
+(allow wpa_t wpa_log_t append_file_perms)
+(allow wpa_t wpa_log_t create_file_perms)
+(allow wpa_t wpa_log_t read_file_perms)
+(call files_var_log_filetrans (wpa_t wpa_log_t file "*"))
+
+(call system_read_proc_net_files (wpa_t))
+
+(call devices_read_random (wpa_t))
+(call devices_read_urandom (wpa_t))
+(call devices_read_sysfs_files (wpa_t))
+(call devices_read_wireless (wpa_t))
+
+(call files_read_generic_etc_files (wpa_t)) ; openssl.config
+
+(call selinux_getattr_filesystems (wpa_t))
+
+(call dbus_system_client_subject (wpa_t))
+(call dbus_acquire_service_system (wpa_t))
+
+(call wpa_read_config_files (wpa_t))
+
+(optional wpa_optional_networkmgr
+    (call networkmgr_dbus_chat (wpa_t)))
+
+(allow is_wpa_admin_subject is_wpa_subject signal_perms)
+(call ps_subject_pattern (is_wpa_admin_subject is_wpa_subject))
+
+(allow is_wpa_admin_subject wpa_unit_t (service (all)))
+
+(call admin_pattern (is_wpa_admin_subject is_wpa_file_object))
+
+(macro wpa_exec_wpacli ((type ARG1))
+    (call can_exec (ARG1 wpacli_exec_t)))
+
+(macro wpa_subtrans_wpacli ((type ARG1))
+    (call subtrans_pattern (ARG1 wpa_exec_t wpacli_t)))
+
+(macro wpa_run_wpacli ((type ARG1)(role ARG2))
+    (call wpa_subtrans_wpacli (ARG1))
+    (roleattributeset is_wpacli_role ARG2))
+
+(macro wpa_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call read_files_pattern (ARG1 wpa_conf_t wpa_conf_t)))
+
+(macro wpa_manage_run_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 wpa_run_t wpa_run_t)))
+
+(macro wpa_read_run_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call read_files_pattern (ARG1 wpa_run_t wpa_run_t)))
+
+(macro wpa_admin ((type ARG1))
+    (typeattributeset is_wpa_admin_subject ARG1))

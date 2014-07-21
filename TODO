@@ -1,3 +1,7 @@
+tmpfiles.cil:
+    implement a tmpfiles_config_object(), and apply that to targeted subjects where possible
+    this is for administration purposes
+
 systemd.cil: 
     files_relabel_non_auth_except() is too coarse, and is a temporary solution
 

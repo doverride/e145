@@ -396,6 +396,11 @@
 (macro filesystem_create_generic_tmpfs_sock_files ((type ARG1)) ; early /run/systemd/notify
     (call create_sock_files_pattern (ARG1 tmpfs_t tmpfs_t)))
 
+(macro filesystem_tmpfs_filetrans ((type ARG1)(type ARG2)(class ARG3)
+    (name ARG4))
+    (call filesystem_search_tmpfs (ARG1))
+    (call filetrans_pattern (ARG1 tmpfs_t ARG2 ARG3 ARG4)))
+
 (macro filesystem_read_generic_tmpfs_files ((type ARG1))
     (call read_files_pattern (ARG1 tmpfs_t tmpfs_t)))
 

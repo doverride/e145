@@ -28,6 +28,7 @@
 
 (type tuned_run_t)
 (call files_run_object (tuned_run_t))
+(call systemd_pid_object (tuned_run_t))
 
 (context file_tuned_run (system_u object_r tuned_run_t ((s0)
     (s0))))
@@ -83,6 +84,7 @@
 (allow tuned_t tuned_log_t append_file_perms)
 (allow tuned_t tuned_log_t create_file_perms)
 (allow tuned_t tuned_log_t read_file_perms)
+(call files_var_log_filetrans (tuned_t tuned_log_t dir "*"))
 
 (call system_read_generic_proc_files (tuned_t))
 (call system_read_proc_net_files (tuned_t))
@@ -100,8 +102,6 @@
 (call devices_rw_sysfs_files (tuned_t))
 (call devices_read_urandom (tuned_t))
 (call devices_write_net_control (tuned_t))
-
-(call files_search_var_log (tuned_t))
 
 (call selinux_getattr_filesystems (tuned_t))
 

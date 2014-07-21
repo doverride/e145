@@ -159,8 +159,10 @@
         is_systemd_socket_activated_object))
 
 (call files_delete_entry_run_dirs (systemd_t))
-(allow systemd_t is_systemd_pid_file_object read_file_perms)
-(allow systemd_t is_systemd_pid_file_object delete_file_perms)
+(call read_files_pattern (systemd_t is_systemd_pid_file_object
+	is_systemd_pid_file_object))
+(call delete_files_pattern (systemd_t is_systemd_pid_file_object
+	is_systemd_pid_file_object))
 
 (call commands_bin_files_entry_subject (systemd_daemon_t))
 (call commands_shell_files_entry_subject (systemd_daemon_t))

@@ -1,5 +1,7 @@
 (typeattribute is_session_home_file_object)
 (typeattribute is_session_run_file_object)
+(typeattribute is_session_tmp_file_object)
+(typeattribute is_session_tmpfs_file_object)
 
 (user session_u)
 (role session_r)
@@ -46,11 +48,49 @@
 (filecon "/run/user/0/.*" any file_session_run)
 (filecon "/run/user/1000/.*" any file_session_run) ; hack
 
+(type session_tmp_t)
+(call session_tmp_object (session_tmp_t))
+
+(type session_tmpfs_t)
+(call session_tmpfs_object (session_tmpfs_t))
+
 (type device_session_pts_t)
 (call terminal_user_pty_object (session_t device_session_pts_t))
 
 (type device_session_tty_t)
 (call terminal_user_tty_object (session_t device_session_tty_t))
+
+(call session_home_dir_filetrans_session_home (session_t dir "*"))
+(call session_home_dir_filetrans_session_home (session_t file "*"))
+(call session_home_dir_filetrans_session_home (session_t lnk_file "*"))
+(call session_home_dir_filetrans_session_home (session_t fifo_file "*"))
+(call session_home_dir_filetrans_session_home (session_t sock_file "*"))
+(call session_home_dir_filetrans_session_home (session_t blk_file "*"))
+(call session_home_dir_filetrans_session_home (session_t chr_file "*"))
+
+(call session_run_user_dir_filetrans_session_run (session_t dir "*"))
+(call session_run_user_dir_filetrans_session_run (session_t file "*"))
+(call session_run_user_dir_filetrans_session_run (session_t lnk_file "*"))
+(call session_run_user_dir_filetrans_session_run (session_t fifo_file "*"))
+(call session_run_user_dir_filetrans_session_run (session_t sock_file "*"))
+(call session_run_user_dir_filetrans_session_run (session_t blk_file "*"))
+(call session_run_user_dir_filetrans_session_run (session_t chr_file "*"))
+
+(call files_tmp_filetrans (session_t session_tmp_t dir "*"))
+(call files_tmp_filetrans (session_t session_tmp_t file "*"))
+(call files_tmp_filetrans (session_t session_tmp_t lnk_file "*"))
+(call files_tmp_filetrans (session_t session_tmp_t fifo_file "*"))
+(call files_tmp_filetrans (session_t session_tmp_t sock_file "*"))
+(call files_tmp_filetrans (session_t session_tmp_t blk_file "*"))
+(call files_tmp_filetrans (session_t session_tmp_t chr_file "*"))
+
+(call filesystem_tmpfs_filetrans (session_t session_tmpfs_t dir "*"))
+(call filesystem_tmpfs_filetrans (session_t session_tmpfs_t file "*"))
+(call filesystem_tmpfs_filetrans (session_t session_tmpfs_t lnk_file "*"))
+(call filesystem_tmpfs_filetrans (session_t session_tmpfs_t fifo_file "*"))
+(call filesystem_tmpfs_filetrans (session_t session_tmpfs_t sock_file "*"))
+(call filesystem_tmpfs_filetrans (session_t session_tmpfs_t blk_file "*"))
+(call filesystem_tmpfs_filetrans (session_t session_tmpfs_t chr_file "*"))
 
 (call commands_bin_files_entry_subject (session_t))
 (call commands_shell_files_entry_subject (session_t))
@@ -72,6 +112,14 @@
     (call files_object (ARG1))
     (typeattributeset is_session_home_file_object ARG1))
 
+(macro session_tmp_object ((type ARG1))
+    (call files_tmp_object (ARG1))
+    (typeattributeset is_session_tmp_file_object ARG1))
+
+(macro session_tmpfs_object ((type ARG1))
+    (call files_tmpfs_object (ARG1))
+    (typeattributeset is_session_tmpfs_file_object ARG1))
+
 (macro session_run_object ((type ARG1))
     (call files_object (ARG1))
     (typeattributeset is_session_run_file_object ARG1))
@@ -92,9 +140,19 @@
     (call files_search_home_root (ARG1))
     (allow ARG1 session_home_dir_t (dirs (search))))
 
+(macro session_home_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
+    (name ARG4))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t ARG2 ARG3 ARG4)))
+
 (macro session_search_generic_home_content ((type ARG1))
     (call session_search_home_dir (ARG1))
     (allow ARG1 session_home_t (dirs (search))))
+
+(macro session_home_dir_filetrans_session_home ((type ARG1)
+    (class ARG2)(name ARG3))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t session_home_t ARG2 ARG3)))
 
 (macro session_manage_run_user_dir ((type ARG1))
     (call files_rw_run_user_root_dirs (ARG1))
@@ -109,6 +167,16 @@
 
 (macro session_run_user_root_filetrans_run_user_dir ((type ARG1)(name ARG2))
     (call files_run_user_root_filetrans (ARG1 session_run_user_dir_t dir ARG2)))
+
+(macro session_run_user_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
+    (name ARG4))
+    (call session_search_run_user_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_run_user_dir_t ARG2 ARG3 ARG4)))
+
+(macro session_run_user_dir_filetrans_session_run ((type ARG1)
+    (class ARG2)(name ARG3))
+    (call session_search_run_user_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_run_user_dir_t session_run_t ARG2 ARG3)))
 
 (macro session_read_state ((type ARG1))
     (allow ARG1 session_t (dirs (list)))

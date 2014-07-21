@@ -184,6 +184,10 @@
     (call files_search_etc (ARG1))
     (allow ARG1 networkmgr_conf_t (dirs (list))))
 
+(macro networkmgr_dbus_chat ((type ARG1))
+    (allow ARG1 networkmgr_t (dbus (send_msg)))
+    (allow networkmgr_t ARG1 (dbus (send_msg))))
+
 (macro networkmgr_read_state ((type ARG1))
     (allow ARG1 networkmgr_t (dirs (list)))
     (allow ARG1 networkmgr_t read_file_perms))

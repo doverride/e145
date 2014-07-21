@@ -1,0 +1,115 @@
+(roleattribute is_upower_role)
+
+(typeattribute is_upower_admin_subject)
+
+(typeattribute is_upower_subject)
+(typeattributeset is_upower_subject (upower_t upowerd_t))
+
+(typeattribute is_upower_file_object)
+(typeattributeset is_upower_file_object (upowerd_conf_t upowerd_unit_t
+    upowerd_var_lib_t upowerd_dbus_conf_t))
+
+(type upower_t)
+(type upower_exec_t)
+(call application_subject_entry (upower_t upower_exec_t))
+(roletype is_upower_role upower_t)
+
+(context file_upower_exec (system_u object_r upower_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/upower" file file_upower_exec)
+
+(type upowerd_t)
+(type upowerd_exec_t)
+(call systemd_daemon_subject_entry (upowerd_t upowerd_exec_t))
+
+(context file_upowerd_exec (system_u object_r upowerd_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/upowerd" file file_upowerd_exec)
+
+(type upowerd_conf_t)
+(call files_etc_object (upowerd_conf_t))
+
+(context file_upowerd_conf (system_u object_r upowerd_conf_t ((s0)
+    (s0))))
+(filecon "/etc/UPower(/.*)?" any file_upowerd_conf)
+
+(type upowerd_dbus_conf_t)
+(call dbus_etc_object (upowerd_dbus_conf_t))
+
+(context file_upowerd_dbus_conf (system_u object_r upowerd_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.UPower\.conf" file
+    file_upowerd_dbus_conf)
+
+(type upowerd_var_lib_t)
+(call files_var_lib_object (upowerd_var_lib_t))
+
+(context file_upowerd_var_lib (system_u object_r upowerd_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/upower(/.*)?" any file_upowerd_var_lib)
+
+(type upowerd_unit_t)
+(call systemd_unit_object (upowerd_unit_t))
+
+(context file_upowerd_unit (system_u object_r upowerd_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/upower.*" file file_upowerd_unit)
+
+(allow upowerd_t self create_unix_stream_socket_perms)
+(allow upowerd_t self create_netlink_kobject_uevent_socket_perms)
+(allow upowerd_t self rw_fifo_file_perms)
+
+(call devices_list (upowerd_t))
+(call devices_list_sysfs (upowerd_t))
+(call devices_read_event (upowerd_t))
+(call devices_read_sysfs_files (upowerd_t))
+(call devices_read_urandom (upowerd_t))
+
+(call filesystem_getattr_filesystems (upowerd_t))
+
+(call dbus_system_client_subject (upowerd_t))
+(call dbus_acquire_service_system (upowerd_t))
+
+(call upower_read_config_files (upowerd_t))
+(call upower_manage_var_lib_files (upowerd_t))
+
+(optional upowerd_optional_logind
+    (call logind_dbus_chat (upowerd_t)))
+
+(optional upowerd_optional_miscfiles
+    (call miscfiles_read_localization_files (upowerd_t)))
+
+(optional upowerd_optional_polkitd
+    (call polkit_dbus_chat_polkitd (upowerd_t)))
+
+(optional upowerd_optional_udevd
+    (call udevd_read_config_files (upowerd_t))
+    (call udevd_read_run_files (upowerd_t)))
+
+(allow is_upower_admin_subject is_upower_subject signal_perms)
+(call ps_subject_pattern (is_upower_admin_subject is_upower_subject))
+
+(allow is_upower_admin_subject upowerd_unit_t (service (all)))
+
+(call admin_pattern (is_upower_admin_subject is_upower_file_object))
+
+(macro upower_exec ((type ARG1))
+    (call can_exec (ARG1 ntp_exec_t)))
+
+(macro upower_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 upower_exec_t upower_t)))
+
+(macro upower_run ((type ARG1)(role ARG2))
+    (call upower_subtrans (ARG1))
+    (roleattributeset is_upower_role ARG2))
+
+(macro upower_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call read_files_pattern (ARG1 upowerd_conf_t upowerd_conf_t)))
+
+(macro upower_manage_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 upowerd_var_lib_t upowerd_var_lib_t)))
+
+(macro upower_admin ((type ARG1))
+    (typeattributeset is_upower_admin_subject ARG1))
