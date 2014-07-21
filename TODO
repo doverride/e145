@@ -1,3 +1,11 @@
+systemd.cil:
+    needs to be able to read, and delete daemon subject pid files in emergency
+
+    example /run/lvmetad.pid /run/chronnyd.pid
+
+    currently i just add individual rules since i do not want to allow systemd_t
+    to read and delete is_run_file_object directories and files
+
 systemd.cil: 
     files_relabel_non_auth_except() is too coarse, and is a temporary solution
 
@@ -7,7 +15,7 @@ systemd.cil:
     there is probably more but the current solution can hopefully be improved
 
     update:
-        it is not as easy as a thought it would be
+        it is not as easy as i thought it would be
         systemd relabels almost all over the place
 
 various:
