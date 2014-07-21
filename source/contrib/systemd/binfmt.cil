@@ -24,12 +24,25 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-binfmt.*" file
     file_binfmt_unit)
 
+(call system_read_generic_proc_files (binfmt_t))
+
+(call devices_read_urandom (binfmt_t))
+
+(call binfmt_read_config_files (binfmt_t))
+
+(optional binfmt_optional_journald
+    (call journald_client_subject (binfmt_t)))
+
 (allow is_binfmt_admin_subject binfmt_t signal_perms)
 (call ps_subject_pattern (is_binfmt_admin_subject binfmt_t))
 
 (allow is_binfmt_admin_subject binfmt_unit_t (service (all)))
 
 (call admin_pattern (is_binfmt_admin_subject is_binfmt_file_object))
+
+(macro binfmt_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 binfmt_conf_t (dirs (list))))
 
 (macro binfmt_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
