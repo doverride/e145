@@ -1,5 +1,3 @@
-(call files_list_all (readahead_t)) ; temporary hack
-
 (typeattribute is_readahead_admin_subject)
 
 (typeattribute is_readahead_file_object)
@@ -47,12 +45,14 @@
 (call devices_read_urandom (readahead_t))
 (call devices_list_sysfs (readahead_t))
 (call devices_rw_sysfs_files (readahead_t))
+(call devices_write_kmsg (readahead_t))
 
-(call files_audit_access_all_non_auth_files_except (readahead_t))
 (call files_dontaudit_read_auth (readahead_t))
 (call files_read_all_non_auth_files_except (readahead_t))
 
 (call filesystem_getattr_filesystems (readahead_t))
+
+(call systemd_stream_connect (readahead_t))
 
 (optional readahead_optional_journald
     (call journald_client_subject (readahead_t)))
