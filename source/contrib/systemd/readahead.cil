@@ -24,17 +24,26 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-readahead.*" file
     file_readahead_unit)
 
-(allow readahead_t self (capability (fowner dac_override)))
+(allow readahead_t self (capability (sys_admin net_admin fowner dac_override)))
+(allow readahead_t self (process (setsched)))
 
 (allow readahead_t readahead_data_t manage_file_perms)
 (call files_root_filetrans (readahead_t readahead_data_t file "*"))
 
-(call devices_read_urandom (readahead_t))
+(call system_read_generic_proc_files (readahead_t))
 
+(call devices_read_urandom (readahead_t))
+(call devices_list_sysfs (readahead_t))
+(call devices_rw_sysfs_files (readahead_t))
+
+(call files_audit_access_all_non_auth_files_except (readahead_t))
 (call files_dontaudit_read_auth (readahead_t))
 (call files_read_all_non_auth_files_except (readahead_t))
 
 (call filesystem_getattr_filesystems (readahead_t))
+
+(optional readahead_optional_journald
+    (call journald_client_subject (readahead_t)))
 
 (allow is_readahead_admin_subject readahead_t signal_perms)
 (call ps_subject_pattern (is_readahead_admin_subject readahead_t))
