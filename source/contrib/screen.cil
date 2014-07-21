@@ -41,16 +41,25 @@
 (allow is_screen_subject screen_run_t manage_sock_file_perms)
 
 (call system_read_generic_proc_files (is_screen_subject))
+(call system_read_sysctl_crypto_files (is_screen_subject))
 
 (call files_dontaudit_search_all (is_screen_subject)) ; cwd
 (call files_read_generic_etc_files (is_screen_subject))
 (call files_read_generic_usr_files (is_screen_subject))
 (call files_search_run (is_screen_subject))
 
+(call selinux_getattr_filesystems (is_screen_subject))
+
 (call screen_read_config_files (is_screen_subject))
+(call screen_read_pam_config_files (is_screen_subject))
 
 (optional screen_optional_auth
+    (call auth_read_generic_pam_config_files (is_screen_subject))
+    (call auth_read_authconfig_pam_config_files (is_screen_subject))
     (call auth_nsswitch_client_subject (is_screen_subject)))
+
+(optional screen_optional_audit
+    (call audit_client_subject (is_screen_subject)))
 
 (optional screen_optional_miscfiles
     (call miscfiles_read_localization_files (is_screen_subject)))
@@ -63,7 +72,8 @@
     (typeattributeset is_screen_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 screen_exec_t ARG3))
-    (optional screen_role_template_optional_utempter
+    (optional screen_role_template_optional_auth
+        (call auth_run_chkpwd (ARG3 ARG1))
         (call auth_run_utempter (ARG3 ARG1))))
 
 (macro screen_home_template ((type ARG1)(type ARG2))
@@ -79,6 +89,10 @@
 (macro screen_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 screen_conf_t read_file_perms))
+
+(macro screen_read_pam_config_files ((type ARG1))
+    (call auth_search_pam_config (ARG1))
+    (allow ARG1 screen_pam_conf_t read_file_perms))
 
 (macro screen_dontaudit_read_all_inherited_home_files ((type ARG1))
     (dontaudit ARG1 is_screen_home_file_object read_inherited_file_perms))
