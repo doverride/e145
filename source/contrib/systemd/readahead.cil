@@ -1,3 +1,5 @@
+(call files_list_all (readahead_t)) ; temporary hack
+
 (typeattribute is_readahead_admin_subject)
 
 (typeattribute is_readahead_file_object)

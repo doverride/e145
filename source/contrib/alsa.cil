@@ -50,6 +50,7 @@
 (call files_run_filetrans (alsactl_t alsactl_run_t file "*"))
 
 (call devices_rw_sound (alsactl_t))
+(call devices_read_generic_chr_files (alsactl_t)) ; early mislabeled /dev/snd/ControlC.*
 
 (call alsa_read_config_files (alsactl_t))
 (call alsa_manage_var_lib_files (alsactl_t))

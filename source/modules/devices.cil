@@ -572,6 +572,9 @@
     (allow ARG1 self (capability (mknod)))
     (call manage_chr_files_pattern (ARG1 device_t device_t)))
 
+(macro devices_read_generic_chr_files ((type ARG1)) ; allows "alsactl" to read early mislabeled sound device
+    (call read_chr_files_pattern (ARG1 device_t device_t)))
+
 (macro devices_relabelfrom_generic_nodes ((type ARG1))
     (call devices_search (ARG1))
     (allow ARG1 device_t relabelfrom_chr_file_perms)
