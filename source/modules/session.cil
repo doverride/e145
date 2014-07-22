@@ -199,6 +199,7 @@
     (allow ARG1 session_home_dir_t (dirs (search))))
 
 (macro session_dontaudit_search_home_dir ((type ARG1))
+    (call files_dontaudit_search_home_root (ARG1))
     (dontaudit ARG1 session_home_dir_t (dirs (search))))
 
 (macro session_home_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
@@ -209,6 +210,10 @@
 (macro session_search_generic_home_content ((type ARG1))
     (call session_search_home_dir (ARG1))
     (allow ARG1 session_home_t (dirs (search))))
+
+(macro session_dontaudit_search_generic_home_content ((type ARG1))
+    (call session_dontaudit_search_home_dir (ARG1))
+    (dontaudit ARG1 session_home_t (dirs (search))))
 
 (macro session_home_dir_filetrans_session_home ((type ARG1)
     (class ARG2)(name ARG3))
