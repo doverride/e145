@@ -198,6 +198,9 @@
     (call files_search_home_root (ARG1))
     (allow ARG1 session_home_dir_t (dirs (search))))
 
+(macro session_dontaudit_search_home_dir ((type ARG1))
+    (dontaudit ARG1 session_home_dir_t (dirs (search))))
+
 (macro session_home_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
     (call session_search_home_dir (ARG1))

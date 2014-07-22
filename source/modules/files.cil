@@ -378,6 +378,9 @@
 (macro files_list_home_root ((type ARG1))
     (allow ARG1 home_root_t (dirs (list))))
 
+(macro files_dontaudit_search_home_root ((type ARG1))
+    (dontaudit ARG1 home_root_t (dirs (search))))
+
 (macro files_search_home_root ((type ARG1))
     (allow ARG1 home_root_t (dirs (search))))
 

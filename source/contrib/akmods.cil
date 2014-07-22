@@ -10,7 +10,7 @@
 
 (typeattribute is_akmods_file_object)
 (typeattributeset is_akmods_file_object (akmods_conf_t akmods_unit_t
-    akmods_var_cache_t akmods_tmp_t))
+    akmods_var_cache_t akmods_tmp_t akmods_lock_t))
 
 (type akmods_t)
 (type akmods_exec_t)
@@ -51,10 +51,58 @@
 (filecon "/usr/lib/systemd/system/[^/]*akmods-shutdown.*" file file_akmods_unit)
 (filecon "/usr/lib/systemd/system/[^/]*akmods.*" file file_akmods_unit)
 
+(type akmods_lock_t)
+(call files_run_lock_object (akmods_lock_t))
+
+(context file_akmods_lock (system_u object_r akmods_lock_t ((s0)
+    (s0))))
+(filecon "/run/lock/subsys/akmods" file file_akmods_lock)
+
 (type akmods_tmp_t)
 (call files_tmp_object (akmods_tmp_t))
 
+(allow akmods_t self (capability (dac_override)))
+(allow akmods_t self (process (setrlimit)))
+(allow akmods_t self create_unix_stream_socket_perms)
+(allow akmods_t self rw_fifo_file_perms)
+
+(call files_run_lock_filetrans (akmods_t akmods_lock_t file "*"))
+
 (call files_tmp_filetrans (akmods_t akmods_tmp_t file "*"))
+
+(call system_read_generic_proc_files (akmods_t))
+
+(call commands_execute_bin_files (akmods_t))
+(call commands_execute_shell_files (akmods_t))
+
+(call devices_read_sysfs_files (akmods_t))
+(call devices_read_urandom (akmods_t))
+
+(call files_list_etc (akmods_t))
+(call files_read_generic_etc_files (akmods_t)) ; /etc/rc.d/init.d/functions
+(call files_read_generic_env_files (akmods_t)) ; /etc/sysconfig/init
+(call files_read_generic_usr_files (akmods_t)) ; /usr/src/akmods/.*
+
+(call selinux_getattr_filesystems (akmods_t))
+
+(call akmods_manage_var_cache_files (akmods_t))
+
+(optional akmods_optional_auth
+    (call auth_nsswitch_client_subject (akmods_t)))
+
+(optional akmods_optional_miscfiles
+    (call miscfiles_read_module_files (akmods_t))
+    (call miscfiles_read_network_config_files (akmods_t))
+    (call miscfiles_read_localization_files (akmods_t)))
+
+(optional akmods_optional_session
+    (call session_dontaudit_search_home_dir (akmods_t))) ; rpmdev-vercmp -> /root/.local
+
+(optional akmods_optional_rpm
+    (call rpm_exec (akmods_t))
+    (call rpm_list_config (akmods_t))
+    (call rpm_read_config_files (akmods_t))
+    (call rpm_manage_var_lib_files (akmods_t)))
 
 (allow is_akmods_admin_subject is_akmods_subject signal_perms)
 (call ps_subject_pattern (is_akmods_admin_subject is_akmods_subject))
