@@ -159,6 +159,8 @@
 (allow has_unconfined_access_to_subject_assets is_subject (shm (all)))
 (allow has_unconfined_access_to_subject_assets is_subject (msg (all)))
 
+(allow has_unconfined_access_to_subject_assets is_entry_file_object (file (entrypoint)))
+
 (macro subject_base_subject ((type ARG1))
     (typeattributeset is_subject ARG1))
 

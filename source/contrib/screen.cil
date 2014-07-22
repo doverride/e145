@@ -53,10 +53,9 @@
 (call screen_read_config_files (is_screen_subject))
 (call screen_read_pam_config_files (is_screen_subject))
 
-(optional screen_optional_auth
-    (call auth_read_generic_pam_config_files (is_screen_subject))
-    (call auth_read_authconfig_pam_config_files (is_screen_subject))
-    (call auth_nsswitch_client_subject (is_screen_subject)))
+(call auth_read_generic_pam_config_files (is_screen_subject))
+(call auth_read_authconfig_pam_config_files (is_screen_subject))
+(call auth_nsswitch_client_subject (is_screen_subject))
 
 (optional screen_optional_audit
     (call audit_client_subject (is_screen_subject)))
@@ -100,5 +99,5 @@
 (macro screen_dontaudit_rw_all_inherited_unix_stream_socket ((type ARG1))
     (dontaudit ARG1 is_screen_subject (unix_stream_socket (read write))))
 
-(macro screen_use_fd ((type ARG1))
+(macro screen_use_all_fd ((type ARG1))
     (allow ARG1 is_screen_subject (fd (use))))

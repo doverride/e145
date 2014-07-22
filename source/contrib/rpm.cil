@@ -1,0 +1,134 @@
+(roleattribute is_rpm_role)
+
+(typeattribute is_rpm_admin_subject)
+
+(typeattribute is_rpm_subject)
+(typeattributeset is_rpm_subject (rpm_t rpm_script_t))
+
+(typeattribute is_rpm_file_object)
+(typeattributeset is_rpm_file_object (rpm_conf_t rpm_var_lib_t
+    rpm_var_cache_t rpm_log_t rpm_tmp_t rpm_tmpfs_t))
+
+(type rpm_t)
+(type rpm_exec_t)
+(call application_subject_entry (rpm_t rpm_exec_t))
+(roletype is_rpm_role rpm_t)
+
+(context file_rpm_exec (system_u object_r rpm_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/rpm" file file_rpm_exec)
+(filecon "/usr/bin/yum" file file_rpm_exec)
+
+(type rpm_script_t)
+(call application_subject (rpm_script_t))
+(roletype is_rpm_role rpm_script_t)
+
+(type rpm_conf_t)
+(call files_etc_object (rpm_conf_t))
+
+(context file_rpm_conf (system_u object_r rpm_conf_t ((s0)
+    (s0))))
+(filecon "/etc/rpm(/.*)?" any file_rpm_conf)
+(filecon "/etc/yum(/.*)?" any file_rpm_conf)
+(filecon "/etc/yum\.conf" file file_rpm_conf)
+(filecon "/etc/yum\.repos\.d(/.*)?" any file_rpm_conf)
+
+(type rpm_var_cache_t)
+(call files_var_cache_object (rpm_var_cache_t))
+
+(context file_rpm_var_cache (system_u object_r rpm_var_cache_t ((s0)
+    (s0))))
+(filecon "/var/cache/yum(/.*)?" any file_rpm_var_cache)
+
+(type rpm_var_lib_t)
+(call files_var_lib_object (rpm_var_lib_t))
+
+(context file_rpm_var_lib (system_u object_r rpm_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/rpm(/.*)?" any file_rpm_var_lib)
+(filecon "/var/lib/rpm-state(/.*)?" any file_rpm_var_lib)
+(filecon "/var/lib/yum(/.*)?" any file_rpm_var_lib)
+
+(type rpm_log_t)
+(call files_var_log_object (rpm_log_t))
+
+(context file_rpm_log (system_u object_r rpm_log_t ((s0)
+    (s0))))
+(filecon "/var/log/yum\.log.*" file file_rpm_log)
+
+(type rpm_tmp_t)
+(call files_tmp_object (rpm_tmp_t))
+
+(type rpm_tmpfs_t)
+(call files_tmpfs_object (rpm_tmpfs_t))
+
+(call files_var_log_filetrans (rpm_t rpm_log_t file "yum.log"))
+
+(call files_tmp_filetrans (is_rpm_subject rpm_tmp_t dir "*"))
+(call files_tmp_filetrans (is_rpm_subject rpm_tmp_t file "*"))
+(call files_tmp_filetrans (is_rpm_subject rpm_tmp_t lnk_file "*"))
+(call files_tmp_filetrans (is_rpm_subject rpm_tmp_t fifo_file "*"))
+(call files_tmp_filetrans (is_rpm_subject rpm_tmp_t sock_file "*"))
+(call files_tmp_filetrans (is_rpm_subject rpm_tmp_t blk_file "*"))
+(call files_tmp_filetrans (is_rpm_subject rpm_tmp_t chr_file "*"))
+
+(call filesystem_tmpfs_filetrans (is_rpm_subject rpm_tmpfs_t dir "*"))
+(call filesystem_tmpfs_filetrans (is_rpm_subject rpm_tmpfs_t file "*"))
+(call filesystem_tmpfs_filetrans (is_rpm_subject rpm_tmpfs_t lnk_file "*"))
+(call filesystem_tmpfs_filetrans (is_rpm_subject rpm_tmpfs_t fifo_file "*"))
+(call filesystem_tmpfs_filetrans (is_rpm_subject rpm_tmpfs_t sock_file "*"))
+(call filesystem_tmpfs_filetrans (is_rpm_subject rpm_tmpfs_t blk_file "*"))
+(call filesystem_tmpfs_filetrans (is_rpm_subject rpm_tmpfs_t chr_file "*"))
+
+(allow is_rpm_subject self (process (execmem execheap execstack)))
+
+(call commands_shell_manual_subject_type_transition (rpm_t rpm_script_t))
+
+(call files_execmod_all_files (is_rpm_subject))
+
+(call auth_manage_shadow_files (is_rpm_subject))
+(call auth_relabelto_shadow_files (is_rpm_subject))
+
+(call seutil_create_policy_config_files (is_rpm_subject))
+(call seutil_write_policy_config_files (is_rpm_subject))
+(call seutil_relabelto_policy_config_files (is_rpm_subject))
+
+(call unconfined_subject (is_rpm_subject))
+
+(allow is_rpm_admin_subject is_rpm_subject signal_perms)
+(call ps_subject_pattern (is_rpm_admin_subject is_rpm_subject))
+
+(call admin_pattern (is_rpm_admin_subject is_rpm_file_object))
+
+(macro rpm_exec ((type ARG1))
+    (call can_exec (ARG1 rpm_exec_t)))
+
+(macro rpm_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 rpm_exec_t rpm_t)))
+
+(macro rpm_run ((type ARG1)(role ARG2))
+    (call rpm_subtrans (ARG1))
+    (roleattributeset is_rpm_role ARG2))
+
+(macro rpm_script_dynamic_subject_type_transition ((type ARG1))
+    (call subject_dynamic_type_transition_subject (ARG1))
+    (call dynamic_subject_type_transition_pattern (ARG1 rpm_script_t)))
+
+(macro rpm_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 rpm_conf_t (dirs (list))))
+
+(macro rpm_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call read_files_pattern (ARG1 rpm_conf_t rpm_conf_t)))
+
+(macro rpm_read_var_cache_files ((type ARG1))
+    (call files_search_var_cache (ARG1))
+    (call read_files_pattern (ARG1 rpm_var_cache_t rpm_var_cache_t)))
+
+(macro rpm_read_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call read_files_pattern (ARG1 rpm_var_lib_t rpm_var_lib_t)))
+
+(macro rpm_admin ((type ARG1))
+    (typeattributeset is_rpm_admin_subject ARG1))

@@ -385,6 +385,9 @@
 (macro system_link_keyring ((type ARG1))
     (allow ARG1 system_t (key (search link))))
 
+(macro system_search_keyring ((type ARG1))
+    (allow ARG1 system_t (key (search))))
+
 (macro system_setkeycreate ((type ARG1))
     (allow ARG1 system_t (process (setkeycreate))))
 

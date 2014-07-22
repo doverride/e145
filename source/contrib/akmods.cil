@@ -1,0 +1,81 @@
+(typepermissive akmods_t)
+(typepermissive akmods_shutdown_t)
+
+(roleattribute is_akmods_role)
+
+(typeattribute is_akmods_admin_subject)
+
+(typeattribute is_akmods_subject)
+(typeattributeset is_akmods_subject (akmods_t akmods_shutdown_t))
+
+(typeattribute is_akmods_file_object)
+(typeattributeset is_akmods_file_object (akmods_conf_t akmods_unit_t
+    akmods_var_cache_t akmods_tmp_t))
+
+(type akmods_t)
+(type akmods_exec_t)
+(call systemd_oneshot_subject_entry (akmods_t akmods_exec_t))
+(roletype is_akmods_role akmods_t)
+
+(context file_akmods_exec (system_u object_r akmods_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/akmods" file file_akmods_exec)
+
+(type akmods_shutdown_t)
+(type akmods_shutdown_exec_t)
+(call systemd_oneshot_subject_entry (akmods_shutdown_t akmods_shutdown_exec_t))
+
+(context file_akmods_shutdown_exec (system_u object_r akmods_shutdown_exec_t
+    ((s0) (s0))))
+(filecon "/usr/bin/akmods-shutdown" file file_akmods_shutdown_exec)
+
+(type akmods_conf_t)
+(call files_etc_object (akmods_conf_t))
+
+(context file_akmods_conf (system_u object_r akmods_conf_t ((s0)
+    (s0))))
+(filecon "/etc/akmods(/.*)?" any file_akmods_conf)
+
+(type akmods_var_cache_t)
+(call files_var_cache_object (akmods_var_cache_t))
+
+(context file_akmods_var_cache (system_u object_r akmods_var_cache_t ((s0)
+    (s0))))
+(filecon "/var/cache/akmods(/.*)?" any file_akmods_var_cache)
+
+(type akmods_unit_t)
+(call systemd_unit_object (akmods_unit_t))
+
+(context file_akmods_unit (system_u object_r akmods_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*akmods-shutdown.*" file file_akmods_unit)
+(filecon "/usr/lib/systemd/system/[^/]*akmods.*" file file_akmods_unit)
+
+(type akmods_tmp_t)
+(call files_tmp_object (akmods_tmp_t))
+
+(call files_tmp_filetrans (akmods_t akmods_tmp_t file "*"))
+
+(allow is_akmods_admin_subject is_akmods_subject signal_perms)
+(call ps_subject_pattern (is_akmods_admin_subject is_akmods_subject))
+
+(allow is_akmods_admin_subject akmods_unit_t (service (all)))
+
+(call admin_pattern (is_akmods_admin_subject is_akmods_file_object))
+
+(macro akmods_exec ((type ARG1))
+    (call can_exec (ARG1 akmods_exec_t)))
+
+(macro akmods_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 akmods_exec_t akmods_t)))
+
+(macro akmods_run ((type ARG1)(role ARG2))
+    (call akmods_subtrans (ARG1))
+    (roleattributeset is_akmods_role ARG2))
+
+(macro akmods_manage_var_cache_files ((type ARG1))
+    (call files_search_var_cache (ARG1))
+    (call manage_files_pattern (ARG1 akmods_var_cache_t akmods_var_cache_t)))
+
+(macro akmods_admin ((type ARG1))
+    (typeattributeset is_akmods_admin_subject ARG1))

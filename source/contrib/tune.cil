@@ -83,6 +83,8 @@
 (allow tuned_t tuned_log_t (file (setattr)))
 (allow tuned_t tuned_log_t append_file_perms)
 (allow tuned_t tuned_log_t create_file_perms)
+(allow tuned_t tuned_log_t delete_file_perms)
+(allow tuned_t tuned_log_t rename_file_perms)
 (allow tuned_t tuned_log_t read_file_perms)
 (call files_var_log_filetrans (tuned_t tuned_log_t dir "*"))
 

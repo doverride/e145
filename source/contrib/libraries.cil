@@ -40,6 +40,8 @@
 (filecon "/usr/lib" symlink file_lib)
 (filecon "/usr/lib" dir file_lib)
 
+(filecon "/usr/libexec/sudo/.*" any file_lib)
+
 (type textrel_shlib_t)
 (call files_usr_object (textrel_shlib_t))
 

@@ -109,6 +109,9 @@
 (optional session_optional_auth
     (call auth_run_chkpwd (session_t session_r)))
 
+(optional session_optional_rpm
+    (call rpm_run (session_t session_r)))
+
 (optional session_optional_seutil
     (call seutil_run_load_policy (session_t session_r))
     (call seutil_run_secilc (session_t session_r))
@@ -132,6 +135,18 @@
     (call session_home_bin_auto_subject_type_transition (session_screen_t session_t))
     (call commands_bin_auto_subject_type_transition (session_screen_t session_t))
     (call commands_shell_auto_subject_type_transition (session_screen_t session_t)))
+
+(optional session_optional_sudo
+    (type session_sudo_t)
+    (call sudo_role_template (session_r session_t session_sudo_t))
+    (call session_use_inherited_terminals (session_sudo_t))
+    (call session_home_bin_auto_subject_type_transition (session_sudo_t session_t))
+    (call commands_bin_auto_subject_type_transition (session_sudo_t session_t))
+    (call commands_shell_auto_subject_type_transition (session_sudo_t session_t))
+    (type session_visudo_t)
+    (call sudo_visudo_role_template (session_r session_t session_visudo_t))
+    (call session_use_inherited_terminals (session_visudo_t))
+    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
 
 (optional session_optional_unconfined
     (call unconfined_subject (session_t)))

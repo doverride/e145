@@ -26,7 +26,7 @@
 	(call auth_use_login_program_subject_fd (is_application_subject)))
 
 (optional application_optional_screen
-	(call screen_use_fd (is_application_subject)))
+	(call screen_use_all_fd (is_application_subject)))
 
 (optional application_optional_sulogin
 	(call login_use_fd_sulogin (is_application_subject)))

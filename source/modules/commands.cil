@@ -42,10 +42,9 @@
 (filecon "/usr/bin/git-shell" file shell)
 (filecon "/usr/bin/scponly" file shell)
 (filecon "/usr/libexec/git-core/git-shell" file shell)
-(filecon "/usr/libexec/sesh" file shell)
+(filecon "/usr/libexec/sudo/sesh" file shell)
 (filecon "/usr/sbin/nologin" file shell)
 (filecon "/usr/sbin/scponlyc" file shell)
-(filecon "/usr/sbin/sesh" file shell)
 (filecon "/usr/sbin/smrsh" file shell)
 
 (call files_object (is_bin_file_object))

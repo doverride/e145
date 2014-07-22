@@ -1,0 +1,123 @@
+(roleattribute is_sudo_role)
+
+(typeattribute is_sudo_subject)
+(typeattribute is_visudo_subject)
+
+(type sudo_exec_t)
+(call application_subject_entry (is_sudo_subject sudo_exec_t))
+
+(context file_sudo_exec (system_u object_r sudo_exec_t ((s0)(s0))))
+(filecon "/usr/bin/sudo" file file_sudo_exec)
+
+(type visudo_exec_t)
+(call application_subject_entry (is_visudo_subject visudo_exec_t))
+
+(context file_visudo_exec (system_u object_r visudo_exec_t ((s0)(s0))))
+(filecon "/usr/sbin/visudo" file file_visudo_exec)
+
+(type sudo_conf_t)
+(call files_etc_object (sudo_conf_t))
+
+(context file_sudo_conf (system_u object_r sudo_conf_t ((s0)(s0))))
+(filecon "/etc/sudoers" file file_sudo_conf)
+(filecon "/etc/sudoers\.tmp" file file_sudo_conf)
+(filecon "/etc/sudoers\.d(/.*)?" any file_sudo_conf)
+
+(type sudo_pam_conf_t)
+(call auth_pam_etc_object (sudo_pam_conf_t))
+
+(context file_sudo_pam_conf (system_u object_r sudo_pam_conf_t ((s0)
+    (s0))))
+(filecon "/etc/pam\.d/sudo" file file_sudo_pam_conf)
+(filecon "/etc/pam\.d/sudo-i" file file_sudo_pam_conf)
+
+(type sudo_var_t)
+(call files_var_object (sudo_var_t))
+
+(context file_sudo_var (system_u object_r sudo_var_t ((s0)
+    (s0))))
+(filecon "/var/db/sudo(/.*)?" any file_sudo_var)
+
+(allow is_sudo_subject self (capability (setuid setgid sys_resource)))
+(allow is_sudo_subject self (process (setsched setrlimit)))
+(allow is_sudo_subject self create_unix_stream_socket_perms)
+(allow is_sudo_subject self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (is_sudo_subject))
+(call system_read_sysctl_kernel_files (is_sudo_subject))
+(call system_search_keyring (is_sudo_subject))
+
+(call devices_list (is_sudo_subject))
+
+(call files_read_generic_etc_files (is_sudo_subject)) ; /etc/login.defs
+
+(call selinux_getattr_filesystems (is_sudo_subject))
+
+(call terminal_search_devpts (is_sudo_subject))
+
+(call auth_read_authconfig_pam_config_files (is_sudo_subject))
+(call auth_list_pam_config (is_sudo_subject))
+(call auth_read_generic_pam_config_files (is_sudo_subject))
+(call auth_nsswitch_client_subject (is_sudo_subject))
+
+(call sudo_list_config (is_sudo_subject))
+(call sudo_read_config_files (is_sudo_subject))
+(call sudo_read_pam_config_files (is_sudo_subject))
+(call sudo_manage_var_files (is_sudo_subject))
+
+(optional sudo_optional_auditd
+    (call audit_client_subject (is_sudo_subject)))
+
+(optional sudo_optional_journald
+    (call journald_client_subject (is_sudo_subject)))
+
+(optional sudo_optional_miscfiles
+    (call miscfiles_read_localization_files (is_sudo_subject)))
+
+(allow is_visudo_subject self (capability (dac_override)))
+(allow is_visudo_subject self create_unix_stream_socket_perms)
+
+(allow is_visudo_subject sudo_conf_t manage_file_perms)
+(call files_etc_filetrans (is_visudo_subject sudo_conf_t file "*"))
+
+(call auth_nsswitch_client_subject (is_visudo_subject))
+
+(call sudo_list_config (is_visudo_subject))
+(call sudo_manage_config_files (is_visudo_subject))
+
+(macro sudo_role_template ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_sudo_role ARG1)
+    (typeattributeset is_sudo_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 sudo_exec_t ARG3))
+    (allow ARG3 ARG2 (key (search)))
+    (allow ARG3 ARG2 (process (signal)))
+    (optional sudo_optional_chkpwd
+        (call auth_run_chkpwd (ARG3 ARG1))))
+
+(macro sudo_visudo_role_template ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_sudo_role ARG1)
+    (typeattributeset is_visudo_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 visudo_exec_t ARG3)))
+
+(macro sudo_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 sudo_conf_t (dirs (list))))
+
+(macro sudo_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call read_files_pattern (ARG1 sudo_conf_t sudo_conf_t)))
+
+(macro sudo_manage_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call manage_files_pattern (ARG1 sudo_conf_t sudo_conf_t)))
+
+(macro sudo_read_pam_config_files ((type ARG1))
+    (call auth_search_pam_config (ARG1))
+    (allow ARG1 sudo_pam_conf_t read_file_perms))
+
+(macro sudo_manage_var_files ((type ARG1))
+    (call files_search_var (ARG1))
+    (call manage_files_pattern (ARG1 sudo_var_t sudo_var_t)))
+
