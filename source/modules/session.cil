@@ -193,8 +193,9 @@
     (filecon "/home/joe/\.gnupg/gpg-agent-wrapper" file file_session_gpgagent_home)
     (filecon "/home/joe/\.gnupg/S\.gpg-agent" socket file_session_gpgagent_home)
     (filecon "/home/joe/\.gnupg/S\.gpg-agent\.ssh" socket file_session_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/sshcontrol" file file_session_gpgagent_home)
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t file
-        "gpg-agent.log"))
+        "*"))
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t sock_file
         "*"))
 
@@ -205,6 +206,7 @@
     (call session_tmp_object (session_scd_tmp_t))
     (type session_scd_home_t)
     (call session_home_object (session_scd_home_t))
+    (call session_search_home_dir (session_scd_t))
     (allow session_scd_t session_gpgagent_t (process (signal)))
     (call filetrans_pattern (session_scd_t session_gpg_home_t session_scd_home_t file "*"))
     (context file_session_scd_home (session_u object_r session_scd_home_t ((s0)(s0))))
@@ -214,7 +216,8 @@
         (type session_pincurses_t)
         (call pinentry_role_template_curses (session_r session_gpgagent_t session_pincurses_t))
         (call session_use_terminals (session_pincurses_t))
-        (call stream_connect_pattern (session_pincurses_t session_gpgagent_home_t session_gpgagent_home_t
+        (call session_search_home_dir (session_pincurses_t))
+        (call stream_connect_pattern (session_pincurses_t session_gpg_home_t session_gpgagent_home_t
             session_gpgagent_t)))
 
     (type session_gpgpcsc_t)
