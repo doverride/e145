@@ -1,0 +1,184 @@
+(roleattribute is_pa_role)
+(roleattribute is_pactl_role)
+
+(typeattribute is_pa_admin_subject)
+
+(typeattribute is_pa_subject)
+(typeattributeset is_pa_subject (pactl_t pa_t))
+
+(typeattribute is_pa_session_subject)
+(typeattribute is_pa_client_subject)
+
+(typeattribute is_pa_or_pa_session_subject)
+(typeattributeset is_pa_or_pa_session_subject (pa_t
+    is_pa_session_subject))
+
+(typeattribute is_pa_session_or_pa_client_subject)
+(typeattributeset is_pa_session_or_pa_client_subject
+    (is_pa_client_subject is_pa_session_subject))
+
+(typeattribute is_pa_or_pa_session_or_pa_client_subject)
+(typeattributeset is_pa_or_pa_session_or_pa_client_subject
+    (pa_t is_pa_client_subject is_pa_session_subject))
+
+(typeattribute is_pa_tmpfs_file_object)
+
+(typeattribute is_pa_file_object)
+(typeattributeset is_pa_file_object (pa_conf_t
+    pa_dbus_conf_t pa_var_lib_t))
+
+(type pactl_t)
+(type pactl_exec_t)
+(call application_subject_entry (pactl_t pactl_exec_t))
+(roletype is_pactl_role pactl_t)
+
+(context file_pactl_exec (system_u object_r pactl_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/pactl" file file_pactl_exec)
+
+(type pa_t)
+(type pa_exec_t)
+(call systemd_daemon_subject_entry (pa_t pa_exec_t))
+
+(call application_subject_entry (is_pa_session_subject pa_exec_t))
+
+(context file_pa_exec (system_u object_r pa_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/pulseaudio" file file_pa_exec)
+
+(type pa_conf_t)
+(call files_etc_object (pa_conf_t))
+
+(context file_pa_conf (system_u object_r pa_conf_t ((s0)
+    (s0))))
+(filecon "/etc/pulse(/.*)?" any file_pa_conf)
+
+(type pa_dbus_conf_t)
+(call dbus_etc_object (pa_dbus_conf_t))
+
+(context file_pa_dbus_conf (system_u object_r pa_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/pulseaudio-system\.conf" file
+    file_pa_dbus_conf)
+
+(type pa_var_lib_t)
+(call files_var_lib_object (pa_var_lib_t))
+
+(context file_pa_var_lib (system_u object_r pa_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/pulse(/.*)?" any file_pa_var_lib)
+
+(allow is_pa_session_or_pa_client_subject self (process (setcap setsched setrlimit)))
+(allow is_pa_session_or_pa_client_subject self create_unix_stream_stream_socket_perms)
+(allow is_pa_session_or_pa_client_subject self create_netlink_kobject_uevent_socket_perms)
+(allow is_pa_session_or_pa_client_subject self rw_fifo_file_perms)
+
+(call can_exec (is_pa_session_or_pa_client_subject pa_exec_t))
+
+(call system_getattr_proc_filesystems (is_pa_session_or_pa_client_subject))
+(call system_list_proc (is_pa_session_or_pa_client_subject))
+(call system_read_generic_proc_files (is_pa_session_or_pa_client_subject))
+
+(call devices_list (is_pa_session_or_pa_client_subject))
+(call devices_rw_sound (is_pa_session_or_pa_client_subject))
+(call devices_read_urandom (is_pa_session_or_pa_client_subject))
+(call devices_list_sysfs (is_pa_session_or_pa_client_subject))
+(call devices_read_sysfs_files (is_pa_session_or_pa_client_subject))
+
+(call files_read_generic_usr_files (is_pa_session_or_pa_client_subject))
+
+(call filesystem_getattr_tmpfs_filesystems (is_pa_session_or_pa_client_subject))
+
+(call dbus_system_client_subject (is_pa_session_or_pa_client_subject))
+
+(call pa_read_config_files (is_pa_session_or_pa_client_subject))
+
+(optional pa_session_or_client_optional_alsa
+    (call alsa_read_config_files (is_pa_session_or_pa_client_subject)))
+
+(optional pa_session_or_client_optional_journald
+    (call journald_client_subject (is_pa_session_or_pa_client_subject)))
+
+(optional pa_session_or_client_optional_logind
+    (call logind_list_run (is_pa_session_or_pa_client_subject))
+    (call logind_read_run_files (is_pa_session_or_pa_client_subject)))
+
+(optional pa_session_or_client_optional_machined
+    (call machined_read_config_files (is_pa_session_or_pa_client_subject)))
+
+(optional pa_session_or_client_optional_miscfiles
+    (call miscfiles_read_localization_files (is_pa_session_or_pa_client_subject)))
+
+(optional pa_session_or_client_optional_rtkitd
+    (call rtkit_client_subject (is_pa_session_or_pa_client_subject))
+    (call rtkit_dbus_chat_rtkitd (is_pa_session_or_pa_client_subject)))
+
+(optional pa_session_or_client_optional_udevd
+    (call udevd_read_config_files (is_pa_session_or_pa_client_subject))
+    (call udevd_read_run_files (is_pa_session_or_pa_client_subject)))
+
+(allow is_pa_admin_subject is_pa_subject signal_perms)
+(call ps_subject_pattern (is_pa_admin_subject is_pa_subject))
+
+(call admin_pattern (is_pa_admin_subject is_pa_file_object))
+
+(macro pa_exec_pactl ((type ARG1))
+    (call can_exec (ARG1 pactl_exec_t)))
+
+(macro pa_subtrans_pactl ((type ARG1))
+    (call subtrans_pattern (ARG1 pactl_exec_t pactl_t)))
+
+(macro pa_run_pactl ((type ARG1)(role ARG2))
+    (call pa_subtrans_pactl (ARG1))
+    (roleattributeset is_pactl_role ARG2))
+
+(macro pa_role_template ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4)(type ARG5)(type ARG6))
+    (roleattributeset is_pa_role ARG1)
+    (typeattributeset is_pa_session_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 pa_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (call session_home_dir_filetrans (ARG3 ARG4 file ".esd_auth"))
+    (allow ARG3 ARG5 manage_dir_perms)
+    (allow ARG3 ARG5 manage_sock_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 dir "*"))
+    (typeattributeset is_pa_tmpfs_file_object ARG6)
+    (allow ARG3 ARG6 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG6 file "*")))
+
+(macro pa_client_subject ((role ARG1)(type ARG2)(type ARG3)(type
+        ARG4)(type ARG5)(type ARG6))
+    (roleattributeset is_pa_role ARG1)
+    (typeattributeset is_pa_client_subject ARG3)
+    (typeattributeset is_pa_tmpfs_file_object ARG4)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 pa_exec_t ARG3))
+    (allow ARG2 ARG4 manage_dir_perms)
+    (allow ARG2 ARG4 manage_file_perms)
+    (call session_home_dir_filetrans_session_config_dir (ARG2))
+    (call session_config_filetrans (ARG2 ARG4 dir "pulse"))
+    (allow ARG2 ARG5 manage_dir_perms)
+    (call session_run_user_dir_filetrans (ARG2 ARG5 dir "pulse"))
+    (allow ARG2 ARG6 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG2 ARG6 file "*"))
+    (allow ARG2 self (process (signull)))
+    (allow ARG2 self create_unix_stream_socket_perms)
+    (allow ARG3 ARG2 (process (signull)))
+    (allow ARG2 ARG3 (process (signull)))
+    (call filesystem_getattr_tmpfs_filesystems (ARG2))
+    (call devices_read_urandom (ARG2))
+    (call pa_read_config_files (ARG2))
+        (optional pa_client_subject_optional_alsa
+            (call alsa_read_config_files (ARG2))))
+
+(macro pa_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 pa_conf_t (dirs (list))))
+
+(macro pa_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call read_files_pattern (ARG1 pa_conf_t pa_conf_t)))
+
+(macro pa_admin ((type ARG1))
+    (typeattributeset is_pa_admin_subject ARG1))

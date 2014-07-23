@@ -28,14 +28,17 @@ contrib/libraries.cil
 contrib/login.cil
 contrib/lvm.cil
 contrib/miscfiles.cil
+contrib/moc.cil
 contrib/mount.cil
 contrib/networkmgr.cil
 contrib/ntp.cil
+contrib/pa.cil
 contrib/pcsc.cil
 contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
 contrib/rpm.cil
+contrib/rtkit.cil
 contrib/screen.cil
 contrib/seutil.cil
 contrib/sudo.cil

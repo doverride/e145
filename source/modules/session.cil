@@ -1,3 +1,7 @@
+
+(typeattribute is_session_cache_file_object)
+(typeattribute is_session_config_file_object)
+(typeattribute is_session_data_file_object)
 (typeattribute is_session_home_file_object)
 (typeattribute is_session_run_file_object)
 (typeattribute is_session_tmp_file_object)
@@ -16,6 +20,30 @@
 
 (roleallow system_r session_r)
 
+(type session_cache_t)
+(call session_cache_object (session_cache_t))
+
+(context file_session_cache (session_u object_r session_cache_t ((s0)
+    (s0))))
+(filecon "/root/\.cache(/.*)?" any file_session_cache)
+(filecon "/home/joe/\.cache(/.*)?" any file_session_cache) ; hack
+
+(type session_conf_t)
+(call session_config_object (session_conf_t))
+
+(context file_session_conf (session_u object_r session_conf_t ((s0)
+    (s0))))
+(filecon "/root/\.config(/.*)?" any file_session_conf)
+(filecon "/home/joe/\.config(/.*)?" any file_session_conf) ; hack
+
+(type session_data_t)
+(call session_data_object (session_data_t))
+
+(context file_session_data (session_u object_r session_data_t ((s0)
+    (s0))))
+(filecon "/root/\.local(/.*)?" any file_session_data)
+(filecon "/home/joe/\.local(/.*)?" any file_session_data) ; hack
+
 (type session_home_t)
 (call session_home_object (session_home_t))
 
@@ -24,14 +52,14 @@
 (filecon "/root/.*" any file_session_home)
 (filecon "/home/joe/.*" any file_session_home) ; hack
 
-(type session_home_bin_t)
-(call session_home_object (session_home_bin_t))
-(call subject_entry (session_t session_home_bin_t))
+(type session_bin_t)
+(call session_home_object (session_bin_t))
+(call subject_entry (session_t session_bin_t))
 
-(context file_session_home_bin (session_u object_r session_home_bin_t ((s0)
+(context file_session_bin (session_u object_r session_bin_t ((s0)
     (s0))))
-(filecon "/home/joe/bin" symlink file_session_home_bin) ; hack
-(filecon "/home/joe/\.local/bin(/.*)?" any file_session_home_bin) ; hack
+(filecon "/home/joe/bin" symlink file_session_bin) ; hack
+(filecon "/home/joe/\.local/bin(/.*)?" any file_session_bin) ; hack
 
 (type session_home_dir_t)
 (call files_object (session_home_dir_t))
@@ -113,6 +141,8 @@
     (call rpm_run (session_t session_r)))
 
 (optional session_optional_seutil
+    (call seutil_list_policy_config (session_t))
+    (call seutil_read_policy_config_files (session_t))
     (call seutil_run_load_policy (session_t session_r))
     (call seutil_run_secilc (session_t session_r))
     (call seutil_run_setfiles (session_t session_r)))
@@ -132,15 +162,56 @@
     (call session_tmp_object (session_screen_tmp_t))
     (call screen_tmp_template (session_screen_t session_screen_tmp_t))
     (call session_create_pty_node (session_screen_t))
-    (call session_home_bin_auto_subject_type_transition (session_screen_t session_t))
+    (call session_bin_auto_subject_type_transition (session_screen_t session_t))
     (call commands_bin_auto_subject_type_transition (session_screen_t session_t))
     (call commands_shell_auto_subject_type_transition (session_screen_t session_t)))
+
+(optional session_optional_pa
+    (type session_pa_t)
+    (call pa_role_template (session_r session_t session_pa_t session_pa_home_t
+        session_pa_tmp_t session_pa_tmpfs_t))
+    (call session_use_inherited_terminals (session_pa_t))
+    (type session_pa_home_t)
+    (call session_home_object (session_pa_home_t))
+    (context file_session_pa_home (session_u object_r session_pa_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.esd_auth" file file_session_pa_home)
+    (filecon "/home/joe/\.config(/.*)?" any file_session_pa_home)
+    (type session_pa_run_t)
+    (call session_run_object (session_pa_run_t))
+    (context file_session_pa_run (session_u object_r session_pa_run_t ((s0)(s0))))
+    (filecon "/run/user/1000/pulse(/.*)?" any file_session_pa_run)
+    (type session_pa_tmp_t)
+    (call session_tmp_object (session_pa_tmp_t))
+    (type session_pa_tmpfs_t)
+    (call session_tmpfs_object (session_pa_tmpfs_t))
+    (call session_search_generic_config (session_pa_t))
+    (allow session_pa_t session_pa_home_t (dirs (list)))
+    (allow session_pa_t session_pa_home_t (dir (setattr)))
+    (call manage_files_pattern (session_pa_t session_pa_home_t session_pa_home_t))
+    (call session_search_run_user_dir (session_pa_t))
+    (allow session_pa_t session_pa_run_t (dirs (list)))
+    (call manage_files_pattern (session_pa_t session_pa_run_t session_pa_run_t))
+    (call manage_sock_files_pattern (session_pa_t session_pa_run_t session_pa_run_t))
+    (allow session_pa_t session_pa_run_t (dir (setattr)))
+        (optional session_pa_optional_moc
+            (type session_moc_t)
+            (call moc_role_template (session_r session_t session_moc_t
+                session_moc_home_t))
+            (call session_use_inherited_terminals (session_moc_t))
+            (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
+                session_pa_run_t session_pa_tmpfs_t))
+            (type session_moc_home_t)
+            (call session_home_object (session_moc_home_t))
+            (context file_session_moc_home (session_u object_r session_moc_home_t ((s0)
+                (s0))))
+            (filecon "/home/joe/\.moc(/.*)?" any file_session_moc_home))
+            (call stream_connect_pattern (session_moc_t session_pa_run_t session_pa_run_t session_pa_t)))
 
 (optional session_optional_sudo
     (type session_sudo_t)
     (call sudo_role_template (session_r session_t session_sudo_t))
     (call session_use_inherited_terminals (session_sudo_t))
-    (call session_home_bin_auto_subject_type_transition (session_sudo_t session_t))
+    (call session_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_shell_auto_subject_type_transition (session_sudo_t session_t))
     (type session_visudo_t)
@@ -150,6 +221,18 @@
 
 (optional session_optional_unconfined
     (call unconfined_subject (session_t)))
+
+(macro session_cache_object ((type ARG1))
+    (call session_home_object (ARG1))
+    (typeattributeset is_session_cache_file_object ARG1))
+
+(macro session_config_object ((type ARG1))
+    (call session_home_object (ARG1))
+    (typeattributeset is_session_config_file_object ARG1))
+
+(macro session_data_object ((type ARG1))
+    (call session_home_object (ARG1))
+    (typeattributeset is_session_data_file_object ARG1))
 
 (macro session_home_object ((type ARG1))
     (call files_object (ARG1))
@@ -182,17 +265,17 @@
     (call dynamic_subject_type_transition_pattern (ARG1
         session_t)))
 
-(macro session_search_home_bin ((type ARG1))
+(macro session_search_bin ((type ARG1))
     (call session_search_home_dir (ARG1))
-    (allow ARG1 session_home_bin_t (dirs (search))))
+    (allow ARG1 session_bin_t (dirs (search))))
 
-(macro session_home_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
-    (call session_home_bin_manual_subject_type_transition (ARG1 ARG2))
-    (typetransition ARG1 session_home_bin_t process "*" ARG2))
+(macro session_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
+    (call session_bin_manual_subject_type_transition (ARG1 ARG2))
+    (typetransition ARG1 session_bin_t process "*" ARG2))
 
-(macro session_home_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
-    (call session_search_home_bin (ARG1))
-    (call manual_subject_type_transition_pattern (ARG1 session_home_bin_t ARG2)))
+(macro session_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
+    (call session_search_bin (ARG1))
+    (call manual_subject_type_transition_pattern (ARG1 session_bin_t ARG2)))
 
 (macro session_search_home_dir ((type ARG1))
     (call files_search_home_root (ARG1))
@@ -215,10 +298,50 @@
     (call session_dontaudit_search_home_dir (ARG1))
     (dontaudit ARG1 session_home_t (dirs (search))))
 
+(macro session_home_dir_filetrans_session_cache_dir ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t session_cache_t dir ".cache")))
+
+(macro session_home_dir_filetrans_session_config_dir ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t session_conf_t dir ".config")))
+
+(macro session_home_dir_filetrans_session_data_dir ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t session_data_t dir ".local")))
+
 (macro session_home_dir_filetrans_session_home ((type ARG1)
     (class ARG2)(name ARG3))
     (call session_search_home_dir (ARG1))
     (call filetrans_pattern (ARG1 session_home_dir_t session_home_t ARG2 ARG3)))
+
+(macro session_search_generic_cache ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (allow ARG1 session_cache_t (dirs (search))))
+
+(macro session_cache_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_cache_t ARG2 ARG3 ARG4)))
+
+(macro session_search_generic_config ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (allow ARG1 session_conf_t (dirs (search))))
+
+(macro session_config_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_conf_t ARG2 ARG3 ARG4)))
+
+(macro session_search_generic_data ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (allow ARG1 session_data_t (dirs (search))))
+
+(macro session_data_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_data_t ARG2 ARG3 ARG4)))
+
+(macro session_home_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call session_search_generic_home_content (ARG1))
+    (call filetrans_pattern (ARG1 session_home_t ARG2 ARG3 ARG4)))
 
 (macro session_manage_run_user_dir ((type ARG1))
     (call files_rw_run_user_root_dirs (ARG1))
@@ -228,7 +351,7 @@
     (allow ARG1 session_run_user_dir_t (dir (mounton))))
 
 (macro session_search_run_user_dir ((type ARG1))
-    (call files_search_run (ARG1))
+    (call files_search_run_user_root (ARG1))
     (allow ARG1 session_run_user_dir_t (dirs (search))))
 
 (macro session_run_user_root_filetrans_run_user_dir ((type ARG1)(name ARG2))

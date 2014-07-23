@@ -180,6 +180,7 @@
     kill sys_tty_config sys_boot chown setgid setuid setpcap sys_resource
         sys_admin)))
 (allow systemd_t self (capability2 (block_suspend)))
+(allow systemd_t self (unix_dgram_socket (lock)))
 (allow systemd_t self create_unix_stream_stream_socket_perms)
 (allow systemd_t self create_netlink_kobject_uevent_socket_perms)
 (allow systemd_t self (netlink_route_socket (nlmsg_write)))
@@ -243,6 +244,7 @@
 
 (call filesystem_create_generic_tmpfs_sock_files (systemd_t)) ; early /run/systemd/notify
 (call filesystem_getattr_all_filesystems (systemd_t))
+(call filesystem_remount_filesystems (systemd_t))
 (call filesystem_list_autofs (systemd_t))
 (call filesystem_manage_cgroup_dirs (systemd_t))
 (call filesystem_mount_autofs_filesystems (systemd_t))

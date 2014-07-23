@@ -472,6 +472,10 @@
     (call system_search_sysctl (ARG1))
     (call rw_files_pattern (ARG1 sysctl_net_t sysctl_net_t)))
 
+(macro system_search_sysctl_vm ((type ARG1))
+    (call system_search_sysctl (ARG1))
+    (allow ARG1 sysctl_vm_t (dirs (search))))
+
 (macro system_rw_sysctl_vm_files ((type ARG1))
     (call system_search_sysctl (ARG1))
     (call rw_files_pattern (ARG1 sysctl_vm_t sysctl_vm_t)))
@@ -494,7 +498,7 @@
     (call rw_files_pattern (ARG1 sysctl_usermodehelper_t sysctl_usermodehelper_t)))
 
 (macro system_read_sysctl_vm_overcommit_files ((type ARG1))
-    (call system_search_sysctl (ARG1))
+    (call system_search_sysctl_vm (ARG1))
     (allow ARG1 sysctl_vm_overcommit_t read_file_perms))
 
 (macro system_list_proc ((type ARG1))

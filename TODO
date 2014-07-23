@@ -1,3 +1,11 @@
+pulseaudio:
+    review what callers of pa_client_subject need and have in common
+
+    Example: there may be rules in moc.cil that apply to all callers of
+    pa_client_subject() instead of just is_moc_subject
+
+    I suppose one could compare the moc rules to rules of other pa_client_subject() callers 
+
 systemd-coredump:
     this utility is executed by a kernel worker thread (system_t)
 

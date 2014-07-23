@@ -87,11 +87,10 @@
 (call files_execmod_all_files (is_rpm_subject))
 
 (call auth_manage_shadow_files (is_rpm_subject))
-(call auth_relabelto_shadow_files (is_rpm_subject))
+(call auth_relabel_shadow_files (is_rpm_subject))
 
-(call seutil_create_policy_config_files (is_rpm_subject))
-(call seutil_write_policy_config_files (is_rpm_subject))
-(call seutil_relabelto_policy_config_files (is_rpm_subject))
+(call seutil_manage_policy_config_files (is_rpm_subject))
+(call seutil_relabel_policy_config_files (is_rpm_subject))
 
 (call unconfined_subject (is_rpm_subject))
 

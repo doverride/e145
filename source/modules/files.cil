@@ -407,6 +407,10 @@
     (call files_search_run (ARG1))
     (call filetrans_pattern (ARG1 run_lock_t ARG2 ARG3 ARG4)))
 
+(macro files_search_run_user_root ((type ARG1))
+    (call files_search_run (ARG1))
+    (allow ARG1 run_user_root_t (dirs (search))))
+
 (macro files_rw_run_user_root_dirs ((type ARG1))
     (call files_search_run (ARG1))
     (allow ARG1 run_user_root_t rw_dir_perms))
@@ -432,6 +436,9 @@
 
 (macro files_list_tmp ((type ARG1))
     (call list_dirs_pattern (ARG1 var_t tmp_t)))
+
+(macro files_search_tmp ((type ARG1))
+    (call search_dirs_pattern (ARG1 var_t tmp_t)))
 
 (macro files_manage_generic_tmp_dirs ((type ARG1))
     (call manage_dirs_pattern (ARG1 tmp_t tmp_t)))

@@ -96,7 +96,7 @@
 (call admin_pattern (is_upower_admin_subject is_upower_file_object))
 
 (macro upower_exec ((type ARG1))
-    (call can_exec (ARG1 ntp_exec_t)))
+    (call can_exec (ARG1 upower_exec_t)))
 
 (macro upower_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 upower_exec_t upower_t)))

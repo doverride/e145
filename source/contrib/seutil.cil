@@ -233,6 +233,10 @@
     (call manage_files_pattern (ARG1 policy_conf_t policy_conf_t))
     (typeattributeset can_write_binary_policy ARG1))
 
+(macro seutil_list_policy_config ((type ARG1))
+    (call seutil_search_config (ARG1))
+    (allow ARG1 policy_conf_t (dirs (list))))
+
 (macro seutil_search_policy_config ((type ARG1))
     (call seutil_search_config (ARG1))
     (allow ARG1 policy_conf_t (dirs (search))))

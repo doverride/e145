@@ -344,6 +344,9 @@
 (macro filesystem_getattr_filesystems ((type ARG1))
     (allow ARG1 fs_t (filesystem (getattr))))
 
+(macro filesystem_remount_filesystems ((type ARG1))
+    (allow ARG1 fs_t (filesystem (remount))))
+
 (macro filesystem_getattr_all_filesystems ((type ARG1))
     (allow ARG1 is_filesystem_object (filesystem (getattr))))
 

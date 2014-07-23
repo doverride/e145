@@ -28,6 +28,7 @@
 (context file_alsa_conf (system_u object_r alsa_conf_t ((s0)
     (s0))))
 (filecon "/etc/alsa(/.*)?" any file_alsa_conf)
+(filecon "/etc/asound\.conf(/.*)?" any file_alsa_conf)
 
 (type alsa_var_lib_t)
 (call files_var_lib_object (alsa_var_lib_t))
