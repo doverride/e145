@@ -266,7 +266,7 @@
         session_t)))
 
 (macro session_search_bin ((type ARG1))
-    (call session_search_home_dir (ARG1))
+    (call session_search_generic_data (ARG1))
     (allow ARG1 session_bin_t (dirs (search))))
 
 (macro session_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
