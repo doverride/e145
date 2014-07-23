@@ -97,6 +97,8 @@
 (context port_http (system_u object_r port_http_t ((s0) (s0))))
 (portcon "tcp" 80 port_http)
 (portcon "udp" 80 port_http)
+(portcon "tcp" 443 port_http)
+(portcon "udp" 443 port_http)
 
 (allow has_unconfined_access_to_network_assets is_interface_object
     (netif (all)))

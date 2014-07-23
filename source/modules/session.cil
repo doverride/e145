@@ -147,20 +147,29 @@
     (call seutil_run_secilc (session_t session_r))
     (call seutil_run_setfiles (session_t session_r)))
 
+(optional session_optional_elinks
+    (type session_elinks_t)
+    (call elinks_role_template (session_r session_t session_elinks_t
+        session_elinks_home_t))
+    (call session_use_terminals (session_elinks_t))
+    (type session_elinks_home_t)
+    (call session_home_object (session_elinks_home_t))
+    (context file_session_elinks_home (session_u object_r session_elinks_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.elinks(/.*)?" any file_session_elinks_home))
+
 (optional session_optional_screen
     (type session_screen_t)
-    (call screen_role_template (session_r session_t session_screen_t))
+    (call screen_role_template (session_r session_t session_screen_t
+        session_screen_home_t session_screen_tmp_t))
     (call session_use_terminals (session_screen_t))
     (call session_setattr_terminals (session_screen_t))
     (call session_search_generic_home_content (session_screen_t))
     (type session_screen_home_t)
     (call session_home_object (session_screen_home_t))
-    (call screen_home_template (session_screen_t session_screen_home_t))
     (context file_session_screen_home (session_u object_r session_screen_home_t ((s0)(s0))))
     (filecon "/home/joe/\.screenrc" file file_session_screen_home)
     (type session_screen_tmp_t)
     (call session_tmp_object (session_screen_tmp_t))
-    (call screen_tmp_template (session_screen_t session_screen_tmp_t))
     (call session_create_pty_node (session_screen_t))
     (call session_bin_auto_subject_type_transition (session_screen_t session_t))
     (call commands_bin_auto_subject_type_transition (session_screen_t session_t))
@@ -330,6 +339,9 @@
 (macro session_config_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
     (call session_search_home_dir (ARG1))
     (call filetrans_pattern (ARG1 session_conf_t ARG2 ARG3 ARG4)))
+
+(macro session_dontaudit_search_generic_data ((type ARG1))
+    (dontaudit ARG1 session_data_t (dirs (search))))
 
 (macro session_search_generic_data ((type ARG1))
     (call session_search_home_dir (ARG1))

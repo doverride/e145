@@ -97,7 +97,7 @@
     (call miscfiles_read_localization_files (akmods_t)))
 
 (optional akmods_optional_session
-    (call session_dontaudit_search_generic_home_content (akmods_t))) ; rpmdev-vercmp -> /root/.local
+    (call session_dontaudit_search_generic_data (akmods_t))) ; rpmdev-vercmp -> /root/.local
 
 (optional akmods_optional_rpm
     (call rpm_exec (akmods_t))

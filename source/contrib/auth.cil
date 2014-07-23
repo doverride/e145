@@ -319,8 +319,8 @@
 (call auth_write_wtmp_log_files (utempter_t))
 
 (optional utempter_optional_screen
-    (call screen_dontaudit_rw_all_inherited_unix_stream_socket (utempter_t))
-    (call screen_dontaudit_read_all_inherited_home_files (utempter_t)))
+    (call screen_rw_all_inherited_unix_stream_socket (utempter_t))
+    (call screen_read_all_inherited_home_files (utempter_t)))
 
 (optional utempter_optional_utmp
     (call utmp_rw_run_files (utempter_t)))

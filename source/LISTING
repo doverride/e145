@@ -17,6 +17,7 @@ contrib/dbus.cil
 contrib/dhcp.cil
 contrib/dm.cil
 contrib/dns.cil
+contrib/elinks.cil
 contrib/fstools.cil
 contrib/getty.cil
 contrib/hostname.cil

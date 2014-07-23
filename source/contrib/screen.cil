@@ -66,24 +66,21 @@
 (optional screen_optional_utmp
     (call utmp_read_run_files (is_screen_subject)))
 
-(macro screen_role_template ((role ARG1)(type ARG2)(type ARG3))
+(macro screen_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
+    (type ARG5))
     (roleattributeset is_screen_role ARG1)
     (typeattributeset is_screen_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 screen_exec_t ARG3))
+    (typeattributeset is_screen_home_file_object ARG4)
+    (allow ARG3 ARG4 list_dir_perms)
+    (allow ARG3 ARG4 read_file_perms)
+    (allow ARG3 ARG4 read_lnk_file_perms)
+    (allow ARG3 ARG5 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 file "*"))
     (optional screen_role_template_optional_auth
         (call auth_run_chkpwd (ARG3 ARG1))
         (call auth_run_utempter (ARG3 ARG1))))
-
-(macro screen_home_template ((type ARG1)(type ARG2))
-    (typeattributeset is_screen_home_file_object ARG2)
-    (allow ARG1 ARG2 list_dir_perms)
-    (allow ARG1 ARG2 read_file_perms)
-    (allow ARG1 ARG2 read_lnk_file_perms))
-
-(macro screen_tmp_template ((type ARG1)(type ARG2))
-    (allow ARG1 ARG2 manage_file_perms)
-    (call files_tmp_filetrans (ARG1 ARG2 file "*")))
 
 (macro screen_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
@@ -93,11 +90,11 @@
     (call auth_search_pam_config (ARG1))
     (allow ARG1 screen_pam_conf_t read_file_perms))
 
-(macro screen_dontaudit_read_all_inherited_home_files ((type ARG1))
-    (dontaudit ARG1 is_screen_home_file_object read_inherited_file_perms))
+(macro screen_read_all_inherited_home_files ((type ARG1))
+    (allow ARG1 is_screen_home_file_object read_inherited_file_perms))
 
-(macro screen_dontaudit_rw_all_inherited_unix_stream_socket ((type ARG1))
-    (dontaudit ARG1 is_screen_subject (unix_stream_socket (read write))))
+(macro screen_rw_all_inherited_unix_stream_socket ((type ARG1))
+    (allow ARG1 is_screen_subject (unix_stream_socket (read write))))
 
 (macro screen_use_all_fd ((type ARG1))
     (allow ARG1 is_screen_subject (fd (use))))
