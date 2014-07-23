@@ -265,7 +265,7 @@
     (call session_home_object (session_pa_home_t))
     (context file_session_pa_home (session_u object_r session_pa_home_t ((s0)(s0))))
     (filecon "/home/joe/\.esd_auth" file file_session_pa_home)
-    (filecon "/home/joe/\.config(/.*)?" any file_session_pa_home)
+    (filecon "/home/joe/\.config/pulse(/.*)?" any file_session_pa_home)
     (type session_pa_run_t)
     (call session_run_object (session_pa_run_t))
     (context file_session_pa_run (session_u object_r session_pa_run_t ((s0)(s0))))
