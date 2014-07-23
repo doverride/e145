@@ -1,0 +1,131 @@
+(roleattribute is_gpg_role)
+(roleattribute is_gpgagent_role)
+(roleattribute is_gpgpcsc_role)
+(roleattribute is_scd_role)
+
+(typeattribute is_gpg_subject)
+(typeattribute is_gpgagent_subject)
+(typeattribute is_gpgpcsc_subject)
+(typeattribute is_scd_subject)
+
+(type gpg_exec_t)
+(call application_subject_entry (is_gpg_subject gpg_exec_t))
+
+(context file_gpg_exec (system_u object_r gpg_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gpg2" file file_gpg_exec)
+
+(type gpg_helper_exec_t)
+(call commands_bin_object (gpg_helper_exec_t))
+
+(context file_gpg_helper_exec (system_u object_r gpg_helper_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gpg-check-pattern" file file_gpg_helper_exec)
+(filecon "/usr/libexec/gpg-preset-passphrase" file file_gpg_helper_exec)
+(filecon "/usr/libexec/gpg-protect-tool" file file_gpg_helper_exec)
+(filecon "/usr/libexec/gpg2keys_curl" file file_gpg_helper_exec)
+(filecon "/usr/libexec/gpg2keys_finger" file file_gpg_helper_exec)
+(filecon "/usr/libexec/gpg2keys_hkp" file file_gpg_helper_exec)
+(filecon "/usr/libexec/gpg2keys_ldap" file file_gpg_helper_exec)
+
+(type gpgagent_exec_t)
+(call application_subject_entry (is_gpgagent_subject gpgagent_exec_t))
+
+(context file_gpgagent_exec (system_u object_r gpgagent_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gpg-agent" file file_gpgagent_exec)
+
+(type gpgpcsc_exec_t)
+(call application_subject_entry (is_gpgpcsc_subject gpgpcsc_exec_t))
+
+(context file_gpgpcsc_exec (system_u object_r gpgpcsc_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnupg-pcsc-wrapper" file file_gpgpcsc_exec)
+
+(type scd_exec_t)
+(call application_subject_entry (is_scd_subject scd_exec_t))
+
+(context file_scd_exec (system_u object_r scd_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/scdaemon" file file_scd_exec)
+
+(type gpg_conf_t)
+(call files_etc_object (gpg_conf_t))
+
+(context file_gpg_conf (system_u object_r gpg_conf_t ((s0)(s0))))
+(filecon "/etc/gnupg(/.*)?" any file_gpg_conf)
+
+(allow is_gpg_subject self create_unix_stream_socket_perms)
+
+(call system_read_sysctl_crypto_files (is_gpg_subject))
+
+(optional gpg_optional_miscfiles
+    (call miscfiles_read_localization_files (is_gpg_subject)))
+
+(allow is_gpgagent_subject self create_unix_stream_stream_socket_perms)
+(allow is_gpgagent_subject self (unix_stream_socket (connectto)))
+(allow is_gpgagent_subject self rw_fifo_file_perms)
+
+(call system_read_sysctl_crypto_files (is_gpgagent_subject))
+
+(optional gpgagent_optional_miscfiles
+    (call miscfiles_read_localization_files (is_gpgagent_subject)))
+
+(allow is_scd_subject self create_unix_stream_stream_socket_perms)
+(allow is_scd_subject self create_netlink_kobject_uevent_socket_perms)
+(allow is_scd_subject self rw_fifo_file_perms)
+
+(call system_read_sysctl_crypto_files (is_scd_subject))
+
+(call devices_list (is_scd_subject))
+(call devices_list_sysfs (is_scd_subject))
+(call devices_read_sysfs_files (is_scd_subject))
+
+(optional scd_optional_miscfiles
+    (call miscfiles_read_localization_files (is_scd_subject)))
+
+(optional scd_optional_udevd
+    (call udevd_read_config_files (is_scd_subject))
+    (call udevd_read_run_files (is_scd_subject)))
+
+(allow is_gpgpcsc_subject self create_unix_stream_socket_perms)
+
+(optional gpgpcsc_optional_pcsc
+    (call pcsc_stream_connect (is_gpgpcsc_subject)))
+
+(macro gpg_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_gpg_role ARG1)
+    (typeattributeset is_gpg_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gpg_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (call session_home_dir_filetrans (ARG3 ARG4 dir ".gnupg")))
+
+(macro gpg_role_template_agent ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_gpgagent_role ARG1)
+    (typeattributeset is_gpgagent_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gpgagent_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG4 manage_sock_file_perms)
+    (call session_home_dir_filetrans (ARG3 ARG4 file ".gpg-agent-info")))
+
+(macro gpg_role_template_pcsc ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gpgpcsc_role ARG1)
+    (typeattributeset is_gpgpcsc_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gpgpcsc_exec_t ARG3)))
+
+(macro gpg_role_template_scd ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
+    (roleattributeset is_scd_role ARG1)
+    (typeattributeset is_scd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 scd_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_sock_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG4 dir "*"))
+    (allow ARG3 ARG5 manage_file_perms))
+
+(macro gpg_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call read_files_pattern (ARG1 gpg_conf_t gpg_conf_t)))
+
+(macro gpg_read_state_all_gpgpcsc ((type ARG1))
+    (allow ARG1 is_gpgpcsc_subject (dirs (list)))
+    (allow ARG1 is_gpgpcsc_subject read_file_perms))

@@ -80,6 +80,7 @@
 (call devices_read_urandom (akmods_t))
 
 (call files_list_etc (akmods_t))
+(call files_audit_access_root_dirs (akmods_t))
 (call files_read_generic_etc_files (akmods_t)) ; /etc/rc.d/init.d/functions
 (call files_read_generic_env_files (akmods_t)) ; /etc/sysconfig/init
 (call files_read_generic_usr_files (akmods_t)) ; /usr/src/akmods/.*
@@ -97,6 +98,7 @@
     (call miscfiles_read_localization_files (akmods_t)))
 
 (optional akmods_optional_session
+    (call session_dontaudit_search_home_dir (akmods_t))
     (call session_dontaudit_search_generic_data (akmods_t))) ; rpmdev-vercmp -> /root/.local
 
 (optional akmods_optional_rpm

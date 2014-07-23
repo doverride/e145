@@ -1,0 +1,20 @@
+(roleattribute is_pincurses_role)
+
+(typeattribute is_pincurses_subject)
+
+(type pincurses_exec_t)
+(call application_subject_entry (is_pincurses_subject pincurses_exec_t))
+
+(context file_pincurses_exec (system_u object_r pincurses_exec_t ((s0)(s0))))
+(filecon "/usr/bin/pinentry-curses" file file_pincurses_exec)
+
+(call files_read_generic_usr_files (is_pincurses_subject))
+
+(optional pincurses_optional_miscfiles
+    (call miscfiles_read_localization_files (is_pincurses_subject)))
+
+(macro pinentry_role_template_curses ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_pincurses_role ARG1)
+    (typeattributeset is_pincurses_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 pincurses_exec_t ARG3)))

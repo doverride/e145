@@ -168,6 +168,58 @@
     (context file_session_elinks_home (session_u object_r session_elinks_home_t ((s0)(s0))))
     (filecon "/home/joe/\.elinks(/.*)?" any file_session_elinks_home))
 
+(optional session_optional_gpg
+    (type session_gpg_t)
+    (call gpg_role_template (session_r session_t session_gpg_t
+        session_gpg_home_t))
+    (call session_use_terminals (session_gpg_t))
+    (type session_gpg_home_t)
+    (call session_home_object (session_gpg_home_t))
+    (context file_session_gpg_home (session_u object_r session_gpg_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.gnupg(/.*)?" any file_session_gpg_home)
+    (call stream_connect_pattern (session_gpg_t session_gpgagent_home_t session_gpgagent_home_t
+        session_gpgagent_t))
+
+    (type session_gpgagent_t)
+    (call gpg_role_template_agent (session_r session_t session_gpgagent_t
+        session_gpgagent_home_t))
+    (call session_use_inherited_terminals (session_gpgagent_t))
+    (type session_gpgagent_home_t)
+    (call session_home_object (session_gpgagent_home_t))
+    (context file_session_gpgagent_home (session_u object_r session_gpgagent_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.gpg-agent-info" file file_session_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/gpg-agent\.conf" file file_session_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/gpg-agent\.log" file file_session_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/gpg-agent-wrapper" file file_session_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/S\.gpg-agent" socket file_session_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/S\.gpg-agent\.ssh" socket file_session_gpgagent_home)
+    (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t file
+        "gpg-agent.log"))
+    (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t sock_file
+        "*"))
+
+    (type session_scd_t)
+    (call gpg_role_template_scd (session_r session_gpgagent_t session_scd_t session_scd_tmp_t
+        session_scd_home_t))
+    (type session_scd_tmp_t)
+    (call session_tmp_object (session_scd_tmp_t))
+    (type session_scd_home_t)
+    (call session_home_object (session_scd_home_t))
+    (allow session_scd_t session_gpgagent_t (process (signal)))
+    (call filetrans_pattern (session_scd_t session_gpg_home_t session_scd_home_t file "*"))
+    (context file_session_scd_home (session_u object_r session_scd_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.gnupg/reader_0\.status" file file_session_scd_home)
+
+    (optional scd_optional_pinentry_curses
+        (type session_pincurses_t)
+        (call pinentry_role_template_curses (session_r session_gpgagent_t session_pincurses_t))
+        (call session_use_terminals (session_pincurses_t))
+        (call stream_connect_pattern (session_pincurses_t session_gpgagent_home_t session_gpgagent_home_t
+            session_gpgagent_t)))
+
+    (type session_gpgpcsc_t)
+    (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t)))
+
 (optional session_optional_newsb
     (type session_newsb_t)
     (call newsb_role_template (session_r session_t session_newsb_t
@@ -176,13 +228,12 @@
     (type session_newsb_home_t)
     (call session_home_object (session_newsb_home_t))
     (context file_session_newsb_home (session_u object_r session_newsb_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.newsbeuter(/.*)?" any file_session_newsb_home))
+    (filecon "/home/joe/\.newsbeuter(/.*)?" any file_session_newsb_home)
     (call session_read_cert_files (session_newsb_t))
         (optional newsb_optional_elinks
             (call elinks_role_template (session_r session_newsb_t session_elinks_t
                 session_elinks_home_t))
-            (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms)) 
-
+            (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms)))
 
 (optional session_optional_screen
     (type session_screen_t)
@@ -240,8 +291,8 @@
             (call session_home_object (session_moc_home_t))
             (context file_session_moc_home (session_u object_r session_moc_home_t ((s0)
                 (s0))))
-            (filecon "/home/joe/\.moc(/.*)?" any file_session_moc_home))
-            (call stream_connect_pattern (session_moc_t session_pa_run_t session_pa_run_t session_pa_t)))
+            (filecon "/home/joe/\.moc(/.*)?" any file_session_moc_home)
+            (call stream_connect_pattern (session_moc_t session_pa_run_t session_pa_run_t session_pa_t))))
 
 (optional session_optional_sudo
     (type session_sudo_t)
@@ -318,7 +369,6 @@
     (allow ARG1 session_home_dir_t (dirs (search))))
 
 (macro session_dontaudit_search_home_dir ((type ARG1))
-    (call files_dontaudit_search_home_root (ARG1))
     (dontaudit ARG1 session_home_dir_t (dirs (search))))
 
 (macro session_home_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
@@ -339,7 +389,6 @@
     (call read_files_pattern (ARG1 session_cert_t session_cert_t)))
 
 (macro session_dontaudit_search_generic_home_content ((type ARG1))
-    (call session_dontaudit_search_home_dir (ARG1))
     (dontaudit ARG1 session_home_t (dirs (search))))
 
 (macro session_home_dir_filetrans_session_cache_dir ((type ARG1))

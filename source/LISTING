@@ -20,6 +20,7 @@ contrib/dns.cil
 contrib/elinks.cil
 contrib/fstools.cil
 contrib/getty.cil
+contrib/gpg.cil
 contrib/hostname.cil
 contrib/hwclock.cil
 contrib/ip.cil
@@ -36,6 +37,7 @@ contrib/newsb.cil
 contrib/ntp.cil
 contrib/pa.cil
 contrib/pcsc.cil
+contrib/pinentry.cil
 contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil

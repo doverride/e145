@@ -62,6 +62,9 @@
 
 (call polkit_dbus_chat_polkitd (pcscd_t))
 
+(optional pcscd_optional_gpgpcsc
+    (call gpg_read_state_all_gpgpcsc (pcscd_t)))
+
 (optional pcscd_optional_session
     (call session_getattr (pcscd_t))
     (call session_read_state (pcscd_t)))
@@ -84,6 +87,10 @@
 (macro pcsc_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 pcscd_conf_t pcscd_conf_t)))
+
+(macro pcsc_stream_connect ((type ARG1))
+    (call files_search_run (ARG1))
+    (call stream_connect_pattern (ARG1 pcscd_run_t pcscd_run_t pcscd_t)))
 
 (macro pcsc_admin ((type ARG1))
     (typeattributeset is_pcsc_admin_subject ARG1))
