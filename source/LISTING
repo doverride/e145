@@ -32,6 +32,7 @@ contrib/miscfiles.cil
 contrib/moc.cil
 contrib/mount.cil
 contrib/networkmgr.cil
+contrib/newsb.cil
 contrib/ntp.cil
 contrib/pa.cil
 contrib/pcsc.cil

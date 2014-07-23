@@ -1,3 +1,9 @@
+auth.cil:
+    miscfiles_read_generic_etc_files() and miscfiles_read_network_config_files()
+    should probably be associoated with is_nsswitch_client_subject
+
+    (probably also devices_read_urandom())
+
 pulseaudio:
     review what callers of pa_client_subject need and have in common
 

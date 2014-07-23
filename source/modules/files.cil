@@ -440,6 +440,9 @@
 (macro files_search_tmp ((type ARG1))
     (call search_dirs_pattern (ARG1 var_t tmp_t)))
 
+(macro files_audit_access_generic_tmp_dirs ((type ARG1))
+    (dontaudit ARG1 tmp_t (dir (audit_access))))
+
 (macro files_manage_generic_tmp_dirs ((type ARG1))
     (call manage_dirs_pattern (ARG1 tmp_t tmp_t)))
 

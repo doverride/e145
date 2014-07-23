@@ -61,6 +61,17 @@
 (filecon "/home/joe/bin" symlink file_session_bin) ; hack
 (filecon "/home/joe/\.local/bin(/.*)?" any file_session_bin) ; hack
 
+(type session_cert_t)
+(call session_home_object (session_cert_t))
+
+(optional session_optional_miscfiles
+    (call miscfiles_cert_object (session_cert_t)))
+
+(context file_session_cert (session_u object_r session_cert_t ((s0)
+    (s0))))
+(filecon "/root/\.pki(/.*)?" any file_session_cert)
+(filecon "/home/joe/\.pki(/.*)?" any file_session_cert) ; hack
+
 (type session_home_dir_t)
 (call files_object (session_home_dir_t))
 
@@ -156,6 +167,22 @@
     (call session_home_object (session_elinks_home_t))
     (context file_session_elinks_home (session_u object_r session_elinks_home_t ((s0)(s0))))
     (filecon "/home/joe/\.elinks(/.*)?" any file_session_elinks_home))
+
+(optional session_optional_newsb
+    (type session_newsb_t)
+    (call newsb_role_template (session_r session_t session_newsb_t
+        session_newsb_home_t))
+    (call session_use_terminals (session_newsb_t))
+    (type session_newsb_home_t)
+    (call session_home_object (session_newsb_home_t))
+    (context file_session_newsb_home (session_u object_r session_newsb_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.newsbeuter(/.*)?" any file_session_newsb_home))
+    (call session_read_cert_files (session_newsb_t))
+        (optional newsb_optional_elinks
+            (call elinks_role_template (session_r session_newsb_t session_elinks_t
+                session_elinks_home_t))
+            (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms)) 
+
 
 (optional session_optional_screen
     (type session_screen_t)
@@ -302,6 +329,14 @@
 (macro session_search_generic_home_content ((type ARG1))
     (call session_search_home_dir (ARG1))
     (allow ARG1 session_home_t (dirs (search))))
+
+(macro session_search_cert ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (allow ARG1 session_cert_t (dirs (search))))
+
+(macro session_read_cert_files ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call read_files_pattern (ARG1 session_cert_t session_cert_t)))
 
 (macro session_dontaudit_search_generic_home_content ((type ARG1))
     (call session_dontaudit_search_home_dir (ARG1))

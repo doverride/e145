@@ -476,6 +476,10 @@
     (call system_search_sysctl (ARG1))
     (allow ARG1 sysctl_vm_t (dirs (search))))
 
+(macro system_read_sysctl_vm_files ((type ARG1))
+    (call system_search_sysctl (ARG1))
+    (call read_files_pattern (ARG1 sysctl_vm_t sysctl_vm_t)))
+
 (macro system_rw_sysctl_vm_files ((type ARG1))
     (call system_search_sysctl (ARG1))
     (call rw_files_pattern (ARG1 sysctl_vm_t sysctl_vm_t)))

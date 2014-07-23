@@ -1,0 +1,46 @@
+(roleattribute is_newsb_role)
+
+(typeattribute is_newsb_subject)
+
+(type newsb_exec_t)
+(call application_subject_entry (is_newsb_subject newsb_exec_t))
+
+(context file_newsb_exec (system_u object_r newsb_exec_t ((s0)(s0))))
+(filecon "/usr/bin/newsbeuter" file file_newsb_exec)
+
+(allow is_newsb_subject self create_unix_stream_socket_perms)
+
+(call system_read_generic_proc_files (is_newsb_subject))
+(call system_read_sysctl_vm_files (is_newsb_subject))
+(call system_read_sysctl_vm_overcommit_files (is_newsb_subject))
+
+(call commands_execute_shell_files (is_newsb_subject))
+
+(call devices_read_urandom (is_newsb_subject))
+
+(call files_list_tmp (is_newsb_subject))
+(call files_audit_access_generic_tmp_dirs (is_newsb_subject))
+(call files_read_generic_etc_files (is_newsb_subject)) ; /etc/terminfo
+(call files_read_generic_usr_files (is_newsb_subject)) ; /usr/share/terminfo(/.*)?
+
+(call network_tcp_connect_http_port (is_newsb_subject))
+
+(call selinux_getattr_filesystems (is_newsb_subject))
+
+(optional newsb_optional_auth
+    (call auth_nsswitch_client_subject (is_newsb_subject)))
+
+(optional newsb_optional_miscfiles
+    (call miscfiles_read_generic_cert_files (is_newsb_subject))
+    (call miscfiles_read_network_config_files (is_newsb_subject))
+    (call miscfiles_read_localization_files (is_newsb_subject)))
+
+(macro newsb_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_newsb_role ARG1)
+    (typeattributeset is_newsb_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 newsb_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG4 manage_lnk_file_perms)
+    (call session_home_dir_filetrans (ARG3 ARG4 dir ".newsbeuter")))
