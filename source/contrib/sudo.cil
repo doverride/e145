@@ -48,6 +48,7 @@
 (call system_search_keyring (is_sudo_subject))
 
 (call devices_list (is_sudo_subject))
+(call devices_getattr_all_nodes (is_sudo_subject))
 
 (call files_read_generic_etc_files (is_sudo_subject)) ; /etc/login.defs
 
