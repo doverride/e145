@@ -38,8 +38,8 @@
 (call network_reserved_port_object (port_ssh_t))
 
 (context port_ssh (system_u object_r port_ssh_t ((s0) (s0))))
-(portcon "tcp" 21 port_ssh)
-(portcon "udp" 21 port_ssh)
+(portcon "tcp" 22 port_ssh)
+(portcon "udp" 22 port_ssh)
 
 (allow is_ssh_subject self create_unix_stream_socket_perms)
 
