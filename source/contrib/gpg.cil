@@ -90,6 +90,8 @@
 
 (allow is_gpgpcsc_subject self create_unix_stream_socket_perms)
 
+(call files_search_etc (is_gpgpcsc_subject))
+
 (optional gpgpcsc_optional_pcsc
     (call pcsc_stream_connect (is_gpgpcsc_subject)))
 
