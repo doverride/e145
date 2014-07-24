@@ -23,6 +23,9 @@ auth.cil:
 
     (probably also devices_read_urandom())
 
+    self create_unix_stream_socket_perms should also be associated with
+    auth_nsswitch_client_subject
+
     miscfiles_read_network_config_files() would probably be associated with
     is_dns_resolve_client_subject which in turn is associated with is_auth_nsswitch_client_subject
 

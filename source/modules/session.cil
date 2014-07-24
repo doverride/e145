@@ -370,6 +370,29 @@
     (call commands_bin_auto_subject_type_transition (session_screen_t session_t))
     (call commands_shell_auto_subject_type_transition (session_screen_t session_t)))
 
+(optional session_optional_session_ssh
+    (type session_ssh_t)
+    (call ssh_role_template (session_r session_t session_ssh_t session_ssh_home_t))
+
+    (call session_use_inherited_terminals (session_ssh_t))
+    (call session_search_all_home (session_ssh_t))
+
+    (type session_ssh_home_t)
+    (call session_home_object (session_ssh_home_t))
+
+    (context file_session_ssh_home (session_u object_r session_ssh_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.ssh(/.*)?" any file_session_ssh_home)
+
+    (optional session_ssh_optional_session_gpgagent
+        (call stream_connect_pattern (session_ssh_t session_gpg_home_t session_gpgagent_home_t
+            session_gpgagent_t)))
+
+    (type session_sshagent_t)
+    (call ssh_role_template_agent (session_r session_t session_sshagent_t))
+
+    (call session_use_inherited_terminals (session_sshagent_t))
+    (call session_search_all_home (session_sshagent_t)))
+
 (optional session_optional_session_pa
     (type session_pa_t)
     (call pa_role_template (session_r session_t session_pa_t session_pa_home_t

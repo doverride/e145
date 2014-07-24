@@ -1,0 +1,86 @@
+(roleattribute is_ssh_role)
+(roleattribute is_sshagent_role)
+
+(typeattribute is_ssh_subject)
+(typeattribute is_sshagent_subject)
+
+(type ssh_exec_t)
+(call application_subject_entry (is_ssh_subject ssh_exec_t))
+
+(context file_ssh_exec (system_u object_r ssh_exec_t ((s0)(s0))))
+(filecon "/usr/bin/scp" file file_ssh_exec)
+(filecon "/usr/bin/sftp" file file_ssh_exec)
+(filecon "/usr/bin/slogin" file file_ssh_exec)
+(filecon "/usr/bin/ssh" file file_ssh_exec)
+(filecon "/usr/bin/ssh-add" file file_ssh_exec)
+(filecon "/usr/bin/ssh-copy-id" file file_ssh_exec)
+(filecon "/usr/bin/ssh-keyscan" file file_ssh_exec)
+
+(type sshagent_exec_t)
+(call application_subject_entry (is_sshagent_subject sshagent_exec_t))
+
+(context file_sshagent_exec (system_u object_r sshagent_exec_t ((s0)(s0))))
+(filecon "/usr/bin/ssh-agent" file file_sshagent_exec)
+
+(type ssh_helper_exec_t)
+(call commands_bin_object (ssh_helper_exec_t))
+
+(context file_ssh_helper_exec (system_u object_r ssh_helper_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/openssh/ssh-pkcs11-helper" file file_ssh_helper_exec)
+
+(type ssh_conf_t)
+(call files_etc_object (ssh_conf_t))
+
+(context file_ssh_conf (system_u object_r ssh_conf_t ((s0)(s0))))
+(filecon "/etc/ssh/ssh_config" file file_ssh_conf)
+
+(type port_ssh_t)
+(call network_reserved_port_object (port_ssh_t))
+
+(context port_ssh (system_u object_r port_ssh_t ((s0) (s0))))
+(portcon "tcp" 21 port_ssh)
+(portcon "udp" 21 port_ssh)
+
+(allow is_ssh_subject self create_unix_stream_socket_perms)
+
+(call devices_read_urandom (is_ssh_subject))
+
+(call files_list_etc (is_ssh_subject)) ; /etc/gss/mech.d
+(call files_read_generic_etc_files (is_ssh_subject)) ; /etc/krb5.conf
+
+(call selinux_getattr_filesystems (is_ssh_subject))
+
+(call ssh_read_config_files (is_ssh_subject))
+(call ssh_tcp_connect_ssh_port (is_ssh_subject))
+
+(optional ssh_optional_auth
+    (call auth_nsswitch_client_subject (is_ssh_subject)))
+
+(optional ssh_optional_miscfiles
+    (call miscfiles_read_network_environ_files (is_ssh_subject))
+    (call miscfiles_read_network_config_files (is_ssh_subject))
+    (call miscfiles_read_generic_cert_files (is_ssh_subject)))
+
+(macro ssh_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_ssh_role ARG1)
+    (typeattributeset is_ssh_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ssh_exec_t ARG3))
+    (allow ARG3 self (key (view read search write link)))
+    (allow ARG3 ARG4 list_dir_perms)
+    (allow ARG3 ARG4 read_file_perms)
+    (allow ARG3 ARG4 read_lnk_file_perms))
+
+(macro ssh_role_template_agent ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_sshagent_role ARG1)
+    (typeattributeset is_sshagent_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 sshagent_exec_t ARG3)))
+
+(macro ssh_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 ssh_conf_t read_file_perms))
+
+(macro ssh_tcp_connect_ssh_port ((type ARG1))
+    (allow ARG1 port_ssh_t (tcp_socket (name_connect))))
+

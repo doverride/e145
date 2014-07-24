@@ -47,6 +47,7 @@ contrib/rpm.cil
 contrib/rtkit.cil
 contrib/screen.cil
 contrib/seutil.cil
+contrib/ssh.cil
 contrib/sudo.cil
 contrib/tune.cil
 contrib/upower.cil
