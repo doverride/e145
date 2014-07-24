@@ -228,6 +228,17 @@
     (call session_use_inherited_terminals (session_gpgagent_t))
     (call session_search_all_home (session_gpgagent_t))
 
+    (optional session_gpgagent_optional_session_pinentry_curses
+        (type session_pincurses_t)
+        (call pinentry_role_template_curses (session_r session_gpgagent_t session_pincurses_t))
+
+        (call session_search_home_dir (session_pincurses_t))
+        (call stream_connect_pattern (session_pincurses_t session_gpg_home_t session_gpgagent_home_t
+            session_gpgagent_t))
+
+        (call session_use_terminals (session_pincurses_t))
+        (call session_search_all_home (session_pincurses_t)))
+
     (type session_scd_t)
     (call gpg_role_template_scd (session_r session_gpgagent_t session_scd_t session_scd_tmp_t
         session_scd_home_t))
@@ -245,17 +256,6 @@
     (call filetrans_pattern (session_scd_t session_gpg_home_t session_scd_home_t file "*"))
 
     (call session_search_all_home (session_scd_t))
-
-    (optional session_scd_optional_session_pinentry_curses
-        (type session_pincurses_t)
-        (call pinentry_role_template_curses (session_r session_gpgagent_t session_pincurses_t))
-
-        (call session_search_home_dir (session_pincurses_t))
-        (call stream_connect_pattern (session_pincurses_t session_gpg_home_t session_gpgagent_home_t
-            session_gpgagent_t))
-
-        (call session_use_terminals (session_pincurses_t))
-        (call session_search_all_home (session_pincurses_t)))
 
     (type session_gpgpcsc_t)
     (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t)))

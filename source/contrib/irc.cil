@@ -6,8 +6,8 @@
 (call network_unreserved_port_object (port_irc_t))
 
 (context port_irc (system_u object_r port_irc_t ((s0) (s0))))
-(portcon "tcp" 6664 port_irc)
-(portcon "udp" 6664 port_irc)
+(portcon "tcp" 6667 port_irc)
+(portcon "udp" 6667 port_irc)
 (portcon "tcp" 6697 port_irc)
 (portcon "udp" 6697 port_irc)
 (portcon "tcp" 7000 port_irc)
