@@ -222,6 +222,7 @@
     (filecon "/home/joe/\.gnupg/S\.gpg-agent\.ssh" socket file_session_gpgagent_home)
     (filecon "/home/joe/\.gnupg/sshcontrol" file file_session_gpgagent_home)
 
+    (allow session_gpgagent_t session_gpg_home_t manage_dir_perms) ; wants to rmdir .gnupg
     (allow session_gpgagent_t session_gpg_home_t read_file_perms)
 
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t file
