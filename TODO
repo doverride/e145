@@ -1,9 +1,3 @@
-tmpfiles:
-    currently tmpfiles can relabel and manage all non auth files
-
-    this can be narrowed down
-    Example: it is unlikely that tmpfiles will need to manage or relabel any user, tmp, tmpfs content
-
 mutt.cil:
     probably rename this to mail since it is a mail client, then move the mail network port
     declarations, portcons and accompanying macros from network.cil to mail.cil

@@ -47,11 +47,9 @@
 
 (call files_list_etc (is_ssh_subject)) ; /etc/gss/mech.d
 (call files_read_generic_etc_files (is_ssh_subject)) ; /etc/krb5.conf
-(call files_read_generic_usr_files (is_ssh_subject)) ; /usr/share/terminfo
 
 (call selinux_getattr_filesystems (is_ssh_subject))
 
-(call ssh_exec (is_ssh_subject)) ; sftp calling ssh
 (call ssh_read_config_files (is_ssh_subject))
 (call ssh_tcp_connect_ssh_port (is_ssh_subject))
 
@@ -61,7 +59,6 @@
 (optional ssh_optional_miscfiles
     (call miscfiles_read_network_environ_files (is_ssh_subject))
     (call miscfiles_read_network_config_files (is_ssh_subject))
-    (call miscfiles_read_localization_files (is_ssh_subject))
     (call miscfiles_read_generic_cert_files (is_ssh_subject)))
 
 (macro ssh_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
@@ -83,9 +80,6 @@
 (macro ssh_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 ssh_conf_t read_file_perms))
-
-(macro ssh_exec ((type ARG1))
-    (call can_exec (ARG1 ssh_exec_t)))
 
 (macro ssh_tcp_connect_ssh_port ((type ARG1))
     (allow ARG1 port_ssh_t (tcp_socket (name_connect))))
