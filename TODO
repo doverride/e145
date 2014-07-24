@@ -2,17 +2,23 @@ miscfiles.cil:
     create a miscfiles_read_terminfo_files()
 
     clients read those in both /etc/terminfo as well as /usr/share/terminfo
-    if we label those with a private type than we can drop the files_read_generic_etc_files() calls
+    if we label those with a private type than we can drop the files_read_generic_etc_files(), as
+    well as files_read_generic_usr_files() calls
 
 session.cil:
     some of the (typetransition) rules in the role_template() calls can (and should) probably
     be moved to the source template macro itself
+
+    on second though, maybe not
 
 auth.cil:
     miscfiles_read_generic_cert_files() and miscfiles_read_network_config_files()
     should probably be associated with is_nsswitch_client_subject
 
     (probably also devices_read_urandom())
+
+    miscfiles_read_network_config_files() would probably be associated with
+    is_dns_resolve_client_subject which in turn is associated with is_auth_nsswitch_client_subject
 
 pulseaudio:
     review what callers of pa_client_subject need and have in common
