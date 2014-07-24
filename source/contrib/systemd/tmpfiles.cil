@@ -45,8 +45,8 @@
 (call devices_manage_all_nodes (tmpfiles_t))
 (call devices_relabel_all_nodes (tmpfiles_t))
 
-(call files_manage_non_auth_except (tmpfiles_t))
-(call files_relabel_non_auth_except (tmpfiles_t))
+(call files_manage_non_auth (tmpfiles_t))
+(call files_relabel_non_auth (tmpfiles_t))
 
 (call selinux_getattr_filesystems (tmpfiles_t))
 

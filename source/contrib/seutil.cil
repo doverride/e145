@@ -61,7 +61,7 @@
 (filecon "/etc/selinux/([^/]*/)?contexts/files(/.*)?" any file_file_context)
 
 (type policy_conf_t)
-(call files_object (policy_conf_t))
+(call files_auth_object (policy_conf_t))
 (call files_all_files_exception (policy_conf_t))
 
 (context file_policy_conf (system_u object_r policy_conf_t (mls_systemhigh
