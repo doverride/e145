@@ -46,6 +46,7 @@
 (call devices_read_urandom (is_ssh_subject))
 
 (call files_list_etc (is_ssh_subject)) ; /etc/gss/mech.d
+(call files_dontaudit_list_all (is_ssh_subject)) ; catchall
 (call files_read_generic_etc_files (is_ssh_subject)) ; /etc/krb5.conf
 (call files_read_generic_usr_files (is_ssh_subject)) ; /usr/share/terminfo
 
