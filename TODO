@@ -1,3 +1,9 @@
+mutt.cil:
+    probably rename this to mail since it is a mail client, then move the mail network port
+    declarations, portcons and accompanying macros from network.cil to mail.cil
+
+    would also have to rename the mutt macro names for consistency
+
 miscfiles.cil:
     create a miscfiles_read_terminfo_files()
 

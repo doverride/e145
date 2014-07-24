@@ -180,7 +180,8 @@
 
     (call session_home_dir_filetrans (session_t session_elinks_home_t dir ".elinks")) 
 
-    (call session_use_terminals (session_elinks_t)))
+    (call session_use_terminals (session_elinks_t))
+    (call session_search_all_home (session_elinks_t)))
 
 (optional session_optional_session_gpg
     (type session_gpg_t)
@@ -199,6 +200,7 @@
         session_gpgagent_t))
 
     (call session_use_terminals (session_gpg_t))
+    (call session_search_all_home (session_gpg_t))
 
     (type session_gpgagent_t)
     (call gpg_role_template_agent (session_r session_t session_gpgagent_t
@@ -224,6 +226,7 @@
         "*"))
 
     (call session_use_inherited_terminals (session_gpgagent_t))
+    (call session_search_all_home (session_gpgagent_t))
 
     (type session_scd_t)
     (call gpg_role_template_scd (session_r session_gpgagent_t session_scd_t session_scd_tmp_t
@@ -241,7 +244,7 @@
     (allow session_scd_t session_gpgagent_t (process (signal)))
     (call filetrans_pattern (session_scd_t session_gpg_home_t session_scd_home_t file "*"))
 
-    (call session_search_home_dir (session_scd_t))
+    (call session_search_all_home (session_scd_t))
 
     (optional session_scd_optional_session_pinentry_curses
         (type session_pincurses_t)
@@ -251,7 +254,8 @@
         (call stream_connect_pattern (session_pincurses_t session_gpg_home_t session_gpgagent_home_t
             session_gpgagent_t))
 
-        (call session_use_terminals (session_pincurses_t)))
+        (call session_use_terminals (session_pincurses_t))
+        (call session_search_all_home (session_pincurses_t)))
 
     (type session_gpgpcsc_t)
     (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t)))
@@ -280,12 +284,14 @@
     (call session_tmp_object (session_mutt_tmp_t))
 
     (call session_use_inherited_terminals (session_mutt_t))
+    (call session_search_all_home (session_mutt_t))
     (call session_read_generic_home_content_files (session_mutt_t)) ; ~/.nanorc
 
     (type session_mutt_gpg_t)
     (call mutt_role_template_gpg (session_r session_mutt_t session_mutt_gpg_t))
 
     (call session_use_inherited_terminals (session_mutt_gpg_t))
+    (call session_search_all_home (session_mutt_gpg_t))
 
     (optional session_mutt_gpg_optional_session_gpg
         (call gpg_role_template (session_r session_mutt_t session_gpg_t session_gpg_home_t))
@@ -293,6 +299,31 @@
         (allow session_gpg_t session_mutt_home_t read_file_perms)
         (allow session_gpg_t session_mutt_tmp_t rw_file_perms))
 
+(optional session_optional_session_irc
+    (type session_irssi_t)
+    (call irc_role_template_irssi (session_r session_t session_irssi_t
+        session_irssi_home_t))
+
+    (type session_irssi_home_t)
+    (call session_home_object (session_irssi_home_t))
+
+    (context file_session_irssi_home (session_u object_r session_irssi_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.irssi(/.*)?" any file_session_irssi_home)
+
+    (allow session_irssi_t session_irssi_home_t manage_dir_perms)
+    (allow session_irssi_t session_irssi_home_t manage_file_perms)
+    (allow session_irssi_t session_irssi_home_t read_lnk_file_perms)
+    (call session_home_dir_filetrans (session_irssi_t session_irssi_home_t dir ".irssi"))
+
+    (call session_home_dir_filetrans (session_t session_irssi_home_t dir ".irssi"))
+
+    ; /exec: not sure if good idea
+    (call commands_shell_auto_subject_type_transition (session_irssi_t session_t))
+
+    (call session_use_inherited_terminals (session_irssi_t))
+    (call session_search_all_home (session_irssi_t))
+    (call session_read_cert_files (session_irssi_t)))
+    
 (optional session_optional_session_newsb
     (type session_newsb_t)
     (call newsb_role_template (session_r session_t session_newsb_t
@@ -304,9 +335,10 @@
     (context file_session_newsb_home (session_u object_r session_newsb_home_t ((s0)(s0))))
     (filecon "/home/joe/\.newsbeuter(/.*)?" any file_session_newsb_home)
 
-    (call session_home_dir_filetrans (session_t session_newsb_home_t dir ".newsbeuter")) 
+    (call session_home_dir_filetrans (session_t session_newsb_home_t dir ".newsbeuter"))
 
     (call session_use_terminals (session_newsb_t))
+    (call session_search_all_home (session_newsb_t))
     (call session_read_cert_files (session_newsb_t))
 
     (optional session_newsb_optional_session_elinks
@@ -332,7 +364,7 @@
 
     (call session_use_terminals (session_screen_t))
     (call session_setattr_terminals (session_screen_t))
-    (call session_search_generic_home_content (session_screen_t))
+    (call session_search_all_home (session_screen_t))
     (call session_create_pty_node (session_screen_t))
     (call session_bin_auto_subject_type_transition (session_screen_t session_t))
     (call commands_bin_auto_subject_type_transition (session_screen_t session_t))
@@ -344,6 +376,7 @@
         session_pa_tmp_t session_pa_tmpfs_t))
 
     (call session_use_inherited_terminals (session_pa_t))
+    (call session_search_all_home (session_pa_t))
 
     (type session_pa_home_t)
     (call session_home_object (session_pa_home_t))
@@ -377,33 +410,38 @@
     (allow session_pa_t session_pa_run_t (dirs (list)))
     (call manage_files_pattern (session_pa_t session_pa_run_t session_pa_run_t))
     (call manage_sock_files_pattern (session_pa_t session_pa_run_t session_pa_run_t))
-    (allow session_pa_t session_pa_run_t (dir (setattr)))
+    (allow session_pa_t session_pa_run_t (dir (setattr))))
 
-    (optional session_pa_optional_session_moc
-        (type session_moc_t)
-        (call moc_role_template (session_r session_t session_moc_t
-            session_moc_home_t))
+(optional session_optional_session_moc
+    (type session_moc_t)
+    (call moc_role_template (session_r session_t session_moc_t
+        session_moc_home_t))
 
-        (call session_use_inherited_terminals (session_moc_t))
-        (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
-            session_pa_run_t session_pa_tmpfs_t))
+    (call session_use_inherited_terminals (session_moc_t))
+    (call session_search_all_home (session_moc_t))
 
-        (type session_moc_home_t)
-        (call session_home_object (session_moc_home_t))
+    (type session_moc_home_t)
+    (call session_home_object (session_moc_home_t))
 
-        (context file_session_moc_home (session_u object_r session_moc_home_t ((s0)
-            (s0))))
-        (filecon "/home/joe/\.moc(/.*)?" any file_session_moc_home)
+    (context file_session_moc_home (session_u object_r session_moc_home_t ((s0)
+        (s0))))
+    (filecon "/home/joe/\.moc(/.*)?" any file_session_moc_home)
    
-        (call session_home_dir_filetrans (session_t session_moc_home_t dir ".moc")) 
+    (call session_home_dir_filetrans (session_t session_moc_home_t dir ".moc")) 
 
-        (call stream_connect_pattern (session_moc_t session_pa_run_t session_pa_run_t session_pa_t))))
+    (call stream_connect_pattern (session_moc_t session_pa_run_t session_pa_run_t session_pa_t))
+
+    (optional session_moc_optional_session_pa
+        (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
+            session_pa_run_t session_pa_tmpfs_t))))
 
 (optional session_optional_session_sudo
     (type session_sudo_t)
     (call sudo_role_template (session_r session_t session_sudo_t))
 
     (call session_use_inherited_terminals (session_sudo_t))
+    (call session_search_all_home (session_sudo_t))
+
     (call session_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_shell_auto_subject_type_transition (session_sudo_t session_t))
@@ -412,6 +450,7 @@
     (call sudo_visudo_role_template (session_r session_t session_visudo_t))
 
     (call session_use_inherited_terminals (session_visudo_t))
+    (call session_search_all_home (session_visudo_t))
     (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
 
 (optional session_optional_unconfined
@@ -521,6 +560,10 @@
 (macro session_read_cert_files ((type ARG1))
     (call session_search_home_dir (ARG1))
     (call read_files_pattern (ARG1 session_cert_t session_cert_t)))
+
+(macro session_search_all_home ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (allow ARG1 is_session_home_file_object (dirs (search))))
 
 (macro session_dontaudit_search_generic_home_content ((type ARG1))
     (dontaudit ARG1 session_home_t (dirs (search))))
