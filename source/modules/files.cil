@@ -584,6 +584,9 @@
 (macro files_dontaudit_search_all ((type ARG1))
     (dontaudit ARG1 is_file_object (dirs (search))))
 
+(macro files_dontaudit_list_all ((type ARG1))
+    (dontaudit ARG1 is_file_object (dirs (list))))
+
 (macro files_list_all ((type ARG1))
     (call list_dirs_pattern (ARG1 is_file_object
         is_file_object)))

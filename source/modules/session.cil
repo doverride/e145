@@ -376,6 +376,8 @@
 
     (call session_use_inherited_terminals (session_ssh_t))
     (call session_search_all_home (session_ssh_t))
+    (call session_manage_generic_home_content_files (session_ssh_t))
+    (call session_home_dir_filetrans_session_home (session_ssh_t file "*"))
 
     (type session_ssh_home_t)
     (call session_home_object (session_ssh_home_t))
@@ -440,16 +442,19 @@
     (call moc_role_template (session_r session_t session_moc_t
         session_moc_home_t))
 
-    (call session_use_inherited_terminals (session_moc_t))
-    (call session_search_all_home (session_moc_t))
-
     (type session_moc_home_t)
     (call session_home_object (session_moc_home_t))
 
     (context file_session_moc_home (session_u object_r session_moc_home_t ((s0)
         (s0))))
     (filecon "/home/joe/\.moc(/.*)?" any file_session_moc_home)
-   
+
+    (call session_use_inherited_terminals (session_moc_t))
+    (call session_search_all_home (session_moc_t))
+    (call session_list_home_dir (session_moc_t))
+    (call session_list_generic_home_content (session_moc_t))
+    (call session_read_generic_home_content_files (session_moc_t))
+
     (call session_home_dir_filetrans (session_t session_moc_home_t dir ".moc")) 
 
     (call stream_connect_pattern (session_moc_t session_pa_run_t session_pa_run_t session_pa_t))
@@ -553,6 +558,10 @@
 (macro session_search_generic_home_content ((type ARG1))
     (call session_search_home_dir (ARG1))
     (allow ARG1 session_home_t (dirs (search))))
+
+(macro session_list_generic_home_content ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (allow ARG1 session_home_t (dirs (list))))
 
 (macro session_dontaudit_read_all_home_content_files ((type ARG1))
     (dontaudit ARG1 is_session_home_file_object read_file_perms))

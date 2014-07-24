@@ -17,6 +17,7 @@
 
 (call devices_read_sysfs_files (is_moc_subject))
 
+(call files_dontaudit_list_all (is_moc_subject)) ; catchall
 (call files_search_tmp (is_moc_subject)) ; gets attributes of /var/tmp
 (call files_read_generic_etc_files (is_moc_subject)) ; /etc/timidity.cfg
 (call files_read_generic_usr_files (is_moc_subject)) ; /use/share/alsa/alsa.conf
