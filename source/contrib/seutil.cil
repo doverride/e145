@@ -62,6 +62,7 @@
 
 (type policy_conf_t)
 (call files_security_object (policy_conf_t))
+(call files_all_files_exception (policy_conf_t))
 
 (context file_policy_conf (system_u object_r policy_conf_t (mls_systemhigh
     mls_systemhigh)))

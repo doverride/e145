@@ -29,6 +29,9 @@
 
 (call object_roletype (is_file_object))
 
+(typeattribute all_files_except)
+(typeattribute is_all_files_exception)
+
 (type boot_t)
 (call files_boot_object (boot_t))
 (call files_mnt_object (boot_t))
@@ -282,19 +285,23 @@
 (call filesystem_associate_all_xattr (is_file_object))
 (call filesystem_associate_all_noxattr (is_file_object))
 
-(allow has_unconfined_access_to_files_assets not_associated_with_authentication_file_object
+(typeattributeset all_files_except
+    (and (is_file_object)
+        (not (is_all_files_exception))))
+
+(allow has_unconfined_access_to_files_assets all_files_except
     all_file_perms_except_execmod_and_entrypoint)
-(allow has_unconfined_access_to_files_assets not_associated_with_authentication_file_object
+(allow has_unconfined_access_to_files_assets all_files_except
     all_dir_perms_except_execmod)
-(allow has_unconfined_access_to_files_assets not_associated_with_authentication_file_object
+(allow has_unconfined_access_to_files_assets all_files_except
     all_lnk_file_perms_except_execmod)
-(allow has_unconfined_access_to_files_assets not_associated_with_authentication_file_object
+(allow has_unconfined_access_to_files_assets all_files_except
     all_fifo_file_perms_except_execmod)
-(allow has_unconfined_access_to_files_assets not_associated_with_authentication_file_object
+(allow has_unconfined_access_to_files_assets all_files_except
     all_sock_file_perms_except_execmod)
-(allow has_unconfined_access_to_files_assets not_associated_with_authentication_file_object
+(allow has_unconfined_access_to_files_assets all_files_except
     all_blk_file_perms_except_execmod)
-(allow has_unconfined_access_to_files_assets not_associated_with_authentication_file_object
+(allow has_unconfined_access_to_files_assets all_files_except
     all_chr_file_perms_except_execmod)
 
 (macro files_object ((type ARG1))
@@ -720,6 +727,9 @@
 
 (macro files_execmod_all_files ((type ARG1))
     (allow ARG1 is_file_object (file (execmod))))
+
+(macro files_all_files_exception ((type ARG1))
+    (typeattributeset is_all_files_exception ARG1))
 
 (macro files_spec_all_non_auth_files_except ((type ARG1)(type ARG2))
     (typeattributeset ARG1 (and (not_associated_with_authentication_file_object) (not (ARG2)))))
