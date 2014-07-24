@@ -45,7 +45,8 @@
 (allow tmpfiles_t tmpfiles_run_t manage_dir_perms)
 (call files_run_filetrans (tmpfiles_t tmpfiles_run_t dir "*"))
 
-(call files_spec_all_non_auth_files_except (is_tmpfiles_managable_file_object is_tmpfiles_managable_file_object_exception))
+(call files_spec_all_non_auth_files_except (is_tmpfiles_managable_file_object
+    is_tmpfiles_managable_file_object_exception))
 
 (allow tmpfiles_t is_tmpfiles_managable_file_object manage_dir_perms)
 (allow tmpfiles_t is_tmpfiles_managable_file_object manage_file_perms)
@@ -55,7 +56,8 @@
 (allow tmpfiles_t is_tmpfiles_managable_file_object manage_blk_file_perms)
 (allow tmpfiles_t is_tmpfiles_managable_file_object manage_chr_file_perms)
 
-(call files_spec_all_non_auth_files_except (is_tmpfiles_relabable_file_object is_tmpfiles_relabable_file_object_exception))
+(call files_spec_all_non_auth_files_except (is_tmpfiles_relabable_file_object
+    is_tmpfiles_relabable_file_object_exception))
 
 (allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_dir_perms)
 (allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_file_perms)
