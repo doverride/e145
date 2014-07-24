@@ -154,6 +154,9 @@
 
 (call subject_user_exemption_target (session_t))
 
+(optional session_optional_tmpfiles
+    (call tmpfiles_managable_object_exception (is_session_home_file_object)))
+
 (optional session_optional_auth
     (call auth_run_chkpwd (session_t session_r)))
 

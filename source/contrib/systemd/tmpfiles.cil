@@ -2,6 +2,12 @@
 
 (typeattribute is_tmpfiles_admin_subject)
 
+(typeattribute is_tmpfiles_managable_file_object)
+(typeattribute is_tmpfiles_managable_file_object_exception)
+
+(typeattribute is_tmpfiles_relabable_file_object)
+(typeattribute is_tmpfiles_relabable_file_object_exception)
+
 (typeattribute is_tmpfiles_file_object)
 (typeattributeset is_tmpfiles_file_object (tmpfiles_conf_t
     tmpfiles_run_t tmpfiles_unit_t))
@@ -39,14 +45,31 @@
 (allow tmpfiles_t tmpfiles_run_t manage_dir_perms)
 (call files_run_filetrans (tmpfiles_t tmpfiles_run_t dir "*"))
 
+(call files_spec_all_non_auth_files_except (is_tmpfiles_managable_file_object is_tmpfiles_managable_file_object_exception))
+
+(allow tmpfiles_t is_tmpfiles_managable_file_object manage_dir_perms)
+(allow tmpfiles_t is_tmpfiles_managable_file_object manage_file_perms)
+(allow tmpfiles_t is_tmpfiles_managable_file_object manage_lnk_file_perms)
+(allow tmpfiles_t is_tmpfiles_managable_file_object manage_fifo_file_perms)
+(allow tmpfiles_t is_tmpfiles_managable_file_object manage_sock_file_perms)
+(allow tmpfiles_t is_tmpfiles_managable_file_object manage_blk_file_perms)
+(allow tmpfiles_t is_tmpfiles_managable_file_object manage_chr_file_perms)
+
+(call files_spec_all_non_auth_files_except (is_tmpfiles_relabable_file_object is_tmpfiles_relabable_file_object_exception))
+
+(allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_dir_perms)
+(allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_file_perms)
+(allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_lnk_file_perms)
+(allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_fifo_file_perms)
+(allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_sock_file_perms)
+(allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_blk_file_perms)
+(allow tmpfiles_t is_tmpfiles_relabable_file_object relabel_chr_file_perms)
+
 (call system_read_sysctl_kernel_files (tmpfiles_t))
 (call system_read_proc_net_files (tmpfiles_t))
 
 (call devices_manage_all_nodes (tmpfiles_t))
 (call devices_relabel_all_nodes (tmpfiles_t))
-
-(call files_manage_non_auth_except (tmpfiles_t))
-(call files_relabel_non_auth_except (tmpfiles_t))
 
 (call selinux_getattr_filesystems (tmpfiles_t))
 
@@ -87,6 +110,12 @@
     (name ARG4))
     (call files_search_run (ARG1))
     (call filetrans_pattern (ARG1 tmpfiles_run_t ARG2 ARG3 ARG4)))
+
+(macro tmpfiles_managable_object_exception ((type ARG1))
+    (call files_spec_all_non_auth_files_exception (is_tmpfiles_managable_file_object_exception ARG1)))
+
+(macro tmpfiles_relabable_object_exception ((type ARG1))
+    (call files_spec_all_non_auth_files_exception (is_tmpfiles_relabable_file_object_exception ARG1)))
 
 (macro tmpfiles_admin ((type ARG1))
     (typeattributeset is_tmpfiles_admin_subject ARG1))

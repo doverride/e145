@@ -62,7 +62,6 @@
 
 (type policy_conf_t)
 (call files_security_object (policy_conf_t))
-(call files_all_files_exception (policy_conf_t))
 
 (context file_policy_conf (system_u object_r policy_conf_t (mls_systemhigh
     mls_systemhigh)))
@@ -131,7 +130,7 @@
 (call devices_relabel_all_nodes (setfiles_t))
 
 (call files_list_all (setfiles_t))
-(call files_relabel_all_except (setfiles_t))
+(call files_relabel_non_auth (setfiles_t))
 
 (call filesystem_getattr_all_filesystems (setfiles_t))
 
@@ -143,13 +142,13 @@
 
 (call seutil_read_config_files (setfiles_t))
 (call seutil_read_file_context_files (setfiles_t))
-(call seutil_relabelto_policy_config_files (setfiles_t))
+(call seutil_relabel_policy_config_files (setfiles_t))
 
 (optional setfiles_optional_audit
     (call audit_client_subject (setfiles_t)))
 
 (optional setfiles_optional_auth
-    (call auth_relabelto_shadow_files (setfiles_t)))
+    (call auth_relabel_shadow_files (setfiles_t)))
 
 (allow is_seutil_admin_subject is_seutil_subject signal_perms)
 (call ps_subject_pattern (is_seutil_admin_subject is_seutil_subject))
