@@ -54,6 +54,11 @@
 
 (call system_read_sysctl_crypto_files (is_gpg_subject))
 
+(call devices_read_urandom (is_gpg_subject))
+(call devices_read_random (is_gpg_subject))
+
+(call files_search_tmp (is_gpg_subject))
+
 (optional gpg_optional_miscfiles
     (call miscfiles_read_localization_files (is_gpg_subject)))
 

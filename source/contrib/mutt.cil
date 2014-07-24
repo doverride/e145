@@ -1,0 +1,83 @@
+(roleattribute is_mutt_role)
+(roleattribute is_mutt_pgp_role)
+
+(typeattribute is_mutt_subject)
+(typeattribute is_mutt_pgp_subject)
+
+(type mutt_exec_t)
+(call application_subject_entry (is_mutt_subject mutt_exec_t))
+
+(context file_mutt_exec (system_u object_r mutt_exec_t ((s0)(s0))))
+(filecon "/usr/bin/mutt" file file_mutt_exec)
+
+(type mutt_pgp_exec_t)
+(call application_subject_entry (is_mutt_pgp_subject mutt_pgp_exec_t))
+
+(context file_mutt_pgp_exec (system_u object_r mutt_pgp_exec_t ((s0)(s0))))
+(filecon "/usr/bin/pgpewrap" file file_mutt_pgp_exec)
+
+(type mutt_helper_exec_t)
+(call commands_bin_object (mutt_helper_exec_t))
+
+(context file_mutt_helper_exec (system_u object_r mutt_helper_exec_t ((s0)(s0))))
+(filecon "/usr/bin/pgpring" file file_mutt_helper_exec)
+(filecon "/usr/bin/smime_keys" file file_mutt_helper_exec)
+
+(type mutt_conf_t)
+(call files_etc_object (mutt_conf_t))
+
+(context file_mutt_conf (system_u object_r mutt_conf_t ((s0)(s0))))
+(filecon "/etc/Muttrc" file file_mutt_conf)
+(filecon "/etc/Muttrc\.local" file file_mutt_conf)
+
+(allow is_mutt_subject self create_unix_stream_socket_perms)
+(allow is_mutt_subject self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (is_mutt_subject))
+
+(call commands_execute_shell_files (is_mutt_subject))
+(call commands_execute_bin_files (is_mutt_subject)) ; text editor
+
+(call devices_read_urandom (is_mutt_subject))
+
+(call files_read_generic_etc_files (is_mutt_subject)) ; /etc/terminfo
+(call files_read_generic_usr_files (is_mutt_subject)) ; /usr/share/terminfo/.*
+
+(call network_tcp_connect_imap_port (is_mutt_subject))
+(call network_tcp_connect_smtp_port (is_mutt_subject))
+
+(call selinux_getattr_filesystems (is_mutt_subject))
+
+(call mutt_read_config_files (is_mutt_subject))
+
+(optional mutt_optional_auth
+    (call auth_nsswitch_client_subject (is_mutt_subject)))
+
+(optional mutt_optional_miscfiles
+    (call miscfiles_read_network_environ_files (is_mutt_subject))
+    (call miscfiles_read_network_config_files (is_mutt_subject))
+    (call miscfiles_read_localization_files (is_mutt_subject)))
+
+(macro mutt_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
+    (type ARG5))
+    (roleattributeset is_mutt_role ARG1)
+    (typeattributeset is_mutt_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 mutt_exec_t ARG3))
+    (allow ARG3 ARG4 rw_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG4 read_lnk_file_perms)
+    (allow ARG3 ARG5 manage_dir_perms)
+    (allow ARG3 ARG5 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 dir "*"))
+    (call files_tmp_filetrans (ARG3 ARG5 file "*")))
+
+(macro mutt_role_template_gpg ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_mutt_pgp_role ARG1)
+    (typeattributeset is_mutt_pgp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 mutt_pgp_exec_t ARG3)))
+
+(macro mutt_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 mutt_conf_t read_file_perms))
