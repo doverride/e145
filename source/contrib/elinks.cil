@@ -23,6 +23,7 @@
 
 (call devices_read_urandom (is_elinks_subject))
 
+(call files_dontaudit_list_all (is_elinks_subject)) ; catchall
 (call files_read_generic_etc_files (is_elinks_subject)) ; mailcap
 (call files_list_tmp (is_elinks_subject))
 
@@ -36,6 +37,12 @@
 
 (optional elinks_optional_auth
     (call auth_nsswitch_client_subject (is_elinks_subject)))
+
+(optional elinks_optional_bt
+    (allow is_elinks_subject self (tcp_socket (listen accept)))
+    (call bt_tcp_bind_bt_port (is_elinks_subject))
+    (call network_tcp_bind_generic_node (is_elinks_subject))
+    (call network_tcp_connect_all_unreserved_ports (is_elinks_subject)))
 
 (optional elinks_optional_miscfiles
     (call miscfiles_read_network_config_files (is_elinks_subject))

@@ -1,8 +1,14 @@
-mutt.cil:
+mutt.cil/elinks.cil:
     probably rename this to mail since it is a mail client, then move the mail network port
     declarations, portcons and accompanying macros from network.cil to mail.cil
 
-    would also have to rename the mutt macro names for consistency
+    probably rename this to http since it is a http client, then move the http network port
+    declarations, portcons and accompanying macros from network.cil to http.cil
+
+    would also have to rename the respective macro names for consistency
+
+    also note that once you move those macros out of network.cil , calls to them become optional
+    to external callers
 
 miscfiles.cil:
     create a miscfiles_read_terminfo_files()

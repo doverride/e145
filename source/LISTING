@@ -13,6 +13,7 @@ contrib/alsa.cil
 contrib/application.cil
 contrib/audit.cil
 contrib/auth.cil
+contrib/bt.cil
 contrib/dbus.cil
 contrib/dhcp.cil
 contrib/dm.cil

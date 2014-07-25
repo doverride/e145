@@ -1,0 +1,31 @@
+(roleattribute is_rtorrent_role)
+
+(typeattribute is_rtorrent_subject)
+
+(type rtorrent_exec_t)
+(call application_subject_entry (is_rtorrent_subject rtorrent_exec_t))
+
+(context file_rtorrent_exec (system_u object_r rtorrent_exec_t ((s0)(s0))))
+(filecon "/usr/bin/rtorrent" file file_rtorrent_exec)
+
+(type port_bt_t)
+(call network_unreserved_port_object (port_bt_t))
+
+(context port_bt (system_u object_r port_bt_t ((s0) (s0))))
+(portcon "tcp" 6881 port_bt)
+(portcon "udp" 6881 port_bt)
+
+(call bt_tcp_bind_bt_port (is_rtorrent_subject))
+
+(macro bt_role_template_rtorrent ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_rtorrent_role ARG1)
+    (typeattributeset is_rtorrent_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 rtorrent_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG4 read_lnk_file_perms))
+
+(macro bt_tcp_bind_bt_port ((type ARG1))
+    (allow ARG1 self (capability (net_bind_service)))
+    (allow ARG1 port_bt_t (tcp_socket (name_bind))))

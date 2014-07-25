@@ -171,6 +171,24 @@
     (call seutil_run_secilc (session_t session_r))
     (call seutil_run_setfiles (session_t session_r)))
 
+(optional session_optional_session_rtorrent
+    (type session_rtorrent_t)
+    (call bt_role_template_rtorrent (session_r session_t session_rtorrent_t
+        session_rtorrent_home_t))
+
+    (type session_rtorrent_home_t)
+    (call session_home_object (session_rtorrent_home_t))
+
+    (context file_session_rtorrent_home (session_u object_r session_rtorrent_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.rtorrent\.rc" file file_session_rtorrent_home)
+    (filecon "/home/joe/\.rtorrent(/.*)?" any file_session_rtorrent_home)
+
+    (call session_home_dir_filetrans (session_t session_rtorrent_home_t file ".rtorrent.rc")) 
+    (call session_home_dir_filetrans (session_t session_rtorrent_home_t dir ".rtorrent")) 
+
+    (call session_use_inherited_terminals (session_rtorrent_t))
+    (call session_search_all_home (session_rtorrent_t)))
+
 (optional session_optional_session_elinks
     (type session_elinks_t)
     (call elinks_role_template (session_r session_t session_elinks_t
@@ -184,6 +202,9 @@
 
     (call session_home_dir_filetrans (session_t session_elinks_home_t dir ".elinks")) 
 
+    (call session_manage_generic_home_content_files (session_elinks_t))
+    (call session_home_dir_filetrans_session_home (session_elinks_t file "*"))
+    (call session_home_dir_filetrans_session_home (session_elinks_t dir "*"))
     (call session_use_terminals (session_elinks_t))
     (call session_search_all_home (session_elinks_t)))
 
@@ -237,7 +258,6 @@
         (type session_pincurses_t)
         (call pinentry_role_template_curses (session_r session_gpgagent_t session_pincurses_t))
 
-        (call session_search_home_dir (session_pincurses_t))
         (call stream_connect_pattern (session_pincurses_t session_gpg_home_t session_gpgagent_home_t
             session_gpgagent_t))
 
