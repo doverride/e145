@@ -304,6 +304,10 @@
 (allow has_unconfined_access_to_files_assets all_files_except
     all_chr_file_perms_except_execmod)
 
+(call files_root_filetrans_file (has_unconfined_access_to_files_assets dir "*"))
+(call files_root_filetrans_file (has_unconfined_access_to_files_assets file "*"))
+(call files_root_filetrans_file (has_unconfined_access_to_files_assets lnk_file "*"))
+
 (macro files_object ((type ARG1))
     (typeattributeset is_file_object ARG1)
     (typeattributeset not_associated_with_security_file_object ARG1)
@@ -426,6 +430,10 @@
 (macro files_root_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
     (call filetrans_pattern (ARG1 root_t ARG2 ARG3 ARG4)))
+
+(macro files_root_filetrans_file ((type ARG1)(class ARG2)
+    (name ARG3))
+    (call files_root_filetrans (ARG1 file_t ARG2 ARG3)))
 
 (macro files_tmp_object ((type ARG1))
     (typeattributeset is_tmp_file_object ARG1))
