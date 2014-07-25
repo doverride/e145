@@ -209,6 +209,7 @@
     (call session_home_dir_filetrans (session_t session_rtorrent_home_t file ".rtorrent.rc")) 
     (call session_home_dir_filetrans (session_t session_rtorrent_home_t dir ".rtorrent")) 
 
+    (call session_read_generic_home_content_files (session_rtorrent_t))
     (call session_use_inherited_terminals (session_rtorrent_t))
     (call session_search_all_home (session_rtorrent_t)))
 
