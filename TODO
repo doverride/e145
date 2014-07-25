@@ -1,15 +1,3 @@
-mutt.cil/elinks.cil:
-    probably rename this to mail since it is a mail client, then move the mail network port
-    declarations, portcons and accompanying macros from network.cil to mail.cil
-
-    probably rename this to http since it is a http client, then move the http network port
-    declarations, portcons and accompanying macros from network.cil to http.cil
-
-    would also have to rename the respective macro names for consistency
-
-    also note that once you move those macros out of network.cil , calls to them become optional
-    to external callers
-
 miscfiles.cil:
     create a miscfiles_read_terminfo_files()
 
@@ -21,7 +9,9 @@ session.cil:
     some of the (typetransition) rules in the role_template() calls can (and should) probably
     be moved to the source template macro itself
 
-    on second though, maybe not
+    on second thought, maybe not (probably not)
+
+    added: still worth investigating though
 
 auth.cil:
     miscfiles_read_generic_cert_files() and miscfiles_read_network_config_files()

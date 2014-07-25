@@ -19,11 +19,11 @@ contrib/dbus.cil
 contrib/dhcp.cil
 contrib/dm.cil
 contrib/dns.cil
-contrib/elinks.cil
 contrib/fstools.cil
 contrib/getty.cil
 contrib/gpg.cil
 contrib/hostname.cil
+contrib/http.cil
 contrib/hwclock.cil
 contrib/ip.cil
 contrib/iptables.cil

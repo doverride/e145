@@ -31,7 +31,7 @@
 (filecon "/etc/Muttrc\.local" file file_mutt_conf)
 
 (type port_imap_t)
-(call network_reserved_port_object (port_imap_t))
+(call network_hi_reserved_port_object (port_imap_t))
 
 (context port_imap (system_u object_r port_imap_t ((s0) (s0))))
 (portcon "tcp" 993 port_imap)

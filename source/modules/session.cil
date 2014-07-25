@@ -214,7 +214,7 @@
 
 (optional session_optional_session_elinks
     (type session_elinks_t)
-    (call elinks_role_template (session_r session_t session_elinks_t
+    (call http_role_template_elinks (session_r session_t session_elinks_t
         session_elinks_home_t))
 
     (type session_elinks_home_t)
@@ -393,7 +393,7 @@
     (call session_read_cert_files (session_newsb_t))
 
     (optional session_newsb_optional_session_elinks
-        (call elinks_role_template (session_r session_newsb_t session_elinks_t
+        (call http_role_template_elinks (session_r session_newsb_t session_elinks_t
             session_elinks_home_t))
         (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms)))
 

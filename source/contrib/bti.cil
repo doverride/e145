@@ -23,8 +23,6 @@
 
 (call selinux_getattr_filesystems (is_bti_subject))
 
-(call network_tcp_connect_http_port (is_bti_subject))
-
 (optional bti_optional_auth
     (call auth_nsswitch_client_subject (is_bti_subject)))
 
@@ -32,6 +30,9 @@
     (call miscfiles_read_network_config_files (is_bti_subject))
     (call miscfiles_read_generic_cert_files (is_bti_subject))
     (call miscfiles_read_localization_files (is_bti_subject)))
+
+(optional bti_optional_http
+    (call http_tcp_connect_http_port (is_bti_subject)))
 
 (macro bti_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_bti_role ARG1)

@@ -90,16 +90,6 @@
 (portcon "tcp" (61001 65535) port_unreserved)
 (portcon "udp" (61001 65535) port_unreserved)
 
-; move this to http module
-(type port_http_t)
-(call network_reserved_port_object (port_http_t))
-
-(context port_http (system_u object_r port_http_t ((s0) (s0))))
-(portcon "tcp" 80 port_http)
-(portcon "udp" 80 port_http)
-(portcon "tcp" 443 port_http)
-(portcon "udp" 443 port_http)
-
 (allow has_unconfined_access_to_network_assets is_interface_object
     (netif (all)))
 (allow has_unconfined_access_to_network_assets is_node_object (node
@@ -195,18 +185,6 @@
 
 (macro network_udp_send_generic_node ((type ARG1))
     (allow ARG1 node_t (node (udp_send sendto))))
-
-; move this to http module
-(macro network_tcp_connect_http_port ((type ARG1))
-    (allow ARG1 port_http_t (tcp_socket (name_connect))))
-
-; move this to mail module
-(macro network_tcp_connect_imap_port ((type ARG1))
-    (allow ARG1 port_imap_t (tcp_socket (name_connect))))
-
-; move this to mail module
-(macro network_tcp_connect_smtp_port ((type ARG1))
-    (allow ARG1 port_smtp_t (tcp_socket (name_connect))))
 
 (macro network_unconfined ((type ARG1))
     (typeattributeset has_unconfined_access_to_network_assets ARG1))
