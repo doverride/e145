@@ -55,7 +55,6 @@
 
 (optional mutt_optional_miscfiles
     (call miscfiles_read_network_environ_files (is_mutt_subject))
-    (call miscfiles_read_network_config_files (is_mutt_subject))
     (call miscfiles_read_localization_files (is_mutt_subject)))
 
 (macro mutt_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)

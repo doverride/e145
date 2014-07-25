@@ -8,7 +8,7 @@
 (context file_moc_exec (system_u object_r moc_exec_t ((s0)(s0))))
 (filecon "/usr/bin/mocp" file file_moc_exec)
 
-(allow is_moc_subject self create_unix_stream_stream_socket_perms)
+(allow is_moc_subject self unix_stream_socket_perms (listen accept)))
 (allow is_moc_subject self create_unix_dgram_socket_perms)
 (allow is_moc_subject self (unix_stream_socket (connectto)))
 (allow is_moc_subject self rw_fifo_file_perms)
