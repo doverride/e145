@@ -154,6 +154,8 @@
 
 (call subject_user_exemption_target (session_t))
 
+(call session_create_pty_node (session_t)) ; script/script replay
+
 (optional session_optional_tmpfiles
     (call tmpfiles_managable_object_exception (is_session_home_file_object))
     (call tmpfiles_relabable_object_exception (is_session_home_file_object)))
