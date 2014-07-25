@@ -22,7 +22,6 @@
 
 (allow is_dns_resolve_client_subject self create_tcp_socket_perms)
 (allow is_dns_resolve_client_subject self create_udp_socket_perms)
-(allow is_dns_resolve_client_subject self create_unix_stream_socket_perms)
 (allow is_dns_resolve_client_subject self r_netlink_route_socket_perms)
 
 (call network_tcp_sendrecv_generic_interface (is_dns_resolve_client_subject))
@@ -35,9 +34,6 @@
 (call dns_tcp_connect_dnssec_port (is_dns_resolve_client_subject))
 
 (call dns_read_resolv_config_files (is_dns_resolve_client_subject))
-
-(optional dns_resolve_client_optional_miscfiles
-    (call miscfiles_read_network_config_files (is_dns_resolve_client_subject)))
 
 (macro dns_etc_filetrans_resolv_conf_files ((type ARG1))
     (call files_etc_filetrans (ARG1 resolv_conf_t file "resolv.conf"))

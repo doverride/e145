@@ -285,6 +285,7 @@
     (call journald_client_subject (is_pam_client_subject)))
 
 (allow chkpwd_t self (capability (dac_override)))
+(allow chkpwd_t self create_unix_stream_socket_perms)
 
 (call system_read_sysctl_crypto_files (chkpwd_t))
 
@@ -307,6 +308,8 @@
 
 (optional chkpwd_optional_session
     (call session_use_inherited_terminals (chkpwd_t)))
+
+(allow utempter_t self create_unix_stream_socket_perms)
 
 (call terminal_dontaudit_use_all_inherited_pty_nodes (utempter_t))
 (call terminal_dontaudit_use_all_inherited_tty_nodes (utempter_t))

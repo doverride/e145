@@ -41,6 +41,8 @@
 (portcon "tcp" 22 port_ssh)
 (portcon "udp" 22 port_ssh)
 
+(allow is_ssh_subject self create_unix_stream_socket_perms)
+
 (call devices_read_urandom (is_ssh_subject))
 
 (call files_list_etc (is_ssh_subject)) ; /etc/gss/mech.d
@@ -60,6 +62,7 @@
 (optional ssh_optional_miscfiles
     (call miscfiles_read_network_environ_files (is_ssh_subject))
     (call miscfiles_read_localization_files (is_ssh_subject))
+    (call miscfiles_read_network_config_files (is_ssh_subject))
     (call miscfiles_read_generic_cert_files (is_ssh_subject)))
 
 (macro ssh_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
