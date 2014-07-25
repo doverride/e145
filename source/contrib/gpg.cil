@@ -50,8 +50,6 @@
 (context file_gpg_conf (system_u object_r gpg_conf_t ((s0)(s0))))
 (filecon "/etc/gnupg(/.*)?" any file_gpg_conf)
 
-(allow is_gpg_subject self create_unix_stream_socket_perms)
-
 (call system_read_sysctl_crypto_files (is_gpg_subject))
 
 (call devices_read_urandom (is_gpg_subject))

@@ -89,7 +89,6 @@
     (call read_files_pattern (ARG1 pcscd_conf_t pcscd_conf_t)))
 
 (macro pcsc_stream_connect ((type ARG1))
-    (allow ARG1 self create_unix_stream_socket_perms)
     (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 pcscd_run_t pcscd_run_t pcscd_t)))
 
