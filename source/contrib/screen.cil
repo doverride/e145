@@ -59,6 +59,9 @@
 (optional screen_optional_audit
     (call audit_client_subject (is_screen_subject)))
 
+(optional screen_optional_journald
+    (call journald_client_subject (is_screen_subject)))
+
 (optional screen_optional_miscfiles
     (call miscfiles_read_localization_files (is_screen_subject)))
 
