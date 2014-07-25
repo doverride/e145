@@ -302,8 +302,13 @@
 
     (call session_home_dir_filetrans (session_t session_mutt_home_t file ".muttrc")) 
     (call session_home_dir_filetrans (session_t session_mutt_home_t file ".signature")) 
+    (call session_home_dir_filetrans (session_t session_mutt_home_t file ".mutt_passwords")) 
 
-    (call session_home_dir_filetrans (session_mutt_t session_mutt_home_t file "*"))
+    (call session_home_dir_filetrans (session_mutt_t session_mutt_home_t file ".mutt_cache"))
+    (call session_home_dir_filetrans (session_mutt_t session_mutt_home_t file ".mutt_certificates"))
+
+    (call session_manage_generic_home_content_files (session_mutt_t))
+    (call session_home_dir_filetrans_session_home (session_mutt_t dir "*"))
 
     (type session_mutt_tmp_t)
     (call session_tmp_object (session_mutt_tmp_t))
