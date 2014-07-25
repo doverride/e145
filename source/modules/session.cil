@@ -157,8 +157,8 @@
 (call session_create_pty_node (session_t)) ; script/script replay
 
 (optional session_optional_tmpfiles
-    (call tmpfiles_managable_object_exception (is_session_home_file_object))
-    (call tmpfiles_relabable_object_exception (is_session_home_file_object)))
+    (call tmpfiles_manageable_object_exception (is_session_home_file_object))
+    (call tmpfiles_relabelable_object_exception (is_session_home_file_object)))
 
 (optional session_optional_auth
     (call auth_run_chkpwd (session_t session_r)))
