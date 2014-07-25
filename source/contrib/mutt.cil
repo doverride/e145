@@ -30,7 +30,6 @@
 (filecon "/etc/Muttrc" file file_mutt_conf)
 (filecon "/etc/Muttrc\.local" file file_mutt_conf)
 
-(allow is_mutt_subject self create_unix_stream_socket_perms)
 (allow is_mutt_subject self rw_fifo_file_perms)
 
 (call system_read_generic_proc_files (is_mutt_subject))
@@ -55,7 +54,6 @@
 
 (optional mutt_optional_miscfiles
     (call miscfiles_read_network_environ_files (is_mutt_subject))
-    (call miscfiles_read_network_config_files (is_mutt_subject))
     (call miscfiles_read_localization_files (is_mutt_subject)))
 
 (macro mutt_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
