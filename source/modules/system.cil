@@ -320,6 +320,9 @@
 (optional system_optional_cgroupagent
     (call cgagent_subtrans (system_t)))
 
+(optional system_optional_coredump
+    (call coredump_subtrans (system_t)))
+
 (optional system_optional_kmod
     (call kmod_subtrans (system_t)))
 

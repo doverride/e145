@@ -58,6 +58,7 @@ contrib/systemd/askpwd.cil
 contrib/systemd/backlight.cil
 contrib/systemd/binfmt.cil
 contrib/systemd/cgagent.cil
+contrib/systemd/coredump.cil
 contrib/systemd/cryptsetup.cil
 contrib/systemd/fsck.cil
 contrib/systemd/hostnamed.cil

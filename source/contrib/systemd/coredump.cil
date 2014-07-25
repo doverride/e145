@@ -1,0 +1,63 @@
+(typepermissive coredump_t)
+
+(roleattribute is_coredumpctl_role)
+
+(typeattribute is_coredump_admin_subject)
+
+(typeattribute is_coredump_file_object)
+(typeattributeset is_coredump_file_object (coredump_conf_t
+    coredump_var_lib_t))
+
+(type coredumpctl_t)
+(type coredumpctl_exec_t)
+(call application_subject_entry (coredumpctl_t coredumpctl_exec_t))
+(roletype is_coredumpctl_role coredumpctl_t)
+
+(context file_coredumpctl_exec (system_u object_r coredumpctl_exec_t ((s0) (s0))))
+(filecon "/usr/bin/coredumpctl" file file_coredumpctl_exec)
+
+(type coredump_t)
+(call subject_common_subject (coredump_t))
+
+(type coredump_exec_t)
+(call subject_entry (coredump_t coredump_exec_t))
+(roletype system_r coredump_t)
+
+(context file_coredump_exec (system_u object_r coredump_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-coredump" file file_coredump_exec)
+
+(type coredump_conf_t)
+(call files_etc_object (coredump_conf_t))
+
+(context file_coredump_conf (system_u object_r coredump_conf_t ((s0) (s0))))
+(filecon "/etc/systemd/coredump\.conf" file file_coredump_conf)
+
+(type coredump_var_lib_t)
+(call files_var_lib_object (coredump_var_lib_t))
+
+(context file_coredump_var_lib (system_u object_r coredump_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/systemd/coredump(/.*)?" any file_coredump_var_lib)
+
+(call admin_pattern (is_coredump_admin_subject is_coredump_file_object))
+
+(macro coredump_subtrans_coredumpctl ((type ARG1))
+    (call subtrans_pattern (ARG1 coredumpctl_exec_t coredumpctl_t)))
+
+(macro coredump_run_coredumpctl ((type ARG1)(role ARG2))
+    (call coredump_subtrans_coredumpctl (ARG1))
+    (roleattributeset is_coredumpctl_role (ARG2)))
+
+(macro coredump_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 coredump_exec_t coredump_t)))
+
+(macro coredump_read_config_files ((type ARG1))
+    (call systemd_search_config (ARG1))
+    (allow ARG1 coredump_conf_t read_file_perms))
+
+(macro coredump_read_lib_files ((type ARG1))
+    (call systemd_search_var_lib (ARG1))
+    (call read_files_pattern (ARG1 coredump_var_lib_t systemd_var_lib_t)))
+
+(macro coredump_admin ((type ARG1))
+    (typeattributeset is_coredump_admin_subject ARG1))
