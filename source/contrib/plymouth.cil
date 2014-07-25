@@ -65,8 +65,6 @@
 
 (call plymouth_read_config_files (is_plymouth_subject))
 
-(allow plymouth_t self create_unix_stream_socket_perms)
-
 (call system_stream_connectto (plymouth_t))
 
 (call plymouth_stream_connect_plymouthd (plymouth_t))
@@ -156,6 +154,7 @@
     (call manage_files_pattern (ARG1 plymouthd_run_t plymouthd_run_t)))
 
 (macro plymouth_stream_connect_plymouthd ((type ARG1))
+    (allow ARG1 self create_unix_stream_socket_perms)
     (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 plymouthd_run_t plymouthd_run_t plymouthd_t)))
 

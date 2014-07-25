@@ -71,7 +71,6 @@
 (allow wpa_t self (capability (net_raw net_admin)))
 (allow wpa_t self (process (signal)))
 (allow wpa_t self create_unix_dgram_socket_perms)
-(allow wpa_t self create_unix_stream_socket_perms)
 (allow wpa_t self create_udp_socket_perms)
 (allow wpa_t self create_netlink_socket_perms)
 (allow wpa_t self create_netlink_route_socket_perms)

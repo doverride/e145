@@ -175,8 +175,6 @@
     (call storage_read_fixed_disk_nodes (udevd_t))
     (call storage_read_scsi_generic_nodes (udevd_t)))
 
-(allow udevadm_t self create_unix_stream_socket_perms)
-
 (call udevd_manage_run_files (udevadm_t))
 (call udevd_stream_connect_udevd (udevadm_t))
 
@@ -223,6 +221,7 @@
     (call read_files_pattern (ARG1 udevd_run_t udevd_run_t)))
 
 (macro udevd_stream_connect_udevd ((type ARG1))
+    (allow ARG1 self create_unix_stream_socket_perms)
     (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 udevd_run_t udevd_run_t udevd_t)))
 

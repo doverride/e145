@@ -59,7 +59,6 @@
 
 (allow rtkitd_t self (capability (sys_nice sys_chroot setuid setgid sys_ptrace)))
 (allow rtkitd_t self (process (setsched setcap setrlimit)))
-(allow rtkitd_t self create_unix_stream_socket_perms)
 
 (call files_tmp_filetrans (rtkitd_t rtkitd_tmp_t dir "*"))
 

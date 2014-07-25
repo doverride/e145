@@ -63,8 +63,6 @@
 (filecon "/usr/bin/pkla-check-authorization" any file_polkitd_auth_exec)
 (filecon "/usr/lib/polkit-1/polkit-agent-helper-1" file file_polkitd_auth_exec)
 
-(allow is_polkit_subject self create_unix_stream_socket_perms)
-
 (call filesystem_getattr_filesystems (is_polkit_subject))
 
 (call selinux_get_filesystems_mount (is_polkit_subject))
@@ -109,6 +107,8 @@
 
 (optional polkit_optional_miscfiles
     (call miscfiles_read_localization_files (polkitd_t)))
+
+(allow polkitd_auth_t self create_unix_stream_socket_perms)
 
 (call polkit_list_var_lib (polkitd_auth_t))
 (call polkit_read_var_lib_files (polkitd_auth_t))

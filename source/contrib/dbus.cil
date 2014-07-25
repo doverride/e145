@@ -155,6 +155,7 @@
     (call read_files_pattern (ARG1 dbusd_var_lib_t dbusd_var_lib_t)))
 
 (macro dbus_stream_connect_system ((type ARG1))
+    (allow ARG1 self create_unix_stream_socket_perms)
     (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 dbusd_run_t dbusd_run_t dbusd_t)))
 

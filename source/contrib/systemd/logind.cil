@@ -64,7 +64,6 @@
 
 (allow logind_t self (capability (chown fowner sys_tty_config sys_admin dac_override)))
 (allow logind_t self (process (getcap setfscreate)))
-(allow logind_t self create_unix_stream_socket_perms)
 (allow logind_t self create_netlink_kobject_uevent_socket_perms)
 
 (allow logind_t logind_run_t manage_dir_perms)

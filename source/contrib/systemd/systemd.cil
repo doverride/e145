@@ -181,7 +181,7 @@
         sys_admin)))
 (allow systemd_t self (capability2 (block_suspend)))
 (allow systemd_t self (unix_dgram_socket (lock)))
-(allow systemd_t self create_unix_stream_stream_socket_perms)
+(allow systemd_t self (unix_stream_socket (listen accept)))
 (allow systemd_t self create_netlink_kobject_uevent_socket_perms)
 (allow systemd_t self (netlink_route_socket (nlmsg_write)))
 (allow systemd_t self create_netlink_selinux_socket_perms)
@@ -368,7 +368,6 @@
 
 (allow systemctl_t self (capability (net_admin)))
 (allow systemctl_t self (process (signal)))
-(allow is_systemctl_client_subject self create_unix_stream_socket_perms)
 
 (call system_read_generic_proc_files (is_systemctl_client_subject))
 
@@ -572,6 +571,7 @@
     (allow ARG1 systemd_t (process (signal))))
 
 (macro systemd_stream_connect ((type ARG1))
+    (allow ARG1 self create_unix_stream_socket_perms)
     (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 systemd_run_t systemd_run_t systemd_t)))
 

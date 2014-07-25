@@ -45,7 +45,6 @@
 (allow dhclient_t self (capability (net_raw)))
 (allow dhclient_t self (process (setcap)))
 (allow dhclient_t self create_packet_socket_perms)
-(allow dhclient_t self create_unix_stream_socket_perms)
 (allow dhclient_t self rw_fifo_file_perms)
 
 (allow dhclient_t dhclient_run_t manage_file_perms)

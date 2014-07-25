@@ -35,7 +35,6 @@
 
 (allow is_login_subject self (capability (sys_tty_config dac_override)))
 (allow is_login_subject self (process (signal)))
-(allow is_login_subject self create_unix_stream_socket_perms)
 (allow is_login_subject self rw_fifo_file_perms)
 
 (call system_read_generic_proc_files (is_login_subject))
@@ -78,6 +77,7 @@
 
 (allow sulogin_t self (capability (sys_admin)))
 (allow sulogin_t self (process (setexec setsched sigkill signull)))
+(allow sulogin_t self create_unix_stream_socket_perms)
 
 (call system_read_sysctl_crypto_files (sulogin_t))
 

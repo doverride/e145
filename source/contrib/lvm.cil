@@ -107,7 +107,6 @@
 (allow lvm_t self (capability (ipc_lock sys_nice sys_admin)))
 (allow lvm_t self (process (setsched)))
 (allow lvm_t self create_sem_perms)
-(allow lvm_t self create_unix_stream_socket_perms)
 
 (allow lvm_t lvm_lock_t manage_dir_perms)
 (allow lvm_t lvm_lock_t manage_file_perms)
@@ -191,6 +190,7 @@
     (call read_files_pattern (ARG1 lvm_conf_t lvm_conf_t)))
 
 (macro lvm_stream_connect_lvmetad ((type ARG1))
+    (allow ARG1 self create_unix_stream_socket_perms)
     (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 lvm_run_t
         lvm_run_t lvmetad_t)))

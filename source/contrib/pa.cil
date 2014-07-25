@@ -69,7 +69,7 @@
 (filecon "/var/lib/pulse(/.*)?" any file_pa_var_lib)
 
 (allow is_pa_session_or_pa_client_subject self (process (setcap setsched setrlimit)))
-(allow is_pa_session_or_pa_client_subject self create_unix_stream_stream_socket_perms)
+(allow is_pa_session_or_pa_client_subject self (unix_stream_socket (listen accept)))
 (allow is_pa_session_or_pa_client_subject self create_netlink_kobject_uevent_socket_perms)
 (allow is_pa_session_or_pa_client_subject self rw_fifo_file_perms)
 

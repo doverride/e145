@@ -9,7 +9,6 @@
 (filecon "/usr/lib/systemd/systemd-cgroups-agent" file file_cgagent_exec)
 
 (allow cgagent_t self (capability (net_admin)))
-(allow cgagent_t self create_unix_stream_socket_perms)
 
 (call system_read_generic_proc_files (cgagent_t))
 
