@@ -100,22 +100,6 @@
 (portcon "tcp" 443 port_http)
 (portcon "udp" 443 port_http)
 
-; move this to mail module
-(type port_imap_t)
-(call network_hi_reserved_port_object (port_imap_t))
-
-(context port_imap (system_u object_r port_imap_t ((s0) (s0))))
-(portcon "tcp" 993 port_imap)
-(portcon "udp" 993 port_imap)
-
-; move this to mail module
-(type port_smtp_t)
-(call network_reserved_port_object (port_smtp_t))
-
-(context port_smtp (system_u object_r port_smtp_t ((s0) (s0))))
-(portcon "tcp" 465 port_imap)
-(portcon "udp" 465 port_imap)
-
 (allow has_unconfined_access_to_network_assets is_interface_object
     (netif (all)))
 (allow has_unconfined_access_to_network_assets is_node_object (node

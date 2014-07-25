@@ -30,6 +30,20 @@
 (filecon "/etc/Muttrc" file file_mutt_conf)
 (filecon "/etc/Muttrc\.local" file file_mutt_conf)
 
+(type port_imap_t)
+(call network_reserved_port_object (port_imap_t))
+
+(context port_imap (system_u object_r port_imap_t ((s0) (s0))))
+(portcon "tcp" 993 port_imap)
+(portcon "udp" 993 port_imap)
+
+(type port_smtp_t)
+(call network_reserved_port_object (port_smtp_t))
+
+(context port_smtp (system_u object_r port_smtp_t ((s0) (s0))))
+(portcon "tcp" 465 port_smtp)
+(portcon "udp" 465 port_smtp)
+
 (allow is_mutt_subject self create_unix_stream_socket_perms)
 (allow is_mutt_subject self rw_fifo_file_perms)
 
@@ -44,12 +58,12 @@
 (call files_read_generic_etc_files (is_mutt_subject)) ; /etc/terminfo
 (call files_read_generic_usr_files (is_mutt_subject)) ; /usr/share/terminfo/.*
 
-(call network_tcp_connect_imap_port (is_mutt_subject))
-(call network_tcp_connect_smtp_port (is_mutt_subject))
+(call mail_tcp_connect_imap_port (is_mutt_subject))
+(call mail_tcp_connect_smtp_port (is_mutt_subject))
 
 (call selinux_getattr_filesystems (is_mutt_subject))
 
-(call mutt_read_config_files (is_mutt_subject))
+(call mail_read_mutt_config_files (is_mutt_subject))
 
 (optional mutt_optional_auth
     (call auth_nsswitch_client_subject (is_mutt_subject)))
@@ -59,7 +73,7 @@
     (call miscfiles_read_network_config_files (is_mutt_subject))
     (call miscfiles_read_localization_files (is_mutt_subject)))
 
-(macro mutt_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
+(macro mail_role_template_mutt ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
     (type ARG5))
     (roleattributeset is_mutt_role ARG1)
     (typeattributeset is_mutt_subject ARG3)
@@ -73,12 +87,19 @@
     (call files_tmp_filetrans (ARG3 ARG5 dir "*"))
     (call files_tmp_filetrans (ARG3 ARG5 file "*")))
 
-(macro mutt_role_template_gpg ((role ARG1)(type ARG2)(type ARG3))
+(macro mail_role_template_mutt_gpg ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_mutt_pgp_role ARG1)
     (typeattributeset is_mutt_pgp_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 mutt_pgp_exec_t ARG3)))
 
-(macro mutt_read_config_files ((type ARG1))
+(macro mail_read_mutt_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 mutt_conf_t read_file_perms))
+
+(macro mail_tcp_connect_imap_port ((type ARG1))
+    (allow ARG1 port_imap_t (tcp_socket (name_connect))))
+
+(macro mail_tcp_connect_smtp_port ((type ARG1))
+    (allow ARG1 port_smtp_t (tcp_socket (name_connect))))
+

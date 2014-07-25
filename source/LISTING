@@ -14,6 +14,7 @@ contrib/application.cil
 contrib/audit.cil
 contrib/auth.cil
 contrib/bt.cil
+contrib/bti.cil
 contrib/dbus.cil
 contrib/dhcp.cil
 contrib/dm.cil
@@ -31,10 +32,10 @@ contrib/kmod.cil
 contrib/libraries.cil
 contrib/login.cil
 contrib/lvm.cil
+contrib/mail.cil
 contrib/miscfiles.cil
 contrib/moc.cil
 contrib/mount.cil
-contrib/mutt.cil
 contrib/networkmgr.cil
 contrib/newsb.cil
 contrib/ntp.cil

@@ -171,6 +171,29 @@
     (call seutil_run_secilc (session_t session_r))
     (call seutil_run_setfiles (session_t session_r)))
 
+(optional session_optional_session_bti
+    (type session_bti_t)
+    (call bti_role_template (session_r session_t session_bti_t
+        session_bti_home_t))
+
+    (type session_bti_home_t)
+    (call session_home_object (session_bti_home_t))
+
+    (context file_session_bti_home (session_u object_r session_bti_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.bti" file file_session_bti_home)
+    (filecon "/home/joe/\.bti\.log.*" file file_session_bti_home)
+
+    (call session_home_dir_filetrans (session_t session_bti_home_t file ".bti"))
+    (call session_home_dir_filetrans (session_t session_bti_home_t file ".bti.log")) 
+
+    (call session_home_dir_filetrans (session_bti_t session_bti_home_t file ".bti"))
+    (call session_home_dir_filetrans (session_bti_t session_bti_home_t file ".bti.log"))
+
+    (call commands_shell_auto_subject_type_transition (session_bti_t session_t))
+
+    (call session_use_inherited_terminals (session_bti_t))
+    (call session_search_all_home (session_bti_t)))
+
 (optional session_optional_session_rtorrent
     (type session_rtorrent_t)
     (call bt_role_template_rtorrent (session_r session_t session_rtorrent_t
@@ -287,7 +310,7 @@
 
 (optional session_optional_session_mutt
     (type session_mutt_t)
-    (call mutt_role_template (session_r session_t session_mutt_t
+    (call mail_role_template_mutt (session_r session_t session_mutt_t
         session_mutt_home_t session_mutt_tmp_t))
 
     (type session_mutt_home_t)
@@ -316,7 +339,7 @@
     (call session_read_generic_home_content_files (session_mutt_t)) ; ~/.nanorc
 
     (type session_mutt_gpg_t)
-    (call mutt_role_template_gpg (session_r session_mutt_t session_mutt_gpg_t))
+    (call mail_role_template_mutt_gpg (session_r session_mutt_t session_mutt_gpg_t))
 
     (call session_use_inherited_terminals (session_mutt_gpg_t))
     (call session_search_all_home (session_mutt_gpg_t))

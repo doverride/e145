@@ -1,0 +1,42 @@
+(roleattribute is_bti_role)
+
+(typeattribute is_bti_subject)
+
+(type bti_exec_t)
+(call application_subject_entry (is_bti_subject bti_exec_t))
+
+(context file_bti_exec (system_u object_r bti_exec_t ((s0)(s0))))
+(filecon "/usr/bin/bti" file file_bti_exec)
+
+(allow is_bti_subject self create_unix_stream_socket_perms)
+(allow is_bti_subject self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (is_bti_subject))
+
+(call commands_execute_bin_files (is_bti_subject))
+
+(call devices_read_urandom (is_bti_subject))
+
+(call files_dontaudit_list_all (is_bti_subject))
+(call files_list_tmp (is_bti_subject))
+(call files_audit_access_generic_tmp_dirs (is_bti_subject))
+
+(call selinux_getattr_filesystems (is_bti_subject))
+
+(call network_tcp_connect_http_port (is_bti_subject))
+
+(optional bti_optional_auth
+    (call auth_nsswitch_client_subject (is_bti_subject)))
+
+(optional bti_optional_miscfiles
+    (call miscfiles_read_network_config_files (is_bti_subject))
+    (call miscfiles_read_generic_cert_files (is_bti_subject))
+    (call miscfiles_read_localization_files (is_bti_subject)))
+
+(macro bti_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_bti_role ARG1)
+    (typeattributeset is_bti_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 bti_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG4 read_lnk_file_perms))
