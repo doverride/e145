@@ -217,9 +217,6 @@
 (call commands_shell_auto_subject_type_transition (systemd_t
     systemd_daemon_t))
 
-(auditallow systemd_t bin_t (file (execute_no_trans))) ; temporary hack for auditing
-(auditallow systemd_t sd_helper_exec_t (file (execute_no_trans))) ; temporary hack for auditing
-
 (call devices_manage_dirs (systemd_t))
 (call devices_manage_generic_chr_files (systemd_t))
 (call devices_read_sysfs_files (systemd_t))

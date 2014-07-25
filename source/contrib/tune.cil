@@ -95,8 +95,6 @@
 (call commands_execute_bin_files (tuned_t)) ; /usr/bin/cpupower
 (call commands_execute_shell_files (tuned_t))
 
-(auditallow tuned_t bin_t (file (execute_no_trans))) ; temporary hack for auditing
-
 (call devices_list (tuned_t))
 (call devices_list_sysfs (tuned_t))
 (call devices_read_cpu (tuned_t))

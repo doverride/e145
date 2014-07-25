@@ -98,8 +98,6 @@
 (call commands_execute_bin_files (udevd_t))
 (call commands_execute_shell_files (udevd_t))
 
-(auditallow udevd_t bin_t (file (execute_no_trans))) ; temporary hack for audit purpose
-
 (call devices_list_sysfs (udevd_t))
 (call devices_manage_dirs (udevd_t))
 (call devices_manage_files (udevd_t))
