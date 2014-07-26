@@ -1,3 +1,8 @@
+grubby:
+    work on bootloader: grubby
+
+    grubby is run from rpm scriplets via some other shell scripts (kernel-install update-kernel-pkg)
+
 miscfiles.cil:
     create a miscfiles_read_terminfo_files()
 
