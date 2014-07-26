@@ -57,7 +57,7 @@
 
 (macro coredump_read_lib_files ((type ARG1))
     (call systemd_search_var_lib (ARG1))
-    (call read_files_pattern (ARG1 coredump_var_lib_t systemd_var_lib_t)))
+    (call read_files_pattern (ARG1 coredump_var_lib_t coredump_var_lib_t)))
 
 (macro coredump_admin ((type ARG1))
     (typeattributeset is_coredump_admin_subject ARG1))
