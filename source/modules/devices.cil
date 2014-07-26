@@ -539,6 +539,7 @@
     (allow ARG1 is_dev_file_object (chr_file (write)))
     (typeattributeset can_write_memory_raw ARG1)
     (optional devices_optional_storage
+        (call storage_update_timestamp_removable_nodes (ARG1))
         (call storage_update_timestamp_fixed_disk_nodes (ARG1))
         (call storage_update_timestamp_scsi_generic_nodes (ARG1))))
 

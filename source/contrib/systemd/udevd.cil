@@ -171,6 +171,7 @@
 
 (optional udevd_optional_storage
     (call storage_read_fixed_disk_nodes (udevd_t))
+    (call storage_read_removable_nodes (udevd_t))
     (call storage_read_scsi_generic_nodes (udevd_t)))
 
 (call udevd_manage_run_files (udevadm_t))
