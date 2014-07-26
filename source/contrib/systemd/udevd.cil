@@ -105,6 +105,7 @@
 (call devices_manage_generic_chr_files (udevd_t))
 (call devices_manage_lnk_files (udevd_t))
 (call devices_read_event (udevd_t))
+(call devices_read_usb (udevd_t))
 (call devices_read_memory_raw (udevd_t))
 (call devices_read_sound (udevd_t)) ; alsactl
 (call devices_read_urandom (udevd_t))
