@@ -50,14 +50,29 @@
 (context file_gpg_conf (system_u object_r gpg_conf_t ((s0)(s0))))
 (filecon "/etc/gnupg(/.*)?" any file_gpg_conf)
 
+(allow is_gpg_subject self rw_fifo_file_perms)
+
+(call can_exec (is_gpg_subject gpg_helper_exec_t))
+
 (call system_read_sysctl_crypto_files (is_gpg_subject))
 
 (call devices_read_urandom (is_gpg_subject))
 (call devices_read_random (is_gpg_subject))
 
-(call files_search_tmp (is_gpg_subject))
+(call files_read_generic_etc_files (is_gpg_subject)) ; FIXME: /etc/openldap/ldap.conf (for keyserver)
+(call files_list_tmp (is_gpg_subject))
+
+(call selinux_getattr_filesystems (is_gpg_subject))
+
+(optional gpg_optional_auth
+    (call auth_nsswitch_client_subject (is_gpg_subject)))
+
+(optional gpg_optional_http
+    (call http_tcp_connect_http_port (is_gpg_subject))) ; keyserver
 
 (optional gpg_optional_miscfiles
+    (call miscfiles_read_generic_cert_files (is_gpg_subject))
+    (call miscfiles_read_network_config_files (is_gpg_subject))
     (call miscfiles_read_localization_files (is_gpg_subject)))
 
 (allow is_gpgagent_subject self create_unix_stream_stream_socket_perms)

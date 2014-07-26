@@ -250,6 +250,10 @@
     (call stream_connect_pattern (session_gpg_t session_gpgagent_home_t session_gpgagent_home_t
         session_gpgagent_t))
 
+    (allow session_gpg_t session_tmp_t read_file_perms) ; pass
+
+    (call manage_files_pattern (session_gpg_t session_pass_home_t session_pass_home_t))
+
     (call session_use_terminals (session_gpg_t))
     (call session_search_all_home (session_gpg_t))
 
