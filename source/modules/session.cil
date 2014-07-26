@@ -235,6 +235,7 @@
 
     (call session_home_dir_filetrans (session_t session_elinks_home_t dir ".elinks")) 
 
+    (call session_manage_generic_home_content_dirs (session_elinks_t))
     (call session_manage_generic_home_content_files (session_elinks_t))
     (call session_home_dir_filetrans_session_home (session_elinks_t file "*"))
     (call session_home_dir_filetrans_session_home (session_elinks_t dir "*"))
@@ -682,6 +683,10 @@
 (macro session_manage_generic_home_content_files ((type ARG1))
     (call session_search_home_dir (ARG1))
     (call manage_files_pattern (ARG1 session_home_t session_home_t)))
+
+(macro session_manage_generic_home_content_dirs ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 session_home_t session_home_t)))
 
 (macro session_read_generic_tmp_files ((type ARG1))
     (call files_search_tmp (ARG1))

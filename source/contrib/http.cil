@@ -51,6 +51,7 @@
     (allow is_elinks_subject self (tcp_socket (listen accept)))
     (call bt_tcp_bind_bt_port (is_elinks_subject))
     (call network_tcp_bind_generic_node (is_elinks_subject))
+    (call network_tcp_connect_all_ephemeral_ports (is_elinks_subject))
     (call network_tcp_connect_all_unreserved_ports (is_elinks_subject)))
 
 (optional elinks_optional_miscfiles
