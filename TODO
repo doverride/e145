@@ -1,3 +1,30 @@
+cryptsetup:
+    in other policy models cryptsetup runs in the lvm_t domain, just like other "dm" tools
+    like dm-setup and dm-eventd
+
+    in this policy i moved cryptsetup out of lvm and into fstools, additionally i moved dm-setup
+    as well as dmeventd out of lvm and into dm
+
+    at some point i started noticing domains wanting to use dm-setups semaphores
+    one example is when session_t processes run cryptsetup
+
+    i supose somehow they communicate with systemd and systemd runs dm-setup then the event follows
+
+    moving crypsetup to the dmsetup_t domain, and forcing unconfined domains to run dmsetup labeled
+    files with a domain trnnsition would in part deal with the issue where dmsetup_t uses
+    session_t's sempaphores
+
+    that still leaves one with dmsetup_t using lvm_t's semaphores
+    lvm utilities do not actually run crypsetup however
+
+    all said and done, i believe there is no easy way out of this semaphore business
+    i am however wondering whether cryptsetup (formely known as dm-crypt) should be moved into
+    the dm module instead
+
+    references:
+        lvm_rw_lvm_semaphores(dmsetup_t)
+        session_rw_sempahores(dmsetup_t)
+
 miscfiles.cil:
     create a miscfiles_read_terminfo_files()
 
