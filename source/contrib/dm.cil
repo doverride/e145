@@ -1,9 +1,10 @@
+(roleattribute is_dmcrypt_role)
 (roleattribute is_dmsetup_role)
 
 (typeattribute is_dm_admin_subject)
 (typeattribute is_dm_subject)
 
-(typeattributeset is_dm_subject (dmeventd_t dmsetup_t))
+(typeattributeset is_dm_subject (dmeventd_t dmsetup_t dmcrypt_t))
 
 (type dmeventd_t)
 (type dmeventd_exec_t)
@@ -41,6 +42,15 @@
     (s0))))
 (filecon "/usr/sbin/dmsetup" file file_dmsetup_exec)
 
+(type dmcrypt_t)
+(type dmcrypt_exec_t)
+(call application_subject_entry (dmcrypt_t dmcrypt_exec_t))
+(roletype is_dmcrypt_role dmcrypt_t)
+
+(context file_dmcrypt_exec (system_u object_r dmcrypt_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/cryptsetup" file file_dmcrypt_exec)
+
 (allow dmsetup_t self (capability (sys_admin)))
 
 (call system_read_generic_proc_files (dmsetup_t))
@@ -71,6 +81,13 @@
 (allow is_dm_admin_subject dmeventd_unit_t (service (all)))
 
 (call admin_pattern (is_dm_admin_subject dmeventd_run_t))
+
+(macro dm_subtrans_dmcrypt ((type ARG1))
+    (call subtrans_pattern (ARG1 dmcrypt_exec_t dmcrypt_t)))
+
+(macro dm_run_dmcrypt ((type ARG1)(role ARG2))
+    (call dm_subtrans_dmcrypt (ARG1))
+    (roleattributeset is_dmcrypt_role (ARG2)))
 
 (macro dm_subtrans_dmsetup ((type ARG1))
     (call subtrans_pattern (ARG1 dmsetup_exec_t dmsetup_t)))
