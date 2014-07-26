@@ -190,6 +190,11 @@
     (typeattributeset can_read_fixed_disk_raw ARG1)
     (typeattributeset can_write_fixed_disk_raw ARG1))
 
+(macro storage_manage_removable_nodes ((type ARG1))
+    (allow ARG1 self (capability (mknod)))
+    (call devices_search (ARG1))
+    (allow ARG1 device_removable_t manage_blk_file_perms))
+
 (macro storage_read_fixed_disk_nodes ((type ARG1))
     (call devices_search (ARG1))
     (allow ARG1 device_fixed_disk_t read_blk_file_perms)

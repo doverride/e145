@@ -517,6 +517,7 @@
     (typeattributeset can_read_memory_raw ARG1)
     (typeattributeset can_write_memory_raw ARG1)
     (optional devices_optional_storage
+        (call storage_manage_removable_nodes (ARG1))
         (call storage_manage_fixed_disk_nodes (ARG1))
         (call storage_manage_scsi_generic_nodes (ARG1))))
 
