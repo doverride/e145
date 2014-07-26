@@ -544,7 +544,7 @@
 
 (context file_session_pass_home (session_u object_r session_pass_home_t ((s0)(s0))))
 (filecon "/home/joe/\.password-store(/.*)?" any file_session_pass_home)
-(call session_home_dir_filetrans (session_t session_pass_home_t file ".password-store")) 
+(call session_home_dir_filetrans (session_t session_pass_home_t dir ".password-store")) 
 
 (type session_google_home_t)
 (call session_home_object (session_google_home_t))
