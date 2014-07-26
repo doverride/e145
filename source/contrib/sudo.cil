@@ -71,6 +71,9 @@
 (optional sudo_optional_auditd
     (call audit_client_subject (is_sudo_subject)))
 
+(optional sudo_optional_initctl
+    (call initctl_getattr_run_fifo_files (is_sudo_subject)))
+
 (optional sudo_optional_journald
     (call journald_client_subject (is_sudo_subject)))
 

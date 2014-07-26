@@ -4,7 +4,7 @@
 
 (typeattribute is_alsa_file_object)
 (typeattributeset is_alsa_file_object (alsa_conf_t alsa_unit_t
-    alsa_var_lib_t))
+    alsa_var_lib_t alsactl_lock_t))
 
 (type alsactl_t)
 (type alsactl_exec_t)
@@ -21,6 +21,13 @@
 (context file_alsactl_run (system_u object_r alsactl_run_t ((s0)
     (s0))))
 (filecon "/run/alsactl\.pid" file file_alsactl_run)
+
+(type alsactl_lock_t)
+(call files_run_lock_object (alsactl_lock_t))
+
+(context file_alsactl_lock (system_u object_r alsactl_lock_t ((s0)
+    (s0))))
+(filecon "/run/lock/asound\.state\.lock" file file_alsactl_lock)
 
 (type alsa_conf_t)
 (call files_etc_object (alsa_conf_t))
@@ -50,7 +57,11 @@
 (allow alsactl_t alsactl_run_t manage_file_perms)
 (call files_run_filetrans (alsactl_t alsactl_run_t file "*"))
 
+(allow alsactl_t alsactl_lock_t manage_file_perms)
+(call files_run_lock_filetrans (alsactl_t alsactl_lock_t file "*"))
+
 (call devices_rw_sound (alsactl_t))
+(call devices_read_sysfs_files (alsactl_t))
 (call devices_read_generic_chr_files (alsactl_t)) ; early mislabeled /dev/snd/ControlC.*
 
 (call alsa_read_config_files (alsactl_t))
