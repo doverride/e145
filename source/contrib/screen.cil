@@ -66,6 +66,9 @@
 (optional screen_optional_miscfiles
     (call miscfiles_read_localization_files (is_screen_subject)))
 
+(optional screen_optional_terminal
+    (call terminal_dontaudit_use_unallocated_tty_nodes (is_screen_subject)))
+
 (optional screen_optional_utmp
     (call utmp_read_run_files (is_screen_subject)))
 
