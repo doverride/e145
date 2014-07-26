@@ -485,12 +485,15 @@
     (allow ARG1 systemd_t (system (start))))
 
 (macro systemd_start_generic_service ((type ARG1))
+    (call systemd_search_generic_unit (ARG1))
     (allow ARG1 systemd_unit_t (service (start))))
 
 (macro systemd_start_power_service ((type ARG1))
+    (call systemd_search_generic_unit (ARG1))
     (allow ARG1 systemd_power_unit_t (service (start))))
 
 (macro systemd_get_status_generic_service ((type ARG1))
+    (call systemd_search_generic_unit (ARG1))
     (allow ARG1 systemd_unit_t (service (status))))
 
 (macro systemd_get_status_transient_system_service ((type ARG1))
@@ -527,7 +530,9 @@
     is_systemd_unit_file_object)))
 
 (macro systemd_search_generic_unit ((type ARG1))
-    (allow ARG1 systemd_unit_t (dirs (search))))
+    (allow ARG1 systemd_unit_t (dirs (search)))
+    (optional systemd_search_generic_unit_optional_libraries
+        (call libraries_search (ARG1))))
 
 (macro systemd_getattr_unix_stream_socket ((type ARG1))
     (allow ARG1 systemd_t (unix_stream_socket (getattr))))

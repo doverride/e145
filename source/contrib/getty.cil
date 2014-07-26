@@ -52,5 +52,9 @@
 (call admin_pattern (is_getty_admin_subject getty_unit_t))
 (allow is_getty_admin_subject getty_unit_t (service (all)))
 
+(macro getty_start_service ((type ARG1))
+    (call systemd_search_generic_unit (ARG1))
+    (allow ARG1 getty_unit_t (service (start))))
+
 (macro getty_admin ((type ARG1))
     (typeattributeset is_getty_admin_subject ARG1))

@@ -55,6 +55,10 @@
     (call files_search_usr (ARG1))
     (allow ARG1 lib_t (dirs (list))))
 
+(macro libraries_search ((type ARG1))
+    (call files_search_usr (ARG1))
+    (allow ARG1 lib_t (dirs (list))))
+
 (macro libraries_use_ld_so ((type ARG1))
     (call libraries_list (ARG1))
     (allow ARG1 ld_so_t mmap_file_perms)
