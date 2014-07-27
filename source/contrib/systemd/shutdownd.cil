@@ -17,8 +17,8 @@
 (type shutdown_run_t)
 (call files_run_object (shutdown_run_t))
 
-(context file_shutdown_run (system_u object_r shutdown_exec_t ((s0) (s0))))
-(filecon "/run/systemd/shutdown(/.*)?" any file_shutdown_exec)
+(context file_shutdown_run (system_u object_r shutdown_run_t ((s0) (s0))))
+(filecon "/run/systemd/shutdown(/.*)?" any file_shutdown_run)
 
 (type shutdownd_t)
 (type shutdownd_exec_t)
