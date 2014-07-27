@@ -339,6 +339,12 @@
 (macro files_search_boot ((type ARG1))
     (allow ARG1 boot_t (dirs (search))))
 
+(macro files_read_boot_files ((type ARG1))
+    (call read_files_pattern (ARG1 boot_t boot_t)))
+
+(macro files_rw_boot_files ((type ARG1))
+    (call rw_files_pattern (ARG1 boot_t boot_t)))
+
 (macro files_var_cache_object ((type ARG1))
     (typeattributeset is_cache_file_object ARG1))
 

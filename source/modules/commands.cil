@@ -24,6 +24,7 @@
 (filecon "/usr/libexec" dir bin)
 (filecon "/usr/sbin/.*" any bin)
 (filecon "/usr/sbin" dir bin)
+(filecon "/usr/src/kernels/[^/]*/scripts/.*" file bin)
 
 (type shell_t)
 (call commands_bin_object (shell_t))

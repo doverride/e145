@@ -368,6 +368,12 @@
     (call devices_search_sysfs (ARG1))
     (call read_files_pattern (ARG1 cgroup_t cgroup_t)))
 
+(macro filesystem_read_dosfs_files ((type ARG1))
+    (call read_files_pattern (ARG1 dosfs_t dosfs_t)))
+
+(macro filesystem_manage_dosfs_files ((type ARG1))
+    (call manage_files_pattern (ARG1 dosfs_t dosfs_t)))
+
 (macro filesystem_rw_cgroup_files ((type ARG1))
     (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 cgroup_t cgroup_t)))

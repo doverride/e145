@@ -42,6 +42,53 @@
 (filecon "/etc/grub2-efi\.cfg" symlink file_bootloader_conf)
 (filecon "/etc/prelink\.conf\.d/grub2\.conf" file file_bootloader_conf)
 
+(type grubby_log_t)
+(call files_var_log_object (grubby_log_t))
+
+(context file_grubby_log (system_u object_r grubby_log_t ((s0)
+    (s0))))
+(filecon "/var/log/grubby" file file_grubby_log)
+
+(allow grubby_t self rw_fifo_file_perms)
+
+(allow grubby_t grubby_log_t read_file_perms)
+(allow grubby_t grubby_log_t append_file_perms)
+(allow grubby_t grubby_log_t delete_file_perms)
+(allow grubby_t grubby_log_t create_file_perms)
+(allow grubby_t grubby_log_t (file (setattr)))
+(call files_var_log_filetrans (grubby_t grubby_log_t file "*"))
+
+(call system_read_generic_proc_files (grubby_t))
+
+(call commands_execute_bin_files (grubby_t)) ; /usr/bin/grub-editenv
+(call commands_execute_shell_files (grubby_t))
+
+(call devices_list_sysfs (grubby_t))
+(call devices_read_sysfs_files (grubby_t))
+
+(call files_list_boot (grubby_t)) ; /boot/grub2/grubenv
+(call files_rw_boot_files (grubby_t)) ; /boot/grub2/grubenv
+(call files_list_etc (grubby_t)) ; /etc/popt.d
+
+(call filesystem_manage_dosfs_files (grubby_t)) ; /boot/efi/EFI/fedora/grub.cfg
+
+(call selinux_getattr_filesystems (grubby_t))
+
+(optional grubby_optional_miscfiles
+    (call miscfiles_read_localization_files (grubby_t)))
+
+(optional grubby_optional_rpm
+    (call rpm_append_inherited_tmp_files (grubby_t))
+    (call rpm_read_inherited_tmp_files (grubby_t))
+    (call rpm_read_inherited_fifo_files (grubby_t))
+    (call rpm_use_fd (grubby_t)))
+
+(optional grubby_optional_session
+    (call session_use_inherited_terminals (grubby_t)))
+
+(optional grubby_optional_storage
+    (call storage_read_fixed_disk_nodes (grubby_t)))
+
 (allow is_bootloader_admin_subject is_bootloader_subject signal_perms)
 (call ps_subject_pattern (is_bootloader_subject is_bootloader_subject))
 

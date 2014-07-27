@@ -629,6 +629,9 @@
 (macro session_link_keyring ((type ARG1))
     (allow ARG1 session_t (key (link))))
 
+(macro session_search_keyring ((type ARG1))
+    (allow ARG1 session_t (key (search))))
+
 (macro session_dynamic_subject_type_transition ((type ARG1))
     (call subject_dynamic_type_transition_subject (ARG1))
     (call dynamic_subject_type_transition_pattern (ARG1

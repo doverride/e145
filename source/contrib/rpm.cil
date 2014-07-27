@@ -139,5 +139,20 @@
     (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 rpm_var_lib_t rpm_var_lib_t)))
 
+(macro rpm_use_fd ((type ARG1))
+    (allow ARG1 rpm_t (fd (use))))
+
+(macro rpm_signull ((type ARG1))
+    (allow ARG1 rpm_t (process (signull))))
+
+(macro rpm_append_inherited_tmp_files ((type ARG1))
+    (allow ARG1 rpm_tmp_t append_inherited_file_perms))
+
+(macro rpm_read_inherited_fifo_files ((type ARG1))
+    (allow ARG1 rpm_t (fifo_file (read))))
+
+(macro rpm_read_inherited_tmp_files ((type ARG1))
+    (allow ARG1 rpm_tmp_t read_inherited_file_perms))
+
 (macro rpm_admin ((type ARG1))
     (typeattributeset is_rpm_admin_subject ARG1))
