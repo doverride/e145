@@ -79,6 +79,8 @@
         (call dns_etc_filetrans_resolv_conf_files (ARG1)))
     (optional unconfined_subject_optional_libraries
         (call libraries_etc_filetrans_ld_so_cache_files (ARG1)))
+    (optional unconfined_subject_optional_bootloader
+        (call bootlaoder_etc_filetrans_conf_files (ARG1)))
     (optional unconfined_optional_dbus
         (call dbus_unconfined (ARG1)))
     (optional unconfined_optional_seutil

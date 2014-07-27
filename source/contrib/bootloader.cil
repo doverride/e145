@@ -1,14 +1,26 @@
+(typepermissive grub_t)
 (typepermissive grubby_t)
 
+(roleattribute is_grub_role)
 (roleattribute is_grubby_role)
 
 (typeattribute is_bootloader_admin_subject)
 
 (typeattribute is_bootloader_subject)
-(typeattributeset is_bootloader_subject (grubby_t))
+(typeattributeset is_bootloader_subject (grub_t grubby_t))
 
 (typeattribute is_bootloader_file_object)
 (typeattributeset is_bootloader_file_object (bootloader_conf_t))
+
+(type grub_t)
+(type grub_exec_t)
+(call application_subject_entry (grub_t grub_exec_t))
+(roleattributeset is_grub_role system_r)
+(roletype is_grub_role grub_t)
+
+(context file_grub_exec (system_u object_r grub_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/grub2-.*" file file_grub_exec)
 
 (type grubby_t)
 (type grubby_exec_t)
@@ -26,11 +38,21 @@
 (context file_bootloader_conf (system_u object_r bootloader_conf_t ((s0)
     (s0))))
 (filecon "/etc/default/grub" file file_bootloader_conf)
+(filecon "/etc/grub\.d(/.*)?" any file_bootloader_conf)
+(filecon "/etc/grub2-efi\.cfg" symlink file_bootloader_conf)
+(filecon "/etc/prelink\.conf\.d/grub2\.conf" file file_bootloader_conf)
 
 (allow is_bootloader_admin_subject is_bootloader_subject signal_perms)
 (call ps_subject_pattern (is_bootloader_subject is_bootloader_subject))
 
 (call admin_pattern (is_bootloader_subject is_bootloader_file_object))
+
+(macro bootloader_subtrans_grub ((type ARG1))
+    (call subtrans_pattern (ARG1 grub_exec_t grub_t)))
+
+(macro bootloader_run_grub ((type ARG1)(role ARG2))
+    (call bootloader_subtrans_grub (ARG1))
+    (roleattributeset is_grub_role (ARG2)))
 
 (macro bootloader_subtrans_grubby ((type ARG1))
     (call subtrans_pattern (ARG1 grubby_exec_t grubby_t)))
@@ -38,6 +60,15 @@
 (macro bootloader_run_grubby ((type ARG1)(role ARG2))
     (call bootloader_subtrans_grubby (ARG1))
     (roleattributeset is_grubby_role (ARG2)))
+
+(macro bootlaoder_etc_filetrans_conf_files ((type ARG1))
+    (call files_etc_filetrans (ARG1 bootloader_conf_t file "grub"))
+    (call files_etc_filetrans (ARG1 bootloader_conf_t lnk_file "grub2-efi.cfg"))
+    (call files_etc_filetrans (ARG1 bootloader_conf_t file "grub2.conf")))
+
+(macro bootloader_manage_config_files ((type ARG1))
+    (call files_rw_etc_dirs (ARG1))
+    (call manage_files_pattern (ARG1 bootloader_conf_t bootloader_conf_t)))
 
 (macro bootloader_admin ((type ARG1))
     (typeattributeset is_bootloader_admin_subject ARG1))
