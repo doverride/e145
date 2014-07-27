@@ -99,6 +99,12 @@
 
 (call admin_pattern (is_rpm_admin_subject is_rpm_file_object))
 
+(optional rpm_optional_akmods
+    (call akmods_run (rpm_script_t is_rpm_role)))
+
+(optional rpm_optional_bootloader
+    (call bootloader_run_grubby (rpm_script_t is_rpm_role)))
+
 (macro rpm_exec ((type ARG1))
     (call can_exec (ARG1 rpm_exec_t)))
 

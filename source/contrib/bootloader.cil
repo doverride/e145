@@ -1,0 +1,31 @@
+(typepermissive grubby_t)
+
+(roleattribute is_grubby_role)
+
+(typeattribute is_bootloader_admin_subject)
+(typeattribute is_bootloader_subject)
+
+(typeattributeset is_bootloader_subject (grubby_t))
+
+(type grubby_t)
+(type grubby_exec_t)
+(call application_subject_entry (grubby_t grubby_exec_t))
+(roleattributeset is_grubby_role system_r)
+(roletype is_grubby_role grubby_t)
+
+(context file_grubby_exec (system_u object_r grubby_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/grubby" file file_grubby_exec)
+
+(allow is_bootloader_admin_subject is_bootloader_subject signal_perms)
+(call ps_subject_pattern (is_bootloader_subject is_bootloader_subject))
+
+(macro bootloader_subtrans_grubby ((type ARG1))
+    (call subtrans_pattern (ARG1 grubby_exec_t grubby_t)))
+
+(macro bootloader_run_grubby ((type ARG1)(role ARG2))
+    (call bootloader_subtrans_grubby (ARG1))
+    (roleattributeset is_grubby_role (ARG2)))
+
+(macro bootloader_admin ((type ARG1))
+    (typeattributeset is_bootloader_admin_subject ARG1))

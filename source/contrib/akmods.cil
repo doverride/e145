@@ -1,3 +1,5 @@
+(typepermissive akmods_t)
+
 (roleattribute is_akmods_role)
 
 (typeattribute is_akmods_admin_subject)
