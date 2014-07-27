@@ -32,6 +32,9 @@
 (typeattribute all_files_except)
 (typeattribute is_all_files_exception)
 
+(typeattribute all_non_auth_files_except)
+(typeattribute is_all_non_auth_files_exception)
+
 (type boot_t)
 (call files_boot_object (boot_t))
 (call files_mnt_object (boot_t))
@@ -288,6 +291,10 @@
 (typeattributeset all_files_except
     (and (is_file_object)
         (not (is_all_files_exception))))
+
+(typeattributeset all_non_auth_files_except
+    (and (not_associated_with_authentication_file_object)
+        (not (is_all_files_exception is_all_non_auth_files_exception))))
 
 (allow has_unconfined_access_to_files_assets all_files_except
     all_file_perms_except_execmod_and_entrypoint)
@@ -597,124 +604,124 @@
     (dontaudit ARG1 is_authentication_file_object read_file_perms)
     (dontaudit ARG1 is_authentication_file_object read_lnk_file_perms))
 
-(macro files_manage_non_auth ((type ARG1))
-    (call files_manage_all_non_auth_dirs (ARG1))
-    (call files_manage_all_non_auth_files (ARG1))
-    (call files_manage_all_non_auth_fifo_files (ARG1))
-    (call files_manage_all_non_auth_sock_files (ARG1))
-    (call files_manage_all_non_auth_lnk_files (ARG1))
-    (call files_manage_all_non_auth_blk_files (ARG1))
-    (call files_manage_all_non_auth_chr_files (ARG1)))
+(macro files_manage_non_auth_except ((type ARG1))
+    (call files_manage_all_non_auth_dirs_except (ARG1))
+    (call files_manage_all_non_auth_files_except (ARG1))
+    (call files_manage_all_non_auth_fifo_files_except (ARG1))
+    (call files_manage_all_non_auth_sock_files_except (ARG1))
+    (call files_manage_all_non_auth_lnk_files_except (ARG1))
+    (call files_manage_all_non_auth_blk_files_except (ARG1))
+    (call files_manage_all_non_auth_chr_files_except (ARG1)))
 
-(macro files_manage_all_non_auth_dirs ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object manage_dir_perms))
+(macro files_manage_all_non_auth_dirs_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except manage_dir_perms))
 
-(macro files_manage_all_non_auth_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (rw)))
-    (allow ARG1 not_associated_with_authentication_file_object manage_file_perms))
+(macro files_manage_all_non_auth_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except manage_file_perms))
 
-(macro files_manage_all_non_auth_fifo_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (rw)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_manage_all_non_auth_fifo_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
         manage_fifo_file_perms))
 
-(macro files_manage_all_non_auth_sock_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (rw)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_manage_all_non_auth_sock_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
         manage_sock_file_perms))
 
-(macro files_manage_all_non_auth_lnk_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (rw)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_manage_all_non_auth_lnk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
         manage_lnk_file_perms))
 
-(macro files_manage_all_non_auth_blk_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (rw)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_manage_all_non_auth_blk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
         manage_blk_file_perms))
 
-(macro files_manage_all_non_auth_chr_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (rw)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_manage_all_non_auth_chr_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (rw)))
+    (allow ARG1 all_non_auth_files_except
         manage_chr_file_perms))
 
-(macro files_read_non_auth ((type ARG1))
-    (call files_read_all_non_auth_dirs (ARG1))
-    (call files_read_all_non_auth_files (ARG1))
-    (call files_read_all_non_auth_fifo_files (ARG1))
-    (call files_read_all_non_auth_sock_files (ARG1))
-    (call files_read_all_non_auth_lnk_files (ARG1))
-    (call files_read_all_non_auth_blk_files (ARG1))
-    (call files_read_all_non_auth_chr_files (ARG1)))
+(macro files_read_non_auth_except ((type ARG1))
+    (call files_read_all_non_auth_dirs_except (ARG1))
+    (call files_read_all_non_auth_files_except (ARG1))
+    (call files_read_all_non_auth_fifo_files_except (ARG1))
+    (call files_read_all_non_auth_sock_files_except (ARG1))
+    (call files_read_all_non_auth_lnk_files_except (ARG1))
+    (call files_read_all_non_auth_blk_files_except (ARG1))
+    (call files_read_all_non_auth_chr_files_except (ARG1)))
 
-(macro files_read_all_non_auth_dirs ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object list_dir_perms))
+(macro files_read_all_non_auth_dirs_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except list_dir_perms))
 
-(macro files_read_all_non_auth_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (list)))
-    (allow ARG1 not_associated_with_authentication_file_object read_file_perms))
+(macro files_read_all_non_auth_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except read_file_perms))
 
-(macro files_read_all_non_auth_fifo_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (list)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_read_all_non_auth_fifo_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
         read_fifo_file_perms))
 
-(macro files_read_all_non_auth_sock_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (list)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_read_all_non_auth_sock_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
         read_sock_file_perms))
 
-(macro files_read_all_non_auth_lnk_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (list)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_read_all_non_auth_lnk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
         read_lnk_file_perms))
 
-(macro files_read_all_non_auth_blk_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (list)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_read_all_non_auth_blk_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
         read_blk_file_perms))
 
-(macro files_read_all_non_auth_chr_files ((type ARG1))
-    (allow ARG1 not_associated_with_authentication_file_object (dirs (list)))
-    (allow ARG1 not_associated_with_authentication_file_object
+(macro files_read_all_non_auth_chr_files_except ((type ARG1))
+    (allow ARG1 all_non_auth_files_except (dirs (list)))
+    (allow ARG1 all_non_auth_files_except
         read_chr_file_perms))
 
-(macro files_relabel_non_auth ((type ARG1))
-    (call files_relabel_all_non_auth_dirs (ARG1))
-    (call files_relabel_all_non_auth_files (ARG1))
-    (call files_relabel_all_non_auth_fifo_files (ARG1))
-    (call files_relabel_all_non_auth_sock_files (ARG1))
-    (call files_relabel_all_non_auth_lnk_files (ARG1))
-    (call files_relabel_all_non_auth_blk_files (ARG1))
-    (call files_relabel_all_non_auth_chr_files (ARG1)))
+(macro files_relabel_non_auth_except ((type ARG1))
+    (call files_relabel_all_non_auth_dirs_except (ARG1))
+    (call files_relabel_all_non_auth_files_except (ARG1))
+    (call files_relabel_all_non_auth_fifo_files_except (ARG1))
+    (call files_relabel_all_non_auth_sock_files_except (ARG1))
+    (call files_relabel_all_non_auth_lnk_files_except (ARG1))
+    (call files_relabel_all_non_auth_blk_files_except (ARG1))
+    (call files_relabel_all_non_auth_chr_files_except (ARG1)))
 
-(macro files_relabel_all_non_auth_dirs ((type ARG1))
-    (call relabel_dirs_pattern (ARG1 not_associated_with_authentication_file_object
-        not_associated_with_authentication_file_object)))
+(macro files_relabel_all_non_auth_dirs_except ((type ARG1))
+    (call relabel_dirs_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
-(macro files_relabel_all_non_auth_files ((type ARG1))
-    (call relabel_files_pattern (ARG1 not_associated_with_authentication_file_object
-        not_associated_with_authentication_file_object)))
+(macro files_relabel_all_non_auth_files_except ((type ARG1))
+    (call relabel_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
-(macro files_relabel_all_non_auth_fifo_files ((type ARG1))
-    (call relabel_fifo_files_pattern (ARG1 not_associated_with_authentication_file_object
-        not_associated_with_authentication_file_object)))
+(macro files_relabel_all_non_auth_fifo_files_except ((type ARG1))
+    (call relabel_fifo_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
-(macro files_relabel_all_non_auth_sock_files ((type ARG1))
-    (call relabel_sock_files_pattern (ARG1 not_associated_with_authentication_file_object
-        not_associated_with_authentication_file_object)))
+(macro files_relabel_all_non_auth_sock_files_except ((type ARG1))
+    (call relabel_sock_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
-(macro files_relabel_all_non_auth_lnk_files ((type ARG1))
-    (call relabel_lnk_files_pattern (ARG1 not_associated_with_authentication_file_object
-        not_associated_with_authentication_file_object)))
+(macro files_relabel_all_non_auth_lnk_files_except ((type ARG1))
+    (call relabel_lnk_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
-(macro files_relabel_all_non_auth_blk_files ((type ARG1))
-    (call relabel_blk_files_pattern (ARG1 not_associated_with_authentication_file_object
-        not_associated_with_authentication_file_object)))
+(macro files_relabel_all_non_auth_blk_files_except ((type ARG1))
+    (call relabel_blk_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
-(macro files_relabel_all_non_auth_chr_files ((type ARG1))
-    (call relabel_chr_files_pattern (ARG1 not_associated_with_authentication_file_object
-        not_associated_with_authentication_file_object)))
+(macro files_relabel_all_non_auth_chr_files_except ((type ARG1))
+    (call relabel_chr_files_pattern (ARG1 all_non_auth_files_except
+        all_non_auth_files_except)))
 
 (macro files_mounton_all_mnt_dirs ((type ARG1))
     (allow ARG1 is_mnt_file_object (dir (mounton))))
@@ -739,8 +746,12 @@
 (macro files_all_files_exception ((type ARG1))
     (typeattributeset is_all_files_exception ARG1))
 
+(macro files_all_non_auth_files_exception ((type ARG1))
+    (typeattributeset is_all_non_auth_files_exception ARG1))
+
 (macro files_spec_all_non_auth_files_except ((type ARG1)(type ARG2))
-    (typeattributeset ARG1 (and (not_associated_with_authentication_file_object) (not (ARG2)))))
+    (typeattributeset ARG1 (and (not_associated_with_authentication_file_object)
+        (not (is_all_files_exception ARG2)))))
 
 (macro files_spec_all_non_auth_files_exception ((type ARG1)(type ARG2))
     (typeattributeset ARG1 ARG2))

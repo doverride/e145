@@ -114,10 +114,10 @@
     (call filetrans_pattern (ARG1 tmpfiles_run_t ARG2 ARG3 ARG4)))
 
 (macro tmpfiles_manageable_object_exception ((type ARG1))
-    (call files_spec_all_non_auth_files_exception (is_tmpfiles_manageable_file_object_exception "ARG1")))
+    (call files_spec_all_non_auth_files_exception (is_tmpfiles_manageable_file_object_exception ARG1)))
 
 (macro tmpfiles_relabelable_object_exception ((type ARG1))
-    (call files_spec_all_non_auth_files_exception (is_tmpfiles_relabelable_file_object_exception "ARG1")))
+    (call files_spec_all_non_auth_files_exception (is_tmpfiles_relabelable_file_object_exception ARG1)))
 
 (macro tmpfiles_admin ((type ARG1))
     (typeattributeset is_tmpfiles_admin_subject ARG1))
