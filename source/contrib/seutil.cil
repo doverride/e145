@@ -131,7 +131,7 @@
 (call devices_relabel_all_nodes (setfiles_t))
 
 (call files_list_all (setfiles_t))
-(call files_relabel_non_auth_except (setfiles_t))
+(call files_relabel_all_except (setfiles_t))
 
 (call filesystem_getattr_all_filesystems (setfiles_t))
 
