@@ -107,7 +107,6 @@
 (call devices_read_event (udevd_t))
 (call devices_read_usb (udevd_t))
 (call devices_read_memory_raw (udevd_t))
-(call devices_read_sound (udevd_t)) ; alsactl
 (call devices_read_urandom (udevd_t))
 (call devices_read_v4l (udevd_t))
 (call devices_relabel_all_nodes (udevd_t))
@@ -132,11 +131,8 @@
 (call udevd_exec_helper (udevd_t))
 
 (optional udevd_optional_alsa
-    (call alsa_exec_alsactl (udevd_t))
-    (call alsa_signal_alsactl (udevd_t))
-    (call alsa_manage_var_lib_files (udevd_t))
-    (call alsa_read_alsactl_run_files (udevd_t))
-    (call alsa_read_config_files (udevd_t)))
+    (call alsa_read_config_files (udevd_t))
+    (call alsa_subtrans_alsactl (udevd_t)))
 
 (optional udevd_optional_auth
     (call auth_nsswitch_client_subject (udevd_t)))

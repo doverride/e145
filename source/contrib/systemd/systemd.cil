@@ -204,7 +204,7 @@
 
 (call system_mounton_sysctl_fs_dirs (systemd_t))
 (call system_read_generic_proc_files (systemd_t))
-(call system_read_sysctl_fs_files (systemd_t))
+(call system_list_sysctl_fs (systemd_t))
 (call system_read_sysctl_kernel_files (systemd_t))
 (call system_read_sysctl_vm_overcommit_files (systemd_t))
 (call system_read_proc_net_files (systemd_t))
