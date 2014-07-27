@@ -218,6 +218,7 @@
     systemd_daemon_t))
 
 (call devices_manage_dirs (systemd_t))
+(call devices_manage_lnk_files (systemd_t))
 (call devices_manage_generic_chr_files (systemd_t))
 (call devices_read_sysfs_files (systemd_t))
 (call devices_read_autofs (systemd_t))
