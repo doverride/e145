@@ -108,11 +108,6 @@
     (call bootloader_subtrans_grubby (ARG1))
     (roleattributeset is_grubby_role (ARG2)))
 
-(macro bootlaoder_etc_filetrans_conf_files ((type ARG1))
-    (call files_etc_filetrans (ARG1 bootloader_conf_t file "grub"))
-    (call files_etc_filetrans (ARG1 bootloader_conf_t lnk_file "grub2-efi.cfg"))
-    (call files_etc_filetrans (ARG1 bootloader_conf_t file "grub2.conf")))
-
 (macro bootloader_manage_config_files ((type ARG1))
     (call files_rw_etc_dirs (ARG1))
     (call manage_files_pattern (ARG1 bootloader_conf_t bootloader_conf_t)))
