@@ -3,9 +3,12 @@
 (roleattribute is_grubby_role)
 
 (typeattribute is_bootloader_admin_subject)
-(typeattribute is_bootloader_subject)
 
+(typeattribute is_bootloader_subject)
 (typeattributeset is_bootloader_subject (grubby_t))
+
+(typeattribute is_bootloader_file_object)
+(typeattributeset is_bootloader_file_object (bootloader_conf_t))
 
 (type grubby_t)
 (type grubby_exec_t)
@@ -17,8 +20,17 @@
     (s0))))
 (filecon "/usr/sbin/grubby" file file_grubby_exec)
 
+(type bootloader_conf_t)
+(call files_etc_object (bootloader_conf_t))
+
+(context file_bootloader_conf (system_u object_r bootloader_conf_t ((s0)
+    (s0))))
+(filecon "/etc/default/grub" file file_bootloader_conf)
+
 (allow is_bootloader_admin_subject is_bootloader_subject signal_perms)
 (call ps_subject_pattern (is_bootloader_subject is_bootloader_subject))
+
+(call admin_pattern (is_bootloader_subject is_bootloader_file_object))
 
 (macro bootloader_subtrans_grubby ((type ARG1))
     (call subtrans_pattern (ARG1 grubby_exec_t grubby_t)))
