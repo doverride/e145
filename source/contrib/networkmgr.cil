@@ -1,4 +1,14 @@
+(typepermissive networkmgr_online_t)
+(typepermissive networkmgr_disp_t)
+(typepermissive networkmgrcli_t)
+
+(roleattribute is_networkmgrcli_role)
+
 (typeattribute is_networkmgr_admin_subject)
+
+(typeattribute is_networkmgr_subject)
+(typeattributeset is_networkmgr_subject (networkmgr_t
+    networkmgr_disp_t networkmgr_online_t networkmgrcli_t))
 
 (typeattribute is_networkmgr_file_object)
 (typeattributeset is_networkmgr_file_object (networkmgr_conf_t
@@ -13,6 +23,35 @@
     (s0))))
 (filecon "/usr/libexec/nm-dispatcher\.action" file file_networkmgr_exec)
 (filecon "/usr/sbin/NetworkManager" file file_networkmgr_exec)
+
+(type networkmgr_disp_t)
+(type networkmgr_disp_exec_t)
+(call systemd_daemon_subject_entry (networkmgr_disp_t networkmgr_disp_exec_t))
+
+(context file_networkmgr_disp_exec (system_u object_r networkmgr_disp_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/nm-dispatcher" file file_networkmgr_disp_exec)
+
+(type networkmgr_online_t)
+(type networkmgr_online_exec_t)
+(call systemd_oneshot_subject_entry (networkmgr_online_t networkmgr_online_exec_t))
+
+(context file_networkmgr_online_exec (system_u object_r networkmgr_online_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/nm-online" file file_networkmgr_online_exec)
+
+(type networkmgrcli_t)
+(type networkmgrcli_exec_t)
+(call application_subject_entry (networkmgrcli_t networkmgrcli_exec_t))
+(roletype is_networkmgrcli_role networkmgrcli_t)
+
+(context file_networkmgrcli_exec (system_u object_r networkmgrcli_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/nmcli" file file_networkmgrcli_exec)
+(filecon "/usr/bin/nmtui" file file_networkmgrcli_exec)
+(filecon "/usr/bin/nmtui-connect" file file_networkmgrcli_exec)
+(filecon "/usr/bin/nmtui-edit" file file_networkmgrcli_exec)
+(filecon "/usr/bin/nmtui-hostname" file file_networkmgrcli_exec)
 
 (type nm_helper_exec_t)
 (call commands_bin_object (nm_helper_exec_t))
@@ -170,8 +209,8 @@
     (call udevd_read_config_files (networkmgr_t))
     (call udevd_read_run_files (networkmgr_t)))
 
-(allow is_networkmgr_admin_subject networkmgr_t signal_perms)
-(call ps_subject_pattern (is_networkmgr_admin_subject networkmgr_t))
+(allow is_networkmgr_admin_subject is_networkmgr_subject signal_perms)
+(call ps_subject_pattern (is_networkmgr_admin_subject is_networkmgr_subject))
 
 (allow is_networkmgr_admin_subject networkmgr_unit_t (service (all)))
 
@@ -179,6 +218,13 @@
 
 (macro networkmgr_execute_helper_files ((type ARG1))
     (call can_exec (ARG1 nm_helper_exec_t)))
+
+(macro networkmgr_subtrans_networkmgrcli ((type ARG1))
+    (call subtrans_pattern (ARG1 networkmgrcli_exec_t networkmgrcli_t)))
+
+(macro networkmgr_run_networkmgrcli ((type ARG1)(role ARG2))
+    (call networkmgr_subtrans_networkmgrcli (ARG1))
+    (roleattributeset is_networkmgrcli_role (ARG2)))
 
 (macro networkmgr_list_config ((type ARG1))
     (call files_search_etc (ARG1))

@@ -219,6 +219,9 @@
     (call mount_run (session_t session_r))
     (call mount_run_showmount (session_t session_r)))
 
+(optional session_optional_networkmgr
+    (call networkmgr_run_networkmgrcli (session_t session_r)))
+
 (optional session_optional_ntp
     (call ntp_run (session_t session_r)))
 
