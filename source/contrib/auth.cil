@@ -316,9 +316,9 @@
 
 (allow utempter_t self create_unix_stream_socket_perms)
 
-(call terminal_dontaudit_use_all_inherited_pty_nodes (utempter_t))
-(call terminal_dontaudit_use_all_inherited_tty_nodes (utempter_t))
-(call terminal_dontaudit_use_inherited_ptmx_nodes (utempter_t))
+(call terminal_use_all_inherited_pty_nodes (utempter_t))
+(call terminal_use_all_inherited_tty_nodes (utempter_t))
+(call terminal_use_inherited_ptmx_nodes (utempter_t))
 
 (call auth_nsswitch_client_subject (utempter_t))
 (call auth_write_wtmp_log_files (utempter_t))

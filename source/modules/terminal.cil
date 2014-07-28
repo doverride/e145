@@ -181,12 +181,22 @@
     (call devices_search (ARG1))
     (allow ARG1 device_devtty_t rw_term_perms))
 
+(macro terminal_use_all_inherited_pty_nodes ((type ARG1))
+    (call terminal_search_devpts (ARG1))
+    (allow ARG1 is_pty_file_object rw_inherited_term_perms))
+
 (macro terminal_dontaudit_use_all_inherited_pty_nodes ((type ARG1))
     (call terminal_search_devpts (ARG1))
     (dontaudit ARG1 is_pty_file_object rw_inherited_term_perms))
 
+(macro terminal_use_all_inherited_tty_nodes ((type ARG1))
+    (allow ARG1 is_tty_file_object rw_inherited_term_perms))
+
 (macro terminal_dontaudit_use_all_inherited_tty_nodes ((type ARG1))
     (dontaudit ARG1 is_tty_file_object rw_inherited_term_perms))
+
+(macro terminal_use_inherited_ptmx_nodes ((type ARG1))
+    (allow ARG1 device_ptmx_t rw_inherited_term_perms))
 
 (macro terminal_dontaudit_use_inherited_ptmx_nodes ((type ARG1))
     (dontaudit ARG1 device_ptmx_t rw_inherited_term_perms))
