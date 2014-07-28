@@ -73,6 +73,36 @@
 
 (call systemd_search_run (is_journald_client_subject))
 
+(call system_read_generic_proc_files (is_journald_subject))
+(call system_read_sysctl_kernel_files (is_journald_subject))
+
+(call devices_read_urandom (is_journald_subject))
+
+(call filesystem_getattr_filesystems (is_journald_subject))
+
+(optional journald_subject_optional_machined
+    (call machined_read_config_files (is_journald_subject)))
+
+(optional journald_subject_optional_miscfiles
+    (call miscfiles_read_localization_files (is_journald_subject)))
+
+(allow journalctl_t self (capability (dac_override))) ; less getting to ~/.lesshst
+(allow journalctl_t self (process (signal)))
+(allow journalctl_t self rw_fifo_file_perms)
+
+(call commands_execute_bin_files (journalctl_t)) ; less
+
+(call files_read_generic_etc_files (journalctl_t)) ; /etc/terminfo
+(call files_read_generic_usr_files (journalctl_t)) ; /usr/share/terminfo(/.*)?
+(call files_search_run (journalctl_t))
+
+(call journald_list_log (journalctl_t))
+(call journald_read_log_files (journalctl_t))
+
+(optional journalctl_optional_session
+    (call session_read_generic_home_content_files (journalctl_t)) ; ~/.lesshst
+    (call session_use_inherited_terminals (journalctl_t)))
+
 (allow journald_t self (capability (setgid setuid sys_admin sys_ptrace)))
 (allow journald_t self (process (getcap)))
 (allow journald_t self create_unix_dgram_socket_perms)
@@ -87,18 +117,14 @@
 (call systemd_run_filetrans (journald_t journald_run_t dir "*"))
 
 (call system_dgram_sendto (journald_t))
-(call system_read_generic_proc_files (journald_t))
 (call system_read_ring_buffer (journald_t))
-(call system_read_sysctl_kernel_files (journald_t))
 (call system_rw_inherited_unix_dgram_sockets (journald_t))
 (call system_rw_inherited_unix_stream_sockets (journald_t))
 (call system_use_fd (journald_t))
 
 (call devices_read_sysfs_files (journald_t))
-(call devices_read_urandom (journald_t))
 (call devices_rw_kmsg (journald_t))
 
-(call filesystem_getattr_filesystems (journald_t))
 (call filesystem_getattr_tmpfs_filesystems (journald_t))
 (call filesystem_manage_generic_tmpfs_files (journald_t)) ; mislabeled /run/log
 
@@ -113,12 +139,6 @@
 (call journald_read_config_files (journald_t))
 
 (call systemd_dgram_send (journald_t))
-
-(optional journald_optional_machined
-    (call machined_read_config_files (journald_t)))
-
-(optional journal_optional_misciles
-    (call miscfiles_read_localization_files (journald_t)))
 
 (optional journal_optional_plymouthd
     (call plymouth_use_fd_plymouthd (journald_t)))
