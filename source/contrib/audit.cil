@@ -1,3 +1,6 @@
+(typepermissive auditctl_t)
+(typepermissive augenrules_t)
+
 (roleattribute is_auditctl_role)
 (roleattribute is_augenrules_role)
 

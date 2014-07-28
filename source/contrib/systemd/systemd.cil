@@ -1,3 +1,5 @@
+(typepermissive systemctl_t)
+
 (roleattribute is_systemctl_role)
 
 (typeattribute is_systemd_unit_file_object)
@@ -564,10 +566,6 @@
 (macro systemd_read_state ((type ARG1))
     (allow ARG1 systemd_t (dirs (list)))
     (allow ARG1 systemd_t read_file_perms))
-
-(macro systemd_read_state_systemctl_client_subjects ((type ARG1))
-    (allow ARG1 is_systemctl_client_subject (dirs (list)))
-    (allow ARG1 is_systemctl_client_subject read_file_perms))
 
 (macro systemd_send_sigchld ((type ARG1))
     (allow ARG1 systemd_t (process (sigchld))))

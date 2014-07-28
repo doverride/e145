@@ -1,3 +1,6 @@
+(typepermissive mount_t)
+(typepermissive showmount_t)
+
 (boolean mount_any_file false)
 
 (roleattribute is_mount_role)

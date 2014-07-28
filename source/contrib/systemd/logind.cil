@@ -1,3 +1,5 @@
+(typepermissive loginctl_t)
+
 (roleattribute is_loginctl_role)
 
 (typeattribute is_logind_admin_subject)

@@ -1,3 +1,5 @@
+(typepermissive localectl_t)
+
 (roleattribute is_localectl_role)
 
 (typeattribute is_localed_admin_subject)

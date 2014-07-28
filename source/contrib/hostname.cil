@@ -1,3 +1,5 @@
+(typepermissive hostname_t)
+
 (roleattribute is_hostname_role)
 
 (type hostname_t)

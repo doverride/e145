@@ -1,3 +1,5 @@
+(typepermissive upower_t)
+
 (roleattribute is_upower_role)
 
 (typeattribute is_upower_admin_subject)
@@ -55,6 +57,23 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/upower.*" file file_upowerd_unit)
 
+(call selinux_getattr_filesystems (is_upower_subject))
+
+(call dbus_system_client_subject (is_upower_subject))
+
+(optional upower_subject_optional_miscfiles
+    (call miscfiles_read_localization_files (is_upower_subject)))
+
+(allow upower_t self create_unix_stream_socket_perms)
+
+(call upower_dbus_chat_upowerd (upower_t))
+
+(optional upower_optional_journald
+    (call journald_client_subject (upower_t)))
+
+(optional upower_optional_session
+    (call session_use_inherited_terminals (upower_t)))
+
 (allow upowerd_t self create_netlink_kobject_uevent_socket_perms)
 (allow upowerd_t self rw_fifo_file_perms)
 
@@ -66,9 +85,6 @@
 
 (call filesystem_getattr_filesystems (upowerd_t))
 
-(call selinux_getattr_filesystems (upowerd_t))
-
-(call dbus_system_client_subject (upowerd_t))
 (call dbus_acquire_service_system (upowerd_t))
 
 (call upower_read_config_files (upowerd_t))
@@ -76,9 +92,6 @@
 
 (optional upowerd_optional_logind
     (call logind_dbus_chat (upowerd_t)))
-
-(optional upowerd_optional_miscfiles
-    (call miscfiles_read_localization_files (upowerd_t)))
 
 (optional upowerd_optional_polkitd
     (call polkit_dbus_chat_polkitd (upowerd_t)))
@@ -112,7 +125,7 @@
     (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 upowerd_var_lib_t upowerd_var_lib_t)))
 
-(macro upower_dbus_chat ((type ARG1))
+(macro upower_dbus_chat_upowerd ((type ARG1))
     (allow ARG1 upowerd_t (dbus (send_msg)))
     (allow upowerd_t ARG1 (dbus (send_msg))))
 

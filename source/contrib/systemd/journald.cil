@@ -1,3 +1,5 @@
+(typepermissive journalctl_t)
+
 (roleattribute is_journalctl_role)
 
 (typeattribute is_journald_admin_subject)

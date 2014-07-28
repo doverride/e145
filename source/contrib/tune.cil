@@ -1,3 +1,5 @@
+(typepermissive tuneadm_t)
+
 (roleattribute is_tuneadm_role)
 
 (typeattribute is_tune_admin_subject)

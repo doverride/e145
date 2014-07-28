@@ -1,3 +1,5 @@
+(typepermissive ntp_t)
+
 (roleattribute is_ntp_role)
 
 (typeattribute is_ntp_admin_subject)

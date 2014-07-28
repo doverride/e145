@@ -1,3 +1,5 @@
+(typepermissive tmpfiles_t)
+
 (roleattribute is_tmpfiles_role)
 
 (typeattribute is_tmpfiles_admin_subject)

@@ -158,11 +158,100 @@
 
 (call session_create_pty_node (session_t)) ; script/script replay
 
+(optional session_optional_audit
+    (call audit_run_auditctl (session_t session_r))
+    (call audit_run_augenrules (session_t session_r)))
+
+(optional session_optional_alsactl
+    (call alsa_run_alsactl (session_t session_r)))
+
+(optional session_optional_akmods
+    (call akmods_run (session_t session_r)))
+
+(optional session_optional_bootloader
+    (call bootloader_run_grub (session_t session_r))
+    (call bootloader_run_grubby (session_t session_r)))
+
+(optional session_optional_dhcp
+    (call dhcp_run_dhclient (session_t session_r)))
+
+(optional session_optional_dm
+    (call dm_run_dmcrypt (session_t session_r))
+    (call dm_run_dmsetup (session_t session_r)))
+
+(optional session_optional_fstools
+    (call fstools_run (session_t session_r)))
+
+(optional session_optional_hostname
+    (call hostname_run (session_t session_r)))
+
+(optional session_optional_hostnamectl
+    (call hostnamed_run_hostnamectl (session_t session_r)))
+
+(optional session_optional_hwclock
+    (call hwclock_run (session_t session_r)))
+
+(optional session_optional_ip
+    (call ip_run (session_t session_r)))
+
+(optional session_optional_iptables
+    (call iptables_run (session_t session_r)))
+
+(optional session_optional_journalctl
+    (call journald_run_journalctl (session_t session_r)))
+
+(optional session_optional_kmod
+    (call kmod_run (session_t session_r)))
+
+(optional session_optional_localectl
+    (call localed_run_localectl (session_t session_r)))
+
+(optional session_optional_loginctl
+    (call logind_run_loginctl (session_t session_r)))
+
+(optional session_optional_lvm
+    (call lvm_run_lvm (session_t session_r)))
+
+(optional session_optional_machinectl
+    (call machined_run_machinectl (session_t session_r)))
+
+(optional session_optional_mount
+    (call mount_run (session_t session_r))
+    (call mount_run_showmount (session_t session_r)))
+
+(optional session_optional_ntp
+    (call ntp_run (session_t session_r)))
+
+(optional session_optional_plymouth
+    (call plymouth_run (session_t session_r)))
+
+(optional session_optional_systemctl
+    (call systemd_run_systemctl (session_t session_r)))
+
+(optional session_optional_timedatectl
+    (call timedated_run_timedatectl (session_t session_r)))
+
+(optional session_optional_tuneadm
+    (call tune_run_tuneadm (session_t session_r)))
+
+(optional session_optional_udevadm
+    (call udevd_run_udevadm (session_t session_r)))
+
+(optional session_optional_upower
+    (call upower_run (session_t session_r)))
+
+(optional session_optional_wpacli
+    (call wpa_run_wpacli (session_t session_r)))
+
 (optional session_optional_tmpfiles
+    (call tmpfiles_run (session_t session_r))
     (call tmpfiles_manageable_object_exception (is_session_home_file_object))
     (call tmpfiles_relabelable_object_exception (is_session_home_file_object)))
 
 (optional session_optional_auth
+    (call auth_run_authconfig (session_t session_r))
+    (call auth_run_updpwd (session_t session_r))
+    (call auth_run_utempter (session_t session_r))
     (call auth_run_chkpwd (session_t session_r)))
 
 (optional session_optional_rpm

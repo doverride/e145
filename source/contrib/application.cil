@@ -12,6 +12,10 @@
 (macro application_execute_all_application_executable_files ((type ARG1))
     (call can_exec (ARG1 is_application_executable_file_object)))
 
+(macro application_read_state_all_application_subjects ((type ARG1))
+    (allow ARG1 is_application_subject (dirs (list)))
+    (allow ARG1 is_application_subject read_file_perms))
+
 (macro application_execute_all_executable_files ((type ARG1))
     (call commands_execute_bin_files (ARG1))
     (call commands_execute_shell_files (ARG1))

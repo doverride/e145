@@ -1,3 +1,6 @@
+(typepermissive dmcrypt_t)
+(typepermissive dmsetup_t)
+
 (roleattribute is_dmcrypt_role)
 (roleattribute is_dmsetup_role)
 

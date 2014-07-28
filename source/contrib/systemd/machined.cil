@@ -1,3 +1,5 @@
+(typepermissive machinectl_t)
+
 (roleattribute is_machinectl_role)
 
 (typeattribute is_machined_admin_subject)

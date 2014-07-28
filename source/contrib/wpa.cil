@@ -1,3 +1,5 @@
+(typepermissive wpacli_t)
+
 (roleattribute is_wpacli_role)
 
 (typeattribute is_wpa_admin_subject)

@@ -1,3 +1,5 @@
+(typepermissive hwclock_t)
+
 (roleattribute is_clock_role)
 
 (type adjtime_t)

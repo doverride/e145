@@ -1,3 +1,5 @@
+(typepermissive alsactl_t)
+
 (roleattribute is_alsactl_role)
 
 (typeattribute is_alsa_admin_subject)

@@ -1,3 +1,5 @@
+(typepermissive udevadm_t)
+
 (roleattribute is_udevadm_role)
 
 (typeattribute is_udevd_admin_subject)

@@ -1,3 +1,5 @@
+(typepermissive hostnamectl_t)
+
 (roleattribute is_hostnamectl_role)
 
 (typeattribute is_hostnamed_admin_subject)

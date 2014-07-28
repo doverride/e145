@@ -1,3 +1,5 @@
+(typepermissive plymouth_t)
+
 (roleattribute is_plymouth_role)
 
 (typeattribute is_plymouth_admin_subject)

@@ -1,3 +1,5 @@
+(typepermissive lvm_t)
+
 (roleattribute is_lvm_role)
 
 (typeattribute is_lvm_admin_subject)
