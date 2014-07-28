@@ -209,6 +209,13 @@
     (call udevd_read_config_files (networkmgr_t))
     (call udevd_read_run_files (networkmgr_t)))
 
+(call selinux_getattr_filesystems (networkmgr_disp_t))
+
+(call dbus_acquire_service_system (networkmgr_disp_t))
+(call dbus_system_client_subject (networkmgr_disp_t))
+
+(call networkmgr_dbus_chat (networkmgr_disp_t))
+
 (allow is_networkmgr_admin_subject is_networkmgr_subject signal_perms)
 (call ps_subject_pattern (is_networkmgr_admin_subject is_networkmgr_subject))
 
