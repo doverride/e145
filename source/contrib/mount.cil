@@ -62,6 +62,8 @@
 
 (call selinux_get_filesystems_mount (mount_t))
 
+(call application_subject (mount_t))
+
 (booleanif mount_any_file
     (true
         (call files_read_all_non_security_files (mount_t))
@@ -69,6 +71,9 @@
 
 (optional mount_optional_miscfiles
     (call miscfiles_read_localization_files (mount_t)))
+
+(optional mount_optional_session
+    (call session_use_inherited_terminals (mount_t)))
 
 (optional mount_optional_storage
     (call storage_getattr_fixed_disk_nodes (mount_t)))
