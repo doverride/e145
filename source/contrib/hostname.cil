@@ -11,6 +11,9 @@
 (context file_hostname_exec (system_u object_r hostname_exec_t ((s0) (s0))))
 (filecon "/usr/bin/hostname" file file_hostname_exec)
 
+(optional hostname_optional_session
+    (call session_use_inherited_terminals (hostname_t)))
+
 (macro hostname_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 hostname_exec_t hostname_t)))
 

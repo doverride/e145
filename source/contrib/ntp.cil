@@ -44,6 +44,13 @@
 (filecon "/usr/sbin/chronyd" file file_ntpd_exec)
 (filecon "/usr/libexec/chrony-helper" file file_ntpd_exec)
 
+(type ntp_helper_exec_t)
+(call commands_bin_object (ntp_helper_exec_t))
+
+(context file_ntp_helper_exec (system_u object_r ntp_helper_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/chrony-helper" file file_ntp_helper_exec)
+
 (type ntpd_run_t)
 (call files_run_object (ntpd_run_t))
 (call systemd_pid_object (ntpd_run_t))
@@ -89,6 +96,12 @@
 (filecon "/usr/lib/systemd/system/[^/]*chrony-wait.*" file file_ntpd_unit)
 (filecon "/usr/lib/systemd/system/[^/]*chronyd.*" file file_ntpd_unit)
 
+(call system_read_sysctl_crypto_files (is_ntp_subject))
+
+(call ntp_read_ntpd_config_files (is_ntp_subject))
+
+(allow ntp_t self create_udp_socket_perms)
+
 (allow ntpd_t self (capability (sys_time setuid setgid)))
 (allow ntpd_t self (process (setcap)))
 (allow ntpd_t self create_unix_stream_socket_perms)
@@ -104,7 +117,6 @@
 (allow ntpd_t ntpd_log_t read_file_perms)
 
 (call system_read_generic_proc_files (ntpd_t))
-(call system_read_sysctl_crypto_files (ntpd_t))
 
 (call network_udp_bind_generic_node (ntpd_t))
 
@@ -115,7 +127,6 @@
 
 (call ntp_udp_bind_ntp_port (ntpd_t))
 (call ntp_udp_bind_ntp_cmdmon_port (ntpd_t))
-(call ntp_read_ntpd_config_files (ntpd_t))
 (call ntp_manage_ntpd_var_lib_files (ntpd_t))
 
 (optional ntpd_optional_auth
@@ -137,6 +148,9 @@
 (allow is_ntp_admin_subject ntpd_unit_t (service (all)))
 
 (call admin_pattern (is_ntp_admin_subject is_ntp_file_object))
+
+(macro ntp_exec_helper ((type ARG1))
+    (call can_exec (ARG1 ntp_helper_exec_t)))
 
 (macro ntp_exec ((type ARG1))
     (call can_exec (ARG1 ntp_exec_t)))

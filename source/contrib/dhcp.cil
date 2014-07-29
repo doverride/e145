@@ -59,7 +59,7 @@
 (call system_read_sysctl_kernel_files (dhclient_t))
 
 (call commands_execute_bin_files (dhclient_t))
-(call commands_mprot_read_shell_files (dhclient_t))
+(call commands_mmap_shell_files (dhclient_t))
 
 (call network_udp_bind_all_unreserved_ports (dhclient_t))
 (call network_udp_bind_generic_node (dhclient_t))
@@ -90,6 +90,10 @@
     (call networkmgr_execute_helper_files (dhclient_t))
     (call networkmgr_manage_var_lib_files (dhclient_t))
     (call networkmgr_stream_connect (dhclient_t)))
+
+(optional dhclient_optional_ntp
+    (call ntp_exec_helper (dhclient_t))
+    (call ntp_subtrans (dhclient_t)))
 
 (call admin_pattern (is_dhcp_admin_subject is_dhcp_file_object))
 

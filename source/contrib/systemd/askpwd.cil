@@ -65,6 +65,12 @@
 
 (call systemd_use_fd (askpwdagent_t))
 
+(optional askpwdagent_optional_application
+    (call application_subject (askpwdagent_t)))
+
+(optional askpwdagent_optional_session
+    (call session_use_inherited_terminals (askpwdagent_t)))
+
 (allow is_askpwd_admin_subject is_askpwd_subject signal_perms)
 (call ps_subject_pattern (is_askpwd_admin_subject is_askpwd_subject))
 
