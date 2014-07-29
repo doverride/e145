@@ -207,7 +207,6 @@
 (call system_mounton_sysctl_fs_dirs (systemd_t))
 (call system_read_generic_proc_files (systemd_t))
 (call system_list_sysctl_fs (systemd_t))
-(call system_read_sysctl_kernel_files (systemd_t))
 (call system_read_sysctl_vm_overcommit_files (systemd_t))
 (call system_read_proc_net_files (systemd_t))
 (call system_read_sysctl_net_files (systemd_t))
@@ -224,10 +223,8 @@
 (call devices_manage_lnk_files (systemd_t))
 (call devices_manage_generic_chr_files (systemd_t))
 (call devices_list_sysfs (systemd_t))
-(call devices_read_sysfs_files (systemd_t))
 (call devices_read_autofs (systemd_t))
 (call devices_read_memory_raw (systemd_t))
-(call devices_read_urandom (systemd_t))
 (call devices_relabel_all_nodes (systemd_t))
 (call devices_write_kmsg (systemd_t))
 
@@ -240,7 +237,6 @@
 (call files_read_all_env_files (systemd_t))
 (call files_read_all_lock_files (systemd_t))
 (call files_read_generic_etc_files (systemd_t)) ; /etc/login.defs
-(call files_read_generic_usr_files (systemd_t))
 (call files_relabel_non_auth_except (systemd_t)) ; hard to trim
 (call files_list_run_lock (systemd_t))
 
@@ -266,8 +262,6 @@
 (call subject_signal_all_subjects (systemd_t))
 (call subject_signull_all_subjects (systemd_t))
 
-(call terminal_write_inherited_generic_pty_nodes (systemd_t)) ; /dev/pts/ptmx
-(call terminal_use_console_nodes (systemd_t))
 (call terminal_use_unallocated_tty_nodes (systemd_t))
 
 (call auth_list_pam_config (systemd_t))
@@ -284,7 +278,6 @@
 (call systemd_exec (systemd_t))
 (call systemd_exec_helper (systemd_t))
 (call systemd_read_all_unit_files (systemd_t))
-(call systemd_read_config_files (systemd_t))
 (call systemd_read_pam_config_files (systemd_t))
 
 (optional systemd_optional_askpwd
@@ -314,9 +307,6 @@
     (call logind_list_run (systemd_t))
     (call logind_read_run_files (systemd_t)))
 
-(optional systemd_optional_machined
-    (call machined_read_config_files (systemd_t)))
-
 (optional systemd_optional_miscfiles
     (call miscfiles_read_localization_files (systemd_t))
     (call miscfiles_read_module_files (systemd_t)))
@@ -332,8 +322,7 @@
     (call plymouth_list_run (systemd_t))
     (call plymouth_read_run_files (systemd_t))
     (call plymouth_stream_connect_plymouthd (systemd_t))
-    (call plymouth_use_fd_plymouth (systemd_t))
-    (call plymouth_use_fd_plymouthd (systemd_t)))
+    (call plymouth_use_fd_plymouth (systemd_t)))
 
 (optional systemd_optional_session
     (call session_link_keyring (systemd_t))
@@ -376,14 +365,14 @@
 (allow systemctl_t is_systemd_daemon_or_systemd_oneshot_subject read_file_perms)
 
 (call system_read_generic_proc_files (is_systemctl_client_subject))
-(call system_read_sysctl_kernel_files (systemctl_t))
+(call system_read_sysctl_kernel_files (is_systemd_subject))
 
 (call commands_execute_bin_files (systemctl_t)) ; less
 
-(call devices_read_sysfs_files (systemctl_t))
-(call devices_read_urandom (systemctl_t))
+(call devices_read_sysfs_files (is_systemd_subject))
+(call devices_read_urandom (is_systemd_subject))
 
-(call files_read_generic_usr_files (systemctl_t)) ; /usr/share/terminfo(/.*)?
+(call files_read_generic_usr_files (is_systemd_subject)) ; /usr/share/terminfo(/.*)?
 
 (call filesystem_getattr_filesystems (systemctl_t))
 (call filesystem_search_tmpfs (is_systemctl_client_subject)) ; /sys/fs/cgroup is tmpfs_t
@@ -392,11 +381,13 @@
 
 (call selinux_get_filesystems_mount (is_systemctl_client_subject))
 
-(call terminal_use_console_nodes (systemctl_t))
-(call terminal_write_inherited_generic_pty_nodes (systemctl_t))
+(call terminal_use_console_nodes (is_systemd_subject))
+(call terminal_write_inherited_generic_pty_nodes (is_systemd_subject))
 
 (call systemd_dgram_send (is_systemctl_client_subject))
+(call systemd_disable_system (systemctl_t))
 (call systemd_halt_system (systemctl_t))
+(call systemd_reload_system (systemctl_t))
 (call systemd_list_run (is_systemctl_client_subject))
 (call systemd_manage_all_services (systemctl_t))
 (call systemd_read_state (is_systemctl_client_subject))
@@ -405,6 +396,7 @@
 (call systemd_search_generic_unit (is_systemctl_client_subject))
 (call systemd_stream_connect (is_systemctl_client_subject))
 (call systemd_use_fd (is_systemctl_client_subject))
+(call systemd_read_config_files (is_systemd_subject))
 
 (optional systemctl_optional_miscfiles
     (call miscfiles_read_localization_files (is_systemctl_client_subject)))
@@ -417,10 +409,10 @@
     (call askpwd_send_signal_agent (systemctl_t)))
 
 (optional systemctl_optional_machined
-    (call machined_read_config_files (systemctl_t)))
+    (call machined_read_config_files (is_systemd_subject)))
 
 (optional systemctl_optional_plymouth
-    (call plymouth_use_fd_plymouthd (systemctl_t)))
+    (call plymouth_use_fd_plymouthd (is_systemd_subject)))
 
 (optional systemctl_optional_journald
     (call journald_read_log_files (systemctl_t)))
@@ -507,11 +499,17 @@
 (macro systemd_get_status_system ((type ARG1))
     (allow ARG1 systemd_t (system (status))))
 
+(macro systemd_disable_system ((type ARG1))
+    (allow ARG1 systemd_t (system (disable))))
+
 (macro systemd_halt_system ((type ARG1))
     (allow ARG1 systemd_t (system (halt))))
 
 (macro systemd_reboot_system ((type ARG1))
     (allow ARG1 systemd_t (system (reboot))))
+
+(macro systemd_reload_system ((type ARG1))
+    (allow ARG1 systemd_t (system (reload))))
 
 (macro systemd_start_system ((type ARG1)) ; BUG: logind to start session
     (allow ARG1 systemd_t (system (start))))
