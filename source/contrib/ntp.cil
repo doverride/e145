@@ -88,14 +88,20 @@
 (filecon "/usr/lib/systemd/system/[^/]*chrony-wait.*" file file_ntpd_unit)
 (filecon "/usr/lib/systemd/system/[^/]*chronyd.*" file file_ntpd_unit)
 
+(allow is_ntp_subject self create_unix_stream_socket_perms)
+
+(call system_read_generic_proc_files (is_ntp_subject))
 (call system_read_sysctl_crypto_files (is_ntp_subject))
 
 (call ntp_read_ntpd_config_files (is_ntp_subject))
 
+(optional ntp_subject_optional_auth
+    (call auth_nsswitch_client_subject (is_ntp_subject)))
+
 (optional ntp_subject_optional_miscfiles
     (call miscfiles_read_localization_files (is_ntp_subject)))
 
-(allow ntp_t self create_udp_socket_perms)
+(call commands_mprot_read_shell_files (ntp_t))
 
 (call ntp_list_ntpd_var_lib (ntp_t))
 
@@ -104,7 +110,6 @@
 
 (allow ntpd_t self (capability (sys_time setuid setgid)))
 (allow ntpd_t self (process (setcap)))
-(allow ntpd_t self create_unix_stream_socket_perms)
 (allow ntpd_t self rw_fifo_file_perms)
 
 (allow ntpd_t ntpd_run_t manage_file_perms)
@@ -116,8 +121,6 @@
 (allow ntpd_t ntpd_log_t create_file_perms)
 (allow ntpd_t ntpd_log_t read_file_perms)
 
-(call system_read_generic_proc_files (ntpd_t))
-
 (call network_udp_bind_generic_node (ntpd_t))
 
 (call commands_execute_shell_files (ntpd_t))
@@ -128,9 +131,6 @@
 (call ntp_udp_bind_ntp_port (ntpd_t))
 (call ntp_udp_bind_ntp_cmdmon_port (ntpd_t))
 (call ntp_manage_ntpd_var_lib_files (ntpd_t))
-
-(optional ntpd_optional_auth
-    (call auth_nsswitch_client_subject (ntpd_t)))
 
 (optional ntpd_optional_dhcp
     (call dhcp_list_dhclient_var_lib (ntpd_t)))
