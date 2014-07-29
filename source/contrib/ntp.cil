@@ -98,7 +98,7 @@
 (optional ntp_subject_optional_auth
     (call auth_nsswitch_client_subject (is_ntp_subject)))
 
-(optional ntpd_optional_dhcp
+(optional ntp_subject_optional_dhcp
     (call dhcp_list_dhclient_var_lib (is_ntp_subject)))
 
 (optional ntp_subject_optional_miscfiles

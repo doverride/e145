@@ -239,7 +239,7 @@
 (optional networkmgr_disp_optional_auth
     (call auth_nsswitch_client_subject (networkmgr_disp_t)))
 
-(optional networkmgr_disp_optional_dhsp
+(optional networkmgr_disp_optional_dhcp
     (call dhcp_subtrans_dhclient (networkmgr_disp_t))) ; /etc/NetworkManager/dispatcher.d/11-dhclient
 
 (optional networkmgr_disp_optional_ip

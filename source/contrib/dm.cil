@@ -63,6 +63,8 @@
 
 (call selinux_getattr_filesystems (dmsetup_t))
 
+(call dm_rw_dmcrypt_semaphores (dmsetup_t))
+
 (optional dmsetup_optional_lvm
     (call lvm_rw_lvm_semaphores (dmsetup_t)))
 
@@ -70,6 +72,40 @@
     (call udevd_read_config_files (dmsetup_t))
     (call udevd_read_run_files (dmsetup_t))
     (call udevd_rw_inherited_udp_socket (dmsetup_t)))
+
+(allow dmcrypt_t self (capability (ipc_lock sys_nice)))
+(allow dmcrypt_t self (process (setsched)))
+(allow dmcrypt_t self create_socket_perms)
+(allow dmcrypt_t self (socket (accept)))
+(allow dmcrypt_t self create_sem_perms)
+
+(call system_list_debugfs (dmcrypt_t))
+(call system_get_sysvipc_info (dmcrypt_t))
+(call system_read_generic_proc_files (dmcrypt_t))
+(call system_read_sysctl_crypto_files (dmcrypt_t))
+
+(call devices_getattr_device_filesystems (dmcrypt_t))
+(call devices_rw_lvm_control (dmcrypt_t))
+(call devices_read_sysfs_files (dmcrypt_t))
+(call devices_read_urandom (dmcrypt_t))
+(call devices_read_random (dmcrypt_t))
+
+(call selinux_getattr_filesystems (dmcrypt_t))
+
+(optional dmcrypt_optional_miscfiles
+    (call miscfiles_read_localization_files (dmcrypt_t)))
+
+(optional dmcrypt_optional_storage
+    (call storage_getattr_fixed_disk_nodes (dmcrypt_t))
+    (call storage_read_removable_nodes (dmcrypt_t))
+    (call storage_write_removable_nodes (dmcrypt_t)))
+
+(optional dmcrypt_optional_session
+    (call session_use_inherited_terminals (dmcrypt_t)))
+
+(optional dmcrypt_optional_udevd
+    (call udevd_read_config_files (dmcrypt_t))
+    (call udevd_read_run_files (dmcrypt_t)))
 
 (call files_run_filetrans (dmeventd_t dmeventd_run_t fifo_file "*"))
 (call files_run_filetrans (dmeventd_t dmeventd_run_t file "*"))
@@ -95,6 +131,9 @@
 (macro dm_run_dmsetup ((type ARG1)(role ARG2))
     (call dm_subtrans_dmsetup (ARG1))
     (roleattributeset is_dmsetup_role (ARG2)))
+
+(macro dm_rw_dmcrypt_semaphores ((type ARG1))
+    (allow ARG1 dmcrypt_t rw_sem_perms))
 
 (macro dm_admin ((type ARG1))
     (typeattributeset is_dm_admin_subject ARG1))
