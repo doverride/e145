@@ -64,8 +64,6 @@
 (optional upower_subject_optional_miscfiles
     (call miscfiles_read_localization_files (is_upower_subject)))
 
-(allow upower_t self create_unix_stream_socket_perms)
-
 (call upower_dbus_chat_upowerd (upower_t))
 
 (optional upower_optional_journald
