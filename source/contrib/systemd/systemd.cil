@@ -511,7 +511,7 @@
 (macro systemd_reload_system ((type ARG1))
     (allow ARG1 systemd_t (system (reload))))
 
-(macro systemd_start_system ((type ARG1)) ; BUG: logind to start session
+(macro systemd_start_system ((type ARG1))
     (allow ARG1 systemd_t (system (start))))
 
 (macro systemd_start_generic_service ((type ARG1))
