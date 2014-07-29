@@ -134,6 +134,7 @@
 (call files_relabel_all_except (setfiles_t))
 
 (call filesystem_getattr_all_filesystems (setfiles_t))
+(call filesystem_read_cgroup_files (setfiles_t))
 
 (call selinux_getattr_filesystems (setfiles_t))
 (call selinux_get_enforce_mode (setfiles_t))
