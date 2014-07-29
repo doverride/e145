@@ -370,6 +370,7 @@
 
 (allow systemctl_t self (capability (net_admin)))
 (allow systemctl_t self (process (signal)))
+(allow systemctl_t self rw_fifo_file_perms)
 
 (allow systemctl_t is_systemd_daemon_or_systemd_oneshot_subject (dirs (list)))
 (allow systemctl_t is_systemd_daemon_or_systemd_oneshot_subject read_file_perms)
@@ -377,8 +378,12 @@
 (call system_read_generic_proc_files (is_systemctl_client_subject))
 (call system_read_sysctl_kernel_files (systemctl_t))
 
+(call commands_execute_bin_files (systemctl_t)) ; less
+
 (call devices_read_sysfs_files (systemctl_t))
 (call devices_read_urandom (systemctl_t))
+
+(call files_read_generic_usr_files (systemctl_t)) ; /usr/share/terminfo(/.*)?
 
 (call filesystem_getattr_filesystems (systemctl_t))
 (call filesystem_search_tmpfs (is_systemctl_client_subject)) ; /sys/fs/cgroup is tmpfs_t
@@ -395,6 +400,7 @@
 (call systemd_list_run (is_systemctl_client_subject))
 (call systemd_manage_all_services (systemctl_t))
 (call systemd_read_state (is_systemctl_client_subject))
+(call systemd_get_status_system (systemctl_t))
 (call systemd_reboot_system (systemctl_t))
 (call systemd_search_generic_unit (is_systemctl_client_subject))
 (call systemd_stream_connect (is_systemctl_client_subject))
@@ -420,6 +426,7 @@
     (call journald_read_log_files (systemctl_t)))
 
 (optional systemctl_optional_session
+    (call session_read_generic_home_content_files (systemctl_t)) ; ~/.lesshst
     (call session_use_inherited_terminals (systemctl_t)))
 
 (allow systemd_t is_systemd_daemon_or_systemd_oneshot_subject (process
