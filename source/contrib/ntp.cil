@@ -27,13 +27,13 @@
 
 (type ntp_t)
 (type ntp_exec_t)
-(call application_subject_entry (ntp_t ntp_exec_t))
-(roleattributeset is_ntp_role system_r)
+(call systemd_oneshot_subject_entry (ntp_t ntp_exec_t))
 (roletype is_ntp_role ntp_t)
 
 (context file_ntp_exec (system_u object_r ntp_exec_t ((s0)
     (s0))))
 (filecon "/usr/bin/chronyc" file file_ntp_exec)
+(filecon "/usr/libexec/chrony-helper" file file_ntp_exec)
 
 (type ntpd_t)
 (type ntpd_exec_t)
@@ -42,14 +42,6 @@
 (context file_ntpd_exec (system_u object_r ntpd_exec_t ((s0)
     (s0))))
 (filecon "/usr/sbin/chronyd" file file_ntpd_exec)
-(filecon "/usr/libexec/chrony-helper" file file_ntpd_exec)
-
-(type ntp_helper_exec_t)
-(call commands_bin_object (ntp_helper_exec_t))
-
-(context file_ntp_helper_exec (system_u object_r ntp_helper_exec_t ((s0)
-    (s0))))
-(filecon "/usr/libexec/chrony-helper" file file_ntp_helper_exec)
 
 (type ntpd_run_t)
 (call files_run_object (ntpd_run_t))
@@ -100,7 +92,15 @@
 
 (call ntp_read_ntpd_config_files (is_ntp_subject))
 
+(optional ntp_subject_optional_miscfiles
+    (call miscfiles_read_localization_files (is_ntp_subject)))
+
 (allow ntp_t self create_udp_socket_perms)
+
+(call ntp_list_ntpd_var_lib (ntp_t))
+
+(optional ntp_optional_application
+    (call application_subject (ntp_t)))
 
 (allow ntpd_t self (capability (sys_time setuid setgid)))
 (allow ntpd_t self (process (setcap)))
@@ -139,7 +139,6 @@
     (call journald_client_subject (ntpd_t)))
 
 (optional ntpd_optional_miscfiles
-    (call miscfiles_read_localization_files (ntpd_t))
     (call miscfiles_read_network_config_files (ntpd_t)))
 
 (allow is_ntp_admin_subject is_ntp_subject signal_perms)
@@ -148,9 +147,6 @@
 (allow is_ntp_admin_subject ntpd_unit_t (service (all)))
 
 (call admin_pattern (is_ntp_admin_subject is_ntp_file_object))
-
-(macro ntp_exec_helper ((type ARG1))
-    (call can_exec (ARG1 ntp_helper_exec_t)))
 
 (macro ntp_exec ((type ARG1))
     (call can_exec (ARG1 ntp_exec_t)))
@@ -165,6 +161,10 @@
 (macro ntp_read_ntpd_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 ntpd_conf_t ntpd_conf_t)))
+
+(macro ntp_list_ntpd_var_lib ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (allow ARG1 ntpd_var_lib_t (dirs (list))))
 
 (macro ntp_manage_ntpd_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))

@@ -92,7 +92,6 @@
     (call networkmgr_stream_connect (dhclient_t)))
 
 (optional dhclient_optional_ntp
-    (call ntp_exec_helper (dhclient_t))
     (call ntp_subtrans (dhclient_t)))
 
 (call admin_pattern (is_dhcp_admin_subject is_dhcp_file_object))

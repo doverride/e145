@@ -168,9 +168,6 @@
 (optional session_optional_akmods
     (call akmods_run (session_t session_r)))
 
-(optional session_optional_askpwd
-    (call askpwd_run_agent (session_t session_r)))
-
 (optional session_optional_bootloader
     (call bootloader_run_grub (session_t session_r))
     (call bootloader_run_grubby (session_t session_r)))

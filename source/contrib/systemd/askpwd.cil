@@ -25,6 +25,7 @@
 (type askpwdagent_t)
 (type askpwdagent_exec_t)
 (call systemd_oneshot_subject_entry (askpwdagent_t askpwdagent_exec_t))
+(roletype is_askpwdagent_role askpwdagent_t)
 
 (context file_askpwdagent_exec (system_u object_r askpwdagent_exec_t ((s0)
     (s0))))
