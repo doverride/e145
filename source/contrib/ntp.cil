@@ -98,11 +98,15 @@
 (optional ntp_subject_optional_auth
     (call auth_nsswitch_client_subject (is_ntp_subject)))
 
+(optional ntpd_optional_dhcp
+    (call dhcp_list_dhclient_var_lib (is_ntp_subject)))
+
 (optional ntp_subject_optional_miscfiles
     (call miscfiles_read_localization_files (is_ntp_subject)))
 
 (call commands_mprot_read_shell_files (ntp_t))
 
+(call ntp_exec (ntp_t))
 (call ntp_list_ntpd_var_lib (ntp_t))
 
 (optional ntp_optional_application
@@ -131,9 +135,6 @@
 (call ntp_udp_bind_ntp_port (ntpd_t))
 (call ntp_udp_bind_ntp_cmdmon_port (ntpd_t))
 (call ntp_manage_ntpd_var_lib_files (ntpd_t))
-
-(optional ntpd_optional_dhcp
-    (call dhcp_list_dhclient_var_lib (ntpd_t)))
 
 (optional ntpd_optional_journald
     (call journald_client_subject (ntpd_t)))
