@@ -217,11 +217,13 @@
 (call selinux_getattr_filesystems (networkmgr_disp_t))
 
 (call commands_execute_shell_files (networkmgr_disp_t))
+(call commands_execute_bin_files (networkmgr_disp_t)) ; 00-report -> lang.sh
 
 (call files_read_generic_etc_files (networkmgr_disp_t)) ; 00-netreport -> /etc/sysconfig/network-scripts/network-functions
 (call files_read_generic_env_files (networkmgr_disp_t)) ; 00-netreport -> /etc/sysconfig/init
 
 (call filesystem_search_tmpfs (networkmgr_disp_t)) ; 00-netreport -> mountpoint -> /sys/fs/cgroup
+(call filesystem_read_cgroup_files (networkmgr_disp_t))
 
 (call dbus_acquire_service_system (networkmgr_disp_t))
 (call dbus_system_client_subject (networkmgr_disp_t))

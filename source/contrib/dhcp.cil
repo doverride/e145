@@ -66,6 +66,7 @@
 
 (call selinux_get_filesystems_mount (dhclient_t))
 
+(call dhcp_list_config (dhclient_t))
 (call dhcp_read_config_files (dhclient_t))
 (call dhcp_udp_bind_dhcp_port (dhclient_t))
 
@@ -98,6 +99,10 @@
 (macro dhcp_run_dhclient ((type ARG1)(role ARG2))
     (call dhcp_subtrans_dhclient (ARG1))
     (roleattributeset is_dhclient_role (ARG2)))
+
+(macro dhcp_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 dhcp_conf_t (dirs (list))))
 
 (macro dhcp_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))

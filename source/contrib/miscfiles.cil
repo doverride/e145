@@ -99,6 +99,18 @@
     (call files_search_usr (ARG1))
     (call read_files_pattern (ARG1 module_t module_t)))
 
+(macro miscfiles_manage_module ((type ARG1))
+    (call files_search_usr (ARG1))
+    (call manage_dirs_pattern (ARG1 module_t module_t))
+    (call manage_files_pattern (ARG1 module_t module_t))
+    (call manage_lnk_files_pattern (ARG1 module_t module_t)))
+
+(macro miscfiles_relabel_module ((type ARG1))
+    (call files_search_usr (ARG1))
+    (call relabel_dirs_pattern (ARG1 module_t module_t))
+    (call relabel_files_pattern (ARG1 module_t module_t))
+    (call relabel_lnk_files_pattern (ARG1 module_t module_t)))
+
 (macro miscfiles_read_network_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 net_conf_t net_conf_t)))

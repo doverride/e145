@@ -437,6 +437,9 @@
 (macro files_search_root ((type ARG1))
     (allow ARG1 root_t (dirs (search))))
 
+(macro files_list_root ((type ARG1))
+    (allow ARG1 root_t (dirs (list))))
+
 (macro files_audit_access_root_dirs ((type ARG1))
     (dontaudit ARG1 root_t (dir (audit_access))))
 

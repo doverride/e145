@@ -61,7 +61,7 @@
 (call files_tmp_object (akmods_tmp_t))
 
 (allow akmods_t self (capability (dac_override setgid setuid chown)))
-(allow akmods_t self (process (getsched setsched setrlimit setfscreate)))
+(allow akmods_t self (process (getsched setsched setrlimit setexec setfscreate)))
 (allow akmods_t self create_unix_stream_socket_perms)
 (allow akmods_t self rw_fifo_file_perms)
 
@@ -70,6 +70,7 @@
 
 (allow akmods_t akmods_tmp_t manage_dir_perms)
 (allow akmods_t akmods_tmp_t manage_file_perms)
+(allow akmods_t akmods_tmp_t manage_lnk_file_perms)
 (allow akmods_t akmods_tmp_t relabel_file_perms)
 (call files_tmp_filetrans (akmods_t akmods_tmp_t file "*"))
 (call files_tmp_filetrans (akmods_t akmods_tmp_t dir "*"))
@@ -84,16 +85,18 @@
 (call devices_read_urandom (akmods_t))
 
 (call files_list_etc (akmods_t))
+(call files_list_root (akmods_t))
 (call files_read_boot_files (akmods_t)) ; /boot/vmlinuz.*
 (call files_audit_access_root_dirs (akmods_t))
 (call files_read_generic_etc_files (akmods_t)) ; /etc/rc.d/init.d/functions
 (call files_read_generic_env_files (akmods_t)) ; /etc/sysconfig/init
 (call files_read_generic_usr_files (akmods_t)) ; /usr/src/akmods/.*
 
+(call filesystem_getattr_filesystems (akmods_t))
 (call filesystem_getattr_tmpfs_filesystems (akmods_t)) ; kmodtool
 
 (call selinux_getattr_filesystems (akmods_t))
-(call selinux_get_enforce_mode (akmods_t))
+(call selinux_compute_create_context (akmods_t))
 
 (call akmods_manage_var_cache_files (akmods_t))
 (call akmods_read_config_files (akmods_t))
@@ -107,7 +110,8 @@
     (call auth_nsswitch_client_subject (akmods_t)))
 
 (optional akmods_optional_miscfiles
-    (call miscfiles_read_module_files (akmods_t))
+    (call miscfiles_manage_module (akmods_t)) ; rpm
+    (call miscfiles_relabel_module (akmods_t))
     (call miscfiles_read_network_config_files (akmods_t))
     (call miscfiles_read_localization_files (akmods_t)))
 
@@ -120,8 +124,13 @@
     (call session_dontaudit_search_home_dir (akmods_t))
     (call session_dontaudit_search_generic_data (akmods_t))) ; rpmdev-vercmp -> /root/.local
 
+(optional akmods_optional_seutil
+    (call seutil_read_config_files (akmods_t))
+    (call seutil_read_file_context_files (akmods_t)))
+
 (optional akmods_optional_rpm
     (call rpm_exec (akmods_t))
+    (call rpm_script_shell_manual_subject_type_transition (akmods_t)) ; rpm
     (call rpm_list_config (akmods_t))
     (call rpm_read_config_files (akmods_t))
     (call rpm_signull (akmods_t))

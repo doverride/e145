@@ -119,6 +119,9 @@
     (call subject_dynamic_type_transition_subject (ARG1))
     (call dynamic_subject_type_transition_pattern (ARG1 rpm_script_t)))
 
+(macro rpm_script_shell_manual_subject_type_transition ((type ARG1))
+    (call commands_shell_manual_subject_type_transition (ARG1 rpm_script_t)))
+
 (macro rpm_list_config ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 rpm_conf_t (dirs (list))))
