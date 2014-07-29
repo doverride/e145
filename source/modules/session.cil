@@ -894,9 +894,6 @@
     (allow ARG1 session_t (dirs (list)))
     (allow ARG1 session_t read_file_perms))
 
-(macro session_rw_semaphores ((type ARG1))
-    (allow ARG1 session_t rw_sem_perms))
-
 (macro session_send_signal ((type ARG1))
     (allow ARG1 session_t (process (signal))))
 

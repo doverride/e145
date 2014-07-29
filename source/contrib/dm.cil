@@ -66,9 +66,6 @@
 (optional dmsetup_optional_lvm
     (call lvm_rw_lvm_semaphores (dmsetup_t)))
 
-(optional dmsetup_optional_session
-    (call session_rw_semaphores (dmsetup_t)))
-
 (optional dmsetup_optional_udevd
     (call udevd_read_config_files (dmsetup_t))
     (call udevd_read_run_files (dmsetup_t))
