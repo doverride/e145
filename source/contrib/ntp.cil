@@ -28,6 +28,7 @@
 (type ntp_t)
 (type ntp_exec_t)
 (call application_subject_entry (ntp_t ntp_exec_t))
+(roleattributeset is_ntp_role system_r)
 (roletype is_ntp_role ntp_t)
 
 (context file_ntp_exec (system_u object_r ntp_exec_t ((s0)

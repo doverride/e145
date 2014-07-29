@@ -241,6 +241,9 @@
 (optional networkmgr_disp_optional_dhsp
     (call dhcp_subtrans_dhclient (networkmgr_disp_t))) ; /etc/NetworkManager/dispatcher.d/11-dhclient
 
+(optional networkmgr_disp_optional_ip
+    (call ip_exec (networkmgr_disp_t)))
+
 (optional networkmgr_disp_optional_journald
     (call journald_client_subject (networkmgr_disp_t)))
 
@@ -248,8 +251,11 @@
     (call miscfiles_read_network_environ_files (networkmgr_disp_t))
     (call miscfiles_read_localization_files (networkmgr_disp_t)))
 
-(optional networkmgr_disp_optional_mmount
+(optional networkmgr_disp_optional_mount
     (call mount_exec (networkmgr_disp_t))) ; 00-netreport -> mountpoint
+
+(optional networkmgr_disp_optional_ntp
+    (call ntp_subtrans (networkmgr_disp_t))) ; chronyc
 
 (allow is_networkmgr_admin_subject is_networkmgr_subject signal_perms)
 (call ps_subject_pattern (is_networkmgr_admin_subject is_networkmgr_subject))
