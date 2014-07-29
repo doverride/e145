@@ -45,6 +45,7 @@
 (call system_setsched (mount_t))
 (call system_request_load_module (mount_t))
 
+(call devices_list_sysfs (mount_t))
 (call devices_read_sysfs_files (mount_t))
 
 (call files_audit_access_all_mnt_dirs (mount_t))
@@ -76,7 +77,7 @@
     (call session_use_inherited_terminals (mount_t)))
 
 (optional mount_optional_storage
-    (call storage_getattr_fixed_disk_nodes (mount_t)))
+    (call storage_read_fixed_disk_nodes (mount_t)))
 
 (macro mount_exec ((type ARG1))
     (call can_exec (ARG1 mount_exec_t)))
