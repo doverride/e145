@@ -1,0 +1,21 @@
+(typepermissive dmesg_t)
+
+(roleattribute is_dmesg_role)
+
+(type dmesg_t)
+(type dmesg_exec_t)
+(call application_subject_entry (dmesg_t dmesg_exec_t))
+(roletype is_dmesg_role dmesg_t)
+
+(context file_dmesg_exec (system_u object_r dmesg_exec_t ((s0) (s0))))
+(filecon "/usr/bin/dmesg" file file_dmesg_exec)
+
+(optional dmesg_optional_session
+    (call session_use_inherited_terminals (dmesg_t)))
+
+(macro dmesg_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 dmesg_exec_t dmesg_t)))
+
+(macro dmesg_run ((type ARG1)(role ARG2))
+    (call dmesg_subtrans (ARG1))
+    (roleattributeset is_dmesg_role (ARG2)))

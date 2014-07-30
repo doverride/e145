@@ -194,6 +194,9 @@
     (call dm_run_dmcrypt (session_t session_r))
     (call dm_run_dmsetup (session_t session_r)))
 
+(optional session_optional_dmesg
+    (call dmesg_run (session_t session_r)))
+
 (optional session_optional_fstools
     (call fstools_run (session_t session_r)))
 
