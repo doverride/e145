@@ -1,10 +1,3 @@
-miscfiles.cil:
-    create a miscfiles_read_terminfo_files()
-
-    clients read those in both /etc/terminfo as well as /usr/share/terminfo
-    if we label those with a private type than we can drop the files_read_generic_etc_files(), as
-    well as files_read_generic_usr_files() calls
-
 auth.cil:
     miscfiles_read_generic_cert_files() and miscfiles_read_network_config_files()
     should probably be associated with is_nsswitch_client_subject
