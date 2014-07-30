@@ -154,11 +154,23 @@
 (call commands_bin_files_entry_subject (session_t))
 (call commands_shell_files_entry_subject (session_t))
 
+(call files_manage_all_non_auth_files_except (session_t))
+
+(call selinux_set_enforce_mode (session_t))
+(call selinux_set_all_booleans (session_t))
+(call selinux_set_parameters (session_t))
+
 (call subject_user_exemption_target (session_t))
 
 (call session_create_pty_node (session_t)) ; script/script replay
 
 (optional session_optional_audit
+    (call audit_list_auditd_config (session_t))
+    (call audit_read_auditd_config_files (session_t))
+    (call audit_list_audispd_config (session_t))
+    (call audit_read_audispd_config_files (session_t))
+    (call audit_list_log (session_t))
+    (call audit_read_log_files (session_t))
     (call audit_run_auditctl (session_t session_r))
     (call audit_run_augenrules (session_t session_r)))
 
@@ -252,6 +264,7 @@
     (call tmpfiles_relabelable_object_exception (is_session_home_file_object)))
 
 (optional session_optional_auth
+    (call auth_read_shadow_files (session_t))
     (call auth_run_authconfig (session_t session_r))
     (call auth_run_updpwd (session_t session_r))
     (call auth_run_utempter (session_t session_r))

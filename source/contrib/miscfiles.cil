@@ -81,6 +81,13 @@
 (filecon "/var/lib/texmf(/.*)?" any file_tetex_data)
 (filecon "/var/spool/texmf(/.*)?" any file_tetex_data)
 
+(type terminfo_t)
+(call files_usr_object (terminfo_t))
+
+(context file_terminfo (system_u object_r terminfo_t ((s0) (s0))))
+(filecon "/etc/terminfo(/.*)?" any file_terminfo)
+(filecon "/usr/share/terminfo(/.*)?" any file_terminfo)
+
 (macro miscfiles_cert_object ((type ARG1))
     (typeattributeset is_cert_file_object ARG1)
     (call files_etc_object (ARG1)))

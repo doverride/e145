@@ -210,9 +210,21 @@
     (call audit_subtrans_augenrules (ARG1))
     (roleattributeset is_augenrules_role (ARG2)))
 
+(macro audit_list_auditd_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 auditd_conf_t (dirs (list))))
+
 (macro audit_read_auditd_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 auditd_conf_t auditd_conf_t)))
+
+(macro audit_list_log ((type ARG1))
+    (call files_search_var_log (ARG1))
+    (allow ARG1 auditd_log_t (dirs (list))))
+
+(macro audit_read_log_files ((type ARG1))
+    (call files_search_var_log (ARG1))
+    (call read_files_pattern (ARG1 auditd_log_t auditd_log_t)))
 
 (macro audit_list_audispd_config ((type ARG1))
     (call files_search_etc (ARG1))
