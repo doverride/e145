@@ -55,6 +55,7 @@
 (call devices_read_urandom (is_mutt_subject))
 
 (call files_dontaudit_list_all (is_mutt_subject)) ; catchall
+(call files_read_generic_etc_files (is_mutt_subject)) ; gnutls.config
 
 (call mail_tcp_connect_imap_port (is_mutt_subject))
 (call mail_tcp_connect_smtp_port (is_mutt_subject))
