@@ -62,6 +62,8 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*arp-ethers.*" file file_arp_unit)
 
+(call application_subject (arp_t))
+
 (allow is_nettools_admin_subject is_nettools_subject signal_perms)
 (call ps_subject_pattern (is_nettools_admin_subject is_nettools_subject))
 
