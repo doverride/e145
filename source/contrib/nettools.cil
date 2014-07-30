@@ -42,7 +42,7 @@
 
 (context file_traceroute_exec (system_u object_r traceroute_exec_t ((s0)
     (s0))))
-(filecon "/usr/bin/traceroute6?" file file_traceroute_exec)
+(filecon "/usr/bin/traceroute" file file_traceroute_exec)
 (filecon "/usr/bin/tcptraceroute" file file_traceroute_exec)
 (filecon "/usr/bin/nmap" file file_traceroute_exec)
 

@@ -184,6 +184,9 @@
     (call bootloader_run_grub (session_t session_r))
     (call bootloader_run_grubby (session_t session_r)))
 
+(optional session_optional_consoletype
+    (call consoletype_run (session_t session_r)))
+
 (optional session_optional_dhcp
     (call dhcp_run_dhclient (session_t session_r)))
 

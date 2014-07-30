@@ -1,0 +1,21 @@
+(typepermissive consoletype_t)
+
+(roleattribute is_consoletype_role)
+
+(type consoletype_t)
+(type consoletype_exec_t)
+(call application_subject_entry (consoletype_t consoletype_exec_t))
+(roletype is_consoletype_role consoletype_t)
+
+(context file_consoletype_exec (system_u object_r consoletype_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/consoletype" file file_consoletype_exec)
+
+(optional consoletype_optional_session
+    (call session_use_inherited_terminals (consoletype_t)))
+
+(macro consoletype_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 consoletype_exec_t consoletype_t)))
+
+(macro consoletype_run ((type ARG1)(role ARG2))
+    (call consoletype_subtrans (ARG1))
+    (roleattributeset is_consoletype_role (ARG2)))
