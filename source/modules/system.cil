@@ -376,6 +376,16 @@
 (macro system_sysctl_object ((type ARG1))
     (typeattributeset is_sysctl_object ARG1))
 
+(macro system_read_all_proc_files ((type ARG1))
+    (allow ARG1 is_proc_object (dirs (list)))
+    (allow ARG1 is_proc_object read_file_perms)
+    (call system_read_core_if (ARG1))
+    (call system_read_messages (ARG1)))
+
+(macro system_read_all_sysctl_files ((type ARG1))
+    (allow ARG1 is_sysctl_object (dirs (list)))
+    (allow ARG1 is_sysctl_object read_file_perms))
+
 (macro system_get_sysvipc_info ((type ARG1))
     (allow ARG1 system_t (system (ipc_info))))
 

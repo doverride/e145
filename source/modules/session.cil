@@ -164,9 +164,8 @@
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t blk_file "*"))
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t chr_file "*"))
 
-(call system_getattr_core_if (session_t))
-(call system_read_generic_proc_files (session_t))
-(call system_read_sysctl_kernel_files (session_t))
+(call system_read_all_proc_files (session_t))
+(call system_read_all_sysctl_files (session_t))
 
 (call commands_execute_bin_files (session_t))
 (call commands_execute_shell_files (session_t))
