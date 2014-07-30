@@ -357,7 +357,7 @@
 (optional systemd_optional_utmp
     (call utmp_rw_run_files (systemd_t)))
 
-(allow systemctl_t self (capability (net_admin)))
+(allow systemctl_t self (capability (net_admin ipc_lock)))
 (allow systemctl_t self (process (signal)))
 (allow systemctl_t self rw_fifo_file_perms)
 
@@ -366,6 +366,7 @@
 
 (call system_read_generic_proc_files (is_systemctl_client_subject))
 (call system_read_sysctl_kernel_files (is_systemd_subject))
+(call system_read_sysctl_crypto_files (systemctl_t))
 
 (call commands_execute_bin_files (systemctl_t)) ; less
 
