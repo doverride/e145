@@ -385,14 +385,10 @@
 (call terminal_write_inherited_generic_pty_nodes (is_systemd_subject))
 
 (call systemd_dgram_send (is_systemctl_client_subject))
-(call systemd_disable_system (systemctl_t))
-(call systemd_halt_system (systemctl_t))
-(call systemd_reload_system (systemctl_t))
 (call systemd_list_run (is_systemctl_client_subject))
 (call systemd_manage_all_services (systemctl_t))
+(call systemd_manage_all_system (systemctl_t))
 (call systemd_read_state (is_systemctl_client_subject))
-(call systemd_get_status_system (systemctl_t))
-(call systemd_reboot_system (systemctl_t))
 (call systemd_search_generic_unit (is_systemctl_client_subject))
 (call systemd_stream_connect (is_systemctl_client_subject))
 (call systemd_use_fd (is_systemctl_client_subject))
@@ -554,6 +550,9 @@
 
 (macro systemd_manage_all_services ((type ARG1))
     (allow ARG1 is_systemd_unit_file_object (service (all))))
+
+(macro systemd_manage_all_system ((type ARG1))
+    (allow ARG1 systemd_t (system (all))))
 
 (macro systemd_read_all_unit_files ((type ARG1))
     (call read_files_pattern (ARG1 is_systemd_unit_file_object
