@@ -1,3 +1,9 @@
+various:
+    clean up modules like seutil, nettools and other by grouping policy using "is_subject" attributes
+
+    many of these individual types have permissions in common.
+    group them to increase readability and efficiency
+
 auth.cil:
     miscfiles_read_generic_cert_files() and miscfiles_read_network_config_files()
     should probably be associated with is_nsswitch_client_subject
@@ -28,6 +34,8 @@ tmpfiles.cil:
 systemd.cil: 
     files_relabel_non_auth_except() is too coarse, and is a temporary solution
 
+    (also applies to readahead, udev and others: grep -i non_auth .)
+
     hopefully this can be trimmed to for example files_relabel_all_run_files(), or less
 
     systemd needs to at least be able to relabel the sock files of socket activated subjects
@@ -36,6 +44,10 @@ systemd.cil:
     update:
         it is not as easy as i thought it would be
         systemd relabels almost all over the place
+
+    update:
+        it is certainly feasible
+        example: systemd does not have to relabel user content (except maybe systemd user content)_
 
 various:
     systemd uses tmpfs a lot but does not fix labels right after it mounts, or is not able to
