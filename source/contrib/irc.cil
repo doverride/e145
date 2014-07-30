@@ -44,6 +44,7 @@
     (call auth_nsswitch_client_subject (is_irssi_subject)))
 
 (optional irssi_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_irssi_subject))
     (call miscfiles_read_network_config_files (is_irssi_subject))
     (call miscfiles_read_localization_files (is_irssi_subject)))
 
