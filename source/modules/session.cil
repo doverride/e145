@@ -172,6 +172,7 @@
 (call commands_bin_files_entry_subject (session_t))
 (call commands_shell_files_entry_subject (session_t))
 
+(call devices_getattr_all_nodes (session_t))
 (call devices_read_urandom (session_t))
 
 (call files_manage_all_non_auth_dirs_except (session_t))
