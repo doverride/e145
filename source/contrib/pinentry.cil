@@ -8,9 +8,8 @@
 (context file_pincurses_exec (system_u object_r pincurses_exec_t ((s0)(s0))))
 (filecon "/usr/bin/pinentry-curses" file file_pincurses_exec)
 
-(call files_read_generic_usr_files (is_pincurses_subject))
-
 (optional pincurses_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_pincurses_subject))
     (call miscfiles_read_localization_files (is_pincurses_subject)))
 
 (macro pinentry_role_template_curses ((role ARG1)(type ARG2)(type ARG3))
