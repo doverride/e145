@@ -19,15 +19,20 @@
 (context file_emacsclient_exec (system_u object_r emacsclient_exec_t ((s0)(s0))))
 (filecon "/usr/bin/emacsclient" file file_emacsclient_exec)
 
+(call files_read_generic_etc_files (is_emacs_or_emacsclient_subject))
+(call files_search_var_spool (is_emacs_or_emacsclient_subject))
+
+(call devices_list (is_emacsclient_subject))
+
+(call files_search_tmp (is_emacsclient_subject))
+
 (allow is_emacs_subject self (process (signal)))
 (allow is_emacs_subject self rw_fifo_file_perms)
 (allow is_emacs_subject self create_unix_stream_stream_socket_perms)
 
 (call devices_read_urandom (is_emacs_subject))
 
-(call files_read_generic_etc_files (is_emacs_subject))
 (call files_read_generic_usr_files (is_emacs_subject))
-(call files_search_var_spool (is_emacs_subject))
 
 (call selinux_getattr_filesystems (is_emacs_subject))
 

@@ -439,6 +439,7 @@
     (call emacs_role_template_client (session_r session_t session_emacsclient_t))
 
     (call session_application_subject (session_emacsclient_t))
+    (call session_use_terminals (session_emacsclient_t))
 
     (call stream_connect_pattern (session_emacsclient_t session_tmp_t session_tmp_t
         session_emacs_t)))
@@ -1042,6 +1043,7 @@
     (allow ARG1 device_session_tty_t rw_term_perms))
 
 (macro session_use_terminals ((type ARG1))
+    (call terminal_search_devpts (ARG1))
     (allow ARG1 device_session_pts_t rw_term_perms)
     (allow ARG1 device_session_tty_t rw_term_perms))
 
