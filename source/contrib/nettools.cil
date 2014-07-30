@@ -65,10 +65,23 @@
 
 (call application_subject (arp_t))
 
-(allow nettools_t self (capability (sys_ptrace dac_override)))
+(allow nettools_t self (capability (sys_ptrace dac_override net_raw
+    net_admin setgid setuid)))
+(allow nettools_t self create_netlink_socket_perms)
+(allow nettools_t self create_unix_stream_socket_perms)
+(allow nettools_t self create_socket_perms)
+(allow nettools_t self create_packet_socket_perms)
 
+(call system_read_sysctl_kernel_files (nettools_t))
+(call system_request_load_module (nettools_t))
 (call system_list_proc (nettools_t))
 (call system_read_proc_net_files (nettools_t))
+
+(call devices_list (nettools_t))
+(call devices_list_sysfs (nettools_t))
+(call devices_read_sysfs_files (nettools_t))
+(call devices_read_usbmon (nettools_t))
+(call devices_rw_usb (nettools_t))
 
 (call selinux_getattr_filesystems (nettools_t))
 (call selinux_get_enforce_mode (nettools_t))
@@ -76,11 +89,58 @@
 (call subject_getattr_all_subjects (nettools_t))
 (call subject_read_all_subjects_state (nettools_t))
 
+(optional nettools_optional_auth
+    (call auth_nsswitch_client_subject (nettools_t)))
+
 (optional nettools_optional_miscfiles
+    (call miscfiles_read_network_environ_files (nettools_t))
     (call miscfiles_read_localization_files (nettools_t)))
 
 (optional nettools_optional_session
     (call session_use_inherited_terminals (nettools_t)))
+
+(allow ping_t self (capability (net_raw)))
+(allow ping_t self (process (getcap setcap)))
+(allow ping_t self create_rawip_socket_perms)
+(allow ping_t self create_unix_stream_socket_perms)
+
+(optional ping_optional_auth
+    (call auth_nsswitch_client_subject (ping_t)))
+
+(optional ping_optional_miscfiles
+    (call miscfiles_read_network_config_files (ping_t))
+    (call miscfiles_read_localization_files (ping_t)))
+
+(optional ping_optional_session
+    (call session_use_inherited_terminals (ping_t)))
+
+(allow traceroute_t self (capability (dac_override net_raw)))
+(allow traceroute_t self (capability2 (block_suspend)))
+(allow traceroute_t self create_unix_stream_socket_perms)
+(allow traceroute_t self create_unix_dgram_socket_perms)
+(allow traceroute_t self create_packet_socket_perms)
+(allow traceroute_t self create_rawip_socket_perms)
+
+(call system_read_generic_proc_files (traceroute_t))
+(call system_read_proc_net_files (traceroute_t))
+
+(call devices_read_urandom (traceroute_t))
+
+(call files_read_generic_usr_files (traceroute_t))
+
+(call network_udp_bind_generic_node (traceroute_t))
+
+(call selinux_getattr_filesystems (traceroute_t))
+
+(optional traceroute_optional_auth
+    (call auth_nsswitch_client_subject (traceroute_t)))
+
+(optional traceroute_optional_miscfiles
+    (call miscfiles_read_network_config_files (traceroute_t))
+    (call miscfiles_read_localization_files (traceroute_t)))
+
+(optional traceroute_optional_session
+    (call session_use_inherited_terminals (traceroute_t)))
 
 (allow is_nettools_admin_subject is_nettools_subject signal_perms)
 (call ps_subject_pattern (is_nettools_admin_subject is_nettools_subject))

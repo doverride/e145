@@ -17,6 +17,17 @@
 (filecon "/usr/sbin/iwpriv" file file_ip_exec)
 (filecon "/usr/sbin/tc" file file_ip_exec)
 
+(allow ip_t self create_unix_dgram_socket_perms)
+
+(call system_read_sysctl_net_files (ip_t))
+(call system_read_proc_net_files (ip_t))
+
+(optional ip_optional_miscfiles
+    (call miscfiles_read_localization_files (ip_t)))
+
+(optional ip_optional_session
+    (call session_use_inherited_terminals (ip_t)))
+
 (macro ip_exec ((type ARG1))
     (call can_exec (ARG1 ip_exec_t)))
 
