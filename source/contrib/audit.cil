@@ -1,15 +1,17 @@
 (typepermissive auditctl_t)
 (typepermissive augenrules_t)
+(typepermissive ausearch_t)
 
 (roleattribute is_auditctl_role)
 (roleattribute is_augenrules_role)
+(roleattribute is_ausearch_role)
 
 (typeattribute is_audit_admin_subject)
 (typeattribute is_audit_client_subject)
 
 (typeattribute is_audit_subject)
 (typeattributeset is_audit_subject (auditd_t audispd_t
-    auditctl_t augenrules_t))
+    auditctl_t augenrules_t ausearch_t))
 
 (typeattribute is_audit_file_object)
 (typeattributeset is_audit_file_object (auditd_conf_t auditd_log_t
@@ -101,6 +103,15 @@
     ((s0) (s0))))
 (filecon "/usr/sbin/augenrules" file file_augenrules_exec)
 
+(type ausearch_t)
+(type ausearch_exec_t)
+(call application_subject_entry (ausearch_t ausearch_exec_t))
+(roletype is_ausearch_role ausearch_t)
+
+(context file_ausearch_exec (system_u object_r ausearch_exec_t
+    ((s0) (s0))))
+(filecon "/usr/sbin/ausearch" file file_ausearch_exec)
+
 (allow is_audit_client_subject self (capability (audit_write)))
 (allow is_audit_client_subject self r_netlink_audit_socket_perms)
 (allow is_audit_client_subject self (netlink_audit_socket (nlmsg_relay)))
@@ -159,6 +170,22 @@
 (call audit_list_audispd_config (audispd_t))
 (call audit_read_audispd_config_files (audispd_t))
 
+(allow ausearch_t self create_unix_stream_socket_perms)
+
+(call audit_list_auditd_config (ausearch_t))
+(call audit_read_auditd_config_files (ausearch_t))
+(call audit_list_log (ausearch_t))
+(call audit_read_log_files (ausearch_t))
+
+(optional ausearch_optional_auth
+    (call auth_nsswitch_client_subject (ausearch_t)))
+
+(optional ausearch_optional_miscfiles
+    (call miscfiles_read_localization_files (ausearch_t)))
+
+(optional ausearch_optional_session
+    (call session_use_inherited_terminals (ausearch_t)))
+
 (allow is_audit_admin_subject is_audit_subject signal_perms)
 (call ps_subject_pattern (is_audit_admin_subject is_audit_subject))
 
@@ -209,6 +236,14 @@
 (macro audit_run_augenrules ((type ARG1)(role ARG2))
     (call audit_subtrans_augenrules (ARG1))
     (roleattributeset is_augenrules_role (ARG2)))
+
+(macro audit_subtrans_ausearch ((type ARG1))
+    (call subtrans_pattern (ARG1 ausearch_exec_t
+        ausearch_t)))
+
+(macro audit_run_ausearch ((type ARG1)(role ARG2))
+    (call audit_subtrans_ausearch (ARG1))
+    (roleattributeset is_ausearch_role (ARG2)))
 
 (macro audit_list_auditd_config ((type ARG1))
     (call files_search_etc (ARG1))

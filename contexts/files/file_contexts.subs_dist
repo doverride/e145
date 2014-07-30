@@ -6,6 +6,9 @@
 /usr/local/lib64 /usr/lib
 /usr/local/lib32 /usr/lib
 
+/usr/local/bin /usr/bin
+/usr/local/sbin /usr/sbin
+
 /run/systemd/system /usr/lib/systemd/system
 /run/systemd/generator /usr/lib/systemd/system
 /run/systemd/generator.late /usr/lib/systemd/system

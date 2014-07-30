@@ -52,6 +52,7 @@ contrib/ppp.cil
 contrib/rpm.cil
 contrib/rtkit.cil
 contrib/screen.cil
+contrib/sensors.cil
 contrib/seutil.cil
 contrib/ssh.cil
 contrib/sudo.cil

@@ -1,0 +1,148 @@
+(typepermissive sensors_t)
+(typepermissive sensors_detect_t)
+(typepermissive fancontrol_t)
+
+(roleattribute is_sensors_role)
+(roleattribute is_sensors_detect_role)
+(roleattribute is_fancontrol_role)
+
+(typeattribute is_sensors_admin_subject)
+
+(typeattribute is_sensors_subject)
+(typeattributeset is_tune_subject (sensors_t fancontrol_t sensors_detect_t))
+
+(typeattribute is_sensors_file_object)
+(typeattributeset is_sensors_file_object (sensors_conf_t fancontrol_conf_t
+    sensors_env_t fancontrol_run_t ))
+
+(typeattribute is_sensors_unit_file_object)
+(typeattributeset is_sensors_unit_file_object (sensors_unit_t
+    fancontrol_unit_t))
+
+(type sensors_t)
+(type sensors_exec_t)
+(call systemd_daemon_subject_entry (sensors_t sensors_exec_t))
+(roletype is_sensors_role sensors_t)
+
+(context file_sensors_exec (system_u object_r sensors_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/sensors" file file_sensors_exec)
+
+(type sensors_detect_t)
+(type sensors_detect_exec_t)
+(call application_subject_entry (sensors_detect_t sensors_detect_exec_t))
+(roletype is_sensors_detect_role sensors_detect_t)
+
+(context file_sensors_detect_exec (system_u object_r sensors_detect_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/sensors-detect" file file_sensors_detect_exec)
+
+(type fancontrol_t)
+(type fancontrol_exec_t)
+(call systemd_daemon_subject_entry (fancontrol_t fancontrol_exec_t))
+(roletype is_fancontrol_role fancontrol_t)
+
+(context file_fancontrol_exec (system_u object_r fancontrol_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/fancontrol" file file_fancontrol_exec)
+
+(type fancontrol_run_t)
+(call files_run_object (fancontrol_run_t))
+(call systemd_pid_object (fancontrol_run_t))
+
+(context file_fancontrol_run (system_u object_r fancontrol_run_t ((s0)
+    (s0))))
+(filecon "/run/fancontrol\.pid" file file_fancontrol_run)
+
+(type fancontrol_conf_t)
+(call files_etc_object (fancontrol_conf_t))
+
+(context file_fancontrol_conf (system_u object_r fancontrol_conf_t ((s0)
+    (s0))))
+(filecon "/etc/fancontrol" file file_fancontrol_conf)
+
+(type sensors_conf_t)
+(call files_etc_object (sensors_conf_t))
+
+(context file_sensors_conf (system_u object_r sensors_conf_t
+    ((s0) (s0))))
+(filecon "/etc/sensors3\.conf" file file_sensors_conf)
+
+(type sensors_env_t)
+(call files_env_object (sensors_env_t))
+
+(context file_sensors_env (system_u object_r sensors_env_t
+    ((s0) (s0))))
+(filecon "/etc/sysconfig/lm_sensors" file file_sensors_env)
+
+(type fancontrol_unit_t)
+(call systemd_unit_object (fancontrol_unit_t))
+
+(context file_fancontrol_unit (system_u object_r fancontrol_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*fancontrol.*" file file_fancontrol_unit)
+
+(type sensors_unit_t)
+(call systemd_unit_object (sensors_unit_t))
+
+(context file_sensors_unit (system_u object_r sensors_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*lm_sensors.*" file file_sensors_unit)
+
+(call files_run_filetrans (fancontrol_t fancontrol_run_t file "*"))
+
+(call devices_list_sysfs (sensors_t))
+(call devices_read_sysfs_files (sensors_t))
+
+(call devices_getattr_sysfs_filesystems (sensors_t))
+
+(call application_subject (sensors_t))
+
+(call sensors_read_sensors_config_files (sensors_t))
+
+(optional sensors_optional_miscfiles
+    (call miscfiles_read_localization_files (sensors_t)))
+
+(allow is_sensors_admin_subject is_sensors_subject signal_perms)
+(call ps_subject_pattern (is_sensors_admin_subject is_sensors_subject))
+
+(allow is_sensors_admin_subject is_sensors_unit_file_object (service (all)))
+
+(call admin_pattern (is_sensors_admin_subject is_sensors_file_object))
+
+(macro sensors_exec_sensors ((type ARG1))
+    (call can_exec (ARG1 sensors_exec_t)))
+
+(macro sensors_subtrans_sensors ((type ARG1))
+    (call subtrans_pattern (ARG1 sensors_exec_t sensors_t)))
+
+(macro sensors_run_sensors ((type ARG1)(role ARG2))
+    (call sensors_subtrans_sensors (ARG1))
+    (roleattributeset is_sensors_role ARG2))
+
+(macro sensors_exec_detect ((type ARG1))
+    (call can_exec (ARG1 sensors_detect_exec_t)))
+
+(macro sensors_subtrans_detect ((type ARG1))
+    (call subtrans_pattern (ARG1 sensors_detect_exec_t sensors_detect_t)))
+
+(macro sensors_run_detect ((type ARG1)(role ARG2))
+    (call sensors_subtrans_detect (ARG1))
+    (roleattributeset is_sensors_detect_role ARG2))
+
+(macro sensors_exec_fancontrol ((type ARG1))
+    (call can_exec (ARG1 fancontrol_exec_t)))
+
+(macro sensors_subtrans_fancontrol ((type ARG1))
+    (call subtrans_pattern (ARG1 fancontrol_exec_t fancontrol_t)))
+
+(macro sensors_run_fancontrol ((type ARG1)(role ARG2))
+    (call sensors_subtrans_fancontrol (ARG1))
+    (roleattributeset is_fancontrol_role ARG2))
+
+(macro sensors_read_sensors_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 sensors_conf_t read_file_perms))
+
+(macro sensors_admin ((type ARG1))
+    (typeattributeset is_sensors_admin_subject ARG1))

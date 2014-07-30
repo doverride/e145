@@ -126,6 +126,10 @@
     (call files_search_etc (ARG1))
     (allow ARG1 net_env_t read_file_perms))
 
-(macro miscfiles_read_terminfo_files ((type ARG1))
+(macro miscfiles_list_terminfo ((type ARG1))
     (call files_search_usr (ARG1))
+    (allow ARG1 terminfo_t (dirs (list))))
+
+(macro miscfiles_read_terminfo_files ((type ARG1))
+    (call miscfiles_list_terminfo (ARG1))
     (call read_files_pattern (ARG1 terminfo_t terminfo_t)))

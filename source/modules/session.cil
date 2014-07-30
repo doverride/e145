@@ -110,6 +110,11 @@
 (type device_session_tty_t)
 (call terminal_user_tty_object (session_t device_session_tty_t))
 
+(allow session_t self (capability (dac_override)))
+(allow session_t self (process (setpgid signal)))
+(allow session_t self create_unix_stream_socket_perms)
+(allow session_t self rw_fifo_file_perms)
+
 (call session_home_dir_filetrans_session_home (session_t dir "*"))
 (call session_home_dir_filetrans_session_home (session_t file "*"))
 (call session_home_dir_filetrans_session_home (session_t lnk_file "*"))
@@ -151,28 +156,31 @@
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t blk_file "*"))
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t chr_file "*"))
 
+(call commands_execute_bin_files (session_t))
+(call commands_execute_shell_files (session_t))
 (call commands_bin_files_entry_subject (session_t))
 (call commands_shell_files_entry_subject (session_t))
 
+(call devices_read_urandom (session_t))
+
 (call files_manage_all_non_auth_files_except (session_t))
+
+(call filesystem_getattr_all_filesystems (session_t))
 
 (call selinux_set_enforce_mode (session_t))
 (call selinux_set_all_booleans (session_t))
 (call selinux_set_parameters (session_t))
 
+(call subject_read_all_subjects_state (session_t))
 (call subject_user_exemption_target (session_t))
 
+(call session_use_terminals (session_t))
 (call session_create_pty_node (session_t)) ; script/script replay
 
 (optional session_optional_audit
-    (call audit_list_auditd_config (session_t))
-    (call audit_read_auditd_config_files (session_t))
-    (call audit_list_audispd_config (session_t))
-    (call audit_read_audispd_config_files (session_t))
-    (call audit_list_log (session_t))
-    (call audit_read_log_files (session_t))
     (call audit_run_auditctl (session_t session_r))
-    (call audit_run_augenrules (session_t session_r)))
+    (call audit_run_augenrules (session_t session_r))
+    (call audit_run_ausearch (session_t session_r)))
 
 (optional session_optional_alsactl
     (call alsa_run_alsactl (session_t session_r)))
@@ -251,6 +259,11 @@
 
 (optional session_optional_plymouth
     (call plymouth_run (session_t session_r)))
+
+(optional session_optional_sensors
+    (call sensors_run_sensors (session_t session_r))
+    (call sensors_run_detect (session_t session_r))
+    (call sensors_run_fancontrol (session_t session_r)))
 
 (optional session_optional_systemctl
     (call systemd_run_systemctl (session_t session_r)))
@@ -516,6 +529,8 @@
 
     ; /exec: not sure if good idea
     (call commands_shell_auto_subject_type_transition (session_irssi_t session_t))
+    (allow session_t session_irssi_t (process (sigchld)))
+    (allow session_t session_irssi_t (fd (use)))
 
     (call session_use_inherited_terminals (session_irssi_t))
     (call session_search_all_home (session_irssi_t))
@@ -560,6 +575,10 @@
 
     (type session_screen_tmp_t)
     (call session_tmp_object (session_screen_tmp_t))
+
+    (allow session_t session_screen_t (process (sigchld)))
+    (allow session_t session_screen_t (fd (use)))
+    (allow session_t session_screen_t rw_inherited_fifo_file_perms)
 
     (call session_use_terminals (session_screen_t))
     (call session_setattr_terminals (session_screen_t))
@@ -677,16 +696,18 @@
     (call session_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_shell_auto_subject_type_transition (session_sudo_t session_t))
+    (allow session_t session_sudo_t (process (sigchld)))
+    (allow session_t session_sudo_t (fd (use)))
 
     (type session_visudo_t)
     (call sudo_visudo_role_template (session_r session_t session_visudo_t))
 
     (call session_use_inherited_terminals (session_visudo_t))
     (call session_search_all_home (session_visudo_t))
-    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
 
-(optional session_optional_unconfined
-    (call unconfined_subject (session_t)))
+    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
+    (allow session_t session_visudo_t (process (sigchld)))
+    (allow session_t session_visudo_t (fd (use)))
 
 ; miscfiles
 (type session_pass_home_t)
