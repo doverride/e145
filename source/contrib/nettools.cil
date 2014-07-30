@@ -1,0 +1,108 @@
+(typepermissive arp_t)
+(typepermissive nettools_t)
+(typepermissive ping_t)
+(typepermissive traceroute_t)
+
+(roleattribute is_arp_role)
+(roleattribute is_nettools_role)
+(roleattribute is_ping_role)
+(roleattribute is_traceroute_role)
+
+(typeattribute is_nettools_admin_subject)
+
+(typeattribute is_nettools_subject)
+(typeattributeset is_nettools_subject (arp_t nettools_t ping_t
+    traceroute_t))
+
+(type nettools_t)
+(type nettools_exec_t)
+(call application_subject_entry (nettools_t nettools_exec_t))
+(roleattributeset is_nettools_role system_r)
+(roletype is_nettools_role nettools_t)
+
+(context file_nettools_exec (system_u object_r nettools_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/tcpdump" file file_nettools_exec)
+
+(type ping_t)
+(type ping_exec_t)
+(call application_subject_entry (ping_t ping_exec_t))
+(roleattributeset is_ping_role system_r)
+(roletype is_ping_role ping_t)
+
+(context file_ping_exec (system_u object_r ping_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/ping" file file_ping_exec)
+
+(type traceroute_t)
+(type traceroute_exec_t)
+(call application_subject_entry (traceroute_t traceroute_exec_t))
+(roleattributeset is_traceroute_role system_r)
+(roletype is_traceroute_role traceroute_t)
+
+(context file_traceroute_exec (system_u object_r traceroute_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/traceroute6?" file file_traceroute_exec)
+(filecon "/usr/bin/tcptraceroute" file file_traceroute_exec)
+(filecon "/usr/bin/nmap" file file_traceroute_exec)
+
+(type arp_t)
+(type arp_exec_t)
+(call systemd_oneshot_subject_entry (arp_t arp_exec_t))
+(roletype is_arp_role arp_t)
+
+(context file_arp_exec (system_u object_r arp_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/arp" file file_arp_exec)
+
+(type arp_unit_t)
+(call systemd_unit_object (arp_unit_t))
+
+(context file_arp_unit (system_u object_r arp_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*arp-ethers.*" file file_arp_unit)
+
+(allow is_nettools_admin_subject is_nettools_subject signal_perms)
+(call ps_subject_pattern (is_nettools_admin_subject is_nettools_subject))
+
+(allow is_nettools_admin_subject arp_unit_t (service (all)))
+
+(macro nettools_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 nettools_exec_t nettools_t)))
+
+(macro nettools_exec ((type ARG1))
+    (call can_exec (ARG1 nettools_exec_t)))
+
+(macro nettools_run ((type ARG1)(role ARG2))
+    (call nettools_subtrans (ARG1))
+    (roleattributeset is_nettools_role (ARG2)))
+
+(macro nettools_subtrans_ping ((type ARG1))
+    (call subtrans_pattern (ARG1 ping_exec_t ping_t)))
+
+(macro nettools_exec_ping ((type ARG1))
+    (call can_exec (ARG1 ping_exec_t)))
+
+(macro nettools_run_ping ((type ARG1)(role ARG2))
+    (call nettools_subtrans_ping (ARG1))
+    (roleattributeset is_ping_role (ARG2)))
+
+(macro nettools_subtrans_traceroute ((type ARG1))
+    (call subtrans_pattern (ARG1 traceroute_exec_t traceroute_t)))
+
+(macro nettools_exec_traceroute ((type ARG1))
+    (call can_exec (ARG1 traceroute_exec_t)))
+
+(macro nettools_run_traceroute ((type ARG1)(role ARG2))
+    (call nettools_subtrans_traceroute (ARG1))
+    (roleattributeset is_traceroute_role (ARG2)))
+
+(macro nettools_subtrans_arp ((type ARG1))
+    (call subtrans_pattern (ARG1 arp_exec_t arp_t)))
+
+(macro nettools_exec_arp ((type ARG1))
+    (call can_exec (ARG1 arp_exec_t)))
+
+(macro nettools_run_arp ((type ARG1)(role ARG2))
+    (call nettools_subtrans_arp (ARG1))
+    (roleattributeset is_arp_role (ARG2)))

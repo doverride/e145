@@ -231,6 +231,12 @@
     (call mount_run (session_t session_r))
     (call mount_run_showmount (session_t session_r)))
 
+(optional session_optional_nettools
+    (call nettools_run_arp (session_t session_r))
+    (call nettools_run (session_t session_r))
+    (call nettools_run_ping (session_t session_r))
+    (call nettools_run_traceroute (session_t session_r)))
+
 (optional session_optional_networkmgr
     (call networkmgr_run_networkmgrcli (session_t session_r)))
 
