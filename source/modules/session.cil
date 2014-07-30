@@ -189,6 +189,8 @@
 (call subject_read_all_subjects_state (session_t))
 (call subject_user_exemption_target (session_t))
 
+(call selinux_get_enforce_mode (session_t))
+
 (call session_execute_bin_files (session_t))
 (call session_use_terminals (session_t))
 (call session_create_pty_node (session_t)) ; script/script replay
