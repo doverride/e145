@@ -531,6 +531,7 @@
     (call commands_shell_auto_subject_type_transition (session_irssi_t session_t))
     (allow session_t session_irssi_t (process (sigchld)))
     (allow session_t session_irssi_t (fd (use)))
+    (allow session_t session_irssi_t rw_inherited_fifo_file_perms)
 
     (call session_use_inherited_terminals (session_irssi_t))
     (call session_search_all_home (session_irssi_t))
@@ -698,6 +699,7 @@
     (call commands_shell_auto_subject_type_transition (session_sudo_t session_t))
     (allow session_t session_sudo_t (process (sigchld)))
     (allow session_t session_sudo_t (fd (use)))
+    (allow session_t session_sudo_t rw_inherited_fifo_file_perms)
 
     (type session_visudo_t)
     (call sudo_visudo_role_template (session_r session_t session_visudo_t))
