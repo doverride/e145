@@ -1,3 +1,6 @@
+/usr/sbin/sysctl:
+    add this to contrib/systemd/sysctl.cil (add a sctl_t subject type for it)
+
 various:
     clean up modules like seutil, nettools and other by grouping policy using "is_subject" attributes
 
