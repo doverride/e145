@@ -772,7 +772,8 @@
 
     (call commands_bin_auto_subject_type_transition (session_visudo_t session_t))
     (allow session_t session_visudo_t (process (sigchld)))
-    (allow session_t session_visudo_t (fd (use))))
+    (allow session_t session_visudo_t (fd (use)))
+    (allow session_t session_visudo_t rw_inherited_fifo_file_perms))
 
 ; miscfiles
 (type session_pass_home_t)
