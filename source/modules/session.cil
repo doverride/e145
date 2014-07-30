@@ -164,6 +164,7 @@
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t blk_file "*"))
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t chr_file "*"))
 
+(call system_getattr_core_if (session_t))
 (call system_read_generic_proc_files (session_t))
 (call system_read_sysctl_kernel_files (session_t))
 
@@ -173,6 +174,7 @@
 (call commands_shell_files_entry_subject (session_t))
 
 (call devices_getattr_all_nodes (session_t))
+(call devices_dontaudit_getattr_generic_nodes (session_t))
 (call devices_read_urandom (session_t))
 
 (call files_manage_all_non_auth_dirs_except (session_t))
