@@ -7,6 +7,8 @@
 (typeattribute is_session_tmp_file_object)
 (typeattribute is_session_tmpfs_file_object)
 
+(typeattribute is_session_application_subject)
+
 (user session_u)
 (role session_r)
 (call object_userrole (session_u))
@@ -111,9 +113,15 @@
 (call terminal_user_tty_object (session_t device_session_tty_t))
 
 (allow session_t self (capability (dac_override)))
-(allow session_t self (process (setpgid signal)))
+(allow session_t self (process (setpgid signal sigkill sigstop signull)))
 (allow session_t self create_unix_stream_socket_perms)
 (allow session_t self rw_fifo_file_perms)
+
+(allow session_t is_session_application_subject (process (sigkill sigstop signal signull)))
+(call ps_subject_pattern (session_t is_session_application_subject))
+
+(call session_use_inherited_terminals (is_session_application_subject))
+(call session_search_all_home (is_session_application_subject))
 
 (call session_home_dir_filetrans_session_home (session_t dir "*"))
 (call session_home_dir_filetrans_session_home (session_t file "*"))
@@ -156,6 +164,9 @@
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t blk_file "*"))
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t chr_file "*"))
 
+(call system_read_generic_proc_files (session_t))
+(call system_read_sysctl_kernel_files (session_t))
+
 (call commands_execute_bin_files (session_t))
 (call commands_execute_shell_files (session_t))
 (call commands_bin_files_entry_subject (session_t))
@@ -163,17 +174,19 @@
 
 (call devices_read_urandom (session_t))
 
+(call files_manage_all_non_auth_dirs_except (session_t))
 (call files_manage_all_non_auth_files_except (session_t))
+(call files_manage_all_non_auth_fifo_files_except (session_t))
+(call files_manage_all_non_auth_lnk_files_except (session_t))
+(call files_manage_all_non_auth_sock_files_except (session_t))
 
 (call filesystem_getattr_all_filesystems (session_t))
 
-(call selinux_set_enforce_mode (session_t))
-(call selinux_set_all_booleans (session_t))
-(call selinux_set_parameters (session_t))
-
+(call subject_getattr_all_subjects (session_t))
 (call subject_read_all_subjects_state (session_t))
 (call subject_user_exemption_target (session_t))
 
+(call session_execute_bin_files (session_t))
 (call session_use_terminals (session_t))
 (call session_create_pty_node (session_t)) ; script/script replay
 
@@ -301,7 +314,10 @@
 (optional session_optional_seutil
     (call seutil_list_policy_config (session_t))
     (call seutil_read_policy_config_files (session_t))
+    (call seutil_run_setools (session_t session_r))
     (call seutil_run_load_policy (session_t session_r))
+    (call seutil_run_setenforce (session_t session_r))
+    (call seutil_run_setsebool (session_t session_r))
     (call seutil_run_secilc (session_t session_r))
     (call seutil_run_setfiles (session_t session_r)))
 
@@ -326,9 +342,11 @@
     (call session_home_dir_filetrans (session_bti_t session_bti_home_t file ".bti.log"))
 
     (call commands_shell_auto_subject_type_transition (session_bti_t session_t))
+    (allow session_t session_bti_t (process (sigchld)))
+    (allow session_t session_bti_t (fd (use)))
+    (allow session_t session_bti_t rw_inherited_fifo_file_perms)
 
-    (call session_use_inherited_terminals (session_bti_t))
-    (call session_search_all_home (session_bti_t)))
+    (call session_application_subject (session_bti_t)))
 
 (optional session_optional_session_rtorrent
     (type session_rtorrent_t)
@@ -346,10 +364,9 @@
 
     (call session_home_dir_filetrans (session_t session_rtorrent_home_t file ".rtorrent.rc")) 
     (call session_home_dir_filetrans (session_t session_rtorrent_home_t dir ".rtorrent")) 
-
     (call session_read_generic_home_content_files (session_rtorrent_t))
-    (call session_use_inherited_terminals (session_rtorrent_t))
-    (call session_search_all_home (session_rtorrent_t)))
+
+    (call session_application_subject (session_rtorrent_t)))
 
 (optional session_optional_session_elinks
     (type session_elinks_t)
@@ -369,8 +386,62 @@
     (call session_manage_generic_home_content_files (session_elinks_t))
     (call session_home_dir_filetrans_session_home (session_elinks_t file "*"))
     (call session_home_dir_filetrans_session_home (session_elinks_t dir "*"))
-    (call session_use_terminals (session_elinks_t))
-    (call session_search_all_home (session_elinks_t)))
+
+    (call session_application_subject (session_elinks_t))
+    (call session_use_terminals (session_elinks_t)))
+
+(optional session_optional_session_emacs
+    (type session_emacs_t)
+    (call emacs_role_template (session_r session_t session_emacs_t
+        session_emacs_home_t))
+
+    (type session_emacs_home_t)
+    (call session_home_object (session_emacs_home_t))
+
+    (context file_session_emacs_home (session_u object_r session_emacs_home_t ((s0)(s0))))
+    (filecon "/root/\.emacs" file file_session_emacs_home)
+    (filecon "/home/joe/\.emacs" file file_session_emacs_home)
+    (filecon "/root/\.emacs\.d(/.*)?" any file_session_emacs_home)
+    (filecon "/home/joe/\.emacs\.d(/.*)?" any file_session_emacs_home)
+
+    (allow session_emacs_t session_emacs_home_t manage_dir_perms)
+    (allow session_emacs_t session_emacs_home_t manage_file_perms)
+    (call session_home_dir_filetrans (session_t session_emacs_home_t file ".emacs")) 
+    (call session_home_dir_filetrans (session_t session_emacs_home_t dir ".emacs.d")) 
+
+    (allow session_emacs_t session_tmp_t manage_dir_perms)
+    (allow session_emacs_t session_tmp_t manage_file_perms)
+    (allow session_emacs_t session_tmp_t manage_lnk_file_perms)
+    (allow session_emacs_t session_tmp_t manage_sock_file_perms)
+    (call session_tmp_filetrans_generic_tmp (session_emacs_t dir "*"))
+    (call session_tmp_filetrans_generic_tmp (session_emacs_t file "*"))
+    (call session_tmp_filetrans_generic_tmp (session_emacs_t lnk_file "*"))
+
+    (call session_application_subject (session_emacs_t))
+    (call session_use_terminals (session_emacs_t))
+
+    (call session_manage_generic_home_content_dirs (session_emacs_t))
+    (call session_manage_generic_home_content_files (session_emacs_t))
+    (call session_manage_generic_home_content_symlinks (session_emacs_t))
+    (call session_home_dir_filetrans_session_home (session_emacs_t dir "*"))
+    (call session_home_dir_filetrans_session_home (session_emacs_t file "*"))
+    (call session_home_dir_filetrans_session_home (session_emacs_t lnk_file "*"))
+
+    (call session_bin_auto_subject_type_transition (session_emacs_t session_t))
+    (call commands_bin_auto_subject_type_transition (session_emacs_t session_t))
+    (call commands_shell_auto_subject_type_transition (session_emacs_t session_t))
+
+    (allow session_t session_emacs_t (process (sigchld)))
+    (allow session_t session_emacs_t (fd (use)))
+    (allow session_t session_emacs_t rw_inherited_fifo_file_perms)
+
+    (type session_emacsclient_t)
+    (call emacs_role_template_client (session_r session_t session_emacsclient_t))
+
+    (call session_application_subject (session_emacsclient_t))
+
+    (call stream_connect_pattern (session_emacsclient_t session_tmp_t session_tmp_t
+        session_emacs_t)))
 
 (optional session_optional_session_gpg
     (type session_gpg_t)
@@ -393,8 +464,8 @@
 
     (call manage_files_pattern (session_gpg_t session_pass_home_t session_pass_home_t))
 
+    (call session_application_subject (session_gpg_t))
     (call session_use_terminals (session_gpg_t))
-    (call session_search_all_home (session_gpg_t))
 
     (type session_gpgagent_t)
     (call gpg_role_template_agent (session_r session_t session_gpgagent_t
@@ -427,8 +498,7 @@
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t sock_file
         "*"))
 
-    (call session_use_inherited_terminals (session_gpgagent_t))
-    (call session_search_all_home (session_gpgagent_t))
+    (call session_application_subject (session_gpgagent_t))
 
     (optional session_gpgagent_optional_session_pinentry_curses
         (type session_pincurses_t)
@@ -437,8 +507,8 @@
         (call stream_connect_pattern (session_pincurses_t session_gpg_home_t session_gpgagent_home_t
             session_gpgagent_t))
 
-        (call session_use_terminals (session_pincurses_t))
-        (call session_search_all_home (session_pincurses_t)))
+        (call session_application_subject (session_pincurses_t))
+        (call session_use_terminals (session_pincurses_t)))
 
     (type session_scd_t)
     (call gpg_role_template_scd (session_r session_gpgagent_t session_scd_t session_scd_tmp_t
@@ -457,10 +527,12 @@
     (allow session_scd_t session_gpgagent_t (process (signal)))
     (call filetrans_pattern (session_scd_t session_gpg_home_t session_scd_home_t file "*"))
 
-    (call session_search_all_home (session_scd_t))
+    (call session_application_subject (session_scd_t))
 
     (type session_gpgpcsc_t)
-    (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t)))
+    (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t))
+
+    (call session_application_subject (session_gpgpcsc_t)))
 
 (optional session_optional_session_mutt
     (type session_mutt_t)
@@ -492,21 +564,19 @@
     (type session_mutt_tmp_t)
     (call session_tmp_object (session_mutt_tmp_t))
 
-    (call session_use_inherited_terminals (session_mutt_t))
-    (call session_search_all_home (session_mutt_t))
+    (call session_application_subject (session_mutt_t))
     (call session_read_generic_home_content_files (session_mutt_t)) ; ~/.nanorc
 
     (type session_mutt_gpg_t)
     (call mail_role_template_mutt_gpg (session_r session_mutt_t session_mutt_gpg_t))
 
-    (call session_use_inherited_terminals (session_mutt_gpg_t))
-    (call session_search_all_home (session_mutt_gpg_t))
+    (call session_application_subject (session_mutt_gpg_t))
 
     (optional session_mutt_gpg_optional_session_gpg
         (call gpg_role_template (session_r session_mutt_t session_gpg_t session_gpg_home_t))
-        (call gpg_role_template (session_r session_mutt_gpg_t session_gpg_t session_gpg_home_t)))
+        (call gpg_role_template (session_r session_mutt_gpg_t session_gpg_t session_gpg_home_t))
         (allow session_gpg_t session_mutt_home_t read_file_perms)
-        (allow session_gpg_t session_mutt_tmp_t rw_file_perms))
+        (allow session_gpg_t session_mutt_tmp_t rw_file_perms)))
 
 (optional session_optional_session_irc
     (type session_irssi_t)
@@ -533,8 +603,7 @@
     (allow session_t session_irssi_t (fd (use)))
     (allow session_t session_irssi_t rw_inherited_fifo_file_perms)
 
-    (call session_use_inherited_terminals (session_irssi_t))
-    (call session_search_all_home (session_irssi_t))
+    (call session_application_subject (session_irssi_t))
     (call session_read_cert_files (session_irssi_t)))
     
 (optional session_optional_session_newsb
@@ -551,8 +620,8 @@
 
     (call session_home_dir_filetrans (session_t session_newsb_home_t dir ".newsbeuter"))
 
+    (call session_application_subject (session_newsb_t))
     (call session_use_terminals (session_newsb_t))
-    (call session_search_all_home (session_newsb_t))
     (call session_read_cert_files (session_newsb_t))
 
     (optional session_newsb_optional_session_elinks
@@ -581,9 +650,9 @@
     (allow session_t session_screen_t (fd (use)))
     (allow session_t session_screen_t rw_inherited_fifo_file_perms)
 
+    (call session_application_subject (session_screen_t))
     (call session_use_terminals (session_screen_t))
     (call session_setattr_terminals (session_screen_t))
-    (call session_search_all_home (session_screen_t))
     (call session_create_pty_node (session_screen_t))
     (call session_bin_auto_subject_type_transition (session_screen_t session_t))
     (call commands_bin_auto_subject_type_transition (session_screen_t session_t))
@@ -593,8 +662,7 @@
     (type session_ssh_t)
     (call ssh_role_template (session_r session_t session_ssh_t session_ssh_home_t))
 
-    (call session_use_inherited_terminals (session_ssh_t))
-    (call session_search_all_home (session_ssh_t))
+    (call session_application_subject (session_ssh_t))
     (call session_manage_generic_home_content_files (session_ssh_t))
     (call session_home_dir_filetrans_session_home (session_ssh_t file "*"))
 
@@ -612,16 +680,14 @@
     (type session_sshagent_t)
     (call ssh_role_template_agent (session_r session_t session_sshagent_t))
 
-    (call session_use_inherited_terminals (session_sshagent_t))
-    (call session_search_all_home (session_sshagent_t)))
+    (call session_application_subject (session_sshagent_t)))
 
 (optional session_optional_session_pa
     (type session_pa_t)
     (call pa_role_template (session_r session_t session_pa_t session_pa_home_t
         session_pa_tmp_t session_pa_tmpfs_t))
 
-    (call session_use_inherited_terminals (session_pa_t))
-    (call session_search_all_home (session_pa_t))
+    (call session_application_subject (session_pa_t))
 
     (type session_pa_home_t)
     (call session_home_object (session_pa_home_t))
@@ -673,8 +739,7 @@
     (filecon "/root/\.moc(/.*)?" any file_session_moc_home)
     (filecon "/home/joe/\.moc(/.*)?" any file_session_moc_home)
 
-    (call session_use_inherited_terminals (session_moc_t))
-    (call session_search_all_home (session_moc_t))
+    (call session_application_subject (session_moc_t))
     (call session_list_home_dir (session_moc_t))
     (call session_list_generic_home_content (session_moc_t))
     (call session_read_generic_home_content_files (session_moc_t))
@@ -691,8 +756,7 @@
     (type session_sudo_t)
     (call sudo_role_template (session_r session_t session_sudo_t))
 
-    (call session_use_inherited_terminals (session_sudo_t))
-    (call session_search_all_home (session_sudo_t))
+    (call session_application_subject (session_sudo_t))
 
     (call session_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_bin_auto_subject_type_transition (session_sudo_t session_t))
@@ -704,12 +768,11 @@
     (type session_visudo_t)
     (call sudo_visudo_role_template (session_r session_t session_visudo_t))
 
-    (call session_use_inherited_terminals (session_visudo_t))
-    (call session_search_all_home (session_visudo_t))
+    (call session_application_subject (session_visudo_t))
 
-    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
+    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t))
     (allow session_t session_visudo_t (process (sigchld)))
-    (allow session_t session_visudo_t (fd (use)))
+    (allow session_t session_visudo_t (fd (use))))
 
 ; miscfiles
 (type session_pass_home_t)
@@ -781,6 +844,10 @@
     (call session_search_generic_data (ARG1))
     (allow ARG1 session_bin_t (dirs (search))))
 
+(macro session_execute_bin_files ((type ARG1))
+    (call session_search_generic_data (ARG1))
+    (call exec_files_pattern (ARG1 session_bin_t session_bin_t)))
+
 (macro session_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
     (call session_bin_manual_subject_type_transition (ARG1 ARG2))
     (typetransition ARG1 session_bin_t process "*" ARG2))
@@ -827,6 +894,10 @@
     (call session_search_home_dir (ARG1))
     (call manage_files_pattern (ARG1 session_home_t session_home_t)))
 
+(macro session_manage_generic_home_content_symlinks ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call manage_lnk_files_pattern (ARG1 session_home_t session_home_t)))
+
 (macro session_manage_generic_home_content_dirs ((type ARG1))
     (call session_search_home_dir (ARG1))
     (call manage_dirs_pattern (ARG1 session_home_t session_home_t)))
@@ -838,6 +909,9 @@
 (macro session_manage_generic_tmp_files ((type ARG1))
     (call files_search_tmp (ARG1))
     (call manage_files_pattern (ARG1 session_tmp_t session_tmp_t)))
+
+(macro session_tmp_filetrans_generic_tmp ((type ARG1)(class ARG2)(name ARG3))
+    (call files_tmp_filetrans (ARG1 session_tmp_t ARG2 ARG3)))
 
 (macro session_search_cert ((type ARG1))
     (call session_search_home_dir (ARG1))
@@ -977,3 +1051,6 @@
 (macro session_setattr_terminals ((type ARG1))
     (allow ARG1 device_session_pts_t (chr_file (setattr)))
     (allow ARG1 device_session_tty_t (chr_file (setattr))))
+
+(macro session_application_subject ((type ARG1))
+    (typeattributeset is_session_application_subject (ARG1)))

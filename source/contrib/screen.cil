@@ -44,6 +44,7 @@
 (call system_read_sysctl_crypto_files (is_screen_subject))
 
 (call files_dontaudit_list_all (is_screen_subject)) ; catchall
+(call files_read_generic_etc_files (is_screen_subject)) ; /etc/login.defs
 (call files_search_run (is_screen_subject))
 
 (call selinux_getattr_filesystems (is_screen_subject))

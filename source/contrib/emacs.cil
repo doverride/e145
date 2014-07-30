@@ -1,0 +1,63 @@
+(roleattribute is_emacs_role)
+
+(typeattribute is_emacs_subject)
+(typeattribute is_emacsclient_subject)
+
+(typeattribute is_emacs_or_emacsclient_subject)
+(typeattributeset is_emacs_or_emacsclient_subject (is_emacs_subject
+    is_emacsclient_subject))
+
+(type emacs_exec_t)
+(call application_subject_entry (is_emacs_subject emacs_exec_t))
+
+(context file_emacs_exec (system_u object_r emacs_exec_t ((s0)(s0))))
+(filecon "/usr/bin/emacs-.*" file file_emacs_exec)
+
+(type emacsclient_exec_t)
+(call application_subject_entry (is_emacsclient_subject emacsclient_exec_t))
+
+(context file_emacsclient_exec (system_u object_r emacsclient_exec_t ((s0)(s0))))
+(filecon "/usr/bin/emacsclient" file file_emacsclient_exec)
+
+(allow is_emacs_subject self (process (signal)))
+(allow is_emacs_subject self rw_fifo_file_perms)
+(allow is_emacs_subject self create_unix_stream_stream_socket_perms)
+
+(call devices_search_sysfs (is_emacs_subject))
+(call devices_read_urandom (is_emacs_subject))
+
+(call files_read_generic_etc_files (is_emacs_subject))
+(call files_read_generic_usr_files (is_emacs_subject))
+(call files_search_var_spool (is_emacs_subject))
+
+(call selinux_getattr_filesystems (is_emacs_subject))
+
+(optional emacs_optional_auth
+    (call auth_nsswitch_client_subject (is_emacs_subject))) 
+
+(optional emacs_optional_miscfiles
+    (call miscfiles_read_network_config_files (is_emacs_subject)) 
+    (call miscfiles_read_terminfo_files (is_emacs_subject)) 
+    (call miscfiles_read_localization_files (is_emacs_subject))) 
+
+(optional emacs_optional_ssh
+    (call ssh_getattr_ssh_executable_files (is_emacs_subject))
+    (call ssh_audit_access_ssh_executable_files (is_emacs_subject)))
+
+(optional emacs_optional_utmp
+    (call utmp_read_run_files (is_emacs_subject)))
+
+(macro emacs_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_emacs_role ARG1)
+    (typeattributeset is_emacs_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 emacs_exec_t ARG3))
+    (allow ARG3 ARG4 list_dir_perms)
+    (allow ARG3 ARG4 read_file_perms)
+    (allow ARG3 ARG4 read_lnk_file_perms))
+
+(macro emacs_role_template_client ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_emacs_role ARG1)
+    (typeattributeset is_emacsclient_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 emacsclient_exec_t ARG3)))

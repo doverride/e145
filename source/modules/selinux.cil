@@ -134,6 +134,11 @@
         (true
             (allow ARG1 security_t (security (setenforce))))))
 
+(macro selinux_read_policy ((type ARG1))
+    (call devices_search_sysfs (ARG1))
+    (call read_files_pattern (ARG1 security_t security_t))
+    (allow ARG1 security_t (security (read_policy))))
+
 (macro selinux_load_policy ((type ARG1))
     (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))

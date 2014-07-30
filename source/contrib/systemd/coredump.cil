@@ -39,6 +39,27 @@
     (s0))))
 (filecon "/var/lib/systemd/coredump(/.*)?" any file_coredump_var_lib)
 
+(allow coredump_t self (capability (setuid setgid sys_ptrace net_admin)))
+
+(call systemd_var_lib_filetrans (coredump_t coredump_var_lib_t dir "*"))
+
+(call system_read_sysctl_kernel_files (coredump_t))
+
+(call commands_read_all_bin_files (coredump_t))
+
+(call devices_write_kmsg (coredump_t))
+(call devices_read_urandom (coredump_t))
+
+(call selinux_get_filesystems_mount (coredump_t))
+
+(call subject_read_all_subjects_state (coredump_t))
+
+(call coredump_read_config_files (coredump_t))
+(call coredump_manage_var_lib_files (coredump_t))
+
+(optional coredump_optional_journald
+    (call journald_client_subject (coredump_t)))
+
 (call admin_pattern (is_coredump_admin_subject is_coredump_file_object))
 
 (macro coredump_subtrans_coredumpctl ((type ARG1))
@@ -55,9 +76,13 @@
     (call systemd_search_config (ARG1))
     (allow ARG1 coredump_conf_t read_file_perms))
 
-(macro coredump_read_lib_files ((type ARG1))
+(macro coredump_read_var_lib_files ((type ARG1))
     (call systemd_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 coredump_var_lib_t coredump_var_lib_t)))
+
+(macro coredump_manage_var_lib_files ((type ARG1))
+    (call systemd_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 coredump_var_lib_t coredump_var_lib_t)))
 
 (macro coredump_admin ((type ARG1))
     (typeattributeset is_coredump_admin_subject ARG1))

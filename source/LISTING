@@ -22,6 +22,7 @@ contrib/dhcp.cil
 contrib/dm.cil
 contrib/dmesg.cil
 contrib/dns.cil
+contrib/emacs.cil
 contrib/fstools.cil
 contrib/getty.cil
 contrib/gpg.cil

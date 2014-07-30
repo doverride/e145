@@ -1,6 +1,9 @@
 (roleattribute is_load_policy_role)
 (roleattribute is_secilc_role)
 (roleattribute is_setfiles_role)
+(roleattribute is_setsebool_role)
+(roleattribute is_setenforce_role)
+(roleattribute is_setools_role)
 
 (typeattribute can_write_binary_policy)
 (typeattribute not_associated_with_can_write_binary_policy)
@@ -11,7 +14,8 @@
 (typeattribute is_seutil_admin_subject)
 
 (typeattribute is_seutil_subject)
-(typeattributeset is_seutil_subject (load_policy_t secilc_t setfiles_t))
+(typeattributeset is_seutil_subject (load_policy_t secilc_t setfiles_t
+    setsebool_t setools_t setenforce_t))
 
 (typeattribute is_seutil_file_object)
 (typeattributeset is_seutil_file_object (default_context_t selinux_conf_t
@@ -27,6 +31,33 @@
 
 (context file_load_policy_exec (system_u object_r load_policy_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/load_policy" file file_load_policy_exec)
+
+(type setsebool_t)
+(type setsebool_exec_t)
+(call application_subject_entry (setsebool_t setsebool_exec_t))
+(roletype is_setsebool_role setsebool_t)
+
+(context file_setsebool_exec (system_u object_r setsebool_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/getsebool" file file_setsebool_exec)
+(filecon "/usr/sbin/setsebool" file file_setsebool_exec)
+
+(type setenforce_t)
+(type setenforce_exec_t)
+(call application_subject_entry (setenforce_t setenforce_exec_t))
+(roletype is_setenforce_role setenforce_t)
+
+(context file_setenforce_exec (system_u object_r setenforce_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/getenforce" file file_setenforce_exec)
+(filecon "/usr/sbin/setenforce" file file_setenforce_exec)
+
+(type setools_t)
+(type setools_exec_t)
+(call application_subject_entry (setools_t setools_exec_t))
+(roletype is_setools_role setools_t)
+
+(context file_setools_exec (system_u object_r setools_exec_t ((s0) (s0))))
+(filecon "/usr/bin/seinfo" file file_setools_exec)
+(filecon "/usr/bin/sesearch" file file_setools_exec)
 
 (type secilc_t)
 (type secilc_exec_t)
@@ -115,6 +146,31 @@
 (optional seutil_optional_miscfiles
     (call miscfiles_read_localization_files (load_policy_t)))
 
+(allow setsebool_t self create_unix_stream_socket_perms)
+
+(call selinux_getattr_filesystems (setsebool_t))
+(call selinux_set_all_booleans (setsebool_t))
+
+(optional setsebool_optional_auth
+    (call auth_nsswitch_client_subject (setsebool_t)))
+
+(optional setsebool_optional_journald
+    (call journald_client_subject (setsebool_t)))
+
+(optional setsebool_optional_miscfiles
+    (call miscfiles_read_localization_files (setsebool_t)))
+
+(call selinux_getattr_filesystems (setools_t))
+(call selinux_read_policy (setools_t))
+
+(call seutil_read_config_files (setools_t))
+
+
+(call selinux_getattr_filesystems (setenforce_t))
+(call selinux_set_enforce_mode (setenforce_t))
+
+(call seutil_read_config_files (setenforce_t))
+
 (call system_read_generic_proc_files (secilc_t))
 
 (call seutil_create_file_context_files (secilc_t))
@@ -168,6 +224,27 @@
 (macro seutil_run_load_policy ((type ARG1)(role ARG2))
     (call seutil_subtrans_load_policy (ARG1))
     (roleattributeset is_load_policy_role (ARG2)))
+
+(macro seutil_subtrans_setsebool ((type ARG1))
+    (call subtrans_pattern (ARG1 setsebool_exec_t setsebool_t)))
+
+(macro seutil_run_setsebool ((type ARG1)(role ARG2))
+    (call seutil_subtrans_setsebool (ARG1))
+    (roleattributeset is_setsebool_role (ARG2)))
+
+(macro seutil_subtrans_setenforce ((type ARG1))
+    (call subtrans_pattern (ARG1 setenforce_exec_t setenforce_t)))
+
+(macro seutil_run_setenforce ((type ARG1)(role ARG2))
+    (call seutil_subtrans_setenforce (ARG1))
+    (roleattributeset is_setenforce_role (ARG2)))
+
+(macro seutil_subtrans_setools ((type ARG1))
+    (call subtrans_pattern (ARG1 setools_exec_t setools_t)))
+
+(macro seutil_run_setools ((type ARG1)(role ARG2))
+    (call seutil_subtrans_setools (ARG1))
+    (roleattributeset is_setools_role (ARG2)))
 
 (macro seutil_subtrans_secilc ((type ARG1))
     (call subtrans_pattern (ARG1 secilc_exec_t secilc_t)))

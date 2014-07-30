@@ -86,5 +86,11 @@
 (macro ssh_tcp_connect_ssh_port ((type ARG1))
     (allow ARG1 port_ssh_t (tcp_socket (name_connect))))
 
+(macro ssh_getattr_ssh_executable_files ((type ARG1))
+    (allow ARG1 ssh_exec_t (file (getattr))))
+
+(macro ssh_audit_access_ssh_executable_files ((type ARG1))
+    (dontaudit ARG1 ssh_exec_t (file (audit_access))))
+
 (macro ssh_exec ((type ARG1))
     (call can_exec (ARG1 ssh_exec_t)))

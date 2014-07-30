@@ -55,6 +55,9 @@
 (macro commands_bin_object ((type ARG1))
     (typeattributeset is_bin_file_object ARG1))
 
+(macro commands_read_all_bin_files ((type ARG1))
+    (call read_files_pattern (ARG1 is_bin_file_object is_bin_file_object)))
+
 (macro commands_bin_files_entry_subject ((type ARG1))
     (call subject_entry (ARG1 bin_t)))
 
