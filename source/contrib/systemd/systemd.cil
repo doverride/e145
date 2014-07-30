@@ -299,7 +299,6 @@
 
 (optional systemd_optional_journald
     (call journald_client_subject (systemd_t))
-    (call journald_list_log (systemd_t)) ; /run/log
     (call journald_list_run (systemd_t))
     (call journald_read_run_files (systemd_t)))
 
@@ -411,6 +410,7 @@
     (call plymouth_use_fd_plymouthd (is_systemd_subject)))
 
 (optional systemctl_optional_journald
+    (call journald_list_log (is_systemd_subject))
     (call journald_read_log_files (systemctl_t)))
 
 (optional systemctl_optional_session
