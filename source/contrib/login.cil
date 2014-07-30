@@ -126,5 +126,8 @@
 (macro login_use_fd_sulogin ((type ARG1))
     (allow ARG1 sulogin_t (fd (use))))
 
+(macro login_signull ((type ARG1))
+    (allow ARG1 login_t (process (signull))))
+
 (macro login_admin ((type ARG1))
     (typeattributeset is_login_admin_subject ARG1))

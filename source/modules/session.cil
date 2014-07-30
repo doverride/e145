@@ -112,7 +112,7 @@
 (type device_session_tty_t)
 (call terminal_user_tty_object (session_t device_session_tty_t))
 
-(allow session_t self (capability (dac_override)))
+(allow session_t self (capability (dac_override kill)))
 (allow session_t self (process (setpgid signal sigkill sigstop signull)))
 (allow session_t self create_unix_stream_socket_perms)
 (allow session_t self rw_fifo_file_perms)
@@ -181,6 +181,7 @@
 (call files_manage_all_non_auth_sock_files_except (session_t))
 
 (call filesystem_getattr_all_filesystems (session_t))
+(call filesystem_read_cgroup_files (session_t))
 
 (call subject_getattr_all_subjects (session_t))
 (call subject_read_all_subjects_state (session_t))
@@ -244,6 +245,9 @@
 
 (optional session_optional_localectl
     (call localed_run_localectl (session_t session_r)))
+
+(optional session_optional_login
+    (call login_signull (session_t)))
 
 (optional session_optional_loginctl
     (call logind_run_loginctl (session_t session_r)))
