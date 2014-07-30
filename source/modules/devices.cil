@@ -685,6 +685,9 @@
 (macro devices_rw_usb ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_usb_t)))
 
+(macro devices_read_kmsg ((type ARG1))
+    (call read_chr_files_pattern (ARG1 device_t device_kmsg_t)))
+
 (macro devices_write_kmsg ((type ARG1))
     (call write_chr_files_pattern (ARG1 device_t device_kmsg_t)))
 

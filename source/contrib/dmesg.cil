@@ -10,7 +10,15 @@
 (context file_dmesg_exec (system_u object_r dmesg_exec_t ((s0) (s0))))
 (filecon "/usr/bin/dmesg" file file_dmesg_exec)
 
+(call system_read_ring_buffer (dmesg_t))
+
+(call devices_read_kmsg (dmesg_t))
+
+(optional dmesg_optional_miscfiles
+    (call miscfiles_read_localization_files (dmesg_t)))
+
 (optional dmesg_optional_session
+    (call session_search_generic_config (dmesg_t))
     (call session_use_inherited_terminals (dmesg_t)))
 
 (macro dmesg_subtrans ((type ARG1))
