@@ -28,7 +28,7 @@
 (context file_session_cache (session_u object_r session_cache_t ((s0)
     (s0))))
 (filecon "/root/\.cache(/.*)?" any file_session_cache)
-(filecon "/home/joe/\.cache(/.*)?" any file_session_cache) ; hack
+(filecon "/home/joe/\.cache(/.*)?" any file_session_cache)
 
 (type session_conf_t)
 (call session_config_object (session_conf_t))
@@ -36,7 +36,7 @@
 (context file_session_conf (session_u object_r session_conf_t ((s0)
     (s0))))
 (filecon "/root/\.config(/.*)?" any file_session_conf)
-(filecon "/home/joe/\.config(/.*)?" any file_session_conf) ; hack
+(filecon "/home/joe/\.config(/.*)?" any file_session_conf)
 
 (type session_data_t)
 (call session_data_object (session_data_t))
@@ -44,7 +44,7 @@
 (context file_session_data (session_u object_r session_data_t ((s0)
     (s0))))
 (filecon "/root/\.local(/.*)?" any file_session_data)
-(filecon "/home/joe/\.local(/.*)?" any file_session_data) ; hack
+(filecon "/home/joe/\.local(/.*)?" any file_session_data)
 
 (type session_home_t)
 (call session_home_object (session_home_t))
@@ -52,7 +52,7 @@
 (context file_session_home (session_u object_r session_home_t ((s0)
     (s0))))
 (filecon "/root/.*" any file_session_home)
-(filecon "/home/joe/.*" any file_session_home) ; hack
+(filecon "/home/joe/.*" any file_session_home)
 
 (type session_bin_t)
 (call session_home_object (session_bin_t))
@@ -60,10 +60,10 @@
 
 (context file_session_bin (session_u object_r session_bin_t ((s0)
     (s0))))
-(filecon "/root/bin" symlink file_session_bin) ; hack
-(filecon "/root/\.local/bin(/.*)?" any file_session_bin) ; hack
-(filecon "/home/joe/bin" symlink file_session_bin) ; hack
-(filecon "/home/joe/\.local/bin(/.*)?" any file_session_bin) ; hack
+(filecon "/root/bin" symlink file_session_bin)
+(filecon "/root/\.local/bin(/.*)?" any file_session_bin)
+(filecon "/home/joe/bin" symlink file_session_bin)
+(filecon "/home/joe/\.local/bin(/.*)?" any file_session_bin)
 
 (type session_cert_t)
 (call session_home_object (session_cert_t))
@@ -74,7 +74,7 @@
 (context file_session_cert (session_u object_r session_cert_t ((s0)
     (s0))))
 (filecon "/root/\.pki(/.*)?" any file_session_cert)
-(filecon "/home/joe/\.pki(/.*)?" any file_session_cert) ; hack
+(filecon "/home/joe/\.pki(/.*)?" any file_session_cert)
 
 (type session_home_dir_t)
 (call files_object (session_home_dir_t))
@@ -82,7 +82,7 @@
 (context file_session_home_dir (session_u object_r session_home_dir_t ((s0)
     mls_systemhigh)))
 (filecon "/root" dir file_session_home_dir)
-(filecon "/home/joe" dir file_session_home_dir) ; hack
+(filecon "/home/joe" dir file_session_home_dir)
 
 (type session_run_user_dir_t)
 (call files_object (session_run_user_dir_t))
@@ -90,7 +90,7 @@
 (context file_session_run_user_dir (session_u object_r session_run_user_dir_t ((s0)
     mls_systemhigh)))
 (filecon "/run/user/0" dir file_session_run_user_dir)
-(filecon "/run/user/1000" dir file_session_run_user_dir) ; hack
+(filecon "/run/user/1000" dir file_session_run_user_dir)
 
 (type session_run_t)
 (call session_run_object (session_run_t))
@@ -98,7 +98,7 @@
 (context file_session_run (session_u object_r session_run_t ((s0)
     (s0))))
 (filecon "/run/user/0/.*" any file_session_run)
-(filecon "/run/user/1000/.*" any file_session_run) ; hack
+(filecon "/run/user/1000/.*" any file_session_run)
 
 (type session_tmp_t)
 (call session_tmp_object (session_tmp_t))
