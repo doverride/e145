@@ -420,6 +420,10 @@
     (call session_application_subject (session_emacs_t))
     (call session_use_terminals (session_emacs_t))
 
+    (call session_manage_bin_dirs (session_emacs_t))
+    (call session_manage_bin_files (session_emacs_t))
+    (call session_manage_bin_symlinks (session_emacs_t))
+
     (call session_manage_generic_home_content_dirs (session_emacs_t))
     (call session_manage_generic_home_content_files (session_emacs_t))
     (call session_manage_generic_home_content_symlinks (session_emacs_t))
@@ -849,6 +853,18 @@
 (macro session_execute_bin_files ((type ARG1))
     (call session_search_generic_data (ARG1))
     (call exec_files_pattern (ARG1 session_bin_t session_bin_t)))
+
+(macro session_manage_bin_files ((type ARG1))
+    (call session_search_generic_data (ARG1))
+    (call manage_files_pattern (ARG1 session_bin_t session_bin_t)))
+
+(macro session_manage_bin_symlinks ((type ARG1))
+    (call session_search_generic_data (ARG1))
+    (call manage_lnk_files_pattern (ARG1 session_bin_t session_bin_t)))
+
+(macro session_manage_bin_dirs ((type ARG1))
+    (call session_search_generic_data (ARG1))
+    (allow ARG1 session_bin_t manage_dir_perms))
 
 (macro session_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
     (call session_bin_manual_subject_type_transition (ARG1 ARG2))

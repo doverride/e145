@@ -13,7 +13,7 @@
 
 (typeattribute is_sensors_file_object)
 (typeattributeset is_sensors_file_object (sensors_conf_t fancontrol_conf_t
-    sensors_env_t fancontrol_run_t ))
+    sensors_env_t fancontrol_run_t is_sensors_unit_file_object))
 
 (typeattribute is_sensors_unit_file_object)
 (typeattributeset is_sensors_unit_file_object (sensors_unit_t

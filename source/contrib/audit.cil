@@ -162,6 +162,11 @@
 (call audit_client_subject (auditctl_t))
 (call audit_set_parameters (auditctl_t))
 
+(call application_subject (auditctl_t))
+
+(optional auditctl_optional_session
+    (call session_use_inherited_terminals (auditctl_t)))
+
 (allow audispd_t auditd_t (unix_stream_socket (read write)))
 
 (allow audispd_t audispd_run_t manage_sock_file_perms)
