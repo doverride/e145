@@ -372,8 +372,6 @@
 (call devices_read_sysfs_files (is_systemd_subject))
 (call devices_read_urandom (is_systemd_subject))
 
-(call files_read_generic_usr_files (is_systemd_subject)) ; /usr/share/terminfo(/.*)?
-
 (call filesystem_getattr_filesystems (systemctl_t))
 (call filesystem_search_tmpfs (is_systemctl_client_subject)) ; /sys/fs/cgroup is tmpfs_t
 (call filesystem_list_cgroup (is_systemctl_client_subject))
@@ -395,6 +393,7 @@
 (call systemd_read_config_files (is_systemd_subject))
 
 (optional systemctl_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_systemd_subject))
     (call miscfiles_read_localization_files (is_systemctl_client_subject)))
 
 (optional systemctl_optional_application

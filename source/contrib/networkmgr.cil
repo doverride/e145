@@ -264,7 +264,6 @@
 (call devices_read_urandom (networkmgrcli_t))
 
 (call files_list_tmp (networkmgrcli_t))
-(call files_read_generic_usr_files (networkmgrcli_t)) ; /usr/share/terminfo(/.*)?
 
 (call selinux_getattr_filesystems (networkmgrcli_t))
 
@@ -274,6 +273,7 @@
     (call session_use_inherited_terminals (networkmgrcli_t)))
 
 (optional networkmgrcli_optional_miscfiles
+    (call miscfiles_read_terminfo_files (networkmgrcli_t))
     (call miscfiles_read_localization_files (networkmgrcli_t)))
 
 (allow is_networkmgr_admin_subject is_networkmgr_subject signal_perms)

@@ -19,8 +19,6 @@
 (allow is_rtorrent_subject self create_tcp_stream_socket_perms)
 
 (call files_dontaudit_list_all (is_rtorrent_subject)) ; catchall
-(call files_read_generic_etc_files (is_rtorrent_subject)) ; /etc/terminfo
-(call files_read_generic_usr_files (is_rtorrent_subject)) ; /usr/share/terminfo(/.*)?
 
 (call network_tcp_bind_generic_node (is_rtorrent_subject))
 (call network_tcp_bind_all_unreserved_ports (is_rtorrent_subject))
@@ -30,6 +28,7 @@
 (call bt_tcp_bind_bt_port (is_rtorrent_subject))
 
 (optional rtorrent_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_rtorrent_subject))
     (call miscfiles_read_localization_files (is_rtorrent_subject)))
 
 (macro bt_role_template_rtorrent ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
