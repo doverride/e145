@@ -545,7 +545,7 @@
 
     (call session_application_subject (session_tig_t))
 
-    (call session_home_dir_filetrans (session_t session_tig_home_t file ".tigrc")) 
+    (call session_home_dir_filetrans (session_t session_tig_home_t file ".tigrc"))
 
     (allow session_tig_t session_tig_home_t read_file_perms)
     (call getattr_files_pattern (session_tig_t session_git_home_t session_git_home_t))
