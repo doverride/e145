@@ -1,12 +1,26 @@
 (roleattribute is_git_role)
+(roleattribute is_tig_role)
 
 (typeattribute is_git_subject)
+(typeattribute is_tig_subject)
 
 (type git_exec_t)
 (call application_subject_entry (is_git_subject git_exec_t))
 
 (context file_git_exec (system_u object_r git_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/git-core(/.*)?" file file_git_exec)
+
+(type tig_exec_t)
+(call application_subject_entry (is_tig_subject tig_exec_t))
+
+(context file_tig_exec (system_u object_r tig_exec_t ((s0)(s0))))
+(filecon "/usr/bin/tig" file file_tig_exec)
+
+(type tig_conf_t)
+(call files_etc_object (tig_conf_t))
+
+(context file_tig_conf (system_u object_r tig_conf_t ((s0)(s0))))
+(filecon "/etc/tigrc" file file_tig_conf)
 
 (allow is_git_subject self (process (signal)))
 (allow is_git_subject self create_unix_stream_socket_perms)
@@ -45,3 +59,9 @@
     (typeattributeset is_git_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 git_exec_t ARG3)))
+
+(macro git_role_template_tig ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_tig_role ARG1)
+    (typeattributeset is_tig_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 tig_exec_t ARG3)))

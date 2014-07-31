@@ -263,6 +263,18 @@
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 selinux_conf_t selinux_conf_t)))
 
+(macro seutil_manage_config_dirs ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call manage_dirs_pattern (ARG1 selinux_conf_t selinux_conf_t)))
+
+(macro seutil_manage_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call manage_files_pattern (ARG1 selinux_conf_t selinux_conf_t)))
+
+(macro seutil_selinux_config_filetrans ((type ARG1)(type ARG2)
+    (class ARG3)(name ARG4))
+    (call filetrans_pattern (ARG1 selinux_conf_t ARG2 ARG3 ARG4)))
+
 (macro seutil_search_config ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 selinux_conf_t (dirs (search))))
@@ -275,9 +287,25 @@
     (call seutil_search_config (ARG1))
     (call read_files_pattern (ARG1 default_context_t default_context_t)))
 
+(macro seutil_manage_default_context_dirs ((type ARG1))
+    (call seutil_search_config (ARG1))
+    (call manage_dirs_pattern (ARG1 default_context_t default_context_t)))
+
+(macro seutil_manage_default_context_files ((type ARG1))
+    (call seutil_search_config (ARG1))
+    (call manage_files_pattern (ARG1 default_context_t default_context_t)))
+
 (macro seutil_read_file_context_files ((type ARG1))
     (call seutil_search_default_context (ARG1))
     (call read_files_pattern (ARG1 file_context_t file_context_t)))
+
+(macro seutil_manage_file_context_dirs ((type ARG1))
+    (call seutil_search_default_context (ARG1))
+    (call manage_dirs_pattern (ARG1 file_context_t file_context_t)))
+
+(macro seutil_manage_file_context_files ((type ARG1))
+    (call seutil_search_default_context (ARG1))
+    (call manage_files_pattern (ARG1 file_context_t file_context_t)))
 
 (macro seutil_write_file_context_files ((type ARG1))
     (call seutil_search_default_context (ARG1))
@@ -290,6 +318,14 @@
 (macro seutil_read_source_files ((type ARG1))
     (call seutil_search_config (ARG1))
     (call read_files_pattern (ARG1 policy_src_t policy_src_t)))
+
+(macro seutil_manage_source_dirs ((type ARG1))
+    (call seutil_search_config (ARG1))
+    (call manage_dirs_pattern (ARG1 policy_src_t policy_src_t)))
+
+(macro seutil_manage_source_files ((type ARG1))
+    (call seutil_search_config (ARG1))
+    (call manage_files_pattern (ARG1 policy_src_t policy_src_t)))
 
 (macro seutil_read_policy_config_files ((type ARG1))
     (call seutil_search_config (ARG1))
@@ -309,6 +345,10 @@
     (call seutil_search_config (ARG1))
     (call manage_files_pattern (ARG1 policy_conf_t policy_conf_t))
     (typeattributeset can_write_binary_policy ARG1))
+
+(macro seutil_dontaudit_list_policy_config ((type ARG1))
+    (call seutil_search_config (ARG1))
+    (dontaudit ARG1 policy_conf_t (dirs (list))))
 
 (macro seutil_list_policy_config ((type ARG1))
     (call seutil_search_config (ARG1))

@@ -466,8 +466,8 @@
         session_emacs_t)))
 
 (optional session_optional_session_git
-    ; (type session_git_t)
-    ; (call git_role_template (session_r session_t session_git_t session_git_home_t))
+    (type session_git_t)
+    (call git_role_template (session_r session_t session_git_t session_git_home_t))
     (call can_exec (session_t git_exec_t))
 
     (type session_git_home_t)
@@ -480,7 +480,7 @@
     (type session_git_conf_t)
     (call session_home_object (session_git_conf_t))
 
-    ; (allow session_git_t session_git_conf_t read_file_perms)
+    (allow session_git_t session_git_conf_t read_file_perms)
 
     (call session_home_dir_filetrans (session_t session_git_conf_t file ".gitconfig")) 
     (call session_home_dir_filetrans (session_t session_git_conf_t file ".gitaliases")) 
@@ -493,30 +493,44 @@
     (filecon "/home/joe/\.gitaliases" file file_session_git_conf)
     (filecon "/home/joe/\.gitconfig" file file_session_git_conf)
 
-    ; (call session_application_subject (session_git_t))
+    (call session_application_subject (session_git_t))
 
-    ; (allow session_git_t session_git_home_t manage_dir_perms)
-    ; (allow session_git_t session_git_home_t manage_file_perms)
-    ; (allow session_git_t session_git_home_t manage_lnk_file_perms)
-    ; (call session_home_filetrans (session_git_t session_git_home_t dir ".git"))
+    (allow session_git_t session_git_home_t manage_dir_perms)
+    (allow session_git_t session_git_home_t manage_file_perms)
+    (allow session_git_t session_git_home_t manage_lnk_file_perms)
+    (call session_home_filetrans (session_git_t session_git_home_t dir ".git"))
 
-    ; (call subtrans_pattern (session_git_t session_git_home_t session_t))
+    (call subtrans_pattern (session_git_t session_git_home_t session_t))
 
-    ; (call commands_bin_auto_subject_type_transition (session_git_t session_t))
-    ; (call commands_shell_auto_subject_type_transition (session_git_t session_t))
+    (call commands_bin_auto_subject_type_transition (session_git_t session_t))
+    (call commands_shell_auto_subject_type_transition (session_git_t session_t))
 
     (call can_exec (session_t session_git_home_t))
     (call subject_entry (session_t session_git_home_t))
 
-    ; (call session_manage_generic_home_content_dirs (session_git_t))
-    ; (call session_manage_generic_home_content_files (session_git_t))
-    ; (call session_manage_generic_home_content_symlinks (session_git_t))
-    ; (call session_home_dir_filetrans_session_home (session_git_t dir "*"))
-    ; (call session_home_dir_filetrans_session_home (session_git_t file "*"))
-    ; (call session_home_dir_filetrans_session_home (session_git_t lnk_file "*"))
+    (call session_manage_generic_home_content_dirs (session_git_t))
+    (call session_manage_generic_home_content_files (session_git_t))
+    (call session_manage_generic_home_content_symlinks (session_git_t))
+    (call session_home_dir_filetrans_session_home (session_git_t dir "*"))
+    (call session_home_dir_filetrans_session_home (session_git_t file "*"))
+    (call session_home_dir_filetrans_session_home (session_git_t lnk_file "*"))
 
-    ; (optional session_git_optional_session_ssh
-        ; (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t)))
+    (optional session_git_optional_seutil
+        (filecon "/etc/selinux/e145/\.git(/.*)?" any file_session_git_home)
+
+        (call seutil_manage_config_dirs (session_git_t))
+        (call seutil_manage_config_files (session_git_t))
+        (call seutil_manage_default_context_dirs (session_git_t))
+        (call seutil_manage_default_context_files (session_git_t))
+        (call seutil_manage_file_context_dirs (session_git_t))
+        (call seutil_manage_file_context_files (session_git_t))
+        (call seutil_manage_source_dirs (session_git_t))
+        (call seutil_manage_source_files (session_git_t))
+        (call seutil_dontaudit_list_policy_config (session_git_t))
+        (call seutil_selinux_config_filetrans (session_git_t session_git_home_t dir ".git")))
+
+    (optional session_git_optional_session_ssh
+        (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t)))
     )
 
 (optional session_optional_session_gpg
@@ -840,6 +854,24 @@
     (call session_application_subject (session_visudo_t))
 
     (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
+
+(optional session_optional_session_tig
+    (type session_tig_t)
+    (call git_role_template_tig (session_r session_t session_tig_t session_tig_home_t))
+
+    (type session_tig_home_t)
+    (call session_home_object (session_tig_home_t))
+
+    (context file_session_tig_home (session_u object_r session_tig_home_t ((s0)(s0))))
+    (filecon "/root/\.tigrc" file file_session_tig_home)
+    (filecon "/home/joe/\.tigrc" file file_session_tig_home)
+
+    (call session_application_subject (session_tig_t))
+
+    (call session_home_dir_filetrans (session_t session_tig_home_t dir ".tigrc")) 
+
+    (allow session_tig_t session_tig_home_t read_file_perms))
+
 
 ; miscfiles
 (type session_pass_home_t)
