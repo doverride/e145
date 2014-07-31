@@ -23,6 +23,8 @@
 (call files_read_generic_etc_files (is_moc_subject)) ; /etc/timidity.cfg
 (call files_read_generic_usr_files (is_moc_subject)) ; /use/share/alsa/alsa.conf
 
+(call network_tcp_connect_icecast_port (is_moc_subject))
+
 (call selinux_getattr_filesystems (is_moc_subject))
 
 (optional moc_optional_auth

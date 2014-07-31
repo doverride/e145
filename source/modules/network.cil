@@ -90,6 +90,15 @@
 (portcon "tcp" (61001 65535) port_unreserved)
 (portcon "udp" (61001 65535) port_unreserved)
 
+; move this to icecast module
+(type port_icecast_t)
+(call network_unreserved_port_object (port_icecast_t))
+
+(context port_icecast (system_u object_r port_icecast_t ((s0)
+    (s0))))
+(portcon "tcp" 8000 port_icecast)
+(portcon "udp" 8000 port_icecast)
+
 (allow has_unconfined_access_to_network_assets is_interface_object
     (netif (all)))
 (allow has_unconfined_access_to_network_assets is_node_object (node
@@ -194,6 +203,9 @@
 
 (macro network_udp_send_generic_node ((type ARG1))
     (allow ARG1 node_t (node (udp_send sendto))))
+
+(macro network_tcp_connect_icecast_port ((type ARG1))
+    (allow ARG1 port_icecast_t (tcp_socket (name_connect))))
 
 (macro network_unconfined ((type ARG1))
     (typeattributeset has_unconfined_access_to_network_assets ARG1))
