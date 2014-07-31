@@ -1,3 +1,14 @@
+session:
+    review whether session actually runs busproxyd, and askpwd directly
+
+    i am pretty sure that session runs askpwdagent directly, however i wonder whether
+    askpwdagent runs askpwd and/or busproxyd instead of session directly
+
+    for now i allowed session to run askpwd, and busproxyd directly with a domain transition
+
+    the fact that for example bus-proxyd is installed in /usr/lib/systemd makes me think
+    that this command is not intended to be run directly from a user shell session
+
 /usr/sbin/sysctl:
     add this to contrib/systemd/sysctl.cil (add a sctl_t subject type for it)
 
