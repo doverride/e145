@@ -366,9 +366,6 @@
     (call session_home_dir_filetrans (session_bti_t session_bti_home_t file ".bti.log"))
 
     (call commands_shell_auto_subject_type_transition (session_bti_t session_t))
-    (allow session_t session_bti_t (process (sigchld)))
-    (allow session_t session_bti_t (fd (use)))
-    (allow session_t session_bti_t rw_inherited_fifo_file_perms)
 
     (call session_application_subject (session_bti_t)))
 
@@ -459,10 +456,6 @@
     (call commands_bin_auto_subject_type_transition (session_emacs_t session_t))
     (call commands_shell_auto_subject_type_transition (session_emacs_t session_t))
 
-    (allow session_t session_emacs_t (process (sigchld)))
-    (allow session_t session_emacs_t (fd (use)))
-    (allow session_t session_emacs_t rw_inherited_fifo_file_perms)
-
     (type session_emacsclient_t)
     (call emacs_role_template_client (session_r session_t session_emacsclient_t))
 
@@ -471,6 +464,55 @@
 
     (call stream_connect_pattern (session_emacsclient_t session_tmp_t session_tmp_t
         session_emacs_t)))
+
+(optional session_optional_session_git
+    (type session_git_t)
+    ; (call git_role_template (session_r session_t session_git_t session_git_home_t))
+
+    (type session_git_home_t)
+    (call session_home_object (session_git_home_t))
+
+    (context file_session_git_home (session_u object_r session_git_home_t ((s0)(s0))))
+    (filecon "/root/.*/\.git(/.*)?" any file_session_git_home)
+    (filecon "/home/joe/.*/\.git(/.*)?" any file_session_git_home)
+
+    (type session_git_conf_t)
+    (call session_home_object (session_git_conf_t))
+
+    (allow session_git_t session_git_conf_t read_file_perms)
+    (call session_home_dir_filetrans (session_t session_git_conf_t file ".gitconfig")) 
+    (call session_home_dir_filetrans (session_t session_git_conf_t file ".gitaliases")) 
+
+    (context file_session_git_conf (session_u object_r session_git_conf_t ((s0)(s0))))
+    (filecon "/root/\.gitaliases" file file_session_git_conf)
+    (filecon "/root/\.gitconfig" file file_session_git_conf)
+    (filecon "/home/joe/\.gitaliases" file file_session_git_conf)
+    (filecon "/home/joe/\.gitconfig" file file_session_git_conf)
+
+    (call session_application_subject (session_git_t))
+
+    (allow session_git_t session_git_home_t manage_dir_perms)
+    (allow session_git_t session_git_home_t manage_file_perms)
+    (allow session_git_t session_git_home_t manage_lnk_file_perms)
+    (call session_home_filetrans (session_git_t session_git_home_t dir ".git"))
+
+    (call subtrans_pattern (session_git_t session_git_home_t session_t))
+
+    (call commands_bin_auto_subject_type_transition (session_git_t session_t))
+    (call commands_shell_auto_subject_type_transition (session_git_t session_t))
+
+    (call can_exec (session_t session_git_home_t))
+    (call subject_entry (session_t session_git_home_t))
+
+    (call session_manage_generic_home_content_dirs (session_git_t))
+    (call session_manage_generic_home_content_files (session_git_t))
+    (call session_manage_generic_home_content_symlinks (session_git_t))
+    (call session_home_dir_filetrans_session_home (session_git_t dir "*"))
+    (call session_home_dir_filetrans_session_home (session_git_t file "*"))
+    (call session_home_dir_filetrans_session_home (session_git_t lnk_file "*"))
+
+    (optional session_git_optional_session_ssh
+        (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t))))
 
 (optional session_optional_session_gpg
     (type session_gpg_t)
@@ -628,9 +670,6 @@
 
     ; /exec: not sure if good idea
     (call commands_shell_auto_subject_type_transition (session_irssi_t session_t))
-    (allow session_t session_irssi_t (process (sigchld)))
-    (allow session_t session_irssi_t (fd (use)))
-    (allow session_t session_irssi_t rw_inherited_fifo_file_perms)
 
     (call session_application_subject (session_irssi_t))
     (call session_read_cert_files (session_irssi_t)))
@@ -674,10 +713,6 @@
 
     (type session_screen_tmp_t)
     (call session_tmp_object (session_screen_tmp_t))
-
-    (allow session_t session_screen_t (process (sigchld)))
-    (allow session_t session_screen_t (fd (use)))
-    (allow session_t session_screen_t rw_inherited_fifo_file_perms)
 
     (call session_application_subject (session_screen_t))
     (call session_use_terminals (session_screen_t))
@@ -799,10 +834,7 @@
 
     (call session_application_subject (session_visudo_t))
 
-    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t))
-    (allow session_t session_visudo_t (process (sigchld)))
-    (allow session_t session_visudo_t (fd (use)))
-    (allow session_t session_visudo_t rw_inherited_fifo_file_perms))
+    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
 
 ; miscfiles
 (type session_pass_home_t)
@@ -896,7 +928,10 @@
 
 (macro session_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
     (call session_search_bin (ARG1))
-    (call manual_subject_type_transition_pattern (ARG1 session_bin_t ARG2)))
+    (call manual_subject_type_transition_pattern (ARG1 session_bin_t ARG2))
+    (allow session_t ARG1 (fd (use)))
+    (allow session_t ARG1 rw_inherited_fifo_file_perms)
+    (allow session_t ARG1 (process (sigchld))))
 
 (macro session_search_home_dir ((type ARG1))
     (call files_search_home_root (ARG1))

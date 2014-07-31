@@ -1,0 +1,47 @@
+(roleattribute is_git_role)
+
+(typeattribute is_git_subject)
+
+(type git_exec_t)
+(call application_subject_entry (is_git_subject git_exec_t))
+
+(context file_git_exec (system_u object_r git_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/git-core(/.*)?" file file_git_exec)
+
+(allow is_git_subject self (process (signal)))
+(allow is_git_subject self create_unix_stream_socket_perms)
+(allow is_git_subject self rw_fifo_file_perms)
+
+(call can_exec (is_git_subject git_exec_t))
+
+(call system_read_generic_proc_files (is_git_subject))
+(call system_read_sysctl_vm_overcommit_files (is_git_subject))
+
+(call commands_execute_bin_files (is_git_subject))
+
+(call devices_read_sysfs_files (is_git_subject))
+(call devices_read_urandom (is_git_subject))
+
+(call files_list_tmp (is_git_subject))
+(call files_audit_access_generic_tmp_dirs (is_git_subject))
+(call files_read_generic_usr_files (is_git_subject))
+
+(call selinux_getattr_filesystems (is_git_subject))
+
+(optional git_optional_auth
+    (call auth_nsswitch_client_subject (is_git_subject)))
+
+(optional git_optional_http
+    (call http_tcp_connect_http_port (is_git_subject)))
+
+(optional git_optional_miscfiles
+    (call miscfiles_read_generic_cert_files (is_git_subject))
+    (call miscfiles_read_network_config_files (is_git_subject))
+    (call miscfiles_read_terminfo_files (is_git_subject))
+    (call miscfiles_read_localization_files (is_git_subject)))
+
+(macro git_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_git_role ARG1)
+    (typeattributeset is_git_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 git_exec_t ARG3)))
