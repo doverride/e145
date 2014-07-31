@@ -60,6 +60,40 @@
 (optional coredump_optional_journald
     (call journald_client_subject (coredump_t)))
 
+(allow coredumpctl_t self (capability (dac_override ipc_lock)))
+(allow coredumpctl_t self (process (signal)))
+(allow coredumpctl_t self rw_fifo_file_perms)
+(allow coredumpctl_t self create_unix_stream_socket_perms)
+
+(call system_read_generic_proc_files (coredumpctl_t))
+(call system_read_sysctl_crypto_files (coredumpctl_t))
+
+(call commands_execute_bin_files (coredumpctl_t)) ; less
+
+(call devices_read_urandom (coredumpctl_t))
+
+(call filesystem_getattr_filesystems (coredumpctl_t))
+
+(call coredump_read_var_lib_files (coredumpctl_t)) ; only search is confirmed
+
+(optional coredumpctl_optional_auth
+    (call auth_nsswitch_client_subject (coredumpctl_t)))
+
+(optional coredumpctl_optional_miscfiles
+    (call miscfiles_read_terminfo_files (coredumpctl_t))
+    (call miscfiles_read_localization_files (coredumpctl_t)))
+
+(optional coredumpctl_optional_journald
+    (call journald_list_log (coredumpctl_t))
+    (call journald_read_log_files (coredumpctl_t)))
+
+(optional coredumpctl_optional_machined
+    (call machined_read_config_files (coredumpctl_t)))
+
+(optional coredumpctl_optional_session
+    (call session_read_generic_home_content_files (coredumpctl_t)) ; ~/.lesshst
+    (call session_use_inherited_terminals (coredumpctl_t)))
+
 (call admin_pattern (is_coredump_admin_subject is_coredump_file_object))
 
 (macro coredump_subtrans_coredumpctl ((type ARG1))
