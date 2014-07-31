@@ -463,7 +463,13 @@
     (call session_use_terminals (session_emacsclient_t))
 
     (call stream_connect_pattern (session_emacsclient_t session_tmp_t session_tmp_t
-        session_emacs_t)))
+        session_emacs_t))
+
+    (optional session_emacs_optional_application
+        ; executing applications with a domain transition
+        (allow is_application_subject session_emacs_t (process (sigchld)))
+        (allow is_application_subject session_emacs_t (fd (use)))
+        (allow is_application_subject session_emacs_t rw_inherited_fifo_file_perms)))
 
 (optional session_optional_session_git
     (type session_git_t)
