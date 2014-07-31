@@ -65,6 +65,8 @@
 
 (allow is_tig_subject self rw_fifo_file_perms)
 
+(call files_dontaudit_list_all (is_tig_subject))
+
 (call git_read_tig_config_files (is_tig_subject))
 
 (optional tig_optional_miscfiles
