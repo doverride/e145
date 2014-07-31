@@ -109,6 +109,9 @@
     (call auth_read_generic_pam_config_files (akmods_t)) ; /etc/pam.d/runuser
     (call auth_nsswitch_client_subject (akmods_t)))
 
+(optional akmods_optional_consoletype
+    (call consoletype_exec (akmods_t)))
+
 (optional akmods_optional_miscfiles
     (call miscfiles_manage_module (akmods_t)) ; rpm
     (call miscfiles_relabel_module (akmods_t))

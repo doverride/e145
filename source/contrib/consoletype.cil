@@ -13,6 +13,9 @@
 (optional consoletype_optional_session
     (call session_use_inherited_terminals (consoletype_t)))
 
+(macro consoletype_exec ((type ARG1))
+    (call can_exec (ARG1 consoletype_exec_t)))
+
 (macro consoletype_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 consoletype_exec_t consoletype_t)))
 
