@@ -179,11 +179,7 @@
 (call devices_dontaudit_getattr_generic_nodes (session_t))
 (call devices_read_urandom (session_t))
 
-(call files_manage_all_non_auth_dirs_except (session_t))
-(call files_manage_all_non_auth_files_except (session_t))
-(call files_manage_all_non_auth_fifo_files_except (session_t))
-(call files_manage_all_non_auth_lnk_files_except (session_t))
-(call files_manage_all_non_auth_sock_files_except (session_t))
+(call files_manage_non_auth_except (session_t))
 
 (call filesystem_getattr_all_filesystems (session_t))
 (call filesystem_read_cgroup_files (session_t))
