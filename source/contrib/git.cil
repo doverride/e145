@@ -97,9 +97,6 @@
     (call miscfiles_read_network_config_files (is_gitemail_subject))
     (call miscfiles_read_localization_files (is_gitemail_subject)))
 
-(optional gitemail_optional_session
-    (call session_use_inherited_terminals (is_gitemail_subject)))
-
 (macro git_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_git_role ARG1)
     (typeattributeset is_git_subject ARG3)

@@ -573,6 +573,7 @@
     (allow session_gitemail_t session_gitemail_home_t manage_file_perms)
     (call filetrans_pattern (session_gitemail_t session_git_home_t session_gitemail_home_t file "*"))
 
+    (call session_application_subject (session_gitemail_t))
     (call session_read_generic_home_content_files (session_gitemail_t))
 
     (call git_role_template (session_r session_gitemail_t session_git_t session_git_home_t)))
