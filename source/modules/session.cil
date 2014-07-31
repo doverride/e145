@@ -468,6 +468,7 @@
 (optional session_optional_session_git
     ; (type session_git_t)
     ; (call git_role_template (session_r session_t session_git_t session_git_home_t))
+    (call can_exec (session_t git_exec_t))
 
     (type session_git_home_t)
     (call session_home_object (session_git_home_t))
