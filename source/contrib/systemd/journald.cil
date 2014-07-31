@@ -5,6 +5,8 @@
 (typeattribute is_journald_admin_subject)
 (typeattribute is_journald_client_subject)
 
+(typeattribute is_journalctl_client_subject)
+
 (typeattribute is_journald_subject)
 (typeattributeset is_journald_subject (journald_t journalctl_t))
 
@@ -14,8 +16,8 @@
 
 (type journalctl_t)
 (type journalctl_exec_t)
-(call application_subject_entry (journalctl_t journalctl_exec_t))
-(roleattributeset is_journalctl_role system_r)
+(call systemd_oneshot_subject_entry (journalctl_t journalctl_exec_t))
+(typeattributeset is_journalctl_client_subject (journalctl_t))
 (roletype is_journalctl_role journalctl_t)
 
 (context file_journalctl_exec (system_u object_r journalctl_exec_t ((s0) (s0))))
@@ -98,6 +100,11 @@
 (call journald_list_log (journalctl_t))
 (call journald_read_log_files (journalctl_t))
 
+(call systemd_manage_var_lib_files (journalctl_t)) ; /var/lib/systemd/catalog/.databaseanKunb
+
+(optional journalctl_optional_application
+    (call application_subject (journalctl_t)))
+
 (optional journalctl_optional_miscfiles
     (call miscfiles_read_terminfo_files (journalctl_t)))
 
@@ -156,7 +163,12 @@
 
 (call admin_pattern (is_journald_admin_subject is_journald_file_object))
 
+(macro journald_exec_journalctl ((type ARG1))
+    (call can_exec (ARG1 journalctl_exec_t))
+    (typeattributeset is_journalctl_client_subject ARG1))
+
 (macro journald_subtrans_journalctl ((type ARG1))
+    (call journald_send_signal_journalctl (ARG1))
     (call subtrans_pattern (ARG1 journalctl_exec_t journalctl_t)))
 
 (macro journald_run_journalctl ((type ARG1)(role ARG2))
@@ -174,6 +186,9 @@
 (macro journald_read_config_files ((type ARG1))
     (call systemd_search_config (ARG1))
     (call read_files_pattern (ARG1 journald_conf_t journald_conf_t)))
+
+(macro journald_send_signal_journalctl ((type ARG1))
+    (allow ARG1 journalctl_t (process (signal))))
 
 (macro journald_list_run ((type ARG1))
     (call systemd_search_run (ARG1))

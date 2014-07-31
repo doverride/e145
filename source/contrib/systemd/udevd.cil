@@ -173,6 +173,9 @@
     (call storage_read_removable_nodes (udevd_t))
     (call storage_read_scsi_generic_nodes (udevd_t)))
 
+(call devices_read_urandom (udevadm_t))
+
+(call udevd_manage_config_files (udevadm_t))
 (call udevd_manage_run_files (udevadm_t))
 (call udevd_stream_connect_udevd (udevadm_t))
 
@@ -205,6 +208,10 @@
 (macro udevd_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 udevd_conf_t udevd_conf_t)))
+
+(macro udevd_manage_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call manage_files_pattern (ARG1 udevd_conf_t udevd_conf_t)))
 
 (macro udevd_list_run ((type ARG1))
     (call files_search_run (ARG1))

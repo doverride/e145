@@ -1,6 +1,12 @@
+(typepermissive askpwd_t)
+(typepermissive askpwdagent_t)
+
 (roleattribute is_askpwdagent_role)
+(roleattribute is_askpwd_role)
 
 (typeattribute is_askpwd_admin_subject)
+
+(typeattribute is_askpwdagent_client_subject)
 
 (typeattribute is_askpwd_subject)
 (typeattributeset is_askpwd_subject (askpwd_t askpwdagent_t))
@@ -12,6 +18,7 @@
 (type askpwd_t)
 (type askpwd_exec_t)
 (call systemd_oneshot_subject_entry (askpwd_t askpwd_exec_t))
+(roletype is_askpwd_role askpwd_t)
 
 (context file_askpwd_exec (system_u object_r askpwd_exec_t ((s0) (s0))))
 (filecon "/usr/bin/systemd-ask-password" file file_askpwd_exec)
@@ -25,6 +32,7 @@
 (type askpwdagent_t)
 (type askpwdagent_exec_t)
 (call systemd_oneshot_subject_entry (askpwdagent_t askpwdagent_exec_t))
+(typeattributeset is_askpwdagent_client_subject (askpwdagent_t))
 (roletype is_askpwdagent_role askpwdagent_t)
 
 (context file_askpwdagent_exec (system_u object_r askpwdagent_exec_t ((s0)
@@ -46,6 +54,9 @@
 (context file_askpwdagent_run (system_u object_r askpwdagent_run_t ((s0)
     (s0))))
 (filecon "/run/systemd/ask-password-block(/.*)?" any file_askpwdagent_run)
+
+(optional askpwd_subhect_optional_application
+    (call application_subject (is_askpwd_subject)))
 
 (call systemd_run_filetrans (askpwd_t askpwd_run_t dir "*"))
 
@@ -79,8 +90,20 @@
 
 (call admin_pattern (is_askpwd_admin_subject is_askpwd_file_object))
 
+(macro askpwd_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 askpwd_exec_t askpwd_t)))
+
+(macro askpwd_run ((type ARG1)(role ARG2))
+    (call askpwd_subtrans (ARG1))
+    (roleattributeset is_askpwd_role (ARG2)))
+
 (macro askpwd_subtrans_agent ((type ARG1))
+    (call askpwd_send_signal_agent (ARG1))
     (call subtrans_pattern (ARG1 askpwdagent_exec_t askpwdagent_t)))
+
+(macro askpwd_exec_agent ((type ARG1))
+    (call can_exec (ARG1 askwpdagent_exec_t))
+    (typeattributeset is_askpwdagent_client_subject ARG1))
 
 (macro askpwd_run_agent ((type ARG1)(role ARG2))
     (call askpwd_subtrans_agent (ARG1))
