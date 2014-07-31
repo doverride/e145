@@ -466,7 +466,7 @@
         session_emacs_t)))
 
 (optional session_optional_session_git
-    (type session_git_t)
+    ; (type session_git_t)
     ; (call git_role_template (session_r session_t session_git_t session_git_home_t))
 
     (type session_git_home_t)
@@ -479,9 +479,12 @@
     (type session_git_conf_t)
     (call session_home_object (session_git_conf_t))
 
-    (allow session_git_t session_git_conf_t read_file_perms)
+    ; (allow session_git_t session_git_conf_t read_file_perms)
+
     (call session_home_dir_filetrans (session_t session_git_conf_t file ".gitconfig")) 
     (call session_home_dir_filetrans (session_t session_git_conf_t file ".gitaliases")) 
+
+    (call session_home_filetrans (session_t session_git_home_t dir ".git"))
 
     (context file_session_git_conf (session_u object_r session_git_conf_t ((s0)(s0))))
     (filecon "/root/\.gitaliases" file file_session_git_conf)
@@ -489,30 +492,31 @@
     (filecon "/home/joe/\.gitaliases" file file_session_git_conf)
     (filecon "/home/joe/\.gitconfig" file file_session_git_conf)
 
-    (call session_application_subject (session_git_t))
+    ; (call session_application_subject (session_git_t))
 
-    (allow session_git_t session_git_home_t manage_dir_perms)
-    (allow session_git_t session_git_home_t manage_file_perms)
-    (allow session_git_t session_git_home_t manage_lnk_file_perms)
-    (call session_home_filetrans (session_git_t session_git_home_t dir ".git"))
+    ; (allow session_git_t session_git_home_t manage_dir_perms)
+    ; (allow session_git_t session_git_home_t manage_file_perms)
+    ; (allow session_git_t session_git_home_t manage_lnk_file_perms)
+    ; (call session_home_filetrans (session_git_t session_git_home_t dir ".git"))
 
-    (call subtrans_pattern (session_git_t session_git_home_t session_t))
+    ; (call subtrans_pattern (session_git_t session_git_home_t session_t))
 
-    (call commands_bin_auto_subject_type_transition (session_git_t session_t))
-    (call commands_shell_auto_subject_type_transition (session_git_t session_t))
+    ; (call commands_bin_auto_subject_type_transition (session_git_t session_t))
+    ; (call commands_shell_auto_subject_type_transition (session_git_t session_t))
 
     (call can_exec (session_t session_git_home_t))
     (call subject_entry (session_t session_git_home_t))
 
-    (call session_manage_generic_home_content_dirs (session_git_t))
-    (call session_manage_generic_home_content_files (session_git_t))
-    (call session_manage_generic_home_content_symlinks (session_git_t))
-    (call session_home_dir_filetrans_session_home (session_git_t dir "*"))
-    (call session_home_dir_filetrans_session_home (session_git_t file "*"))
-    (call session_home_dir_filetrans_session_home (session_git_t lnk_file "*"))
+    ; (call session_manage_generic_home_content_dirs (session_git_t))
+    ; (call session_manage_generic_home_content_files (session_git_t))
+    ; (call session_manage_generic_home_content_symlinks (session_git_t))
+    ; (call session_home_dir_filetrans_session_home (session_git_t dir "*"))
+    ; (call session_home_dir_filetrans_session_home (session_git_t file "*"))
+    ; (call session_home_dir_filetrans_session_home (session_git_t lnk_file "*"))
 
-    (optional session_git_optional_session_ssh
-        (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t))))
+    ; (optional session_git_optional_session_ssh
+        ; (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t)))
+    )
 
 (optional session_optional_session_gpg
     (type session_gpg_t)

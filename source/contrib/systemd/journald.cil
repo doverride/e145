@@ -12,7 +12,7 @@
 
 (typeattribute is_journald_file_object)
 (typeattributeset is_journald_file_object (journald_conf_t journald_log_t
-    journald_run_t journald_unit_t))
+    journald_run_t journald_unit_t journald_var_lib_t))
 
 (type journalctl_t)
 (type journalctl_exec_t)
@@ -59,6 +59,12 @@
 (filecon "/usr/lib/systemd/system/[^/]*syslog.*" file file_journald_unit)
 (filecon "/usr/lib/systemd/system/[^/]*systemd-journal.*" file file_journald_unit)
 
+(type journald_var_lib_t)
+(call files_var_lib_object (journald_var_lib_t))
+
+(context file_journald_var_lib (system_u object_r journald_var_lib_t ((s0) (s0))))
+(filecon "/var/lib/systemd/catalog(/.*)?" any file_journald_var_lib)
+
 (allow is_journald_client_subject self create_unix_dgram_socket_perms)
 (allow is_journald_client_subject self (unix_dgram_socket (sendto)))
 
@@ -100,7 +106,7 @@
 (call journald_list_log (journalctl_t))
 (call journald_read_log_files (journalctl_t))
 
-(call systemd_manage_var_lib_files (journalctl_t)) ; /var/lib/systemd/catalog/.databaseanKunb
+(call journald_manage_var_lib_files (journalctl_t)) ; /var/lib/systemd/catalog
 
 (optional journalctl_optional_application
     (call application_subject (journalctl_t)))
@@ -124,6 +130,8 @@
 (allow journald_t journald_run_t manage_file_perms)
 (allow journald_t journald_run_t manage_sock_file_perms)
 (call systemd_run_filetrans (journald_t journald_run_t dir "*"))
+
+(call systemd_var_lib_filetrans (journald_t journald_var_lib_t dir "*")) ; /var/lib/systemd/catalog
 
 (call system_dgram_sendto (journald_t))
 (call system_read_ring_buffer (journald_t))
@@ -182,6 +190,10 @@
 (macro journald_read_log_files ((type ARG1))
     (call files_search_var_log (ARG1))
     (call read_files_pattern (ARG1 journald_log_t journald_log_t)))
+
+(macro journald_manage_var_lib_files ((type ARG1))
+    (call systemd_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 journald_var_lib_t journald_var_lib_t)))
 
 (macro journald_read_config_files ((type ARG1))
     (call systemd_search_config (ARG1))
