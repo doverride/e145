@@ -176,7 +176,6 @@
 (call commands_shell_files_entry_subject (session_t))
 
 (call devices_getattr_all_nodes (session_t))
-(call devices_dontaudit_getattr_generic_nodes (session_t))
 (call devices_read_urandom (session_t))
 
 (call files_manage_non_auth_except (session_t))
