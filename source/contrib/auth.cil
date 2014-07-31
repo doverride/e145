@@ -318,6 +318,7 @@
 
 (call terminal_use_all_inherited_pty_nodes (utempter_t))
 (call terminal_use_all_inherited_tty_nodes (utempter_t))
+(call terminal_use_inherited_unallocated_tty_nodes (utempter_t))
 (call terminal_use_inherited_ptmx_nodes (utempter_t))
 
 (call auth_nsswitch_client_subject (utempter_t))

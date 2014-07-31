@@ -177,6 +177,10 @@
     (call devices_search (ARG1))
     (allow ARG1 device_tty_t rw_term_perms))
 
+(macro terminal_use_inherited_unallocated_tty_nodes ((type ARG1))
+    (call devices_search (ARG1))
+    (allow ARG1 device_tty_t rw_inherited_term_perms))
+
 (macro terminal_use_controlling_terminal ((type ARG1))
     (call devices_search (ARG1))
     (allow ARG1 device_devtty_t rw_term_perms))

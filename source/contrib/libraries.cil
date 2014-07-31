@@ -46,6 +46,7 @@
 
 (typeattributeset is_lib_or_textrel_shlib_file_object (lib_t textrel_shlib_t))
 
+(allow ldconfig_t ld_so_cache_t manage_file_perms)
 (call files_etc_filetrans (ldconfig_t ld_so_cache_t file "*"))
 
 (allow ldconfig_t ldconfig_cache_t manage_dir_perms)
