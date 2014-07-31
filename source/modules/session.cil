@@ -531,6 +531,9 @@
     (optional session_git_optional_session_ssh
         (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t)))
 
+    (optional session_git_optional_session_gpg
+        (call gpg_role_template (session_r session_git_t session_gpg_t session_gpg_home_t)))
+
     (type session_tig_t)
     (call git_role_template_tig (session_r session_t session_tig_t session_tig_home_t))
 
