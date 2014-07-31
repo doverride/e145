@@ -1,7 +1,9 @@
 (roleattribute is_git_role)
+(roleattribute is_gitemail_role)
 (roleattribute is_tig_role)
 
 (typeattribute is_git_subject)
+(typeattribute is_gitemail_subject)
 (typeattribute is_tig_subject)
 
 (type git_exec_t)
@@ -9,6 +11,12 @@
 
 (context file_git_exec (system_u object_r git_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/git-core(/.*)?" file file_git_exec)
+
+(type gitemail_exec_t)
+(call application_subject_entry (is_gitemail_subject gitemail_exec_t))
+
+(context file_gitemail_exec (system_u object_r gitemail_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/git-core/git-send-email" file file_gitemail_exec)
 
 (type tig_exec_t)
 (call application_subject_entry (is_tig_subject tig_exec_t))
@@ -63,6 +71,33 @@
     (call miscfiles_read_terminfo_files (is_tig_subject))
     (call miscfiles_read_localization_files (is_tig_subject)))
 
+(allow is_gitemail_subject self create_unix_stream_socket_perms)
+(allow is_gitemail_subject self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (is_gitemail_subject))
+
+(call devices_read_urandom (is_gitemail_subject))
+
+(call files_read_generic_usr_files (is_gitemail_subject)) ; /usr/share/perl5/strict.pm
+(call files_read_generic_etc_files (is_gitemail_subject)) ; /etc/protocols
+
+(call selinux_getattr_filesystems (is_gitemail_subject))
+
+(optional gitemail_optional_auth
+    (call auth_nsswitch_client_subject (is_gitemail_subject)))
+
+(optional gitemail_optional_mail
+    (call mail_tcp_connect_smtp_port (is_gitemail_subject)))
+
+(optional gitemail_optional_miscfiles
+    (call miscfiles_list_generic_cert (is_gitemail_subject))
+    (call miscfiles_read_generic_cert_files (is_gitemail_subject))
+    (call miscfiles_read_network_config_files (is_gitemail_subject))
+    (call miscfiles_read_localization_files (is_gitemail_subject)))
+
+(optional gitemail_optional_session
+    (call session_use_inherited_terminals (is_gitemail_subject)))
+
 (macro git_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_git_role ARG1)
     (typeattributeset is_git_subject ARG3)
@@ -74,6 +109,12 @@
     (typeattributeset is_tig_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 tig_exec_t ARG3)))
+
+(macro git_role_template_email ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_gitemail_role ARG1)
+    (typeattributeset is_gitemail_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gitemail_exec_t ARG3)))
 
 (macro git_read_tig_config_files ((type ARG1))
     (call files_search_etc (ARG1))

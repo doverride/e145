@@ -554,7 +554,28 @@
 
     (call commands_bin_auto_subject_type_transition (session_tig_t session_t))
 
-    (call git_role_template (session_r session_tig_t session_git_t session_git_home_t)))
+    (call git_role_template (session_r session_tig_t session_git_t session_git_home_t))
+
+    (type session_gitemail_t)
+    (call git_role_template_email (session_r session_git_t session_gitemail_t
+        session_gitemail_home_t))
+
+    (type session_gitemail_home_t)
+    (call session_home_object (session_gitemail_home_t))
+
+    (context file_session_gitemail_home (session_u object_r session_gitemail_home_t ((s0)(s0))))
+    (filecon "/root/.*/\.git/\.gitsendemail\.msg.*" file file_session_gitemail_home)
+    (filecon "/home/joe/.*/\.git/\.gitsendemail\.msg.*" file file_session_gitemail_home)
+
+    (call commands_bin_auto_subject_type_transition (session_gitemail_t session_t))
+    (call commands_shell_auto_subject_type_transition (session_gitemail_t session_t))
+
+    (allow session_gitemail_t session_gitemail_home_t manage_file_perms)
+    (call filetrans_pattern (session_gitemail_t session_git_home_t session_gitemail_home_t file "*"))
+
+    (call session_read_generic_home_content_files (session_gitemail_t))
+
+    (call git_role_template (session_r session_gitemail_t session_git_t session_git_home_t)))
 
 (optional session_optional_session_gpg
     (type session_gpg_t)

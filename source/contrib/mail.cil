@@ -43,6 +43,8 @@
 (context port_smtp (system_u object_r port_smtp_t ((s0) (s0))))
 (portcon "tcp" 465 port_smtp)
 (portcon "udp" 465 port_smtp)
+(portcon "tcp" 587 port_smtp)
+(portcon "udp" 587 port_smtp)
 
 (allow is_mutt_subject self create_unix_stream_socket_perms)
 (allow is_mutt_subject self rw_fifo_file_perms)

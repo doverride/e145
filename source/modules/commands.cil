@@ -68,7 +68,10 @@
 
 (macro commands_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
     (call commands_search_bin (ARG1))
-    (call manual_subject_type_transition_pattern (ARG1 bin_t ARG2)))
+    (call manual_subject_type_transition_pattern (ARG1 bin_t ARG2))
+    (allow ARG2 ARG1 (fd (use)))
+    (allow ARG2 ARG1 rw_inherited_fifo_file_perms)
+    (allow ARG2 ARG1 (process (sigchld))))
 
 (macro commands_execute_bin_files ((type ARG1))
     (call files_search_usr (ARG1))
@@ -91,7 +94,10 @@
 
 (macro commands_shell_manual_subject_type_transition ((type ARG1)(type ARG2))
     (call commands_search_bin (ARG1))
-    (call manual_subject_type_transition_pattern (ARG1 shell_t ARG2)))
+    (call manual_subject_type_transition_pattern (ARG1 shell_t ARG2))
+    (allow ARG2 ARG1 (fd (use)))
+    (allow ARG2 ARG1 rw_inherited_fifo_file_perms)
+    (allow ARG2 ARG1 (process (sigchld))))
 
 (macro commands_execute_shell_files ((type ARG1))
     (call files_search_usr (ARG1))
