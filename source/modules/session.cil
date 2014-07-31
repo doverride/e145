@@ -468,7 +468,6 @@
 (optional session_optional_session_git
     (type session_git_t)
     (call git_role_template (session_r session_t session_git_t session_git_home_t))
-    (call can_exec (session_t git_exec_t))
 
     (type session_git_home_t)
     (call session_home_object (session_git_home_t))
@@ -531,7 +530,29 @@
 
     (optional session_git_optional_session_ssh
         (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t)))
-    )
+
+    (type session_tig_t)
+    (call git_role_template_tig (session_r session_t session_tig_t session_tig_home_t))
+
+    (allow session_t session_tig_t (fd (use)))
+
+    (type session_tig_home_t)
+    (call session_home_object (session_tig_home_t))
+
+    (context file_session_tig_home (session_u object_r session_tig_home_t ((s0)(s0))))
+    (filecon "/root/\.tigrc" file file_session_tig_home)
+    (filecon "/home/joe/\.tigrc" file file_session_tig_home)
+
+    (call session_application_subject (session_tig_t))
+
+    (call session_home_dir_filetrans (session_t session_tig_home_t file ".tigrc")) 
+
+    (allow session_tig_t session_tig_home_t read_file_perms)
+    (call getattr_files_pattern (session_tig_t session_git_home_t session_git_home_t))
+
+    (call commands_bin_auto_subject_type_transition (session_tig_t session_t))
+
+    (call git_role_template (session_r session_tig_t session_git_t session_git_home_t)))
 
 (optional session_optional_session_gpg
     (type session_gpg_t)
@@ -854,24 +875,6 @@
     (call session_application_subject (session_visudo_t))
 
     (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
-
-(optional session_optional_session_tig
-    (type session_tig_t)
-    (call git_role_template_tig (session_r session_t session_tig_t session_tig_home_t))
-
-    (type session_tig_home_t)
-    (call session_home_object (session_tig_home_t))
-
-    (context file_session_tig_home (session_u object_r session_tig_home_t ((s0)(s0))))
-    (filecon "/root/\.tigrc" file file_session_tig_home)
-    (filecon "/home/joe/\.tigrc" file file_session_tig_home)
-
-    (call session_application_subject (session_tig_t))
-
-    (call session_home_dir_filetrans (session_t session_tig_home_t dir ".tigrc")) 
-
-    (allow session_tig_t session_tig_home_t read_file_perms))
-
 
 ; miscfiles
 (type session_pass_home_t)

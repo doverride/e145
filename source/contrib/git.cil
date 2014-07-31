@@ -54,6 +54,14 @@
     (call miscfiles_read_terminfo_files (is_git_subject))
     (call miscfiles_read_localization_files (is_git_subject)))
 
+(allow is_tig_subject self rw_fifo_file_perms)
+
+(call git_read_tig_config_files (is_tig_subject))
+
+(optional tig_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_tig_subject))
+    (call miscfiles_read_localization_files (is_tig_subject)))
+
 (macro git_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_git_role ARG1)
     (typeattributeset is_git_subject ARG3)
@@ -65,3 +73,7 @@
     (typeattributeset is_tig_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 tig_exec_t ARG3)))
+
+(macro git_read_tig_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 tig_conf_t read_file_perms))
