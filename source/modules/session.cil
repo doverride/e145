@@ -525,7 +525,6 @@
         (call seutil_manage_file_context_files (session_git_t))
         (call seutil_manage_source_dirs (session_git_t))
         (call seutil_manage_source_files (session_git_t))
-        (call seutil_dontaudit_list_policy_config (session_git_t))
         (call seutil_selinux_config_filetrans (session_git_t session_git_home_t dir ".git")))
 
     (optional session_git_optional_session_ssh
