@@ -321,8 +321,7 @@
     (call rpm_run (session_t session_r)))
 
 (optional session_optional_seutil
-    (call seutil_list_policy_config (session_t))
-    (call seutil_read_policy_config_files (session_t))
+    (call seutil_admin (session_t))
     (call seutil_run_setools (session_t session_r))
     (call seutil_run_load_policy (session_t session_r))
     (call seutil_run_setenforce (session_t session_r))
