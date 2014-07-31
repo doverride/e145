@@ -98,6 +98,8 @@
 (call selinux_getattr_filesystems (akmods_t))
 (call selinux_compute_create_context (akmods_t))
 
+(call subject_obj_id_change_exemption (akmods_t))
+
 (call akmods_manage_var_cache_files (akmods_t))
 (call akmods_read_config_files (akmods_t))
 
@@ -115,6 +117,7 @@
 (optional akmods_optional_miscfiles
     (call miscfiles_manage_module (akmods_t)) ; rpm
     (call miscfiles_relabel_module (akmods_t))
+    (call miscfiles_read_terminfo_files (akmods_t))
     (call miscfiles_read_network_config_files (akmods_t))
     (call miscfiles_read_localization_files (akmods_t)))
 
