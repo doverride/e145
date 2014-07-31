@@ -736,7 +736,13 @@
     (call commands_shell_auto_subject_type_transition (session_irssi_t session_t))
 
     (call session_application_subject (session_irssi_t))
-    (call session_read_cert_files (session_irssi_t)))
+    (call session_read_cert_files (session_irssi_t))
+
+    (optional session_irssi_optional_application
+        ; executing applications with a domain transition
+        (allow is_application_subject session_irssi_t (process (sigchld)))
+        (allow is_application_subject session_irssi_t (fd (use)))
+        (allow is_application_subject session_irssi_t rw_inherited_fifo_file_perms)))
     
 (optional session_optional_session_newsb
     (type session_newsb_t)
