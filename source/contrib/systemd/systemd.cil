@@ -177,10 +177,6 @@
 (call commands_bin_files_entry_subject (systemd_daemon_t))
 (call commands_shell_files_entry_subject (systemd_daemon_t))
 
-(allow systemd_daemon_t systemd_t (fd (use)))
-(allow systemd_daemon_t systemd_t rw_inherited_fifo_file_perms)
-(allow systemd_daemon_t systemd_t (process (sigchld)))
-
 (optional systemd_daemon_optional_unconfined
     (call unconfined_subject (systemd_daemon_t)))
 
@@ -289,6 +285,7 @@
 
 (call systemd_exec (systemd_t))
 (call systemd_exec_helper (systemd_t))
+(auditallow systemd_t sd_helper_exec_t (file (execute_no_trans))) ; auditing hack
 (call systemd_read_all_unit_files (systemd_t))
 (call systemd_read_pam_config_files (systemd_t))
 
