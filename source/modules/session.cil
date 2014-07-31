@@ -196,6 +196,7 @@
 (call session_create_pty_node (session_t)) ; script/script replay
 
 (optional session_optional_audit
+    (call audit_admin (session_t))
     (call audit_run_auditctl (session_t session_r))
     (call audit_run_augenrules (session_t session_r))
     (call audit_run_ausearch (session_t session_r)))
