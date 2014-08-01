@@ -1,3 +1,5 @@
+(typeattribute is_unconfined_subject)
+
 (boolean unconfined_execheap false)
 (boolean unconfined_execmem false)
 (boolean unconfined_execstack false)
@@ -44,44 +46,59 @@
 (genfscon "selinuxfs" "/booleans/unconfined_ptrace"
     unconfined_ptrace)
 
+(allow is_unconfined_subject self all_capability_perms_except_sys_nice_and_sys_module)
+(allow is_unconfined_subject self all_capability2_perms_except_mac_admin_and_mac_override)
+(allow is_unconfined_subject self (process (transition dyntransition setcurrent setsched)))
+(allow is_unconfined_subject self (fifo_file (all)))
+
+(call devices_unconfined (is_unconfined_subject))
+(call files_unconfined (is_unconfined_subject))
+(call filesystem_unconfined (is_unconfined_subject))
+(call network_unconfined (is_unconfined_subject))
+(call selinux_unconfined (is_unconfined_subject))
+(call subject_unconfined (is_unconfined_subject))
+(call system_unconfined (is_unconfined_subject))
+
+(booleanif unconfined_execheap
+    (true
+        (allow is_unconfined_subject self (process (execheap)))))
+
+(booleanif unconfined_execmem
+    (true
+        (allow is_unconfined_subject self (process (execmem)))))
+
+(booleanif unconfined_execstack
+    (true
+        (allow is_unconfined_subject self (process (execstack execmem)))))
+
+(booleanif unconfined_execmod
+    (true
+        (call files_execmod_all_files (is_unconfined_subject))))
+
+(booleanif unconfined_ptrace
+    (true
+        (allow is_unconfined_subject self (process (ptrace)))))
+
+(optional unconfined_subject_optional_storage
+    (call storage_unconfined (is_unconfined_subject)))
+
+(optional unconfined_subject_optional_auth
+    (call auth_unconfined (is_unconfined_subject)))
+
+(optional unconfined_subject_optional_dns
+    (call dns_etc_filetrans_resolv_conf_files (is_unconfined_subject)))
+
+(optional unconfined_subject_optional_libraries
+    (call libraries_etc_filetrans_ld_so_cache_files (is_unconfined_subject)))
+
+(optional unconfined_optional_dbus
+    (call dbus_unconfined (is_unconfined_subject)))
+
+(optional unconfined_optional_seutil
+    (call seutil_unconfined (is_unconfined_subject)))
+
+(optional unconfined_optional_systemd
+    (call systemd_unconfined (is_unconfined_subject)))
+
 (macro unconfined_subject ((type ARG1))
-    (allow ARG1 self all_capability_perms_except_sys_nice_and_sys_module)
-    (allow ARG1 self all_capability2_perms_except_mac_admin_and_mac_override)
-    (allow ARG1 self (process (transition dyntransition setcurrent setsched)))
-    (allow ARG1 self (fifo_file (all)))
-    (call devices_unconfined (ARG1))
-    (call subject_unconfined (ARG1))
-    (call files_unconfined (ARG1))
-    (call filesystem_unconfined (ARG1))
-    (call network_unconfined (ARG1))
-    (call selinux_unconfined (ARG1))
-    (call system_unconfined (ARG1))
-    (booleanif unconfined_execheap
-        (true
-            (allow ARG1 self (process (execheap)))))
-    (booleanif unconfined_execmem
-        (true
-            (allow ARG1 self (process (execmem)))))
-    (booleanif unconfined_execstack
-        (true
-            (allow ARG1 self (process (execstack execmem)))))
-    (booleanif unconfined_execmod
-        (true
-            (call files_execmod_all_files (ARG1))))
-    (booleanif unconfined_ptrace
-        (true
-            (allow ARG1 self (process (ptrace)))))
-    (optional unconfined_subject_optional_storage
-        (call storage_unconfined (ARG1)))
-    (optional unconfined_subject_optional_auth
-        (call auth_unconfined (ARG1)))
-    (optional unconfined_subject_optional_dns
-        (call dns_etc_filetrans_resolv_conf_files (ARG1)))
-    (optional unconfined_subject_optional_libraries
-        (call libraries_etc_filetrans_ld_so_cache_files (ARG1)))
-    (optional unconfined_optional_dbus
-        (call dbus_unconfined (ARG1)))
-    (optional unconfined_optional_seutil
-        (call seutil_unconfined (ARG1)))
-    (optional unconfined_optional_systemd
-        (call systemd_unconfined (ARG1))))
+    (typeattributeset is_unconfined_subject ARG1))
