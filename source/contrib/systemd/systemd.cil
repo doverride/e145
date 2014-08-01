@@ -163,6 +163,11 @@
 (call commands_bin_files_entry_subject (systemd_daemon_t))
 (call commands_shell_files_entry_subject (systemd_daemon_t))
 
+(call commands_bin_auto_subject_type_transition (systemd_t
+    systemd_daemon_t))
+(call commands_shell_auto_subject_type_transition (systemd_t
+    systemd_daemon_t))
+
 (optional systemd_daemon_optional_unconfined
     (call unconfined_subject (systemd_daemon_t)))
 
@@ -203,11 +208,6 @@
 (call system_link_keyring (systemd_t))
 (call system_stream_connectto (systemd_t))
 (call system_use_fd (systemd_t))
-
-(call commands_bin_auto_subject_type_transition (systemd_t
-    systemd_daemon_t))
-(call commands_shell_auto_subject_type_transition (systemd_t
-    systemd_daemon_t))
 
 (call devices_manage_dirs (systemd_t))
 (call devices_manage_lnk_files (systemd_t))
