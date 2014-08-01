@@ -1,13 +1,3 @@
-systemd-update-done:
-    confine this oneshot subject
-
-    this is what creates those .updated files in select mountpoints
-    so move rules/types (systemd_updated_t) related curently associated
-    with systemd and associate them with a new "update" oneshot domain
-    instead
-
-    note there are various other oneshots and daemon untargeted in /usr/lib/systemd
-
 session:
     review whether session actually runs busproxyd, and askpwd directly
 

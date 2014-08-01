@@ -87,6 +87,7 @@ contrib/systemd/systemd.cil
 contrib/systemd/timedated.cil
 contrib/systemd/tmpfiles.cil
 contrib/systemd/udevd.cil
+contrib/systemd/updated.cil
 contrib/systemd/utmp.cil
 contrib/systemd/vconsole.cil
 modules/commands.cil

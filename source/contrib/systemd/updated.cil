@@ -1,0 +1,42 @@
+(typepermissive updated_t)
+
+(typeattribute is_updated_admin_subject)
+
+(typeattribute is_updated_file_object)
+(typeattributeset is_updated_file_object (update_done_t
+    updated_unit_t))
+
+(type updated_t)
+(type updated_exec_t)
+(call systemd_oneshot_subject_entry (updated_t updated_exec_t))
+
+(context file_updated_exec (system_u object_r updated_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-update-done" file file_updated_exec)
+
+(type update_done_t)
+(call files_object (update_done_t))
+
+(context file_update_done (system_u object_r update_done_t ((s0) (s0))))
+(filecon "/etc/\.updated" file file_update_done)
+(filecon "/var/\.updated" file file_update_done)
+
+(type updated_unit_t)
+(call systemd_unit_object (updated_unit_t))
+
+(context file_updated_unit (system_u object_r updated_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-update-done.*" file
+    file_updated_unit)
+
+(allow updated_t update_done_t manage_file_perms)
+(call files_etc_filetrans (updated_t update_done_t file "*"))
+(call files_var_filetrans (updated_t update_done_t file "*"))
+
+(allow is_updated_admin_subject updated_t signal_perms)
+(call ps_subject_pattern (is_updated_admin_subject updated_t))
+
+(allow is_updated_admin_subject updated_unit_t (service (all)))
+
+(call admin_pattern (is_updated_admin_subject is_updated_file_object))
+
+(macro updated_admin ((type ARG1))
+    (typeattributeset is_updated_admin_subject ARG1))

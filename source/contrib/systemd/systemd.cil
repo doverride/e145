@@ -26,8 +26,7 @@
 (typeattribute is_systemd_file_object)
 (typeattributeset is_systemd_file_object (systemd_conf_t systemd_var_lib_t
     systemd_run_t systemd_unit_t systemd_pam_conf_t systemd_dbus_conf_t
-    systemd_polkit_conf_t systemd_power_unit_t systemd_kexec_unit_t
-    systemd_updated_t))
+    systemd_polkit_conf_t systemd_power_unit_t systemd_kexec_unit_t))
 
 (typeattribute has_unconfined_access_to_systemd_assets)
 
@@ -67,13 +66,6 @@
 
 (context file_bootchart_conf (system_u object_r bootchart_conf_t ((s0) (s0))))
 (filecon "/etc/systemd/bootchart\.conf" file file_bootchart_conf)
-
-(type systemd_updated_t)
-(call files_object (systemd_updated_t)) ; systemd-update-done
-
-(context file_systemd_updated (system_u object_r systemd_updated_t ((s0) (s0))))
-(filecon "/etc/\.updated" file file_systemd_updated)
-(filecon "/var/\.updated" file file_systemd_updated)
 
 (type systemd_dbus_conf_t)
 (call dbus_etc_object (systemd_dbus_conf_t))
@@ -193,10 +185,6 @@
 (allow systemd_t self create_netlink_selinux_socket_perms)
 (allow systemd_t self rw_fifo_file_perms)
 
-(allow systemd_t systemd_updated_t manage_file_perms)
-(call files_etc_filetrans (systemd_t systemd_updated_t file ".updated"))
-(call files_var_filetrans (systemd_t systemd_updated_t file ".updated"))
-
 (allow systemd_t systemd_var_lib_t manage_dir_perms)
 (call files_var_lib_filetrans (systemd_t systemd_var_lib_t dir "*"))
 
@@ -274,7 +262,7 @@
 
 (call auth_list_pam_config (systemd_t))
 (call auth_read_authconfig_pam_config_files (systemd_t))
-(call auth_read_generic_pam_config_files (systemd_t)) ; verify me
+(call auth_read_generic_pam_config_files (systemd_t))
 (call auth_nsswitch_client_subject (systemd_t))
 (call auth_write_wtmp_log_files (systemd_t))
 
