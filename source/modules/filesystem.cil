@@ -356,6 +356,14 @@
 (macro filesystem_list_autofs ((type ARG1))
     (allow ARG1 autofs_t (dirs (list))))
 
+(macro filesystem_list_binfmt_misc ((type ARG1))
+    (call system_search_sysctl_fs (ARG1))
+    (allow ARG1 binfmt_misc_t (dirs (list))))
+
+(macro filesystem_read_binfmt_misc_files ((type ARG1))
+    (call system_search_sysctl_fs (ARG1))
+    (call read_files_pattern (ARG1 binfmt_misc_t binfmt_misc_t)))
+
 (macro filesystem_list_cgroup ((type ARG1))
     (allow ARG1 cgroup_t (dirs (list))))
 

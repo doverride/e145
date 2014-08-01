@@ -39,7 +39,7 @@
 (context file_sysctl_unit (system_u object_r sysctl_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-sysctl.*" file file_sysctl_unit)
 
-(allow sd_sysctl_t self (capability (net_admin)))
+(allow is_sysctl_subject self (capability (net_admin)))
 
 (call system_read_generic_proc_files (sd_sysctl_t))
 (call system_rw_sysctl_fs_files (sd_sysctl_t))
@@ -61,6 +61,19 @@
 
 (optional sd_sysctl_optional_udevd
     (call udevd_rw_inherited_udp_socket (sd_sysctl_t)))
+
+(call system_read_all_sysctl_files (sctl_t))
+
+(call devices_read_sysfs_files (sctl_t)) ; cpu/online
+
+(call filesystem_list_binfmt_misc (sctl_t))
+(call filesystem_read_binfmt_misc_files (sctl_t))
+
+(optional sctl_optional_miscfiles
+    (call miscfiles_read_localization_files (sctl_t)))
+
+(optional sctl_optional_session
+    (call session_use_inherited_terminals (sctl_t)))
 
 (allow is_sysctl_admin_subject is_sysctl_subject signal_perms)
 (call ps_subject_pattern (is_sysctl_admin_subject is_sysctl_subject))

@@ -473,6 +473,10 @@
     (call system_search_sysctl (ARG1))
     (allow ARG1 sysctl_fs_t (dirs (list))))
 
+(macro system_search_sysctl_fs ((type ARG1))
+    (call system_search_sysctl (ARG1))
+    (allow ARG1 sysctl_fs_t (dirs (search))))
+
 (macro system_read_sysctl_fs_files ((type ARG1))
     (call system_search_sysctl (ARG1))
     (call read_files_pattern (ARG1 sysctl_fs_t sysctl_fs_t)))
