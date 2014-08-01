@@ -27,9 +27,22 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-update-done.*" file
     file_updated_unit)
 
+(allow updated_t self (capability (net_admin)))
+
 (allow updated_t update_done_t manage_file_perms)
 (call files_etc_filetrans (updated_t update_done_t file "*"))
 (call files_var_filetrans (updated_t update_done_t file "*"))
+
+(call system_read_generic_proc_files (updated_t))
+
+(call selinux_getattr_filesystems (updated_t))
+
+(optional updated_optional_journald
+    (call journald_client_subject (updated_t)))
+
+(optional updated_optional_seutil
+    (call seutil_read_config_files (updated_t))
+    (call seutil_read_file_context_files (updated_t)))
 
 (allow is_updated_admin_subject updated_t signal_perms)
 (call ps_subject_pattern (is_updated_admin_subject updated_t))
