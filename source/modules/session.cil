@@ -456,13 +456,7 @@
     (call session_use_terminals (session_emacsclient_t))
 
     (call stream_connect_pattern (session_emacsclient_t session_tmp_t session_tmp_t
-        session_emacs_t))
-
-    (optional session_emacs_optional_application
-        ; executing applications with a domain transition
-        (allow is_application_subject session_emacs_t (process (sigchld)))
-        (allow is_application_subject session_emacs_t (fd (use)))
-        (allow is_application_subject session_emacs_t rw_inherited_fifo_file_perms)))
+        session_emacs_t)))
 
 (optional session_optional_session_git
     (type session_git_t)
@@ -735,13 +729,7 @@
     (call commands_shell_auto_subject_type_transition (session_irssi_t session_t))
 
     (call session_application_subject (session_irssi_t))
-    (call session_read_cert_files (session_irssi_t))
-
-    (optional session_irssi_optional_application
-        ; executing applications with a domain transition
-        (allow is_application_subject session_irssi_t (process (sigchld)))
-        (allow is_application_subject session_irssi_t (fd (use)))
-        (allow is_application_subject session_irssi_t rw_inherited_fifo_file_perms)))
+    (call session_read_cert_files (session_irssi_t)))
     
 (optional session_optional_session_newsb
     (type session_newsb_t)

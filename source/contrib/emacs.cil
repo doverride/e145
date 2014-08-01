@@ -51,6 +51,15 @@
 (optional emacs_optional_utmp
     (call utmp_read_run_files (is_emacs_subject)))
 
+(macro emacs_send_sigchld_all ((type ARG1))
+    (allow ARG1 is_emacs_subject (process (sigchld))))
+
+(macro emacs_use_fd_all ((type ARG1))
+    (allow ARG1 is_emacs_subject (fd (use))))
+
+(macro emacs_rw_inherited_fifo_files_all ((type ARG1))
+    (allow ARG1 is_emacs_subject rw_inherited_fifo_file_perms))
+
 (macro emacs_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_emacs_role ARG1)
     (typeattributeset is_emacs_subject ARG3)

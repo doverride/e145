@@ -29,6 +29,16 @@
 (optional application_optional_auth
 	(call auth_use_login_program_subject_fd (is_application_subject)))
 
+(optional application_optional_emacs
+    (call emacs_send_sigchld_all (is_application_subject))
+    (call emacs_use_fd_all (is_application_subject))
+    (call emacs_rw_inherited_fifo_files_all (is_application_subject)))
+
+(optional application_optional_irssi
+    (call irc_send_sigchld_all_irssi (is_application_subject))
+    (call irc_use_fd_all_irssi (is_application_subject))
+    (call irc_rw_inherited_fifo_files_all_irssi (is_application_subject)))
+
 (optional application_optional_screen
 	(call screen_use_all_fd (is_application_subject)))
 

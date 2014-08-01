@@ -61,6 +61,15 @@
     (call files_search_etc (ARG1))
     (allow ARG1 irssi_conf_t read_file_perms))
 
+(macro irc_send_sigchld_all_irssi ((type ARG1))
+    (allow ARG1 is_irssi_subject (process (sigchld))))
+
+(macro irc_use_fd_all_irssi ((type ARG1))
+    (allow ARG1 is_irssi_subject (fd (use))))
+
+(macro irc_rw_inherited_fifo_files_all_irssi ((type ARG1))
+    (allow ARG1 is_irssi_subject rw_inherited_fifo_file_perms))
+
 (macro irc_tcp_connect_irc_port ((type ARG1))
     (allow ARG1 port_irc_t (tcp_socket (name_connect))))
 
