@@ -269,6 +269,9 @@
 
 (call networkmgr_stream_connect (networkmgrcli_t))
 
+(optional networkmgrcli_optional_auth
+    (call auth_read_passwd_files (networkmgrcli_t)))
+
 (optional networkmgrcli_optional_session
     (call session_use_inherited_terminals (networkmgrcli_t)))
 
