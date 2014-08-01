@@ -1,7 +1,23 @@
+(typepermissive sctl_t)
+
+(roleattribute is_sctl_role)
+
 (typeattribute is_sysctl_admin_subject)
 
 (typeattribute is_sysctl_file_object)
 (typeattributeset is_sysctl_file_object (sysctl_conf_t sysctl_unit_t))
+
+(typeattribute is_sysctl_subject)
+(typeattributeset is_sysctl_subject (sd_sysctl_t sctl_t))
+
+(type sctl_t)
+(type sctl_exec_t)
+(call application_subject_entry (sctl_t sctl_exec_t))
+(roleattributeset is_sctl_role system_r)
+(roletype is_sctl_role sctl_t)
+
+(context file_sctl_exec (system_u object_r sctl_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/sysctl" file file_sctl_exec)
 
 (type sd_sysctl_t)
 (type sysctl_exec_t)
@@ -46,12 +62,19 @@
 (optional sd_sysctl_optional_udevd
     (call udevd_rw_inherited_udp_socket (sd_sysctl_t)))
 
-(allow is_sysctl_admin_subject sd_sysctl_t signal_perms)
-(call ps_subject_pattern (is_sysctl_admin_subject sd_sysctl_t))
+(allow is_sysctl_admin_subject is_sysctl_subject signal_perms)
+(call ps_subject_pattern (is_sysctl_admin_subject is_sysctl_subject))
 
 (allow is_sysctl_admin_subject sysctl_unit_t (service (all)))
 
 (call admin_pattern (is_sysctl_admin_subject is_sysctl_file_object))
+
+(macro sysctl_subtrans_sctl ((type ARG1))
+    (call subtrans_pattern (ARG1 sctl_exec_t sctl_t)))
+
+(macro sysctl_run_sctl ((type ARG1)(role ARG2))
+    (call sysctl_subtrans_sctl (ARG1))
+    (roleattributeset is_sctl_role (ARG2)))
 
 (macro sysctl_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 sysctl_exec_t sd_sysctl_t)))

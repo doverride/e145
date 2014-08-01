@@ -299,6 +299,9 @@
 (optional session_optional_systemctl
     (call systemd_run_systemctl (session_t session_r)))
 
+(optional session_optional_sysctl
+    (call sysctl_run_sctl (session_t session_r)))
+
 (optional session_optional_timedatectl
     (call timedated_run_timedatectl (session_t session_r)))
 
