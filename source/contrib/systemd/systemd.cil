@@ -61,12 +61,6 @@
 (typeattributeset is_systemd_daemon_subject (systemd_daemon_t))
 (roletype system_r systemd_daemon_t)
 
-(type bootchart_conf_t)
-(call files_etc_object (bootchart_conf_t)) ; belongs elsewhere
-
-(context file_bootchart_conf (system_u object_r bootchart_conf_t ((s0) (s0))))
-(filecon "/etc/systemd/bootchart\.conf" file file_bootchart_conf)
-
 (type systemd_dbus_conf_t)
 (call dbus_etc_object (systemd_dbus_conf_t))
 

@@ -98,5 +98,9 @@
     (call files_search_usr (ARG1))
     (allow ARG1 modules_dep_t read_file_perms))
 
+(macro kmod_relabel_modules_dep_files ((type ARG1))
+    (call files_search_usr (ARG1))
+    (allow ARG1 modules_dep_t relabel_file_perms))
+
 (macro kmod_admin ((type ARG1))
     (typeattributeset is_kmod_admin_subject ARG1))

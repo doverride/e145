@@ -1,0 +1,32 @@
+(typepermissive bootchart_t)
+
+(roleattribute is_bootchart_role)
+
+(type bootchart_t)
+(type bootchart_exec_t)
+(call application_subject_entry (bootchart_t bootchart_exec_t))
+(roleattributeset is_bootchart_role system_r)
+(roletype is_bootchart_role bootchart_t)
+
+(context file_bootchart_exec (system_u object_r bootchart_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-bootchart" file file_bootchart_exec)
+
+(type bootchart_conf_t)
+(call files_etc_object (bootchart_conf_t))
+
+(context file_bootchart_conf (system_u object_r bootchart_conf_t ((s0) (s0))))
+(filecon "/etc/systemd/bootchart\.conf" file file_bootchart_conf)
+
+(optional bootchart_optional_systemd
+    (call systemd_dynamic_subject_type_transition (bootchart_t)))
+
+(macro bootchart_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 bootchart_exec_t bootchart_t)))
+
+(macro bootchart_run ((type ARG1)(role ARG2))
+    (call bootchart_subtrans (ARG1))
+    (roleattributeset is_bootchart_role ARG2))
+
+(macro bootchart_read_config_files ((type ARG1))
+    (call systemd_search_config (ARG1))
+    (allow ARG1 bootchart_conf_t read_file_perms))

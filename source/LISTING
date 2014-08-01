@@ -64,6 +64,7 @@ contrib/wpa.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/backlight.cil
 contrib/systemd/binfmt.cil
+contrib/systemd/bootchart.cil
 contrib/systemd/busproxyd.cil
 contrib/systemd/cgagent.cil
 contrib/systemd/coredump.cil

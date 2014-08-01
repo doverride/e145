@@ -317,6 +317,9 @@
 (call selinux_get_filesystems_mount (system_t))
 (call selinux_list (system_t))
 
+(optional system_optional_bootchart
+    (call bootchart_subtrans (system_t)))
+
 (optional system_optional_cgroupagent
     (call cgagent_subtrans (system_t)))
 

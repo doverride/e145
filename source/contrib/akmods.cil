@@ -119,7 +119,9 @@
     (call miscfiles_relabel_module (akmods_t))
     (call miscfiles_read_terminfo_files (akmods_t))
     (call miscfiles_read_network_config_files (akmods_t))
-    (call miscfiles_read_localization_files (akmods_t)))
+    (call miscfiles_read_localization_files (akmods_t))
+    (optional akmods_optional_kmod
+        (call kmod_relabel_modules_dep_files (akmods_t))))
 
 (optional akmods_optional_journald
     (call journald_client_subject (akmods_t))) ; /usr/sbin/runuser
