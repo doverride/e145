@@ -397,6 +397,12 @@
 (filecon "/dev/vtx.*" char device_v4l)
 (filecon "/dev/winradio.*" char device_v4l)
 
+(type device_vhci_t)
+(call devices_object (device_vhci_t))
+
+(context device_vhci (system_u object_r device_vhci_t ((s0) (s0))))
+(filecon "/dev/vhci" char device_vhci)
+
 (type device_vhost_t)
 (call devices_object (device_vhost_t))
 
