@@ -121,7 +121,7 @@
     (call miscfiles_read_network_config_files (akmods_t))
     (call miscfiles_read_localization_files (akmods_t))
     (optional akmods_optional_kmod
-        (call kmod_read_modules_dep_files (akmods_t))
+        (call kmod_manage_modules_dep_files (akmods_t))
         (call kmod_relabel_modules_dep_files (akmods_t))))
 
 (optional akmods_optional_journald
