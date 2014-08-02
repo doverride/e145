@@ -160,6 +160,8 @@
 (optional setsebool_optional_miscfiles
     (call miscfiles_read_localization_files (setsebool_t)))
 
+(call files_dontaudit_list_all (setools_t)) ; catchall
+
 (call selinux_getattr_filesystems (setools_t))
 (call selinux_read_policy (setools_t))
 
