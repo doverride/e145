@@ -72,6 +72,10 @@
         (allow has_unconfined_access_to_selinux_assets
             secure_mode_policyload_t write_file_perms)))
 
+(optional selinux_optional_tmpfiles
+    (call tmpfiles_manageable_object_exception (security_t))
+    (call tmpfiles_relabelable_object_exception (security_t)))
+
 (allow has_unconfined_access_to_selinux_assets security_t (dirs (list)))
 (allow has_unconfined_access_to_selinux_assets security_t rw_file_perms)
 

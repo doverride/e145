@@ -323,7 +323,13 @@
 (optional session_optional_tmpfiles
     (call tmpfiles_run (session_t session_r))
     (call tmpfiles_manageable_object_exception (is_session_home_file_object))
-    (call tmpfiles_relabelable_object_exception (is_session_home_file_object)))
+    (call tmpfiles_relabelable_object_exception (is_session_home_file_object))
+    (call tmpfiles_manageable_object_exception (is_session_tmp_file_object))
+    (call tmpfiles_relabelable_object_exception (is_session_tmp_file_object))
+    (call tmpfiles_manageable_object_exception (is_session_tmpfs_file_object))
+    (call tmpfiles_relabelable_object_exception (is_session_tmpfs_file_object))
+    (call tmpfiles_manageable_object_exception (is_session_run_file_object))
+    (call tmpfiles_relabelable_object_exception (is_session_run_file_object)))
 
 (optional session_optional_auth
     (call auth_read_shadow_files (session_t))
