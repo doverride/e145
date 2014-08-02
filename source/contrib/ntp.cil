@@ -3,6 +3,7 @@
 (roleattribute is_ntp_role)
 
 (typeattribute is_ntp_admin_subject)
+(typeattribute is_ntp_client_subject)
 
 (typeattribute is_ntp_subject)
 (typeattributeset is_ntp_subject (ntp_t ntpd_t))
@@ -28,6 +29,7 @@
 (type ntp_t)
 (type ntp_exec_t)
 (call systemd_oneshot_subject_entry (ntp_t ntp_exec_t))
+(typeattributeset is_ntp_client_subject (ntp_t))
 (roletype is_ntp_role ntp_t)
 
 (context file_ntp_exec (system_u object_r ntp_exec_t ((s0)
@@ -142,6 +144,12 @@
 (optional ntpd_optional_miscfiles
     (call miscfiles_read_network_config_files (ntpd_t)))
 
+(optional ntp_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_ntp_client_subject)))
+
+(optional ntp_optional_session
+    (call session_use_inherited_terminals (ntp_t)))
+
 (allow is_ntp_admin_subject is_ntp_subject signal_perms)
 (call ps_subject_pattern (is_ntp_admin_subject is_ntp_subject))
 
@@ -150,7 +158,8 @@
 (call admin_pattern (is_ntp_admin_subject is_ntp_file_object))
 
 (macro ntp_exec ((type ARG1))
-    (call can_exec (ARG1 ntp_exec_t)))
+    (call can_exec (ARG1 ntp_exec_t))
+    (typeattributeset is_ntp_client_subject (ARG1)))
 
 (macro ntp_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 ntp_exec_t ntp_t)))
