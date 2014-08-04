@@ -1,0 +1,26 @@
+(typeattribute is_remountfs_admin_subject)
+
+(type remountfs_t)
+(type remountfs_exec_t)
+(call systemd_oneshot_subject_entry (remountfs_t remountfs_exec_t))
+
+(context file_remountfs_exec (system_u object_r remountfs_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-remount-fs" file file_remountfs_exec)
+
+(type remountfs_unit_t)
+(call systemd_unit_object (remountfs_unit_t))
+
+(context file_remountfs_unit (system_u object_r remountfs_unit_t
+    ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-remount-fs.*" file
+    file_remountfs_unit)
+
+(allow is_remountfs_admin_subject remountfs_t signal_perms)
+(call ps_subject_pattern (is_remountfs_admin_subject remountfs_t))
+
+(allow is_remountfs_admin_subject remountfs_unit_t (service (all)))
+
+(call admin_pattern (is_remountfs_admin_subject remountfs_unit_t))
+
+(macro remountfs_admin ((type ARG1))
+    (typeattributeset is_remountfs_admin_subject ARG1))

@@ -79,6 +79,7 @@ contrib/systemd/machined.cil
 contrib/systemd/modules.cil
 contrib/systemd/random.cil
 contrib/systemd/readahead.cil
+contrib/systemd/remountfs.cil
 contrib/systemd/rfkill.cil
 contrib/systemd/sessions.cil
 contrib/systemd/shutdownd.cil

@@ -76,6 +76,7 @@
 (call devices_relabel_all_nodes (tmpfiles_t))
 
 (call selinux_getattr_filesystems (tmpfiles_t))
+(call selinux_validate_context (tmpfiles_t)) ; not (yet) sure except that it rw security_t
 
 (optional tmpfiles_optional_journald
     (call journald_client_subject (tmpfiles_t))
