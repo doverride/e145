@@ -123,6 +123,9 @@
 (optional tuned_optional_miscfiles
     (call miscfiles_read_localization_files (tuned_t)))
 
+(optional tuned_optional_sysctl
+    (call sysctl_exec_sctl (tuned_t)))
+
 (optional tuned_optional_storage
     (call storage_getattr_fixed_disk_nodes (tuned_t))
     (call storage_getattr_scsi_generic_nodes (tuned_t)))

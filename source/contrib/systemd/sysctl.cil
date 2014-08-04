@@ -82,6 +82,9 @@
 
 (call admin_pattern (is_sysctl_admin_subject is_sysctl_file_object))
 
+(macro sysctl_exec_sctl ((type ARG1))
+    (call can_exec (ARG1 sctl_exec_t)))
+
 (macro sysctl_subtrans_sctl ((type ARG1))
     (call subtrans_pattern (ARG1 sctl_exec_t sctl_t)))
 
