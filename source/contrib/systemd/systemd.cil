@@ -235,6 +235,7 @@
 (call filesystem_list_autofs (systemd_t))
 (call filesystem_manage_cgroup_dirs (systemd_t))
 (call filesystem_mount_autofs_filesystems (systemd_t))
+(call filesystem_remount_filesystems (systemd_t))
 (call filesystem_remount_tmpfs_filesystems (systemd_t))
 (call filesystem_rw_cgroup_files (systemd_t))
 (call filesystem_read_generic_tmpfs_files (systemd_t))
