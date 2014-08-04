@@ -1,3 +1,5 @@
+(typepermissive remountfs_t)
+
 (typeattribute is_remountfs_admin_subject)
 
 (type remountfs_t)
