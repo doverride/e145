@@ -10,16 +10,16 @@
 (call application_subject_entry (is_git_subject git_exec_t))
 
 (context file_git_exec (system_u object_r git_exec_t ((s0)(s0))))
+(filecon "/usr/bin/git" file file_git_exec)
+(filecon "/usr/bin/git-receive-pack" file file_git_exec)
+(filecon "/usr/bin/git-upload-archive" file file_git_exec)
+(filecon "/usr/bin/git-upload-pack" file file_git_exec)
 (filecon "/usr/libexec/git-core(/.*)?" file file_git_exec)
 
 (type gitemail_exec_t)
 (call application_subject_entry (is_gitemail_subject gitemail_exec_t))
 
 (context file_gitemail_exec (system_u object_r gitemail_exec_t ((s0)(s0)))) ; hardlinks
-(filecon "/usr/bin/git" file file_gitemail_exec)
-(filecon "/usr/bin/git-receive-pack" file file_gitemail_exec)
-(filecon "/usr/bin/git-upload-archive" file file_gitemail_exec)
-(filecon "/usr/bin/git-upload-pack" file file_gitemail_exec)
 (filecon "/usr/libexec/git-core/git-send-email" file file_gitemail_exec)
 
 (type tig_exec_t)
