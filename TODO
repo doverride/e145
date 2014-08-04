@@ -1,3 +1,10 @@
+generators:
+    target them because else we have no way to make them generate the units with
+    their appropriate types
+
+fedora-readonly/fedora-autorelabel:
+    target these oneshots
+
 session:
     review whether session actually runs busproxyd, and askpwd directly
 
