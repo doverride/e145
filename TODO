@@ -1,3 +1,6 @@
+rpm: for some reason files get installed labeled with type file_t
+    i suspect that i really may need a role transition to system_r on rpm_exec_t
+
 systemd:
     on early boot systemd/tmpfiles.d create select object in /run with the wrong label
 
@@ -26,9 +29,6 @@ session:
 
     the fact that for example bus-proxyd is installed in /usr/lib/systemd makes me think
     that this command is not intended to be run directly from a user shell session
-
-/usr/sbin/sysctl:
-    add this to contrib/systemd/sysctl.cil (add a sctl_t subject type for it)
 
 various:
     clean up modules like seutil, nettools and other by grouping policy using "is_subject" attributes
