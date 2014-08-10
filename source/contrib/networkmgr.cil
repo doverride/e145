@@ -107,6 +107,8 @@
     (s0))))
 (filecon "/var/lib/NetworkManager(/.*)?" any file_networkmgr_var_lib)
 
+(call dbus_system_client_subject (is_networkmgr_subject))
+
 (allow networkmgr_t self (process (signal setpgid)))
 (allow networkmgr_t self (capability (net_admin net_raw)))
 (allow networkmgr_t self create_netlink_socket_perms)
@@ -152,7 +154,6 @@
 (call selinux_get_filesystems_mount (networkmgr_t))
 
 (call dbus_acquire_service_system (networkmgr_t))
-(call dbus_system_client_subject (networkmgr_t))
 
 (call networkmgr_list_config (networkmgr_t))
 (call networkmgr_read_config_files (networkmgr_t))
@@ -230,7 +231,6 @@
 (call filesystem_read_cgroup_files (networkmgr_disp_t))
 
 (call dbus_acquire_service_system (networkmgr_disp_t))
-(call dbus_system_client_subject (networkmgr_disp_t))
 
 (call networkmgr_dbus_chat (networkmgr_disp_t))
 
@@ -268,6 +268,7 @@
 (call selinux_getattr_filesystems (networkmgrcli_t))
 
 (call networkmgr_stream_connect (networkmgrcli_t))
+(call networkmgr_dbus_chat (networkmgrcli_t))
 
 (optional networkmgrcli_optional_auth
     (call auth_read_passwd_files (networkmgrcli_t)))
