@@ -19,6 +19,7 @@
 (filecon "/usr/libexec/iptables/ip6tables\.init" file file_iptables_exec)
 (filecon "/usr/libexec/iptables/iptables\.init" file file_iptables_exec)
 (filecon "/usr/bin/ebtables.*" file file_iptables_exec)
+(filecon "/usr/sbin/arptables.*" file file_iptables_exec)
 (filecon "/usr/sbin/xtables-multi" file file_iptables_exec)
 
 (type iptables_conf_t)
@@ -27,6 +28,7 @@
 (context file_iptables_conf (system_u object_r iptables_conf_t ((s0)
     (s0))))
 (filecon "/etc/ethertypes" file file_iptables_conf)
+(filecon "/etc/sysconfig/arptables.*" file file_iptables_conf)
 (filecon "/etc/sysconfig/ebtables.*" file file_iptables_conf)
 (filecon "/etc/sysconfig/iptables.*" file file_iptables_conf)
 (filecon "/etc/sysconfig/ip6tables.*" file file_iptables_conf)
@@ -46,6 +48,7 @@
 
 (context file_iptables_lock (system_u object_r iptables_lock_t ((s0)
     (s0))))
+(filecon "/run/lock/subsys/arptables" file file_iptables_lock)
 (filecon "/run/lock/subsys/ebtables" file file_iptables_lock)
 (filecon "/run/lock/subsys/iptables" file file_iptables_lock)
 (filecon "/run/lock/subsys/ip6tables" file file_iptables_lock)
@@ -55,6 +58,7 @@
 
 (context file_iptables_unit (system_u object_r iptables_unit_t ((s0)
     (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*arptables.*" file file_iptables_unit)
 (filecon "/usr/lib/systemd/system/[^/]*ebtables.*" file file_iptables_unit)
 (filecon "/usr/lib/systemd/system/[^/]*iptables.*" file file_iptables_unit)
 (filecon "/usr/lib/systemd/system/[^/]*ip6tables.*" file file_iptables_unit)
