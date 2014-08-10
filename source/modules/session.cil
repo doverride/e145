@@ -376,6 +376,18 @@
 
     (call session_application_subject (session_bti_t)))
 
+(optional session_optional_session_ffmpeg
+    (type session_ffmpeg_t)
+    (call ffmpeg_role_template (session_r session_t session_ffmpeg_t))
+
+    (call session_manage_generic_home_content_files (session_ffmpeg_t))
+    (call session_home_dir_filetrans_session_home (session_ffmpeg_t file "*"))
+
+    (call session_manage_generic_tmp_files (session_ffmpeg_t))
+    (call session_tmp_filetrans_generic_tmp (session_ffmpeg_t file "*"))
+
+    (call session_application_subject (session_ffmpeg_t)))
+
 (optional session_optional_session_rtorrent
     (type session_rtorrent_t)
     (call bt_role_template_rtorrent (session_r session_t session_rtorrent_t

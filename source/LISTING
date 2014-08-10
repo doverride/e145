@@ -23,6 +23,7 @@ contrib/dm.cil
 contrib/dmesg.cil
 contrib/dns.cil
 contrib/emacs.cil
+contrib/ffmpeg.cil
 contrib/fstools.cil
 contrib/getty.cil
 contrib/git.cil

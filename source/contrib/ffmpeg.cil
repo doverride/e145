@@ -1,0 +1,19 @@
+(roleattribute is_ffmpeg_role)
+
+(typeattribute is_ffmpeg_subject)
+
+(type ffmpeg_exec_t)
+(call application_subject_entry (is_ffmpeg_subject ffmpeg_exec_t))
+
+(context file_ffmpeg_exec (system_u object_r ffmpeg_exec_t ((s0)(s0))))
+(filecon "/usr/bin/ffmpeg" file file_ffmpeg_exec)
+(filecon "/usr/bin/ffplay" file file_ffmpeg_exec)
+(filecon "/usr/bin/ffprobe" file file_ffmpeg_exec)
+(filecon "/usr/bin/ffserver" file file_ffmpeg_exec)
+(filecon "/usr/bin/qt-faststart" file file_ffmpeg_exec)
+
+(macro ffmpeg_role_template ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_ffmpeg_role ARG1)
+    (typeattributeset is_ffmpeg_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ffmpeg_exec_t ARG3)))
