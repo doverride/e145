@@ -1,3 +1,5 @@
+(typepermissive autorelabel_t)
+
 (typeattribute is_autorelabel_admin_subject)
 
 (typeattribute is_autorelabel_file_object)
