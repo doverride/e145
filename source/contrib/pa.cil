@@ -68,54 +68,64 @@
     (s0))))
 (filecon "/var/lib/pulse(/.*)?" any file_pa_var_lib)
 
-(allow is_pa_session_or_pa_client_subject self (process (setcap setsched setrlimit)))
-(allow is_pa_session_or_pa_client_subject self (unix_stream_socket (listen accept)))
-(allow is_pa_session_or_pa_client_subject self create_netlink_kobject_uevent_socket_perms)
-(allow is_pa_session_or_pa_client_subject self rw_fifo_file_perms)
+(allow is_pa_session_subject self (process (setcap setsched setrlimit)))
+(allow is_pa_session_subject self (unix_stream_socket (listen accept)))
+(allow is_pa_session_subject self create_netlink_kobject_uevent_socket_perms)
+(allow is_pa_session_subject self rw_fifo_file_perms)
 
-(call can_exec (is_pa_session_or_pa_client_subject pa_exec_t))
+(allow is_pa_session_subject is_pa_client_subject (process (signull)))
 
-(call system_getattr_proc_filesystems (is_pa_session_or_pa_client_subject))
-(call system_list_proc (is_pa_session_or_pa_client_subject))
-(call system_read_generic_proc_files (is_pa_session_or_pa_client_subject))
+(call can_exec (is_pa_session_subject pa_exec_t))
 
-(call devices_list (is_pa_session_or_pa_client_subject))
-(call devices_rw_sound (is_pa_session_or_pa_client_subject))
-(call devices_read_urandom (is_pa_session_or_pa_client_subject))
+(call system_getattr_proc_filesystems (is_pa_session_subject))
+(call system_list_proc (is_pa_session_subject))
+(call system_read_generic_proc_files (is_pa_session_subject))
+
+(call devices_list (is_pa_session_subject))
+(call devices_rw_sound (is_pa_session_subject))
+
+(call files_read_generic_usr_files (is_pa_session_subject))
+
+(call dbus_system_client_subject (is_pa_session_subject))
+
+(optional pa_session_optional_journald
+    (call journald_client_subject (is_pa_session_subject)))
+
+(optional pa_session_optional_logind
+    (call logind_list_run (is_pa_session_subject))
+    (call logind_read_run_files (is_pa_session_subject)))
+
+(optional pa_session_optional_miscfiles
+    (call miscfiles_read_localization_files (is_pa_session_subject)))
+
+(optional pa_session_optional_rtkitd
+    (call rtkit_client_subject (is_pa_session_subject))
+    (call rtkit_dbus_chat_rtkitd (is_pa_session_subject)))
+
+(optional pa_session_optional_udevd
+    (call udevd_read_config_files (is_pa_session_subject))
+    (call udevd_read_run_files (is_pa_session_subject)))
+
 (call devices_list_sysfs (is_pa_session_or_pa_client_subject))
 (call devices_read_sysfs_files (is_pa_session_or_pa_client_subject))
-
-(call files_read_generic_usr_files (is_pa_session_or_pa_client_subject))
+(call devices_read_urandom (is_pa_session_or_pa_client_subject))
 
 (call filesystem_getattr_tmpfs_filesystems (is_pa_session_or_pa_client_subject))
 
-(call dbus_system_client_subject (is_pa_session_or_pa_client_subject))
-
 (call pa_read_config_files (is_pa_session_or_pa_client_subject))
 
-(optional pa_session_or_client_optional_alsa
+(optional pa_session_or_pa_client_subject_optional_alsa
     (call alsa_read_config_files (is_pa_session_or_pa_client_subject)))
 
-(optional pa_session_or_client_optional_journald
-    (call journald_client_subject (is_pa_session_or_pa_client_subject)))
-
-(optional pa_session_or_client_optional_logind
-    (call logind_list_run (is_pa_session_or_pa_client_subject))
-    (call logind_read_run_files (is_pa_session_or_pa_client_subject)))
-
-(optional pa_session_or_client_optional_machined
+(optional pa_session_or_pa_client_optional_machined
     (call machined_read_config_files (is_pa_session_or_pa_client_subject)))
 
-(optional pa_session_or_client_optional_miscfiles
-    (call miscfiles_read_localization_files (is_pa_session_or_pa_client_subject)))
+(allow is_pa_client_subject self (process (getsched)))
+(allow is_pa_client_subject self rw_fifo_file_perms)
 
-(optional pa_session_or_client_optional_rtkitd
-    (call rtkit_client_subject (is_pa_session_or_pa_client_subject))
-    (call rtkit_dbus_chat_rtkitd (is_pa_session_or_pa_client_subject)))
+(allow is_pa_client_subject is_pa_client_subject (process (signull)))
 
-(optional pa_session_or_client_optional_udevd
-    (call udevd_read_config_files (is_pa_session_or_pa_client_subject))
-    (call udevd_read_run_files (is_pa_session_or_pa_client_subject)))
+(allow is_pa_client_subject is_pa_session_subject (process (signull)))
 
 (allow is_pa_admin_subject is_pa_subject signal_perms)
 (call ps_subject_pattern (is_pa_admin_subject is_pa_subject))
@@ -150,7 +160,8 @@
 (macro pa_client_subject ((role ARG1)(type ARG2)(type ARG3)(type
         ARG4)(type ARG5)(type ARG6))
     (roleattributeset is_pa_role ARG1)
-    (typeattributeset is_pa_client_subject ARG3)
+    (typeattributeset is_pa_client_subject ARG2)
+    (typeattributeset is_pa_session_subject ARG3)
     (typeattributeset is_pa_tmpfs_file_object ARG4)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 pa_exec_t ARG3))
@@ -162,15 +173,7 @@
     (call session_run_user_dir_filetrans (ARG2 ARG5 dir "pulse"))
     (allow ARG2 ARG6 manage_file_perms)
     (call filesystem_tmpfs_filetrans (ARG2 ARG6 file "*"))
-    (allow ARG2 self (process (signull)))
-    (allow ARG2 self create_unix_stream_socket_perms)
-    (allow ARG3 ARG2 (process (signull)))
-    (allow ARG2 ARG3 (process (signull)))
-    (call filesystem_getattr_tmpfs_filesystems (ARG2))
-    (call devices_read_urandom (ARG2))
-    (call pa_read_config_files (ARG2))
-        (optional pa_client_subject_optional_alsa
-            (call alsa_read_config_files (ARG2))))
+    (call stream_connect_pattern (ARG2 ARG5 ARG5 ARG3)))
 
 (macro pa_list_config ((type ARG1))
     (call files_search_etc (ARG1))

@@ -8,16 +8,11 @@
 (context file_moc_exec (system_u object_r moc_exec_t ((s0)(s0))))
 (filecon "/usr/bin/mocp" file file_moc_exec)
 
-(allow is_moc_subject self (process (getsched)))
-(allow is_moc_subject self (unix_stream_socket (listen accept)))
+(allow is_moc_subject self (unix_stream_socket (listen accept connectto)))
 (allow is_moc_subject self create_unix_dgram_socket_perms)
-(allow is_moc_subject self (unix_stream_socket (connectto)))
-(allow is_moc_subject self rw_fifo_file_perms)
 
 (call system_read_generic_proc_files (is_moc_subject))
 (call system_read_sysctl_vm_overcommit_files (is_moc_subject))
-
-(call devices_read_sysfs_files (is_moc_subject))
 
 (call files_dontaudit_list_all (is_moc_subject)) ; catchall
 (call files_search_tmp (is_moc_subject)) ; gets attributes of /var/tmp
@@ -30,9 +25,6 @@
 
 (optional moc_optional_auth
     (call auth_nsswitch_client_subject (is_moc_subject)))
-
-(optional moc_optional_machined
-    (call machined_read_config_files (is_moc_subject)))
 
 (optional moc_optional_miscfiles
     (call miscfiles_read_network_config_files (is_moc_subject))

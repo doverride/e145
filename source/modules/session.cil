@@ -386,7 +386,11 @@
     (call session_manage_generic_tmp_files (session_ffmpeg_t))
     (call session_tmp_filetrans_generic_tmp (session_ffmpeg_t file "*"))
 
-    (call session_application_subject (session_ffmpeg_t)))
+    (call session_application_subject (session_ffmpeg_t))
+
+    (optional session_ffmpeg_optional_session_pa
+        (call pa_client_subject (session_r session_ffmpeg_t session_pa_t session_pa_home_t
+            session_pa_run_t session_pa_tmpfs_t))))
 
 (optional session_optional_session_rtorrent
     (type session_rtorrent_t)
@@ -892,8 +896,6 @@
     (call session_read_generic_home_content_files (session_moc_t))
 
     (call session_home_dir_filetrans (session_t session_moc_home_t dir ".moc")) 
-
-    (call stream_connect_pattern (session_moc_t session_pa_run_t session_pa_run_t session_pa_t))
 
     (optional session_moc_optional_session_pa
         (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t

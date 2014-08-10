@@ -12,6 +12,8 @@
 (filecon "/usr/bin/ffserver" file file_ffmpeg_exec)
 (filecon "/usr/bin/qt-faststart" file file_ffmpeg_exec)
 
+(call selinux_getattr_filesystems (is_ffmpeg_subject))
+
 (macro ffmpeg_role_template ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_ffmpeg_role ARG1)
     (typeattributeset is_ffmpeg_subject ARG3)
