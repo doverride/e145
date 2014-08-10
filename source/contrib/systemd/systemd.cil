@@ -11,6 +11,7 @@
 
 (typeattribute is_systemd_daemon_subject)
 (typeattribute is_systemd_oneshot_subject)
+(typeattribute is_systemd_generator_subject)
 
 (typeattribute is_systemd_admin_subject)
 
@@ -135,6 +136,9 @@
 
 (call subject_common_subject
     (is_systemd_daemon_or_systemd_oneshot_subject))
+
+(call subject_common_subject
+    (is_systemd_generator_subject))
 
 (call files_object (is_systemd_unit_file_object))
 
@@ -450,6 +454,12 @@
 (macro systemd_oneshot_subject_entry ((type ARG1) (type ARG2))
     (call subject_entry (ARG1 ARG2))
     (typeattributeset is_systemd_oneshot_subject ARG1)
+    (roletype system_r ARG1)
+    (call subtrans_pattern (systemd_t ARG2 ARG1)))
+
+(macro systemd_generator_subject_entry ((type ARG1) (type ARG2))
+    (call subject_entry (ARG1 ARG2))
+    (typeattributeset is_systemd_generator_subject ARG1)
     (roletype system_r ARG1)
     (call subtrans_pattern (systemd_t ARG2 ARG1)))
 

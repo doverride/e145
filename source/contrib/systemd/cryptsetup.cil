@@ -1,4 +1,9 @@
+(typepermissive cryptsetup_generator_t)
+
 (typeattribute is_cryptsetup_admin_subject)
+
+(typeattribute is_cryptsetup_subject)
+(typeattributeset is_cryptsetup_subject (cryptsetup_t cryptsetup_generator_t))
 
 (type cryptsetup_t)
 (type cryptsetup_exec_t)
@@ -12,6 +17,16 @@
 
 (context file_cryptsetup_unit (system_u object_r cryptsetup_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*cryptsetup.*" file file_cryptsetup_unit)
+
+(type cryptsetup_generator_t)
+(type cryptsetup_generator_exec_t)
+(call systemd_generator_subject_entry (cryptsetup_generator_t
+    cryptsetup_generator_exec_t))
+
+(context file_cryptsetup_generator_exec (system_u object_r cryptsetup_generator_exec_t
+    ((s0) (s0))))
+(filecon "/usr/lib/systemd/system-generators/systemd-cryptsetup-generator" file
+    file_cryptsetup_generator_exec)
 
 (allow cryptsetup_t self (capability (net_admin sys_admin ipc_lock)))
 (allow cryptsetup_t self create_sem_perms)
@@ -44,8 +59,8 @@
     (call udevd_read_config_files (cryptsetup_t))
     (call udevd_read_run_files (cryptsetup_t)))
 
-(allow is_cryptsetup_admin_subject cryptsetup_t signal_perms)
-(call ps_subject_pattern (is_cryptsetup_admin_subject cryptsetup_t))
+(allow is_cryptsetup_admin_subject is_cryptsetup_subject signal_perms)
+(call ps_subject_pattern (is_cryptsetup_admin_subject is_cryptsetup_subject))
 
 (allow is_cryptsetup_admin_subject cryptsetup_unit_t (service (all)))
 
