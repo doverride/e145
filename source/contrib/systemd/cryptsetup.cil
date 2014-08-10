@@ -59,6 +59,9 @@
     (call udevd_read_config_files (cryptsetup_t))
     (call udevd_read_run_files (cryptsetup_t)))
 
+(allow cryptsetup_generator_t cryptsetup_unit_t manage_file_perms)
+(call systemd_unit_filetrans (cryptsetup_generator_t cryptsetup_unit_t file "*"))
+
 (allow is_cryptsetup_admin_subject is_cryptsetup_subject signal_perms)
 (call ps_subject_pattern (is_cryptsetup_admin_subject is_cryptsetup_subject))
 

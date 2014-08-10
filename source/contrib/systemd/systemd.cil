@@ -569,6 +569,10 @@
     (optional systemd_search_generic_unit_optional_libraries
         (call libraries_search (ARG1))))
 
+(macro systemd_unit_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
+    (call systemd_search_generic_unit (ARG1))
+    (call filetrans_pattern (ARG1 systemd_unit_t ARG2 ARG3 ARG4)))
+
 (macro systemd_getattr_unix_stream_socket ((type ARG1))
     (allow ARG1 systemd_t (unix_stream_socket (getattr))))
 
