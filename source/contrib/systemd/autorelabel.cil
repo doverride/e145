@@ -1,0 +1,45 @@
+(typeattribute is_autorelabel_admin_subject)
+
+(typeattribute is_autorelabel_file_object)
+(typeattributeset is_autorelabel_file_object (autorelabel_flag_t
+    autorelabel_unit_t))
+
+(type autorelabel_t)
+(type autorelabel_exec_t)
+(call systemd_oneshot_subject_entry (autorelabel_t autorelabel_exec_t))
+
+(context file_autorelabel_exec (system_u object_r autorelabel_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/fedora-autorelabel" file file_autorelabel_exec)
+
+(type autorelabel_flag_t)
+(call files_object (autorelabel_flag_t))
+
+(context file_autorelabel_flag (system_u object_r autorelabel_flag_t ((s0) (s0))))
+(filecon "/\.autorelabel" file file_autorelabel_flag)
+
+(type autorelabel_unit_t)
+(call systemd_unit_object (autorelabel_unit_t))
+
+(context file_autorelabel_unit (system_u object_r autorelabel_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*fedora-autorelabel.*" file
+    file_autorelabel_unit)
+
+(optional autorelabel_optional_seutil
+    (call seutil_subtrans_setfiles (autorelabel_t)))
+
+(allow is_autorelabel_admin_subject autorelabel_t signal_perms)
+(call ps_subject_pattern (is_autorelabel_admin_subject autorelabel_t))
+
+(allow is_autorelabel_admin_subject autorelabel_unit_t (service (all)))
+
+(call admin_pattern (is_autorelabel_admin_subject is_autorelabel_file_object))
+
+(macro autorelabel_manage_flag_files ((type ARG1))
+    (call files_rw_root_dirs (ARG1))
+    (allow ARG1 autorelabel_flag_t manage_file_perms))
+
+(macro autorelabel_root_filetrans_autorelabel_flag_files ((type ARG1))
+    (call files_root_filetrans (ARG1 autorelabel_flag_t file ".autorelabel")))
+
+(macro autorelabel_admin ((type ARG1))
+    (typeattributeset is_autorelabel_admin_subject ARG1))

@@ -62,6 +62,7 @@ contrib/tune.cil
 contrib/upower.cil
 contrib/wpa.cil
 contrib/systemd/askpwd.cil
+contrib/systemd/autorelabel.cil
 contrib/systemd/backlight.cil
 contrib/systemd/binfmt.cil
 contrib/systemd/bootchart.cil

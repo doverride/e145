@@ -85,6 +85,9 @@
 (optional unconfined_subject_optional_auth
     (call auth_unconfined (is_unconfined_subject)))
 
+(optional unconfined_subject_optional_autorelabel
+    (call autorelabel_root_filetrans_autorelabel_flag_files (is_unconfined_subject)))
+
 (optional unconfined_subject_optional_dns
     (call dns_etc_filetrans_resolv_conf_files (is_unconfined_subject)))
 
