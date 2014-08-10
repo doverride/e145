@@ -115,6 +115,7 @@
     (call miscfiles_read_terminfo_files (journalctl_t)))
 
 (optional journalctl_optional_session
+    (call session_execute_bin_files (journalctl_t)) ; it traverses ~/.local/bin
     (call session_read_generic_home_content_files (journalctl_t)) ; ~/.lesshst
     (call session_use_inherited_terminals (journalctl_t)))
 
