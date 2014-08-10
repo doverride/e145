@@ -199,6 +199,10 @@
     (call audit_run_augenrules (session_t session_r))
     (call audit_run_ausearch (session_t session_r)))
 
+(optional session_optional_autorelabel
+    (call autorelabel_manage_flag_files (session_t))
+    (call autorelabel_root_filetrans_autorelabel_flag_files (session_t)))
+
 (optional session_optional_alsactl
     (call alsa_run_alsactl (session_t session_r)))
 
