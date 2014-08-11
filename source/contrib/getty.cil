@@ -1,4 +1,9 @@
+(typepermissive getty_generator_t)
+
 (typeattribute is_getty_admin_subject)
+
+(typeattribute is_getty_subject)
+(typeattributeset is_getty_subject (getty_t getty_generator_t))
 
 (type getty_t)
 (type getty_exec_t)
@@ -15,6 +20,16 @@
 
 (allow getty_t self (capability (chown fsetid sys_tty_config sys_admin)))
 (allow getty_t self create_unix_stream_socket_perms)
+
+(type getty_generator_t)
+(type getty_generator_exec_t)
+(call systemd_generator_subject_entry (getty_generator_t
+    getty_generator_exec_t))
+
+(context file_getty_generator_exec (system_u object_r getty_generator_exec_t
+    ((s0) (s0))))
+(filecon "/usr/lib/systemd/system-generators/systemd-getty-generator" file
+    file_getty_generator_exec)
 
 (call system_read_generic_proc_files (getty_t))
 
@@ -46,8 +61,8 @@
 (optional getty_optional_utmp
     (call utmp_rw_run_files (getty_t)))
 
-(allow is_getty_admin_subject getty_t signal_perms)
-(call ps_subject_pattern (is_getty_admin_subject getty_t))
+(allow is_getty_admin_subject is_getty_subject signal_perms)
+(call ps_subject_pattern (is_getty_admin_subject is_getty_subject))
 
 (call admin_pattern (is_getty_admin_subject getty_unit_t))
 (allow is_getty_admin_subject getty_unit_t (service (all)))
