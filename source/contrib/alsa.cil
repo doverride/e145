@@ -53,6 +53,7 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*alsa-state.*" file file_alsa_unit)
 (filecon "/usr/lib/systemd/system/[^/]*alsa-restore.*" file file_alsa_unit)
+(filecon "/usr/lib/systemd/system/[^/]*alsa-store.*" file file_alsa_unit)
 
 (allow alsactl_t self (process (getsched setsched signal)))
 

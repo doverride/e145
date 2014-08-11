@@ -4,6 +4,12 @@
 
 (typeattribute is_lib_or_textrel_shlib_file_object)
 
+(typeattribute is_libraries_admin_subject)
+
+(typeattribute is_libraries_file_object)
+(typeattributeset is_libraries_file_object (ldconfig_unit_t ldconfig_cache_t
+    ld_so_cache_t ld_so_t lib_t textrel_shlib_t))
+
 (type ldconfig_t)
 (type ldconfig_exec_t)
 (call systemd_oneshot_subject_entry (ldconfig_t ldconfig_exec_t))
@@ -11,6 +17,13 @@
 
 (context file_ldconfig_exec (system_u object_r ldconfig_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/ldconfig" file file_ldconfig_exec)
+
+(type ldconfig_unit_t)
+(call systemd_unit_object (ldconfig_unit_t))
+
+(context file_ldconfig_unit (system_u object_r ldconfig_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*ldconfig.*" file file_ldconfig_unit)
 
 (type ldconfig_cache_t)
 (call files_var_cache_object (ldconfig_cache_t))
@@ -61,6 +74,13 @@
 (optional ldconfig_optional_miscfiles
     (call miscfiles_read_localization_files (ldconfig_t)))
 
+(allow is_libraries_admin_subject ldconfig_t signal_perms)
+(call ps_subject_pattern (is_libraries_admin_subject ldconfig_t))
+
+(allow is_libraries_admin_subject ldconfig_unit_t (service (all)))
+
+(call admin_pattern (is_libraries_admin_subject is_libraries_file_object))
+
 (macro libraries_list ((type ARG1))
     (call files_search_usr (ARG1))
     (allow ARG1 lib_t (dirs (list))))
@@ -102,3 +122,6 @@
 
 (macro libraries_exec_ldconfig ((type ARG1))
     (call can_exec (ARG1 ldconfig_exec_t)))
+
+(macro libraries_admin ((type ARG1))
+    (typeattributeset is_libraries_admin_subject ARG1))
