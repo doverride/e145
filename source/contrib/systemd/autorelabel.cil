@@ -26,7 +26,32 @@
 (filecon "/usr/lib/systemd/system/[^/]*fedora-autorelabel.*" file
     file_autorelabel_unit)
 
+(allow autorelabel_t self (capability (dac_override)))
+(allow autorelabel_t self (process (getsched)))
+(allow autorelabel_t self rw_fifo_file_perms)
+
+(call commands_execute_bin_files (autorelabel_t)) ; /bin/cat /.autorelabel
+(call commands_execute_shell_files (autorelabel_t))
+
+(call files_list_root (autorelabel_t))
+(call files_getattr_all_tmp_files (autorelabel_t))
+(call files_list_all_tmp (autorelabel_t))
+
+(call terminal_use_inherited_console_nodes (autorelabel_t))
+
+(call selinux_get_enforce_mode (autorelabel_t))
+(call selinux_getattr_filesystems (autorelabel_t))
+
+(call autorelabel_manage_flag_files (autorelabel_t))
+
+(call systemd_exec_systemctl (autorelabel_t))
+
+(optional autorelabel_optional_miscfiles
+    (call miscfiles_read_localization_files (autorelabel_t)))
+
 (optional autorelabel_optional_seutil
+    (call seutil_audit_access_load_policy_executable_files (autorelabel_t))
+    (call seutil_read_config_files (autorelabel_t))
     (call seutil_subtrans_setfiles (autorelabel_t)))
 
 (allow is_autorelabel_admin_subject autorelabel_t signal_perms)

@@ -460,6 +460,12 @@
 (macro files_list_tmp ((type ARG1))
     (call list_dirs_pattern (ARG1 var_t tmp_t)))
 
+(macro files_getattr_all_tmp_files ((type ARG1))
+    (allow ARG1 is_tmp_file_object (file (getattr))))
+
+(macro files_list_all_tmp ((type ARG1))
+    (call list_dirs_pattern (ARG1 var_t is_tmp_file_object)))
+
 (macro files_search_tmp ((type ARG1))
     (call search_dirs_pattern (ARG1 var_t tmp_t)))
 

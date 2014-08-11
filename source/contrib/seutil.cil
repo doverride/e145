@@ -219,6 +219,9 @@
 
 (allow has_unconfined_access_to_seutil_assets self (context (all)))
 
+(macro seutil_audit_access_load_policy_executable_files ((type ARG1))
+    (dontaudit ARG1 load_policy_exec_t (file (audit_access))))
+
 (macro seutil_subtrans_load_policy ((type ARG1))
     (call subtrans_pattern (ARG1 load_policy_exec_t load_policy_t)))
 

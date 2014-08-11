@@ -424,6 +424,9 @@
     (call shutdownd_sigchld_shutdown (is_systemd_daemon_or_systemd_oneshot_subject)))
 
 (call system_use_fd (is_systemd_generator_subject))
+(call system_read_generic_proc_files (is_systemd_generator_subject))
+
+(call selinux_getattr_filesystems (is_systemd_generator_subject))
 
 (allow is_systemd_admin_subject is_systemd_subject signal_perms)
 (call ps_subject_pattern (is_systemd_admin_subject is_systemd_subject))

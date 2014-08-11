@@ -309,6 +309,7 @@
 (call devices_manage_generic_blk_files (system_t))
 (call devices_manage_generic_chr_files (system_t))
 
+(call files_read_generic_usr_files (system_t)) ; plymouthd -> details.plymouth
 (call files_mounton_all_rootfs_mnt_dirs (system_t))
 
 (call filesystem_list_tmpfs (system_t)) ; /run/initramfs

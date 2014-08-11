@@ -85,7 +85,7 @@
 (filecon "/home/joe" dir file_session_home_dir)
 
 (type session_run_user_dir_t)
-(call files_object (session_run_user_dir_t))
+(call files_mnt_object (session_run_user_dir_t))
 
 (context file_session_run_user_dir (session_u object_r session_run_user_dir_t ((s0)
     mls_systemhigh)))
