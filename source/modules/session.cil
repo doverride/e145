@@ -13,6 +13,7 @@
 (role session_r)
 (call object_userrole (session_u))
 (userrole session_u session_r)
+(userrole session_u system_r)
 (userlevel session_u (s0))
 (userrange session_u ((s0) systemhigh))
 
@@ -342,6 +343,7 @@
 
 (optional session_optional_rpm
     ; temporary hack to see if this fixes "file_t" rpm issue
+    (call subject_system_change_exemption (session_t))
     (roletransition session_r rpm_exec_t process system_r)
     (roleallow session_r system_r)
 
