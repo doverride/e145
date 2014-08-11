@@ -1,0 +1,46 @@
+(typepermissive busproxyd_t)
+(typepermissive socketproxyd_t)
+
+(roleattribute is_proxyd_role)
+
+(typeattribute is_proxyd_admin_subject)
+
+(type busproxyd_t)
+(type busproxyd_exec_t)
+(call application_subject_entry (busproxyd_t busproxyd_exec_t))
+(roletype is_proxyd_role busproxyd_t)
+
+(context file_busproxyd_exec (system_u object_r busproxyd_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-bus-proxyd" file file_busproxyd_exec)
+
+(type socketproxyd_t)
+(type socketproxyd_exec_t)
+(call systemd_daemon_subject_entry (socketproxyd_t socketproxyd_exec_t))
+
+(context file_socketproxyd_exec (system_u object_r socketproxyd_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/systemd-socket-proxyd" file file_socketproxyd_exec)
+
+(call systemd_socket_activated_subject (socketproxyd_t socketproxyd_run_t))
+
+(type socketproxyd_run_t)
+(call files_run_object (socketproxyd_run_t))
+
+(allow socketproxyd_t socketproxyd_run_t manage_sock_file_perms)
+(allow socketproxyd_t socketproxyd_run_t manage_fifo_file_perms)
+(call files_run_filetrans (socketproxyd_t socketproxyd_run_t sock_file "*"))
+(call files_run_filetrans (socketproxyd_t socketproxyd_run_t fifo_file "*"))
+
+(allow is_proxyd_admin_subject socketproxyd_t signal_perms)
+(call ps_subject_pattern (is_proxyd_admin_subject socketproxyd_t))
+
+(call admin_pattern (is_proxyd_admin_subject socketproxyd_run_t))
+
+(macro proxyd_subtrans_busproxyd ((type ARG1))
+    (call subtrans_pattern (ARG1 busproxyd_exec_t busproxyd_t)))
+
+(macro proxyd_run_busproxyd ((type ARG1)(role ARG2))
+    (call proxyd_subtrans_busproxyd (ARG1))
+    (roleattributeset is_proxyd_role (ARG2)))
+
+(macro proxyd_admin ((type ARG1))
+    (typeattributeset is_proxyd_admin_subject ARG1))

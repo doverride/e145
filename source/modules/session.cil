@@ -221,9 +221,6 @@
     (call bootloader_run_grub (session_t session_r))
     (call bootloader_run_grubby (session_t session_r)))
 
-(optional session_optional_busproxyd
-    (call busproxyd_run (session_t session_r)))
-
 (optional session_optional_coredump
     (call coredump_run_coredumpctl (session_t session_r)))
 
