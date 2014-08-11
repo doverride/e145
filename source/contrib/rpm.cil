@@ -12,6 +12,7 @@
 (type rpm_t)
 (type rpm_exec_t)
 (call application_subject_entry (rpm_t rpm_exec_t))
+(roleattributeset is_rpm_role system_r)
 (roletype is_rpm_role rpm_t)
 
 (context file_rpm_exec (system_u object_r rpm_exec_t ((s0)
