@@ -1,6 +1,10 @@
 (typepermissive updated_t)
+(typepermissive updated_generator_t)
 
 (typeattribute is_updated_admin_subject)
+
+(typeattribute is_updated_subject)
+(typeattributeset is_updated_subject (updated_t updated_generator_t))
 
 (typeattribute is_updated_file_object)
 (typeattributeset is_updated_file_object (update_done_t
@@ -27,6 +31,16 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-update-done.*" file
     file_updated_unit)
 
+(type updated_generator_t)
+(type updated_generator_exec_t)
+(call systemd_generator_subject_entry (updated_generator_t
+    updated_generator_exec_t))
+
+(context file_updated_generator_exec (system_u object_r updated_generator_exec_t
+    ((s0) (s0))))
+(filecon "/usr/lib/systemd/system-generators/systemd-system-update-generator" file
+    file_updated_generator_exec)
+
 (allow updated_t self (capability (net_admin)))
 
 (allow updated_t update_done_t manage_file_perms)
@@ -44,8 +58,8 @@
     (call seutil_read_config_files (updated_t))
     (call seutil_read_file_context_files (updated_t)))
 
-(allow is_updated_admin_subject updated_t signal_perms)
-(call ps_subject_pattern (is_updated_admin_subject updated_t))
+(allow is_updated_admin_subject is_updated_subject signal_perms)
+(call ps_subject_pattern (is_updated_admin_subject is_updated_subject))
 
 (allow is_updated_admin_subject updated_unit_t (service (all)))
 
