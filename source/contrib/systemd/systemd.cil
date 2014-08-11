@@ -594,6 +594,12 @@
 (macro systemd_getattr_generic_unit_dirs ((type ARG1))
     (allow ARG1 systemd_unit_t (dir (getattr))))
 
+(macro systemd_create_generic_unit_dirs ((type ARG1))
+    (call create_dirs_pattern (ARG1 systemd_unit_t systemd_unit_t)))
+
+(macro systemd_create_generic_unit_symlinks ((type ARG1))
+    (call create_lnk_files_pattern (ARG1 systemd_unit_t systemd_unit_t)))
+
 (macro systemd_search_config ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 systemd_conf_t (dirs (search))))

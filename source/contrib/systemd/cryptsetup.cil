@@ -41,8 +41,6 @@
 (call devices_read_urandom (cryptsetup_t))
 (call devices_rw_lvm_control (cryptsetup_t))
 
-(call files_search_etc (cryptsetup_t))
-
 (call selinux_getattr_filesystems (cryptsetup_t))
 
 (optional cryptsetup_optional_journald
@@ -58,6 +56,13 @@
 (optional cryptsetop_optional_udevd
     (call udevd_read_config_files (cryptsetup_t))
     (call udevd_read_run_files (cryptsetup_t)))
+
+(allow cryptsetup_generator_t self (process (setfscreate)))
+
+(call files_read_generic_etc_files (cryptsetup_generator_t)) ; /etc/crypttab
+
+(call systemd_create_generic_unit_dirs (cryptsetup_generator_t))
+(call systemd_create_generic_unit_symlinks (cryptsetup_generator_t))
 
 (allow cryptsetup_generator_t cryptsetup_unit_t manage_file_perms)
 (call systemd_unit_filetrans (cryptsetup_generator_t cryptsetup_unit_t file "*"))
