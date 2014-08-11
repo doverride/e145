@@ -341,6 +341,10 @@
     (call auth_run_chkpwd (session_t session_r)))
 
 (optional session_optional_rpm
+    ; temporary hack to see if this fixes "file_t" rpm issue
+    (roletransition session_r rpm_exec_t process system_r)
+    (roleallow session_r system_r)
+
     (call rpm_run (session_t session_r)))
 
 (optional session_optional_seutil
