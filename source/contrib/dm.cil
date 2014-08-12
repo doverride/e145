@@ -96,7 +96,8 @@
     (call miscfiles_read_localization_files (dmcrypt_t)))
 
 (optional dmcrypt_optional_storage
-    (call storage_getattr_fixed_disk_nodes (dmcrypt_t))
+    (call storage_read_fixed_disk_nodes (dmcrypt_t))
+    (call storage_write_fixed_disk_nodes (dmcrypt_t))
     (call storage_read_removable_nodes (dmcrypt_t))
     (call storage_write_removable_nodes (dmcrypt_t)))
 

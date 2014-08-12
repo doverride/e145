@@ -66,6 +66,7 @@
 
 (call devices_list_sysfs (fstools_t))
 (call devices_read_sysfs_files (fstools_t))
+(call devices_read_urandom (fstools_t)) ; mkfs.ext4
 
 (call files_read_generic_etc_files (fstools_t)) ; /etc/fstab
 
@@ -85,7 +86,9 @@
 
 (optional fstools_optional_storage
     (call storage_read_fixed_disk_nodes (fstools_t))
-    (call storage_write_fixed_disk_nodes (fstools_t)))
+    (call storage_write_fixed_disk_nodes (fstools_t))
+    (call storage_read_removable_nodes (fstools_t))
+    (call storage_write_removable_nodes (fstools_t)))
 
 (macro fstools_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 fstools_exec_t fstools_t)))
