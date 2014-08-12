@@ -71,11 +71,17 @@
 
 (call selinux_get_filesystems_mount (fstools_t))
 
+(optional fstools_optional_application
+    (call application_subject (fstools_t)))
+
 (optional fstools_optional_miscfiles
     (call miscfiles_read_localization_files (fstools_t)))
 
 (optional fstools_optional_mount
     (call mount_read_run_files (fstools_t)))
+
+(optional fstools_optional_session
+    (call session_use_inherited_terminals (fstools_t)))
 
 (optional fstools_optional_storage
     (call storage_read_fixed_disk_nodes (fstools_t))
