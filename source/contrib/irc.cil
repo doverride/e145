@@ -28,6 +28,8 @@
 (allow is_irssi_subject self create_unix_stream_socket_perms)
 (allow is_irssi_subject self rw_fifo_file_perms)
 
+(call can_exec (is_irssi_subject irssi_exec_t))
+
 (call system_read_sysctl_crypto_files (is_irssi_subject))
 
 (call devices_read_urandom (is_irssi_subject))
