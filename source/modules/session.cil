@@ -7,6 +7,11 @@
 (typeattribute is_session_tmp_file_object)
 (typeattribute is_session_tmpfs_file_object)
 
+(typeattribute is_session_file_object)
+(typeattributeset is_session_file_object (is_session_home_file_object
+    is_session_run_file_object is_session_tmp_file_object
+    is_session_tmpfs_file_object))
+
 (typeattribute is_session_application_subject)
 
 (user session_u)
@@ -167,6 +172,14 @@
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t sock_file "*"))
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t blk_file "*"))
 (call filesystem_tmpfs_filetrans (session_t session_tmpfs_t chr_file "*"))
+
+(allow session_t is_session_file_object relabel_dir_perms)
+(allow session_t is_session_file_object relabel_file_perms)
+(allow session_t is_session_file_object relabel_lnk_file_perms)
+(allow session_t is_session_file_object relabel_fifo_file_perms)
+(allow session_t is_session_file_object relabel_sock_file_perms)
+(allow session_t is_session_file_object relabel_blk_file_perms)
+(allow session_t is_session_file_object relabel_chr_file_perms)
 
 (call system_read_all_proc_files (session_t))
 (call system_read_all_sysctl_files (session_t))
