@@ -1,7 +1,3 @@
-(typepermissive sensors_t)
-(typepermissive sensors_detect_t)
-(typepermissive fancontrol_t)
-
 (roleattribute is_sensors_role)
 (roleattribute is_sensors_detect_role)
 (roleattribute is_fancontrol_role)

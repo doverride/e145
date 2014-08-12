@@ -1,5 +1,3 @@
-(typepermissive getty_generator_t)
-
 (typeattribute is_getty_admin_subject)
 
 (typeattribute is_getty_subject)
@@ -60,6 +58,10 @@
 
 (optional getty_optional_utmp
     (call utmp_rw_run_files (getty_t)))
+
+(call devices_read_sysfs_files (getty_generator_t))
+
+(call files_search_etc (getty_generator_t))
 
 (allow is_getty_admin_subject is_getty_subject signal_perms)
 (call ps_subject_pattern (is_getty_admin_subject is_getty_subject))

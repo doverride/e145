@@ -1,5 +1,3 @@
-(typepermissive dmesg_t)
-
 (roleattribute is_dmesg_role)
 
 (type dmesg_t)

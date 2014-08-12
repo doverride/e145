@@ -1,7 +1,3 @@
-(typepermissive networkmgr_online_t)
-(typepermissive networkmgr_disp_t)
-(typepermissive networkmgrcli_t)
-
 (roleattribute is_networkmgrcli_role)
 
 (typeattribute is_networkmgr_admin_subject)

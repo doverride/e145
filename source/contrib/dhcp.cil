@@ -1,5 +1,3 @@
-(typepermissive dhclient_t)
-
 (roleattribute is_dhclient_role)
 
 (typeattribute is_dhcp_admin_subject)
@@ -88,6 +86,7 @@
 
 (optional dhclient_optional_networkmgr
     (call networkmgr_execute_helper_files (dhclient_t))
+    (call networkmgr_read_config_files (dhclient_t))
     (call networkmgr_manage_var_lib_files (dhclient_t))
     (call networkmgr_stream_connect (dhclient_t)))
 

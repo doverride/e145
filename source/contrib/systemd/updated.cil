@@ -1,6 +1,3 @@
-(typepermissive updated_t)
-(typepermissive updated_generator_t)
-
 (typeattribute is_updated_admin_subject)
 
 (typeattribute is_updated_subject)
@@ -57,6 +54,8 @@
 (optional updated_optional_seutil
     (call seutil_read_config_files (updated_t))
     (call seutil_read_file_context_files (updated_t)))
+
+(call files_search_etc (updated_generator_t))
 
 (allow is_updated_admin_subject is_updated_subject signal_perms)
 (call ps_subject_pattern (is_updated_admin_subject is_updated_subject))

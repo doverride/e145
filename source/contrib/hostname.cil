@@ -1,5 +1,3 @@
-(typepermissive hostname_t)
-
 (roleattribute is_hostname_role)
 
 (type hostname_t)
@@ -10,6 +8,8 @@
 
 (context file_hostname_exec (system_u object_r hostname_exec_t ((s0) (s0))))
 (filecon "/usr/bin/hostname" file file_hostname_exec)
+
+(call files_search_etc (hostname_t))
 
 (optional hostname_optional_session
     (call session_use_inherited_terminals (hostname_t)))

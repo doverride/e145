@@ -1,5 +1,3 @@
-(typepermissive ldconfig_t)
-
 (roleattribute is_ldconfig_role)
 
 (typeattribute is_lib_or_textrel_shlib_file_object)

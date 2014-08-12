@@ -1,5 +1,3 @@
-(typepermissive remountfs_t)
-
 (typeattribute is_remountfs_admin_subject)
 
 (type remountfs_t)
@@ -16,6 +14,20 @@
     ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-remount-fs.*" file
     file_remountfs_unit)
+
+(allow remountfs_t self (capability (net_admin)))
+
+(call system_read_generic_proc_files (remountfs_t))
+
+(call devices_read_urandom (remountfs_t))
+
+(call files_read_generic_etc_files (remountfs_t)) ; /etc/fstab
+
+(optional remountfs_optional_journald
+    (call journald_client_subject (remountfs_t)))
+
+(optional remountfs_optional_mount
+    (call mount_subtrans (remountfs_t)))
 
 (allow is_remountfs_admin_subject remountfs_t signal_perms)
 (call ps_subject_pattern (is_remountfs_admin_subject remountfs_t))

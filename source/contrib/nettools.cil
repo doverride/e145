@@ -1,8 +1,3 @@
-(typepermissive arp_t)
-(typepermissive nettools_t)
-(typepermissive ping_t)
-(typepermissive traceroute_t)
-
 (roleattribute is_arp_role)
 (roleattribute is_nettools_role)
 (roleattribute is_ping_role)

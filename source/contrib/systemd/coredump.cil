@@ -1,5 +1,3 @@
-(typepermissive coredump_t)
-
 (roleattribute is_coredumpctl_role)
 
 (typeattribute is_coredump_admin_subject)
