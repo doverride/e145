@@ -37,11 +37,12 @@
 (call files_getattr_all_tmp_files (autorelabel_t))
 (call files_list_all_tmp (autorelabel_t))
 (call files_search_var_lib (autorelabel_t))
+(call files_read_generic_etc_files (autorelabel_t)) ; /etc/fstab, /etc/init.d/functions
 
 (call terminal_use_inherited_console_nodes (autorelabel_t))
 (call terminal_write_inherited_generic_pty_nodes (autorelabel_t)) 
 
-(call selinux_get_enforce_mode (autorelabel_t))
+(call selinux_set_enforce_mode (autorelabel_t))
 (call selinux_getattr_filesystems (autorelabel_t))
 
 (call autorelabel_manage_flag_files (autorelabel_t))
@@ -54,6 +55,9 @@
 
 (optional autorelabel_optional_miscfiles
     (call miscfiles_read_localization_files (autorelabel_t)))
+
+(optional autorelabel_optional_plymouth
+    (call plymouth_exec (autorelabel_t)))
 
 (optional autorelabel_optional_consoletype
     (call consoletype_exec (autorelabel_t)))
