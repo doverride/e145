@@ -334,6 +334,9 @@
     (call plymouth_manage_var_lib_files (system_t))
     (call plymouth_manage_run_files (system_t)))
 
+(optional system_optional_shutdown
+    (call shutdownd_sigchld_shutdown (system_t)))
+
 (optional system_optional_systemd
     (call systemd_dynamic_subject_type_transition (system_t))
     (call systemd_getattr_exec_files (system_t))

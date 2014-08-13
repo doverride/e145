@@ -110,6 +110,11 @@
     (call rw_files_pattern (ARG1 security_t security_t))
     (allow ARG1 security_t (security (compute_relabel))))
 
+(macro selinux_set_check_req_prot ((type ARG1))
+    (call devices_search_sysfs (ARG1))
+    (call rw_files_pattern (ARG1 security_t security_t))
+    (allow ARG1 security_t (security (setcheckreqprot))))
+
 (macro selinux_compute_user_contexts ((type ARG1))
     (call devices_search_sysfs (ARG1))
     (call rw_files_pattern (ARG1 security_t security_t))

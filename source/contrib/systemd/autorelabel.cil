@@ -47,6 +47,9 @@
 (optional autorelabel_optional_miscfiles
     (call miscfiles_read_localization_files (autorelabel_t)))
 
+(optional autorelabel_optional_consoletype
+    (call consoletype_exec (autorelabel_t)))
+
 (optional autorelabel_optional_seutil
     (call seutil_audit_access_load_policy_executable_files (autorelabel_t))
     (call seutil_read_config_files (autorelabel_t))

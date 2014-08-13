@@ -82,6 +82,7 @@
 (optional dhclient_optional_miscfiles
     (call miscfiles_read_generic_cert_files (dhclient_t))
     (call miscfiles_read_localization_files (dhclient_t))
+    (call miscfiles_read_network_config_files (dhclient_t))
     (call miscfiles_read_network_environ_files (dhclient_t)))
 
 (optional dhclient_optional_networkmgr

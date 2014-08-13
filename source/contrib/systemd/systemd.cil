@@ -407,6 +407,9 @@
     (call journald_list_log (is_systemd_subject))
     (call journald_read_log_files (systemctl_t)))
 
+(optional systemctl_optional_utmp
+    (call utmp_read_run_files (systemctl_t)))
+
 (optional systemctl_optional_session
     (call session_read_generic_home_content_files (systemctl_t)) ; ~/.lesshst
     (call session_use_inherited_terminals (systemctl_t)))

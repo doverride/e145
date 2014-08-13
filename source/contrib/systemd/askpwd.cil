@@ -68,6 +68,7 @@
 (call selinux_get_filesystems_mount (askpwdagent_t))
 
 (call terminal_use_console_nodes (askpwdagent_t))
+(call terminal_use_unallocated_tty_nodes (askpwdagent_t))
 
 (call askpwd_list_run (askpwdagent_t))
 (call askpwd_read_run_files (askpwdagent_t))

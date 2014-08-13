@@ -16,7 +16,7 @@
 (call files_run_object (mount_run_t))
 
 (context file_mount_run (system_u object_r mount_run_t ((s0) (s0))))
-(filecon "/run/mount(/.*)?" dir file_mount_run)
+(filecon "/run/mount(/.*)?" any file_mount_run)
 
 (type showmount_t)
 (type showmount_exec_t)

@@ -59,9 +59,16 @@
 (optional getty_optional_utmp
     (call utmp_rw_run_files (getty_t)))
 
+(allow getty_generator_t self (capability (dac_override)))
+
 (call devices_read_sysfs_files (getty_generator_t))
 
 (call files_search_etc (getty_generator_t))
+
+(call terminal_use_unallocated_tty_nodes (getty_generator_t))
+
+(call systemd_create_generic_unit_dirs (getty_generator_t))
+(call systemd_create_generic_unit_symlinks (getty_generator_t))
 
 (allow is_getty_admin_subject is_getty_subject signal_perms)
 (call ps_subject_pattern (is_getty_admin_subject is_getty_subject))
