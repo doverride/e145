@@ -28,12 +28,15 @@
 (allow autorelabel_t self (process (getsched)))
 (allow autorelabel_t self rw_fifo_file_perms)
 
+(call system_use_fd (autorelabel_t)) ; systemctl
+
 (call commands_execute_bin_files (autorelabel_t)) ; /bin/cat /.autorelabel
 (call commands_execute_shell_files (autorelabel_t))
 
 (call files_list_root (autorelabel_t))
 (call files_getattr_all_tmp_files (autorelabel_t))
 (call files_list_all_tmp (autorelabel_t))
+(call files_search_var_lib (autorelabel_t))
 
 (call terminal_use_inherited_console_nodes (autorelabel_t))
 
@@ -43,6 +46,7 @@
 (call autorelabel_manage_flag_files (autorelabel_t))
 
 (call systemd_exec_systemctl (autorelabel_t))
+(call systemd_reboot_system (autorelabel_t))
 
 (optional autorelabel_optional_miscfiles
     (call miscfiles_read_localization_files (autorelabel_t)))
