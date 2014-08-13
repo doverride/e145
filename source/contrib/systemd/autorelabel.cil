@@ -39,6 +39,7 @@
 (call files_search_var_lib (autorelabel_t))
 
 (call terminal_use_inherited_console_nodes (autorelabel_t))
+(call terminal_write_inherited_generic_pty_nodes (autorelabel_t)) 
 
 (call selinux_get_enforce_mode (autorelabel_t))
 (call selinux_getattr_filesystems (autorelabel_t))
@@ -47,6 +48,9 @@
 
 (call systemd_exec_systemctl (autorelabel_t))
 (call systemd_reboot_system (autorelabel_t))
+
+(optional autorelabel_optional_auth
+    (call auth_nsswitch_client_subject (autorelabel_t)))
 
 (optional autorelabel_optional_miscfiles
     (call miscfiles_read_localization_files (autorelabel_t)))
