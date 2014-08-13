@@ -71,6 +71,7 @@
 (call devices_getattr_sysfs_filesystems (shutdown_t))
 (call devices_read_loop_control (shutdown_t))
 (call devices_read_sysfs_files (shutdown_t))
+(call devices_read_urandom (shutdown_t))
 (call devices_rw_lvm_control (shutdown_t))
 (call devices_write_kmsg (shutdown_t))
 

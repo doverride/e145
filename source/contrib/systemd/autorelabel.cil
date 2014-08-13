@@ -24,7 +24,7 @@
 (filecon "/usr/lib/systemd/system/[^/]*fedora-autorelabel.*" file
     file_autorelabel_unit)
 
-(allow autorelabel_t self (capability (dac_override)))
+(allow autorelabel_t self (capability (dac_override net_admin)))
 (allow autorelabel_t self (process (getsched)))
 (allow autorelabel_t self rw_fifo_file_perms)
 
@@ -39,7 +39,7 @@
 (call files_search_var_lib (autorelabel_t))
 (call files_read_generic_etc_files (autorelabel_t)) ; /etc/fstab, /etc/init.d/functions
 
-(call terminal_use_inherited_console_nodes (autorelabel_t))
+(call terminal_use_console_nodes (autorelabel_t))
 (call terminal_write_inherited_generic_pty_nodes (autorelabel_t)) 
 
 (call selinux_set_enforce_mode (autorelabel_t))
