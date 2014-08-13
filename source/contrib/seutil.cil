@@ -202,9 +202,13 @@
 
 (call subject_obj_id_change_exemption (setfiles_t))
 
+(call terminal_use_inherited_console_nodes (setfiles_t))
+
 (call seutil_read_config_files (setfiles_t))
 (call seutil_read_file_context_files (setfiles_t))
 (call seutil_relabel_policy_config_files (setfiles_t))
+
+(call systemd_use_fd (setfiles_t))
 
 (optional setfiles_optional_audit
     (call audit_client_subject (setfiles_t)))
