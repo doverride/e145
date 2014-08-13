@@ -148,8 +148,11 @@
 
 (allow setsebool_t self create_unix_stream_socket_perms)
 
+(call selinux_list (setsebool_t))
 (call selinux_getattr_filesystems (setsebool_t))
 (call selinux_set_all_booleans (setsebool_t))
+
+(call seutil_read_config_files (setsebool_t))
 
 (optional setsebool_optional_auth
     (call auth_nsswitch_client_subject (setsebool_t)))
