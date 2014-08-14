@@ -1,2 +1,3 @@
 session_r:session_t session_r:session_t
 system_r:login_t   session_r:session_t
+system_r:sulogin_t   session_r:session_t

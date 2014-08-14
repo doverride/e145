@@ -600,6 +600,7 @@
     (filecon "/root/\.gnupg(/.*)?" any file_session_gpg_home)
 
     (call session_home_dir_filetrans (session_t session_gpg_home_t dir ".gnupg")) 
+    (call session_home_dir_filetrans (session_gpg_t session_gpg_home_t dir ".gnupg"))
 
     (call stream_connect_pattern (session_gpg_t session_gpgagent_home_t session_gpgagent_home_t
         session_gpgagent_t))
@@ -626,6 +627,8 @@
     (filecon "/root/\.gnupg/S\.gpg-agent" socket file_session_gpgagent_home)
     (filecon "/root/\.gnupg/S\.gpg-agent\.ssh" socket file_session_gpgagent_home)
     (filecon "/root/\.gnupg/sshcontrol" file file_session_gpgagent_home)
+
+    (call session_home_dir_filetrans (session_gpgagent_t session_gpgagent_home_t file ".gpg-agent-info"))
 
     (allow session_gpgagent_t session_gpg_home_t manage_dir_perms) ; wants to rmdir .gnupg
     (allow session_gpgagent_t session_gpg_home_t read_file_perms)

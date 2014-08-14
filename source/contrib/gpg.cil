@@ -147,7 +147,7 @@
     (call subtrans_pattern (ARG2 gpgpcsc_exec_t ARG3))
     (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
     (call ps_subject_pattern (ARG2 ARG3)))
- 
+
 (macro gpg_role_template_scd ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
     (roleattributeset is_scd_role ARG1)
     (typeattributeset is_scd_subject ARG3)
