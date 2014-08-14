@@ -68,6 +68,9 @@
 (call usersubject_use_inherited_terminals (is_user_application_subject))
 (call usersubject_search_all_home (is_user_application_subject))
 
+(allow is_common_login_user_subject self (process (setpgid signal sigkill sigstop signull)))
+(allow is_common_login_user_subject self rw_fifo_file_perms)
+
 (call commands_execute_bin_files (is_common_login_user_subject))
 (call commands_execute_shell_files (is_common_login_user_subject))
 (call commands_bin_files_entry_subject (is_common_login_user_subject))
@@ -88,6 +91,11 @@
 (call usersubject_generic_run_template (is_common_login_user_subject))
 (call usersubject_generic_tmp_template (is_common_login_user_subject))
 (call usersubject_generic_tmpfs_template (is_common_login_user_subject))
+
+(call files_read_generic_etc_files (is_common_login_user_subject))
+
+(optional usersubject_optional_auth
+    (call auth_read_passwd_files (is_common_login_user_subject)))
 
 (optional usersubject_optional_login
     (call login_signull (is_common_login_user_subject)))

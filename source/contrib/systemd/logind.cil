@@ -137,13 +137,18 @@
     (call session_manage_run_user_dir (logind_t)) ; BUG: would have preferred lsetfilecon by logind for identity
     (call session_mounton_run_user_dir (logind_t))
     (call session_run_user_root_filetrans_run_user_dir (logind_t "0"))
-    (call session_run_user_root_filetrans_run_user_dir (logind_t "1000"))
     (call session_use_tty_nodes (logind_t)))
 
 (optional logind_optional_udevd
     (call udevd_list_run (logind_t))
     (call udevd_read_config_files (logind_t))
     (call udevd_read_run_files (logind_t)))
+
+(optional logind_optional_usersubject
+    (call usersubject_manage_run_user_dir (logind_t)) ; BUG: would have preferred lsetfilecon by logind for identity
+    (call usersubject_mounton_run_user_dir (logind_t))
+    (call usersubject_run_user_root_filetrans_run_user_dir (logind_t "1000"))
+    (call usersubject_use_tty_nodes (logind_t)))
 
 (allow is_logind_admin_subject is_logind_subject signal_perms)
 (call ps_subject_pattern (is_logind_admin_subject is_logind_subject))

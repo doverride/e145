@@ -350,6 +350,13 @@
 (optional systemd_optional_utmp
     (call utmp_rw_run_files (systemd_t)))
 
+(optional systemd_optional_usersubject
+    (call usersubject_link_keyring_all_common_login_user_subjects (systemd_t))
+    (call usersubject_search_home_dir (systemd_t)) ; temporary
+    (call usersubject_search_run_user_dir (systemd_t))
+    (call usersubject_search_generic_home_content (systemd_t)) ; temporary for ~/.local/share/systemd
+    (call usersubject_use_tty_nodes (systemd_t)))
+
 (allow systemctl_t self (capability (net_admin ipc_lock)))
 (allow systemctl_t self (process (signal)))
 (allow systemctl_t self rw_fifo_file_perms)
