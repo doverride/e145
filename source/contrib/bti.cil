@@ -34,10 +34,16 @@
 (optional bti_optional_http
     (call http_tcp_connect_http_port (is_bti_subject)))
 
+(optional bti_optional_usersubject
+    (type user_bti_home_t)
+    (call usersubject_home_object (user_bti_home_t)))
+
 (macro bti_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_bti_role ARG1)
     (typeattributeset is_bti_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 bti_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG4 read_lnk_file_perms))

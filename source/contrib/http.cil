@@ -59,16 +59,21 @@
     (call miscfiles_read_generic_cert_files (is_elinks_subject))
     (call miscfiles_read_localization_files (is_elinks_subject)))
 
+(optional elinks_optional_usersubject
+    (type user_elinks_home_t)
+    (call usersubject_home_object (user_elinks_home_t)))
+
 (macro http_role_template_elinks ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_elinks_role ARG1)
     (typeattributeset is_elinks_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 elinks_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG4 manage_lnk_file_perms)
-    (allow ARG3 ARG4 manage_sock_file_perms)
-    (call session_home_dir_filetrans (ARG3 ARG4 dir ".elinks")))
+    (allow ARG3 ARG4 manage_sock_file_perms))
 
 (macro http_read_elinks_config_files ((type ARG1))
     (call files_search_etc (ARG1))

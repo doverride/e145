@@ -31,11 +31,17 @@
     (call miscfiles_read_terminfo_files (is_rtorrent_subject))
     (call miscfiles_read_localization_files (is_rtorrent_subject)))
 
+(optional bt_optional_usersubject
+    (type user_rtorrent_home_t)
+    (call usersubject_home_object (user_rtorrent_home_t)))
+
 (macro bt_role_template_rtorrent ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_rtorrent_role ARG1)
     (typeattributeset is_rtorrent_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 rtorrent_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG4 read_lnk_file_perms))

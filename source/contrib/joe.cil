@@ -1,0 +1,621 @@
+(user joe_u)
+(role joe_r)
+(type joe_t)
+(call usersubject_base_common_login_user_template (joe_u joe_r joe_t (s0) (s0) systemhigh))
+
+; miscfiles
+(context file_joe_user_pass_home (joe_u object_r user_pass_home_t ((s0)(s0))))
+(filecon "/home/joe/\.password-store(/.*)?" any file_joe_user_pass_home)
+
+(allow joe_t user_pass_home_t manage_dir_perms)
+(allow joe_t user_pass_home_t relabel_dir_perms)
+(allow joe_t user_pass_home_t manage_file_perms)
+(allow joe_t user_pass_home_t relabel_file_perms)
+(call usersubject_home_dir_filetrans (joe_t user_pass_home_t dir ".password-store"))
+
+(context file_joe_user_google_home (joe_u object_r user_google_home_t ((s0)(s0))))
+(filecon "/home/joe/\.config/googlecl(/.*)?" any file_joe_user_google_home)
+(filecon "/home/joe/\.local/share/googlecl(/.*)?" any file_joe_user_google_home)
+
+(allow joe_t user_google_home_t manage_dir_perms)
+(allow joe_t user_google_home_t relabel_dir_perms)
+(allow joe_t user_google_home_t manage_file_perms)
+(allow joe_t user_google_home_t relabel_file_perms)
+(call usersubject_config_filetrans (joe_t user_google_home_t dir "googlecl"))
+(call usersubject_data_filetrans (joe_t user_google_home_t dir "googlecl"))
+
+(context file_joe_user_cache (joe_u object_r user_cache_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.cache(/.*)?" any file_joe_user_cache)
+
+(context file_joe_user_conf (joe_u object_r user_conf_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.config(/.*)?" any file_joe_user_conf)
+
+(context file_joe_user_data (joe_u object_r user_data_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.local(/.*)?" any file_joe_user_data)
+
+(context file_joe_user_home (joe_u object_r user_home_t ((s0)
+    (s0))))
+(filecon "/home/joe/.*" any file_joe_user_home)
+
+(context file_joe_user_bin (joe_u object_r user_bin_t ((s0)
+    (s0))))
+(filecon "/home/joe/bin" symlink file_joe_user_bin)
+(filecon "/home/joe/\.local/bin(/.*)?" any file_joe_user_bin)
+
+(context file_joe_user_cert (joe_u object_r user_cert_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.pki(/.*)?" any file_joe_user_cert)
+
+(context file_joe_user_home_dir (joe_u object_r user_home_dir_t ((s0)
+    mls_systemhigh)))
+(filecon "/home/joe" dir file_joe_user_home_dir)
+
+(context file_joe_user_run_user_dir (joe_u object_r user_run_user_dir_t ((s0)
+    mls_systemhigh)))
+(filecon "/run/user/1000" dir file_joe_user_run_user_dir)
+
+(context file_joe_user_run (joe_u object_r user_run_t ((s0)
+    (s0))))
+(filecon "/run/user/1000/.*" any file_joe_user_run)
+
+(optional joe_optional_sensors
+    (call sensors_run_sensors (joe_t joe_r)))
+
+(optional joe_optional_session
+    (call session_role_change (joe_r))
+    (call session_user_role (joe_u)))
+
+(optional joe_optional_upower
+    (call upower_run (joe_t joe_r)))
+
+(optional joe_optional_wpacli
+    (call wpa_run_wpacli (joe_t joe_r)))
+
+(optional joe_optional_joe_bti
+    (type joe_bti_t)
+    (call bti_role_template (joe_r joe_t joe_bti_t
+        user_bti_home_t))
+
+    (context file_joe_user_bti_home (joe_u object_r user_bti_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.bti" file file_joe_user_bti_home)
+    (filecon "/home/joe/\.bti\.log.*" file file_joe_user_bti_home)
+
+    (allow joe_t user_bti_home_t manage_file_perms)
+    (allow joe_t user_bti_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_bti_home_t file ".bti"))
+    (call usersubject_home_dir_filetrans (joe_t user_bti_home_t file ".bti.log")) 
+
+    (call usersubject_home_dir_filetrans (joe_bti_t user_bti_home_t file ".bti"))
+    (call usersubject_home_dir_filetrans (joe_bti_t user_bti_home_t file ".bti.log"))
+
+    (call commands_shell_auto_subject_type_transition (joe_bti_t joe_t))
+
+    (call usersubject_application_subject (joe_bti_t)))
+
+(optional joe_optional_joe_ffmpeg
+    (type joe_ffmpeg_t)
+    (call ffmpeg_role_template (joe_r joe_t joe_ffmpeg_t))
+
+    (call usersubject_manage_generic_home_content_files (joe_ffmpeg_t))
+    (call usersubject_home_dir_filetrans_user_home (joe_ffmpeg_t file "*"))
+
+    (call usersubject_manage_generic_tmp_content_files (joe_ffmpeg_t))
+    (call usersubject_tmp_filetrans_generic_user_tmp (joe_ffmpeg_t file "*"))
+
+    (call usersubject_application_subject (joe_ffmpeg_t))
+
+    (optional joe_ffmpeg_optional_joe_pa
+        (call pa_client_subject (joe_r joe_ffmpeg_t joe_pa_t user_pa_home_t
+            user_pa_run_t user_pa_tmpfs_t)))
+ 
+        (call usersubject_home_dir_filetrans_user_config_dir (joe_ffmpeg_t))
+        (call usersubject_config_filetrans (joe_ffmpeg_t user_pa_home_t dir "pulse"))
+        (call usersubject_run_user_dir_filetrans (joe_ffmpeg_t user_pa_run_t dir "pulse"))
+        (call filesystem_tmpfs_filetrans (joe_ffmpeg_t user_pa_tmpfs_t file "*")))
+
+(optional joe_optional_joe_rtorrent
+    (type joe_rtorrent_t)
+    (call bt_role_template_rtorrent (joe_r joe_t joe_rtorrent_t
+        user_rtorrent_home_t))
+
+    (context file_joe_user_rtorrent_home (joe_u object_r user_rtorrent_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.rtorrent\.rc" file file_joe_user_rtorrent_home)
+    (filecon "/home/joe/\.rtorrent(/.*)?" any file_joe_user_rtorrent_home)
+
+    (allow joe_t user_rtorrent_home_t manage_dir_perms)
+    (allow joe_t user_rtorrent_home_t relabel_dir_perms)
+    (allow joe_t user_rtorrent_home_t manage_file_perms)
+    (allow joe_t user_rtorrent_home_t relabel_file_perms)
+    (allow joe_t user_rtorrent_home_t manage_lnk_file_perms)
+    (allow joe_t user_rtorrent_home_t relabel_lnk_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_rtorrent_home_t file ".rtorrent.rc")) 
+    (call usersubject_home_dir_filetrans (joe_t user_rtorrent_home_t dir ".rtorrent")) 
+    (call usersubject_read_generic_home_content_files (joe_rtorrent_t))
+
+    (call usersubject_application_subject (joe_rtorrent_t)))
+
+(optional joe_optional_joe_elinks
+    (type joe_elinks_t)
+    (call http_role_template_elinks (joe_r joe_t joe_elinks_t
+        user_elinks_home_t))
+
+    (context file_joe_user_elinks_home (joe_u object_r user_elinks_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.elinks(/.*)?" any file_joe_user_elinks_home)
+
+    (allow joe_t user_elinks_home_t manage_dir_perms)
+    (allow joe_t user_elinks_home_t relabel_dir_perms)
+    (allow joe_t user_elinks_home_t manage_file_perms)
+    (allow joe_t user_elinks_home_t relabel_file_perms)
+    (allow joe_t user_elinks_home_t manage_lnk_file_perms)
+    (allow joe_t user_elinks_home_t relabel_lnk_file_perms)
+    (allow joe_t user_elinks_home_t manage_sock_file_perms)
+    (allow joe_t user_elinks_home_t relabel_sock_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t dir ".elinks")) 
+
+    (call usersubject_manage_generic_home_content_dirs (joe_elinks_t))
+    (call usersubject_manage_generic_home_content_files (joe_elinks_t))
+    (call usersubject_home_dir_filetrans_user_home (joe_elinks_t file "*"))
+    (call usersubject_home_dir_filetrans_user_home (joe_elinks_t dir "*"))
+
+    (call usersubject_application_subject (joe_elinks_t))
+    (call usersubject_use_terminals (joe_elinks_t)))
+
+(optional joe_optional_joe_emacs
+    (type joe_emacs_t)
+    (call emacs_role_template (joe_r joe_t joe_emacs_t
+        user_emacs_home_t))
+
+    (context file_joe_user_emacs_home (joe_u object_r user_emacs_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.emacs" file file_joe_user_emacs_home)
+    (filecon "/home/joe/\.emacs\.d(/.*)?" any file_joe_user_emacs_home)
+
+    (allow joe_t user_emacs_home_t manage_dir_perms)
+    (allow joe_t user_emacs_home_t relabel_dir_perms)
+    (allow joe_t user_emacs_home_t manage_file_perms)
+    (allow joe_t user_emacs_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_emacs_home_t file ".emacs")) 
+    (call usersubject_home_dir_filetrans (joe_t user_emacs_home_t dir ".emacs.d")) 
+
+    (call usersubject_manage_generic_tmp_content_dirs (joe_emacs_t))
+    (call usersubject_manage_generic_tmp_content_files (joe_emacs_t))
+    (call usersubject_manage_generic_tmp_content_lnk_files (joe_emacs_t))
+    (call usersubject_manage_generic_tmp_content_sock_files (joe_emacs_t))
+
+    (call usersubject_tmp_filetrans_generic_user_tmp (joe_emacs_t dir "*"))
+    (call usersubject_tmp_filetrans_generic_user_tmp (joe_emacs_t file "*"))
+    (call usersubject_tmp_filetrans_generic_user_tmp (joe_emacs_t lnk_file "*"))
+
+    (call usersubject_application_subject (joe_emacs_t))
+    (call usersubject_use_terminals (joe_emacs_t))
+
+    (call usersubject_manage_generic_bin_dirs (joe_emacs_t))
+    (call usersubject_manage_generic_bin_files (joe_emacs_t))
+    (call usersubject_manage_generic_bin_lnk_files (joe_emacs_t))
+
+    (call usersubject_manage_generic_home_content_dirs (joe_emacs_t))
+    (call usersubject_manage_generic_home_content_files (joe_emacs_t))
+    (call usersubject_manage_generic_home_content_lnk_files (joe_emacs_t))
+    (call usersubject_home_dir_filetrans_user_home (joe_emacs_t dir "*"))
+    (call usersubject_home_dir_filetrans_user_home (joe_emacs_t file "*"))
+    (call usersubject_home_dir_filetrans_user_home (joe_emacs_t lnk_file "*"))
+
+    (call usersubject_bin_auto_subject_type_transition (joe_emacs_t joe_t))
+    (call commands_bin_auto_subject_type_transition (joe_emacs_t joe_t))
+    (call commands_shell_auto_subject_type_transition (joe_emacs_t joe_t))
+
+    (type joe_emacsclient_t)
+    (call emacs_role_template_client (joe_r joe_t joe_emacsclient_t))
+
+    (call usersubject_application_subject (joe_emacsclient_t))
+    (call usersubject_use_terminals (joe_emacsclient_t))
+
+    (call stream_connect_pattern (joe_emacsclient_t user_tmp_t user_tmp_t
+        joe_emacs_t)))
+
+(optional joe_optional_joe_git
+    (type joe_git_t)
+    (call git_role_template (joe_r joe_t joe_git_t user_git_home_t user_git_conf_t))
+
+    (context file_user_joe_git_conf (joe_u object_r user_git_conf_t ((s0)(s0))))
+    (filecon "/home/joe/\.gitaliases" file file_user_joe_git_conf)
+    (filecon "/home/joe/\.gitconfig" file file_user_joe_git_conf)
+
+    (allow joe_t user_git_conf_t manage_file_perms)
+    (allow joe_t user_git_conf_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_git_conf_t file ".gitconfig")) 
+    (call usersubject_home_dir_filetrans (joe_t user_git_conf_t file ".gitaliases")) 
+
+    (context file_joe_user_git_home (joe_u object_r user_git_home_t ((s0)(s0))))
+    (filecon "/home/joe/.*/\.git(/.*)?" any file_joe_user_git_home)
+
+    (allow joe_t user_git_home_t manage_dir_perms)
+    (allow joe_t user_git_home_t relabel_dir_perms)
+    (allow joe_t user_git_home_t manage_file_perms)
+    (allow joe_t user_git_home_t relabel_file_perms)
+    (allow joe_t user_git_home_t manage_lnk_file_perms)
+    (allow joe_t user_git_home_t relabel_lnk_file_perms)
+    (call usersubject_home_filetrans (joe_t user_git_home_t dir ".git"))
+
+    (call usersubject_application_subject (joe_git_t))
+    (call usersubject_home_filetrans (joe_git_t user_git_home_t dir ".git"))
+
+    (call subtrans_pattern (joe_git_t user_git_home_t joe_t))
+
+    (call commands_bin_auto_subject_type_transition (joe_git_t joe_t))
+    (call commands_shell_auto_subject_type_transition (joe_git_t joe_t))
+
+    (call can_exec (joe_t user_git_home_t))
+    (call subject_entry (joe_t user_git_home_t))
+
+    (call usersubject_manage_generic_home_content_dirs (joe_git_t))
+    (call usersubject_manage_generic_home_content_files (joe_git_t))
+    (call usersubject_manage_generic_home_content_lnk_files (joe_git_t))
+
+    (call usersubject_home_dir_filetrans_user_home (joe_git_t dir "*"))
+    (call usersubject_home_dir_filetrans_user_home (joe_git_t file "*"))
+    (call usersubject_home_dir_filetrans_user_home (joe_git_t lnk_file "*"))
+
+    (optional joe_git_optional_joe_ssh
+        (call ssh_role_template (joe_r joe_git_t joe_ssh_t user_ssh_home_t)))
+
+    (optional joe_git_optional_joe_gpg
+        (call gpg_role_template (joe_r joe_git_t joe_gpg_t user_gpg_home_t)))
+
+    (type joe_tig_t)
+    (call git_role_template_tig (joe_r joe_t joe_tig_t user_tig_home_t))
+
+    (context file_joe_user_tig_home (joe_u object_r user_tig_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.tigrc" file file_joe_user_tig_home)
+
+    (call usersubject_application_subject (joe_tig_t))
+
+    (allow joe_t user_tig_home_t manage_file_perms)
+    (allow joe_t user_tig_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_tig_home_t file ".tigrc"))
+
+    (call getattr_files_pattern (joe_tig_t user_git_home_t user_git_home_t))
+
+    (call commands_bin_auto_subject_type_transition (joe_tig_t joe_t))
+
+    (call git_role_template (joe_r joe_tig_t joe_git_t user_git_home_t user_git_conf_t))
+
+    (type joe_gitemail_t)
+    (call git_role_template_email (joe_r joe_git_t joe_gitemail_t
+        user_gitemail_home_t))
+
+    (context file_joe_user_gitemail_home (joe_u object_r user_gitemail_home_t ((s0)(s0))))
+    (filecon "/home/joe/.*/\.git/\.gitsendemail\.msg.*" file file_joe_user_gitemail_home)
+
+    (call commands_bin_auto_subject_type_transition (joe_gitemail_t joe_t))
+    (call commands_shell_auto_subject_type_transition (joe_gitemail_t joe_t))
+
+    (allow joe_t user_gitemail_home_t manage_file_perms)
+    (allow joe_t user_gitemail_home_t relabel_file_perms)
+    (call filetrans_pattern (joe_gitemail_t user_git_home_t user_gitemail_home_t file "*"))
+
+    (call usersubject_application_subject (joe_gitemail_t))
+    (call usersubject_read_generic_home_content_files (joe_gitemail_t))
+
+    (call git_role_template (joe_r joe_gitemail_t joe_git_t user_git_home_t user_git_conf_t)))
+
+(optional joe_optional_joe_gpg
+    (type joe_gpg_t)
+    (call gpg_role_template (joe_r joe_t joe_gpg_t
+        user_gpg_home_t))
+
+    (context file_joe_user_gpg_home (joe_u object_r user_gpg_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.gnupg(/.*)?" any file_joe_user_gpg_home)
+
+    (allow joe_t user_gpg_home_t manage_dir_perms)
+    (allow joe_t user_gpg_home_t relabel_dir_perms)
+    (allow joe_t user_gpg_home_t manage_file_perms)
+    (allow joe_t user_gpg_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_gpg_home_t dir ".gnupg")) 
+    (call usersubject_home_dir_filetrans (joe_gpg_t user_gpg_home_t dir ".gnupg"))
+
+    (call stream_connect_pattern (joe_gpg_t user_gpgagent_home_t user_gpgagent_home_t
+        joe_gpgagent_t))
+
+    (call usersubject_read_generic_tmp_files (joe_gpg_t))
+
+    (call manage_files_pattern (joe_gpg_t user_pass_home_t user_pass_home_t))
+
+    (call usersubject_application_subject (joe_gpg_t))
+    (call usersubject_use_terminals (joe_gpg_t))
+
+    (type joe_gpgagent_t)
+    (call gpg_role_template_agent (joe_r joe_t joe_gpgagent_t
+        user_gpgagent_home_t))
+
+    (context file_joe_user_gpgagent_home (joe_u object_r user_gpgagent_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.gpg-agent-info" file file_joe_user_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/gpg-agent\.conf" file file_joe_user_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/gpg-agent\.log" file file_joe_user_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/gpg-agent-wrapper" file file_joe_user_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/S\.gpg-agent" socket file_joe_user_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/S\.gpg-agent\.ssh" socket file_joe_user_gpgagent_home)
+    (filecon "/home/joe/\.gnupg/sshcontrol" file file_joe_user_gpgagent_home)
+
+    (allow joe_gpgagent_t user_gpg_home_t manage_dir_perms) ; wants to rmdir .gnupg
+    (allow joe_gpgagent_t user_gpg_home_t read_file_perms)
+
+    (allow joe_t user_gpgagent_home_t manage_file_perms)
+    (allow joe_t user_gpgagent_home_t relabel_file_perms)
+    (allow joe_t user_gpgagent_home_t manage_sock_file_perms)
+    (allow joe_t user_gpgagent_home_t relabel_sock_file_perms)
+    (call usersubject_home_dir_filetrans (joe_gpgagent_t user_gpgagent_home_t file ".gpg-agent-info"))
+
+    (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t file "*"))
+    (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t sock_file "*"))
+
+    (call usersubject_application_subject (joe_gpgagent_t))
+
+    (optional joe_gpgagent_optional_joe_pinentry_curses
+        (type joe_pincurses_t)
+        (call pinentry_role_template_curses (joe_r joe_gpgagent_t joe_pincurses_t))
+
+        (call stream_connect_pattern (joe_pincurses_t user_gpg_home_t user_gpgagent_home_t
+            joe_gpgagent_t))
+
+        (call usersubject_application_subject (joe_pincurses_t))
+        (call usersubject_use_terminals (joe_pincurses_t)))
+
+    (type joe_scd_t)
+    (call gpg_role_template_scd (joe_r joe_gpgagent_t joe_scd_t user_scd_tmp_t
+        user_scd_home_t))
+
+    (allow joe_t user_scd_tmp_t manage_dir_perms)
+    (allow joe_t user_scd_tmp_t relabel_dir_perms)
+    (allow joe_t user_scd_tmp_t manage_sock_file_perms)
+    (allow joe_t user_scd_tmp_t relabel_sock_file_perms)
+
+    (context file_joe_user_scd_home (joe_u object_r user_scd_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.gnupg/reader_0\.status" file file_joe_user_scd_home)
+
+    (allow joe_scd_t joe_gpgagent_t (process (signal)))
+
+    (allow joe_t user_scd_home_t manage_file_perms)
+    (allow joe_t user_scd_home_t relabel_file_perms)
+    (call filetrans_pattern (joe_scd_t user_gpg_home_t user_scd_home_t file "*"))
+
+    (call usersubject_application_subject (joe_scd_t))
+
+    (type joe_gpgpcsc_t)
+    (call gpg_role_template_pcsc (joe_r joe_scd_t joe_gpgpcsc_t))
+
+    (call usersubject_application_subject (joe_gpgpcsc_t)))
+
+(optional joe_optional_joe_mutt
+    (type joe_mutt_t)
+    (call mail_role_template_mutt (joe_r joe_t joe_mutt_t
+        user_mutt_home_t user_mutt_tmp_t))
+
+    (context file_joe_user_mutt_home (joe_u object_r user_mutt_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.muttrc" file file_joe_user_mutt_home)
+    (filecon "/home/joe/\.mutt_cache" file file_joe_user_mutt_home)
+    (filecon "/home/joe/\.mutt_certificates" file file_joe_user_mutt_home)
+    (filecon "/home/joe/\.mutt_passwords\.gpg" file file_joe_user_mutt_home)
+
+    (allow joe_t user_mutt_home_t manage_file_perms)
+    (allow joe_t user_mutt_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_mutt_home_t file ".muttrc")) 
+    (call usersubject_home_dir_filetrans (joe_t user_mutt_home_t file ".mutt_passwords")) 
+
+    (call usersubject_home_dir_filetrans (joe_mutt_t user_mutt_home_t file ".mutt_cache"))
+    (call usersubject_home_dir_filetrans (joe_mutt_t user_mutt_home_t file ".mutt_certificates"))
+
+    (call usersubject_manage_generic_home_content_files (joe_mutt_t))
+    (call usersubject_home_dir_filetrans_user_home (joe_mutt_t file "*"))
+
+    (allow joe_t user_mutt_tmp_t manage_dir_perms)
+    (allow joe_t user_mutt_tmp_t relabel_dir_perms)
+    (allow joe_t user_mutt_tmp_t manage_file_perms)
+    (allow joe_t user_mutt_tmp_t relabel_file_perms)
+
+    (call usersubject_application_subject (joe_mutt_t))
+    (call usersubject_read_generic_home_content_files (joe_mutt_t)) ; ~/.nanorc
+
+    (type joe_mutt_gpg_t)
+    (call mail_role_template_mutt_gpg (joe_r joe_mutt_t joe_mutt_gpg_t))
+
+    (call usersubject_application_subject (joe_mutt_gpg_t))
+
+    (optional joe_mutt_gpg_optional_joe_gpg
+        (call gpg_role_template (joe_r joe_mutt_t joe_gpg_t user_gpg_home_t))
+        (call gpg_role_template (joe_r joe_mutt_gpg_t joe_gpg_t user_gpg_home_t))
+        (allow joe_gpg_t user_mutt_home_t read_file_perms)
+        (allow joe_gpg_t user_mutt_tmp_t rw_file_perms)))
+
+(optional joe_optional_joe_irc
+    (type joe_irssi_t)
+    (call irc_role_template_irssi (joe_r joe_t joe_irssi_t
+        user_irssi_home_t))
+
+    (context file_joe_user_irssi_home (joe_u object_r user_irssi_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.irssi(/.*)?" any file_joe_user_irssi_home)
+
+    (allow joe_t user_irssi_home_t manage_dir_perms)
+    (allow joe_t user_irssi_home_t relabel_dir_perms)
+    (allow joe_t user_irssi_home_t manage_file_perms)
+    (allow joe_t user_irssi_home_t relabel_file_perms)
+    (allow joe_t user_irssi_home_t manage_lnk_file_perms)
+    (allow joe_t user_irssi_home_t relabel_lnk_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_irssi_home_t dir ".irssi"))
+
+    (call usersubject_home_dir_filetrans (joe_irssi_t user_irssi_home_t dir ".irssi"))
+
+    ; /exec: not sure if good idea
+    (call commands_shell_auto_subject_type_transition (joe_irssi_t joe_t))
+
+    (call usersubject_application_subject (joe_irssi_t))
+    (call usersubject_read_cert_files (joe_irssi_t)))
+    
+(optional joe_optional_joe_newsb
+    (type joe_newsb_t)
+    (call newsb_role_template (joe_r joe_t joe_newsb_t
+        user_newsb_home_t))
+
+    (context file_joe_user_newsb_home (joe_u object_r user_newsb_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.newsbeuter(/.*)?" any file_joe_user_newsb_home)
+
+    (allow joe_t user_newsb_home_t manage_dir_perms)
+    (allow joe_t user_newsb_home_t relabel_dir_perms)
+    (allow joe_t user_newsb_home_t manage_file_perms)
+    (allow joe_t user_newsb_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_newsb_home_t dir ".newsbeuter"))
+
+    (call usersubject_home_dir_filetrans (joe_newsb_t user_newsb_home_t dir ".newsbeuter"))
+
+    (call usersubject_application_subject (joe_newsb_t))
+    (call usersubject_use_terminals (joe_newsb_t))
+    (call usersubject_read_cert_files (joe_newsb_t))
+
+    (optional joe_newsb_optional_joe_elinks
+        (call http_role_template_elinks (joe_r joe_newsb_t joe_elinks_t
+            user_elinks_home_t))
+        (allow joe_elinks_t user_newsb_home_t rw_inherited_file_perms)))
+
+(optional joe_optional_joe_screen
+    (type joe_screen_t)
+    (call screen_role_template (joe_r joe_t joe_screen_t
+        user_screen_home_t user_screen_tmp_t))
+
+    (context file_joe_user_screen_home (joe_u object_r user_screen_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.screenrc" file file_joe_user_screen_home)
+
+    (allow joe_t user_screen_home_t manage_file_perms)
+    (allow joe_t user_screen_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_screen_home_t file ".screenrc")) 
+
+    (allow joe_t user_screen_tmp_t manage_file_perms)
+    (allow joe_t user_screen_tmp_t relabel_file_perms)
+    (call files_tmp_filetrans (joe_screen_t user_screen_tmp_t file "*"))
+
+    (call usersubject_application_subject (joe_screen_t))
+    (call usersubject_use_terminals (joe_screen_t))
+    (call usersubject_setattr_terminals (joe_screen_t))
+    (call usersubject_create_pty_node (joe_screen_t))
+    (call usersubject_bin_auto_subject_type_transition (joe_screen_t joe_t))
+    (call commands_bin_auto_subject_type_transition (joe_screen_t joe_t))
+    (call commands_shell_auto_subject_type_transition (joe_screen_t joe_t)))
+
+(optional joe_optional_joe_ssh
+    (type joe_ssh_t)
+    (call ssh_role_template (joe_r joe_t joe_ssh_t user_ssh_home_t))
+
+    (call usersubject_application_subject (joe_ssh_t))
+    (call usersubject_manage_generic_home_content_files (joe_ssh_t))
+    (call usersubject_home_dir_filetrans_user_home (joe_ssh_t file "*"))
+
+    (allow joe_t user_ssh_home_t manage_dir_perms)
+    (allow joe_t user_ssh_home_t relabel_dir_perms)
+    (allow joe_t user_ssh_home_t manage_file_perms)
+    (allow joe_t user_ssh_home_t relabel_file_perms)
+    (allow joe_t user_ssh_home_t manage_lnk_file_perms)
+    (allow joe_t user_ssh_home_t relabel_lnk_file_perms)
+
+    (context file_joe_user_ssh_home (joe_u object_r user_ssh_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.ssh(/.*)?" any file_joe_user_ssh_home)
+
+    (optional joe_ssh_optional_joe_gpgagent
+        (call stream_connect_pattern (joe_ssh_t user_gpg_home_t user_gpgagent_home_t
+            joe_gpgagent_t)))
+
+    (type joe_sshagent_t)
+    (call ssh_role_template_agent (joe_r joe_t joe_sshagent_t))
+
+    (call usersubject_application_subject (joe_sshagent_t)))
+
+(optional joe_optional_joe_pa
+    (type joe_pa_t)
+    (call pa_role_template (joe_r joe_t joe_pa_t user_pa_home_t
+        user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t))
+
+    (call usersubject_application_subject (joe_pa_t))
+
+    (context file_joe_user_pa_home (joe_u object_r user_pa_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.esd_auth" file file_joe_user_pa_home)
+    (filecon "/home/joe/\.config/pulse(/.*)?" any file_joe_user_pa_home)
+
+    (allow joe_t user_pa_home_t manage_dir_perms)
+    (allow joe_t user_pa_home_t relabel_dir_perms)
+    (allow joe_t user_pa_home_t manage_file_perms)
+    (allow joe_t user_pa_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_pa_home_t file ".esd_auth")) 
+    (call usersubject_home_dir_filetrans (joe_pa_t user_pa_home_t file ".esd_auth"))
+    (call usersubject_config_filetrans (joe_t user_pa_home_t dir "pulse")) 
+ 
+    (context file_joe_user_pa_run (joe_u object_r user_pa_run_t ((s0)(s0))))
+    (filecon "/run/user/1000/pulse(/.*)?" any file_joe_user_pa_run)
+
+    (allow joe_t user_pa_run_t manage_dir_perms)
+    (allow joe_t user_pa_run_t relabel_dir_perms)
+    (allow joe_t user_pa_run_t manage_file_perms)
+    (allow joe_t user_pa_run_t relabel_file_perms)
+    (allow joe_t user_pa_run_t manage_sock_file_perms)
+    (allow joe_t user_pa_run_t relabel_sock_file_perms)
+    (call usersubject_run_user_dir_filetrans (joe_t user_pa_run_t dir "pulse")) 
+
+    (allow joe_t user_pa_tmp_t manage_dir_perms)
+    (allow joe_t user_pa_tmp_t relabel_dir_perms)
+    (allow joe_t user_pa_tmp_t manage_sock_file_perms)
+    (allow joe_t user_pa_tmp_t relabel_sock_file_perms)
+    (call files_tmp_filetrans (joe_pa_t user_pa_tmp_t dir "*"))
+
+    (allow joe_t user_pa_tmpfs_t manage_file_perms)
+    (allow joe_t user_pa_tmpfs_t relabel_file_perms)
+    (call filesystem_tmpfs_filetrans (joe_pa_t user_pa_tmpfs_t file "*"))
+
+    (call usersubject_search_generic_config (joe_pa_t))
+    (call usersubject_search_run_user_dir (joe_pa_t)))
+
+(optional joe_optional_joe_moc
+    (type joe_moc_t)
+    (call moc_role_template (joe_r joe_t joe_moc_t
+        user_moc_home_t))
+
+    (context file_joe_user_moc_home (joe_u object_r user_moc_home_t ((s0)
+        (s0))))
+    (filecon "/home/joe/\.moc(/.*)?" any file_joe_user_moc_home)
+
+    (call usersubject_application_subject (joe_moc_t))
+    (call usersubject_list_home_dir (joe_moc_t))
+    (call usersubject_list_generic_home_content (joe_moc_t))
+    (call usersubject_read_generic_home_content_files (joe_moc_t))
+
+    (allow joe_t user_moc_home_t manage_dir_perms)
+    (allow joe_t user_moc_home_t relabel_dir_perms)
+    (allow joe_t user_moc_home_t manage_file_perms)
+    (allow joe_t user_moc_home_t relabel_file_perms)
+    (allow joe_t user_moc_home_t manage_sock_file_perms)
+    (allow joe_t user_moc_home_t relabel_sock_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_moc_home_t dir ".moc")) 
+
+    (optional joe_moc_optional_joe_pa
+        (call pa_client_subject (joe_r joe_moc_t joe_pa_t user_pa_home_t
+            user_pa_run_t user_pa_tmpfs_t)))
+
+        (call usersubject_home_dir_filetrans_user_config_dir (joe_moc_t))
+        (call usersubject_config_filetrans (joe_moc_t user_pa_home_t dir "pulse"))
+        (call usersubject_run_user_dir_filetrans (joe_moc_t user_pa_run_t dir "pulse"))
+        (call filesystem_tmpfs_filetrans (joe_moc_t user_pa_tmpfs_t file "*")))
+
+(optional joe_optional_joe_sudo
+    (type joe_sudo_t)
+    (call sudo_role_template (joe_r joe_t joe_sudo_t))
+
+    (call usersubject_application_subject (joe_sudo_t))
+
+    (call usersubject_bin_auto_subject_type_transition (joe_sudo_t joe_t))
+    (call commands_bin_auto_subject_type_transition (joe_sudo_t joe_t))
+    (call commands_shell_auto_subject_type_transition (joe_sudo_t joe_t))
+
+    (type joe_visudo_t)
+    (call sudo_visudo_role_template (joe_r joe_t joe_visudo_t))
+
+    (call usersubject_application_subject (joe_visudo_t))
+
+    (call commands_bin_auto_subject_type_transition (joe_visudo_t joe_t)))

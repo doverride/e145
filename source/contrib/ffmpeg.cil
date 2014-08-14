@@ -18,4 +18,7 @@
     (roleattributeset is_ffmpeg_role ARG1)
     (typeattributeset is_ffmpeg_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 ffmpeg_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 ffmpeg_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3)))
+

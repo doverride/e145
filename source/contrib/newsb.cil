@@ -35,12 +35,17 @@
 (optional newsb_optional_http
     (call http_tcp_connect_http_port (is_newsb_subject)))
 
+(optional newsb_optional_usersubject
+    (type user_newsb_home_t)
+    (call usersubject_home_object (user_newsb_home_t)))
+
 (macro newsb_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_newsb_role ARG1)
     (typeattributeset is_newsb_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 newsb_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms)
-    (allow ARG3 ARG4 manage_lnk_file_perms)
-    (call session_home_dir_filetrans (ARG3 ARG4 dir ".newsbeuter")))
+    (allow ARG3 ARG4 manage_lnk_file_perms))

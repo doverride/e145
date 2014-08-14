@@ -75,12 +75,20 @@
     (call miscfiles_read_terminfo_files (is_mutt_subject))
     (call miscfiles_read_localization_files (is_mutt_subject)))
 
+(optional mutt_optional_usersubject
+    (type user_mutt_home_t)
+    (call usersubject_home_object (user_mutt_home_t))
+    (type user_mutt_tmp_t)
+    (call usersubject_tmp_object (user_mutt_tmp_t)))
+
 (macro mail_role_template_mutt ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
     (type ARG5))
     (roleattributeset is_mutt_role ARG1)
     (typeattributeset is_mutt_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 mutt_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 rw_dir_perms)
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG4 read_lnk_file_perms)
@@ -93,7 +101,9 @@
     (roleattributeset is_mutt_pgp_role ARG1)
     (typeattributeset is_mutt_pgp_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 mutt_pgp_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 mutt_pgp_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3)))
 
 (macro mail_read_mutt_config_files ((type ARG1))
     (call files_search_etc (ARG1))

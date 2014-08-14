@@ -75,6 +75,10 @@
     (call miscfiles_read_network_config_files (is_gpg_subject))
     (call miscfiles_read_localization_files (is_gpg_subject)))
 
+(optional gpg_optional_usersubject
+    (type user_gpg_home_t)
+    (call usersubject_home_object (user_gpg_home_t)))
+
 (allow is_gpgagent_subject self create_unix_stream_stream_socket_perms)
 (allow is_gpgagent_subject self (unix_stream_socket (connectto)))
 (allow is_gpgagent_subject self rw_fifo_file_perms)
@@ -83,6 +87,10 @@
 
 (optional gpgagent_optional_miscfiles
     (call miscfiles_read_localization_files (is_gpgagent_subject)))
+
+(optional gpgagent_optional_usersubject
+    (type user_gpgagent_home_t)
+    (call usersubject_home_object (user_gpgagent_home_t)))
 
 (allow is_scd_subject self create_unix_stream_stream_socket_perms)
 (allow is_scd_subject self create_netlink_kobject_uevent_socket_perms)
@@ -101,6 +109,12 @@
     (call udevd_read_config_files (is_scd_subject))
     (call udevd_read_run_files (is_scd_subject)))
 
+(optional scd_optional_usersubject
+    (type user_scd_tmp_t)
+    (call usersubject_tmp_object (user_scd_tmp_t))
+    (type user_scd_home_t)
+    (call usersubject_home_object (user_scd_home_t)))
+
 (call files_search_etc (is_gpgpcsc_subject))
 
 (optional gpgpcsc_optional_pcsc
@@ -111,30 +125,36 @@
     (typeattributeset is_gpg_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gpg_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_dir_perms)
-    (allow ARG3 ARG4 manage_file_perms)
-    (call session_home_dir_filetrans (ARG3 ARG4 dir ".gnupg")))
+    (allow ARG3 ARG4 manage_file_perms))
 
 (macro gpg_role_template_agent ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gpgagent_role ARG1)
     (typeattributeset is_gpgagent_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gpgagent_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_file_perms)
-    (allow ARG3 ARG4 manage_sock_file_perms)
-    (call session_home_dir_filetrans (ARG3 ARG4 file ".gpg-agent-info")))
+    (allow ARG3 ARG4 manage_sock_file_perms))
 
 (macro gpg_role_template_pcsc ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gpgpcsc_role ARG1)
     (typeattributeset is_gpgpcsc_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 gpgpcsc_exec_t ARG3)))
-
+    (call subtrans_pattern (ARG2 gpgpcsc_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3)))
+ 
 (macro gpg_role_template_scd ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
     (roleattributeset is_scd_role ARG1)
     (typeattributeset is_scd_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 scd_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_sock_file_perms)
     (call files_tmp_filetrans (ARG3 ARG4 dir "*"))

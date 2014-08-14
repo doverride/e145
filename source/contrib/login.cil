@@ -46,6 +46,10 @@
     (call session_search_home_dir (is_login_subject))
     (call session_shell_manual_subject_type_transition (is_login_subject)))
 
+(optional login_subject_optional_usersubject
+    (call usersubject_search_home_dir (is_login_subject))
+    (call usersubject_shell_manual_subject_type_transition_all_common_login_user_subjects (is_login_subject)))
+
 (allow login_t self (capability (kill fsetid fowner net_admin)))
 
 (call system_link_keyring (login_t))
@@ -66,6 +70,11 @@
     (call session_relabel_tty_nodes (login_t))
     (call session_setattr_tty_nodes (login_t))
     (call session_use_tty_nodes (login_t)))
+
+(optional login_optional_usersubject
+    (call usersubject_relabel_tty_nodes (login_t))
+    (call usersubject_setattr_tty_nodes (login_t))
+    (call usersubject_use_tty_nodes (login_t)))
 
 (booleanif console_login
     (true

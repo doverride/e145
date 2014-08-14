@@ -72,6 +72,12 @@
 (optional screen_optional_utmp
     (call utmp_read_run_files (is_screen_subject)))
 
+(optional screen_optional_usersubject
+    (type user_screen_home_t)
+    (call usersubject_home_object (user_screen_home_t))
+    (type user_screen_tmp_t)
+    (call usersubject_tmp_object (user_screen_tmp_t)))
+
 (macro screen_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
     (type ARG5))
     (roleattributeset is_screen_role ARG1)
@@ -79,11 +85,12 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 screen_exec_t ARG3))
     (typeattributeset is_screen_home_file_object ARG4)
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 list_dir_perms)
     (allow ARG3 ARG4 read_file_perms)
     (allow ARG3 ARG4 read_lnk_file_perms)
     (allow ARG3 ARG5 manage_file_perms)
-    (call files_tmp_filetrans (ARG3 ARG5 file "*"))
     (optional screen_role_template_optional_auth
         (call auth_run_chkpwd (ARG3 ARG1))
         (call auth_run_utempter (ARG3 ARG1))))

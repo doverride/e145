@@ -33,7 +33,6 @@
 (context file_session_cache (session_u object_r session_cache_t ((s0)
     (s0))))
 (filecon "/root/\.cache(/.*)?" any file_session_cache)
-(filecon "/home/joe/\.cache(/.*)?" any file_session_cache)
 
 (type session_conf_t)
 (call session_config_object (session_conf_t))
@@ -41,7 +40,6 @@
 (context file_session_conf (session_u object_r session_conf_t ((s0)
     (s0))))
 (filecon "/root/\.config(/.*)?" any file_session_conf)
-(filecon "/home/joe/\.config(/.*)?" any file_session_conf)
 
 (type session_data_t)
 (call session_data_object (session_data_t))
@@ -49,7 +47,6 @@
 (context file_session_data (session_u object_r session_data_t ((s0)
     (s0))))
 (filecon "/root/\.local(/.*)?" any file_session_data)
-(filecon "/home/joe/\.local(/.*)?" any file_session_data)
 
 (type session_home_t)
 (call session_home_object (session_home_t))
@@ -57,7 +54,6 @@
 (context file_session_home (session_u object_r session_home_t ((s0)
     (s0))))
 (filecon "/root/.*" any file_session_home)
-(filecon "/home/joe/.*" any file_session_home)
 
 (type session_bin_t)
 (call session_home_object (session_bin_t))
@@ -67,8 +63,6 @@
     (s0))))
 (filecon "/root/bin" symlink file_session_bin)
 (filecon "/root/\.local/bin(/.*)?" any file_session_bin)
-(filecon "/home/joe/bin" symlink file_session_bin)
-(filecon "/home/joe/\.local/bin(/.*)?" any file_session_bin)
 
 (type session_cert_t)
 (call session_home_object (session_cert_t))
@@ -79,7 +73,6 @@
 (context file_session_cert (session_u object_r session_cert_t ((s0)
     (s0))))
 (filecon "/root/\.pki(/.*)?" any file_session_cert)
-(filecon "/home/joe/\.pki(/.*)?" any file_session_cert)
 
 (type session_home_dir_t)
 (call files_object (session_home_dir_t))
@@ -87,7 +80,6 @@
 (context file_session_home_dir (session_u object_r session_home_dir_t ((s0)
     mls_systemhigh)))
 (filecon "/root" dir file_session_home_dir)
-(filecon "/home/joe" dir file_session_home_dir)
 
 (type session_run_user_dir_t)
 (call files_mnt_object (session_run_user_dir_t))
@@ -95,7 +87,6 @@
 (context file_session_run_user_dir (session_u object_r session_run_user_dir_t ((s0)
     mls_systemhigh)))
 (filecon "/run/user/0" dir file_session_run_user_dir)
-(filecon "/run/user/1000" dir file_session_run_user_dir)
 
 (type session_run_t)
 (call session_run_object (session_run_t))
@@ -103,7 +94,6 @@
 (context file_session_run (session_u object_r session_run_t ((s0)
     (s0))))
 (filecon "/run/user/0/.*" any file_session_run)
-(filecon "/run/user/1000/.*" any file_session_run)
 
 (type session_tmp_t)
 (call session_tmp_object (session_tmp_t))
@@ -124,9 +114,6 @@
 (allow session_t self create_udp_socket_perms)
 (allow session_t self create_tcp_socket_perms)
 (allow session_t self rw_fifo_file_perms)
-
-(allow session_t is_session_application_subject (process (sigkill sigstop signal signull)))
-(call ps_subject_pattern (session_t is_session_application_subject))
 
 (call session_use_inherited_terminals (is_session_application_subject))
 (call session_search_all_home (is_session_application_subject))
@@ -373,8 +360,6 @@
     (context file_session_bti_home (session_u object_r session_bti_home_t ((s0)(s0))))
     (filecon "/root/\.bti" file file_session_bti_home)
     (filecon "/root/\.bti\.log.*" file file_session_bti_home)
-    (filecon "/home/joe/\.bti" file file_session_bti_home)
-    (filecon "/home/joe/\.bti\.log.*" file file_session_bti_home)
 
     (call session_home_dir_filetrans (session_t session_bti_home_t file ".bti"))
     (call session_home_dir_filetrans (session_t session_bti_home_t file ".bti.log")) 
@@ -400,7 +385,12 @@
 
     (optional session_ffmpeg_optional_session_pa
         (call pa_client_subject (session_r session_ffmpeg_t session_pa_t session_pa_home_t
-            session_pa_run_t session_pa_tmpfs_t))))
+            session_pa_run_t session_pa_tmpfs_t)))
+
+        (call session_home_dir_filetrans_session_config_dir (session_ffmpeg_t))
+        (call session_config_filetrans (session_ffmpeg_t session_pa_home_t dir "pulse"))
+        (call session_run_user_dir_filetrans (session_ffmpeg_t session_pa_run_t dir "pulse"))
+        (call filesystem_tmpfs_filetrans (session_ffmpeg_t session_pa_tmpfs_t file "*")))
 
 (optional session_optional_session_rtorrent
     (type session_rtorrent_t)
@@ -413,8 +403,6 @@
     (context file_session_rtorrent_home (session_u object_r session_rtorrent_home_t ((s0)(s0))))
     (filecon "/root/\.rtorrent\.rc" file file_session_rtorrent_home)
     (filecon "/root/\.rtorrent(/.*)?" any file_session_rtorrent_home)
-    (filecon "/home/joe/\.rtorrent\.rc" file file_session_rtorrent_home)
-    (filecon "/home/joe/\.rtorrent(/.*)?" any file_session_rtorrent_home)
 
     (call session_home_dir_filetrans (session_t session_rtorrent_home_t file ".rtorrent.rc")) 
     (call session_home_dir_filetrans (session_t session_rtorrent_home_t dir ".rtorrent")) 
@@ -432,9 +420,9 @@
 
     (context file_session_elinks_home (session_u object_r session_elinks_home_t ((s0)(s0))))
     (filecon "/root/\.elinks(/.*)?" any file_session_elinks_home)
-    (filecon "/home/joe/\.elinks(/.*)?" any file_session_elinks_home)
 
     (call session_home_dir_filetrans (session_t session_elinks_home_t dir ".elinks")) 
+    (call session_home_dir_filetrans (session_elinks_t session_elinks_t dir ".elinks"))
 
     (call session_manage_generic_home_content_dirs (session_elinks_t))
     (call session_manage_generic_home_content_files (session_elinks_t))
@@ -454,9 +442,7 @@
 
     (context file_session_emacs_home (session_u object_r session_emacs_home_t ((s0)(s0))))
     (filecon "/root/\.emacs" file file_session_emacs_home)
-    (filecon "/home/joe/\.emacs" file file_session_emacs_home)
     (filecon "/root/\.emacs\.d(/.*)?" any file_session_emacs_home)
-    (filecon "/home/joe/\.emacs\.d(/.*)?" any file_session_emacs_home)
 
     (allow session_emacs_t session_emacs_home_t manage_dir_perms)
     (allow session_emacs_t session_emacs_home_t manage_file_perms)
@@ -500,19 +486,16 @@
 
 (optional session_optional_session_git
     (type session_git_t)
-    (call git_role_template (session_r session_t session_git_t session_git_home_t))
+    (call git_role_template (session_r session_t session_git_t session_git_home_t session_git_conf_t))
 
     (type session_git_home_t)
     (call session_home_object (session_git_home_t))
 
     (context file_session_git_home (session_u object_r session_git_home_t ((s0)(s0))))
     (filecon "/root/.*/\.git(/.*)?" any file_session_git_home)
-    (filecon "/home/joe/.*/\.git(/.*)?" any file_session_git_home)
 
     (type session_git_conf_t)
     (call session_home_object (session_git_conf_t))
-
-    (allow session_git_t session_git_conf_t read_file_perms)
 
     (call session_home_dir_filetrans (session_t session_git_conf_t file ".gitconfig")) 
     (call session_home_dir_filetrans (session_t session_git_conf_t file ".gitaliases")) 
@@ -522,8 +505,6 @@
     (context file_session_git_conf (session_u object_r session_git_conf_t ((s0)(s0))))
     (filecon "/root/\.gitaliases" file file_session_git_conf)
     (filecon "/root/\.gitconfig" file file_session_git_conf)
-    (filecon "/home/joe/\.gitaliases" file file_session_git_conf)
-    (filecon "/home/joe/\.gitconfig" file file_session_git_conf)
 
     (call session_application_subject (session_git_t))
 
@@ -569,14 +550,11 @@
     (type session_tig_t)
     (call git_role_template_tig (session_r session_t session_tig_t session_tig_home_t))
 
-    (allow session_t session_tig_t (fd (use)))
-
     (type session_tig_home_t)
     (call session_home_object (session_tig_home_t))
 
     (context file_session_tig_home (session_u object_r session_tig_home_t ((s0)(s0))))
     (filecon "/root/\.tigrc" file file_session_tig_home)
-    (filecon "/home/joe/\.tigrc" file file_session_tig_home)
 
     (call session_application_subject (session_tig_t))
 
@@ -587,7 +565,7 @@
 
     (call commands_bin_auto_subject_type_transition (session_tig_t session_t))
 
-    (call git_role_template (session_r session_tig_t session_git_t session_git_home_t))
+    (call git_role_template (session_r session_tig_t session_git_t session_git_home_t session_git_conf_t))
 
     (type session_gitemail_t)
     (call git_role_template_email (session_r session_git_t session_gitemail_t
@@ -598,7 +576,6 @@
 
     (context file_session_gitemail_home (session_u object_r session_gitemail_home_t ((s0)(s0))))
     (filecon "/root/.*/\.git/\.gitsendemail\.msg.*" file file_session_gitemail_home)
-    (filecon "/home/joe/.*/\.git/\.gitsendemail\.msg.*" file file_session_gitemail_home)
 
     (call commands_bin_auto_subject_type_transition (session_gitemail_t session_t))
     (call commands_shell_auto_subject_type_transition (session_gitemail_t session_t))
@@ -609,7 +586,7 @@
     (call session_application_subject (session_gitemail_t))
     (call session_read_generic_home_content_files (session_gitemail_t))
 
-    (call git_role_template (session_r session_gitemail_t session_git_t session_git_home_t)))
+    (call git_role_template (session_r session_gitemail_t session_git_t session_git_home_t session_git_conf_t)))
 
 (optional session_optional_session_gpg
     (type session_gpg_t)
@@ -621,7 +598,6 @@
 
     (context file_session_gpg_home (session_u object_r session_gpg_home_t ((s0)(s0))))
     (filecon "/root/\.gnupg(/.*)?" any file_session_gpg_home)
-    (filecon "/home/joe/\.gnupg(/.*)?" any file_session_gpg_home)
 
     (call session_home_dir_filetrans (session_t session_gpg_home_t dir ".gnupg")) 
 
@@ -650,13 +626,6 @@
     (filecon "/root/\.gnupg/S\.gpg-agent" socket file_session_gpgagent_home)
     (filecon "/root/\.gnupg/S\.gpg-agent\.ssh" socket file_session_gpgagent_home)
     (filecon "/root/\.gnupg/sshcontrol" file file_session_gpgagent_home)
-    (filecon "/home/joe/\.gpg-agent-info" file file_session_gpgagent_home)
-    (filecon "/home/joe/\.gnupg/gpg-agent\.conf" file file_session_gpgagent_home)
-    (filecon "/home/joe/\.gnupg/gpg-agent\.log" file file_session_gpgagent_home)
-    (filecon "/home/joe/\.gnupg/gpg-agent-wrapper" file file_session_gpgagent_home)
-    (filecon "/home/joe/\.gnupg/S\.gpg-agent" socket file_session_gpgagent_home)
-    (filecon "/home/joe/\.gnupg/S\.gpg-agent\.ssh" socket file_session_gpgagent_home)
-    (filecon "/home/joe/\.gnupg/sshcontrol" file file_session_gpgagent_home)
 
     (allow session_gpgagent_t session_gpg_home_t manage_dir_perms) ; wants to rmdir .gnupg
     (allow session_gpgagent_t session_gpg_home_t read_file_perms)
@@ -690,7 +659,6 @@
 
     (context file_session_scd_home (session_u object_r session_scd_home_t ((s0)(s0))))
     (filecon "/root/\.gnupg/reader_0\.status" file file_session_scd_home)
-    (filecon "/home/joe/\.gnupg/reader_0\.status" file file_session_scd_home)
 
     (allow session_scd_t session_gpgagent_t (process (signal)))
     (call filetrans_pattern (session_scd_t session_gpg_home_t session_scd_home_t file "*"))
@@ -715,10 +683,6 @@
     (filecon "/root/\.mutt_cache" file file_session_mutt_home)
     (filecon "/root/\.mutt_certificates" file file_session_mutt_home)
     (filecon "/root/\.mutt_passwords\.gpg" file file_session_mutt_home)
-    (filecon "/home/joe/\.muttrc" file file_session_mutt_home)
-    (filecon "/home/joe/\.mutt_cache" file file_session_mutt_home)
-    (filecon "/home/joe/\.mutt_certificates" file file_session_mutt_home)
-    (filecon "/home/joe/\.mutt_passwords\.gpg" file file_session_mutt_home)
 
     (call session_home_dir_filetrans (session_t session_mutt_home_t file ".muttrc")) 
     (call session_home_dir_filetrans (session_t session_mutt_home_t file ".mutt_passwords")) 
@@ -756,7 +720,6 @@
 
     (context file_session_irssi_home (session_u object_r session_irssi_home_t ((s0)(s0))))
     (filecon "/root/\.irssi(/.*)?" any file_session_irssi_home)
-    (filecon "/home/joe/\.irssi(/.*)?" any file_session_irssi_home)
 
     (allow session_irssi_t session_irssi_home_t manage_dir_perms)
     (allow session_irssi_t session_irssi_home_t manage_file_perms)
@@ -781,7 +744,6 @@
 
     (context file_session_newsb_home (session_u object_r session_newsb_home_t ((s0)(s0))))
     (filecon "/root/\.newsbeuter(/.*)?" any file_session_newsb_home)
-    (filecon "/home/joe/\.newsbeuter(/.*)?" any file_session_newsb_home)
 
     (call session_home_dir_filetrans (session_t session_newsb_home_t dir ".newsbeuter"))
 
@@ -804,12 +766,13 @@
 
     (context file_session_screen_home (session_u object_r session_screen_home_t ((s0)(s0))))
     (filecon "/root/\.screenrc" file file_session_screen_home)
-    (filecon "/home/joe/\.screenrc" file file_session_screen_home)
 
     (call session_home_dir_filetrans (session_t session_screen_home_t file ".screenrc")) 
 
     (type session_screen_tmp_t)
     (call session_tmp_object (session_screen_tmp_t))
+
+    (call files_tmp_filetrans (session_screen_t session_screen_tmp_t file "*"))
 
     (call session_application_subject (session_screen_t))
     (call session_use_terminals (session_screen_t))
@@ -832,7 +795,6 @@
 
     (context file_session_ssh_home (session_u object_r session_ssh_home_t ((s0)(s0))))
     (filecon "/root/\.ssh(/.*)?" any file_session_ssh_home)
-    (filecon "/home/joe/\.ssh(/.*)?" any file_session_ssh_home)
 
     (optional session_ssh_optional_session_gpgagent
         (call stream_connect_pattern (session_ssh_t session_gpg_home_t session_gpgagent_home_t
@@ -846,7 +808,7 @@
 (optional session_optional_session_pa
     (type session_pa_t)
     (call pa_role_template (session_r session_t session_pa_t session_pa_home_t
-        session_pa_tmp_t session_pa_tmpfs_t))
+        session_pa_tmp_t session_pa_tmpfs_t session_pa_run_t))
 
     (call session_application_subject (session_pa_t))
 
@@ -856,36 +818,32 @@
     (context file_session_pa_home (session_u object_r session_pa_home_t ((s0)(s0))))
     (filecon "/root/\.esd_auth" file file_session_pa_home)
     (filecon "/root/\.config/pulse(/.*)?" any file_session_pa_home)
-    (filecon "/home/joe/\.esd_auth" file file_session_pa_home)
-    (filecon "/home/joe/\.config/pulse(/.*)?" any file_session_pa_home)
 
     (call session_home_dir_filetrans (session_t session_pa_home_t file ".esd_auth")) 
-    (call session_config_filetrans (session_t session_pa_home_t dir "pulse")) 
+    (call session_home_dir_filetrans (session_pa_t session_pa_home_t file ".esd_auth"))
 
+    (call session_config_filetrans (session_t session_pa_home_t dir "pulse")) 
+ 
     (type session_pa_run_t)
     (call session_run_object (session_pa_run_t))
 
     (context file_session_pa_run (session_u object_r session_pa_run_t ((s0)(s0))))
     (filecon "/run/user/0/pulse(/.*)?" any file_session_pa_run)
-    (filecon "/run/user/1000/pulse(/.*)?" any file_session_pa_run)
 
     (call session_run_user_dir_filetrans (session_t session_pa_run_t dir "pulse")) 
 
     (type session_pa_tmp_t)
     (call session_tmp_object (session_pa_tmp_t))
 
+    (call files_tmp_filetrans (session_pa_t session_pa_tmp_t dir "*"))
+
     (type session_pa_tmpfs_t)
     (call session_tmpfs_object (session_pa_tmpfs_t))
 
+    (call filesystem_tmpfs_filetrans (session_pa_t session_pa_tmpfs_t file "*"))
+
     (call session_search_generic_config (session_pa_t))
-    (allow session_pa_t session_pa_home_t (dirs (list)))
-    (allow session_pa_t session_pa_home_t (dir (setattr)))
-    (call manage_files_pattern (session_pa_t session_pa_home_t session_pa_home_t))
-    (call session_search_run_user_dir (session_pa_t))
-    (allow session_pa_t session_pa_run_t (dirs (list)))
-    (call manage_files_pattern (session_pa_t session_pa_run_t session_pa_run_t))
-    (call manage_sock_files_pattern (session_pa_t session_pa_run_t session_pa_run_t))
-    (allow session_pa_t session_pa_run_t (dir (setattr))))
+    (call session_search_run_user_dir (session_pa_t)))
 
 (optional session_optional_session_moc
     (type session_moc_t)
@@ -898,7 +856,6 @@
     (context file_session_moc_home (session_u object_r session_moc_home_t ((s0)
         (s0))))
     (filecon "/root/\.moc(/.*)?" any file_session_moc_home)
-    (filecon "/home/joe/\.moc(/.*)?" any file_session_moc_home)
 
     (call session_application_subject (session_moc_t))
     (call session_list_home_dir (session_moc_t))
@@ -909,7 +866,12 @@
 
     (optional session_moc_optional_session_pa
         (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
-            session_pa_run_t session_pa_tmpfs_t))))
+            session_pa_run_t session_pa_tmpfs_t)))
+
+        (call session_home_dir_filetrans_session_config_dir (session_moc_t))
+        (call session_config_filetrans (session_moc_t session_pa_home_t dir "pulse"))
+        (call session_run_user_dir_filetrans (session_moc_t session_pa_run_t dir "pulse"))
+        (call filesystem_tmpfs_filetrans (session_moc_t session_pa_tmpfs_t file "*")))
 
 (optional session_optional_session_sudo
     (type session_sudo_t)
@@ -920,9 +882,6 @@
     (call session_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_bin_auto_subject_type_transition (session_sudo_t session_t))
     (call commands_shell_auto_subject_type_transition (session_sudo_t session_t))
-    (allow session_t session_sudo_t (process (sigchld)))
-    (allow session_t session_sudo_t (fd (use)))
-    (allow session_t session_sudo_t rw_inherited_fifo_file_perms)
 
     (type session_visudo_t)
     (call sudo_visudo_role_template (session_r session_t session_visudo_t))
@@ -937,7 +896,6 @@
 
 (context file_session_pass_home (session_u object_r session_pass_home_t ((s0)(s0))))
 (filecon "/root/\.password-store(/.*)?" any file_session_pass_home)
-(filecon "/home/joe/\.password-store(/.*)?" any file_session_pass_home)
 (call session_home_dir_filetrans (session_t session_pass_home_t dir ".password-store")) 
 
 (type session_google_home_t)
@@ -946,8 +904,6 @@
 (context file_session_google_home (session_u object_r session_google_home_t ((s0)(s0))))
 (filecon "/root/\.config/googlecl(/.*)?" any file_session_google_home)
 (filecon "/root/\.local/share/googlecl(/.*)?" any file_session_google_home)
-(filecon "/home/joe/\.config/googlecl(/.*)?" any file_session_google_home)
-(filecon "/home/joe/\.local/share/googlecl(/.*)?" any file_session_google_home)
 (call session_config_filetrans (session_t session_google_home_t dir "googlecl")) 
 (call session_data_filetrans (session_t session_google_home_t dir "googlecl")) 
 
@@ -1224,6 +1180,12 @@
 (macro session_setattr_terminals ((type ARG1))
     (allow ARG1 device_session_pts_t (chr_file (setattr)))
     (allow ARG1 device_session_tty_t (chr_file (setattr))))
+
+(macro session_role_change ((role ARG1))
+    (roleallow ARG1 session_r))
+
+(macro session_user_role ((user ARG1))
+    (userrole ARG1 session_r))
 
 (macro session_application_subject ((type ARG1))
     (typeattributeset is_session_application_subject (ARG1)))

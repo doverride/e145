@@ -16,4 +16,6 @@
     (roleattributeset is_pincurses_role ARG1)
     (typeattributeset is_pincurses_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 pincurses_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 pincurses_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal sigkill signal sigstop)))
+    (call ps_subject_pattern (ARG2 ARG3)))

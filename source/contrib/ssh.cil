@@ -63,12 +63,18 @@
     (call miscfiles_read_network_config_files (is_ssh_subject))
     (call miscfiles_read_generic_cert_files (is_ssh_subject)))
 
+(optional ssh_optional_usersubject
+    (type user_ssh_home_t)
+    (call usersubject_home_object (user_ssh_home_t)))
+
 (macro ssh_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_ssh_role ARG1)
     (typeattributeset is_ssh_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 ssh_exec_t ARG3))
     (allow ARG3 self (key (view read search write link)))
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 list_dir_perms)
     (allow ARG3 ARG4 read_file_perms)
     (allow ARG3 ARG4 read_lnk_file_perms))
@@ -77,7 +83,9 @@
     (roleattributeset is_sshagent_role ARG1)
     (typeattributeset is_sshagent_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 sshagent_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 sshagent_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3)))
 
 (macro ssh_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
