@@ -69,6 +69,7 @@
 (call usersubject_search_all_home (is_user_application_subject))
 
 (allow is_common_login_user_subject self (process (setpgid signal sigkill sigstop signull)))
+(allow is_common_login_user_subject self create_unix_stream_socket_perms)
 (allow is_common_login_user_subject self rw_fifo_file_perms)
 
 (call commands_execute_bin_files (is_common_login_user_subject))
@@ -92,13 +93,18 @@
 (call usersubject_generic_tmp_template (is_common_login_user_subject))
 (call usersubject_generic_tmpfs_template (is_common_login_user_subject))
 
+(call system_read_generic_proc_files (is_common_login_user_subject))
+
 (call files_read_generic_etc_files (is_common_login_user_subject))
 
-(optional usersubject_optional_auth
+(optional usersubject_common_login_user_optional_auth
     (call auth_nsswitch_client_subject (is_common_login_user_subject)))
 
-(optional usersubject_optional_login
+(optional usersubject_common_login_user_optional_login
     (call login_signull (is_common_login_user_subject)))
+
+(optional usersubject_common_login_user_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_common_login_user_subject)))
 
 (optional usersubject_optional_tmpfiles
     (call tmpfiles_manageable_object_exception (is_user_home_file_object))
