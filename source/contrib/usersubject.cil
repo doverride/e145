@@ -95,7 +95,7 @@
 (call files_read_generic_etc_files (is_common_login_user_subject))
 
 (optional usersubject_optional_auth
-    (call auth_read_passwd_files (is_common_login_user_subject)))
+    (call auth_nsswitch_client_subject (is_common_login_user_subject)))
 
 (optional usersubject_optional_login
     (call login_signull (is_common_login_user_subject)))

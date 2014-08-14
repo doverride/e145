@@ -91,7 +91,9 @@
 (call files_setattr_run_user_root_dirs (logind_t))
 
 (call filesystem_list_tmpfs (logind_t)) ; may be related to misslabeled /run/user/$UID
+(call filesystem_getattr_tmpfs_filesystems (logind_t))
 (call filesystem_mount_tmpfs_filesystems (logind_t))
+(call filesystem_unmount_tmpfs_filesystems (logind_t))
 
 (call selinux_getattr_filesystems (logind_t))
 (call selinux_get_enforce_mode (logind_t))
@@ -111,7 +113,8 @@
 (call systemd_search_var_lib (logind_t)) ; not sure where it wants to go
 (call systemd_start_generic_service (logind_t)) ; user@.service
 (call systemd_start_power_service (logind_t)) ; sleep
-(call systemd_start_system (logind_t)) ; BUG: logind to start session
+(call systemd_start_system (logind_t))
+(call systemd_stop_system (logind_t))
 (call systemd_start_transient_system_service (logind_t))
 (call systemd_stream_connect (logind_t))
 

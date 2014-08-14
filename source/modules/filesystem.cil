@@ -410,6 +410,9 @@
 (macro filesystem_mount_tmpfs_filesystems ((type ARG1))
     (allow ARG1 tmpfs_t (filesystem (mount))))
 
+(macro filesystem_unmount_tmpfs_filesystems ((type ARG1))
+    (allow ARG1 tmpfs_t (filesystem (unmount))))
+
 (macro filesystem_execute_generic_tmpfs_files ((type ARG1))
     (call exec_files_pattern (ARG1 tmpfs_t tmpfs_t)))
 
