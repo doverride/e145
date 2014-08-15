@@ -135,3 +135,6 @@
     (call files_search_var (ARG1))
     (call manage_files_pattern (ARG1 sudo_var_t sudo_var_t)))
 
+(macro sudo_use_all_fd ((type ARG1))
+    (allow ARG1 is_sudo_subject (fd (use))))
+

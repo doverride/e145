@@ -39,6 +39,9 @@
     (call irc_use_fd_all_irssi (is_application_subject))
     (call irc_rw_inherited_fifo_files_all_irssi (is_application_subject)))
 
+(optional application_optional_sudo
+    (call sudo_use_all_fd (is_application_subject)))
+
 (optional application_optional_screen
 	(call screen_use_all_fd (is_application_subject)))
 
