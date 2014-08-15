@@ -609,7 +609,7 @@
 
     (call usersubject_application_subject (joe_sudo_t))
     (call usersubject_use_terminals (joe_sudo_t))
-    (call usersubject_relabel_tty_nodes (joe_sudo_t))
+    (call usersubject_relabel_terminals (joe_sudo_t))
 
     (call usersubject_bin_auto_subject_type_transition (joe_sudo_t joe_t))
     (call commands_bin_auto_subject_type_transition (joe_sudo_t joe_t))

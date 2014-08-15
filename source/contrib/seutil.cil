@@ -178,6 +178,8 @@
 
 (call seutil_read_config_files (setenforce_t))
 
+(allow secilc_t self (capability (dac_override))) ; hack: run build.sh as root
+
 (call system_read_generic_proc_files (secilc_t))
 
 (call seutil_create_file_context_files (secilc_t))

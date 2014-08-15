@@ -93,14 +93,24 @@
 (call usersubject_generic_tmp_template (is_common_login_user_subject))
 (call usersubject_generic_tmpfs_template (is_common_login_user_subject))
 
+(call system_list_proc (is_common_login_user_subject))
 (call system_read_generic_proc_files (is_common_login_user_subject))
+(call system_read_sysctl_kernel_files (is_common_login_user_subject))
 
 (call files_list_etc (is_common_login_user_subject))
 (call files_read_generic_etc_files (is_common_login_user_subject))
+(call files_read_generic_usr_files (is_common_login_user_subject))
+
+(call files_dontaudit_list_all (is_common_login_user_subject)) ; catchall
 
 (call devices_read_urandom (is_common_login_user_subject))
+(call devices_read_sysfs_files (is_common_login_user_subject))
 
 (call selinux_getattr_filesystems (is_common_login_user_subject))
+(call selinux_get_enforce_mode (is_common_login_user_subject))
+
+(call subject_getattr_all_subjects (is_common_login_user_subject))
+(call subject_read_all_subjects_state (is_common_login_user_subject))
 
 (optional usersubject_common_login_user_optional_auth
     (call auth_nsswitch_client_subject (is_common_login_user_subject)))
@@ -1091,7 +1101,7 @@
     (allow ARG1 user_cache_t (dirs (search))))
 
 (macro usersubject_search_generic_config ((type ARG1))
-    (call session_search_home_dir (ARG1))
+    (call usersubject_search_home_dir (ARG1))
     (allow ARG1 user_conf_t (dirs (search))))
 
 (macro usersubject_dontaudit_search_generic_data ((type ARG1))
@@ -1149,8 +1159,15 @@
 (macro usersubject_create_pty_node ((type ARG1))
     (call terminal_create_pty_node (ARG1 device_user_pts_t)))
 
+(macro usersubject_relabel_terminals ((type ARG1))
+    (allow ARG1 device_user_tty_t relabel_chr_file_perms)
+    (allow ARG1 device_user_pts_t relabel_chr_file_perms))
+
 (macro usersubject_relabel_tty_nodes ((type ARG1))
     (allow ARG1 device_user_tty_t relabel_chr_file_perms))
+
+(macro usersubject_relabel_pty_nodes ((type ARG1))
+    (allow ARG1 device_user_pts_t relabel_chr_file_perms))
 
 (macro usersubject_setattr_tty_nodes ((type ARG1))
     (allow ARG1 device_user_tty_t (chr_file (setattr))))
