@@ -626,3 +626,6 @@
     (call usersubject_application_subject (joe_visudo_t))
 
     (call commands_bin_auto_subject_type_transition (joe_visudo_t joe_t)))
+
+(macro joe_use_fd ((type ARG1))
+    (allow ARG1 joe_t (fd (use))))

@@ -906,7 +906,10 @@
 
     (call session_application_subject (session_visudo_t))
 
-    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t)))
+    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t))
+
+    (optional session_optional_joe
+        (call joe_use_fd (session_t))))
 
 ; miscfiles
 (type session_pass_home_t)
