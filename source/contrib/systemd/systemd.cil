@@ -421,6 +421,9 @@
     (call session_read_generic_home_content_files (systemctl_t)) ; ~/.lesshst
     (call session_use_inherited_terminals (systemctl_t)))
 
+(optional systemctl_optional_usersubject
+    (call usersubject_use_inherited_terminals (systemctl_t)))
+
 (allow systemd_t is_systemd_daemon_or_systemd_oneshot_subject (process
     (signull)))
 (call systemd_getattr_unix_stream_socket
