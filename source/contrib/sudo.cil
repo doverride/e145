@@ -72,6 +72,9 @@
 (call sudo_read_pam_config_files (is_sudo_subject))
 (call sudo_manage_var_files (is_sudo_subject))
 
+(optional sudo_optional_application
+    (call application_getattr_all_application_executable_files (is_sudo_subject)))
+
 (optional sudo_optional_auditd
     (call audit_client_subject (is_sudo_subject)))
 

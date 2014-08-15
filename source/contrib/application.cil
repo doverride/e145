@@ -9,6 +9,9 @@
     (typeattributeset is_application_executable_file_object ARG1)
     (call commands_bin_object (ARG1)))
 
+(macro application_getattr_all_application_executable_files ((type ARG1))
+    (allow ARG1 is_application_executable_file_object (file (getattr))))
+
 (macro application_execute_all_application_executable_files ((type ARG1))
     (call can_exec (ARG1 is_application_executable_file_object)))
 
