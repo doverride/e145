@@ -909,6 +909,7 @@
     (call commands_bin_auto_subject_type_transition (session_visudo_t session_t))
 
     (optional session_optional_joe
+        (call joe_rw_inherited_fifo_files (session_t))
         (call joe_use_fd (session_t))))
 
 ; miscfiles

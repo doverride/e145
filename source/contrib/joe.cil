@@ -629,3 +629,7 @@
 
 (macro joe_use_fd ((type ARG1))
     (allow ARG1 joe_t (fd (use))))
+
+(macro joe_rw_inherited_fifo_files ((type ARG1))
+    (allow ARG1 joe_t rw_inherited_fifo_file_perms))
+
