@@ -318,6 +318,9 @@
 (optional session_optional_upower
     (call upower_run (session_t session_r)))
 
+(optional session_optional_usersubject
+    (call usersubject_use_inherited_terminals (session_t)))
+
 (optional session_optional_wpacli
     (call wpa_run_wpacli (session_t session_r)))
 

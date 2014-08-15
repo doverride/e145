@@ -97,13 +97,24 @@
 
 (call files_read_generic_etc_files (is_common_login_user_subject))
 
+(call devices_read_urandom (is_common_login_user_subject))
+
+(call selinux_getattr_filesystems (is_common_login_user_subject))
+
 (optional usersubject_common_login_user_optional_auth
     (call auth_nsswitch_client_subject (is_common_login_user_subject)))
+
+(optional usersubject_common_login_user_optional_consoletype
+    (call consoletype_exec (is_common_login_user_subject)))
 
 (optional usersubject_common_login_user_optional_login
     (call login_signull (is_common_login_user_subject)))
 
+(optional usersubject_common_login_user_optional_hostname
+    (call hostname_exec (is_common_login_user_subject)))
+
 (optional usersubject_common_login_user_optional_miscfiles
+    (call miscfiles_read_localization_files (is_common_login_user_subject))
     (call miscfiles_read_terminfo_files (is_common_login_user_subject)))
 
 (optional usersubject_optional_tmpfiles
