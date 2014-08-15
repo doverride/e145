@@ -20,6 +20,7 @@
     (call sudo_rw_inherited_fifo_files_all_sudo (is_application_subject))
 
     (optional application_optional_joe
+        (call joe_rw_inherited_fifo_files (is_application_subject))
     	(call joe_use_fd (is_application_subject))))
 
 (optional application_optional_screen
