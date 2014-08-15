@@ -39,7 +39,7 @@
 (filecon "/var/db/sudo(/.*)?" any file_sudo_var)
 
 (allow is_sudo_subject self (capability (setuid setgid sys_resource fowner dac_override)))
-(allow is_sudo_subject self (process (setsched setrlimit setexec)))
+(allow is_sudo_subject self (process (setsched setrlimit setexec signal)))
 (allow is_sudo_subject self create_unix_stream_socket_perms)
 (allow is_sudo_subject self rw_fifo_file_perms)
 
@@ -144,3 +144,8 @@
 (macro sudo_use_all_fd ((type ARG1))
     (allow ARG1 is_sudo_subject (fd (use))))
 
+(macro sudo_send_sigchld_all_sudo ((type ARG1))
+    (allow ARG1 is_sudo_subject (process (sigchld))))
+
+(macro sudo_rw_inherited_fifo_files_all_sudo ((type ARG1))
+    (allow ARG1 is_sudo_subject rw_inherited_fifo_file_perms))
