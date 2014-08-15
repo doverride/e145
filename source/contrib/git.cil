@@ -71,7 +71,8 @@
     (type user_git_home_t)
     (call usersubject_home_object (user_git_home_t))
     (type user_git_conf_t)
-    (call usersubject_home_object (user_git_conf_t)))
+    (call usersubject_home_object (user_git_conf_t))
+    (call usersubject_use_inherited_terminals (is_git_subject)))
 
 (allow is_tig_subject self rw_fifo_file_perms)
 

@@ -81,6 +81,9 @@
 (optional sudo_optional_journald
     (call journald_client_subject (is_sudo_subject)))
 
+(optional sudo_optional_systemd
+    (call systemd_search_keyring (is_sudo_subject)))
+
 (optional sudo_optional_utmp
     (call utmp_read_run_files (is_sudo_subject)))
 

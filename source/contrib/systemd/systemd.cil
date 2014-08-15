@@ -645,6 +645,9 @@
 (macro systemd_send_signal ((type ARG1))
     (allow ARG1 systemd_t (process (signal))))
 
+(macro systemd_search_keyring ((type ARG1))
+    (allow ARG1 systemd_t (key (search))))
+
 (macro systemd_send_signal_systemctl ((type ARG1))
     (allow ARG1 systemctl_t (process (signal))))
 
