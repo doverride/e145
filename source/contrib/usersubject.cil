@@ -95,6 +95,7 @@
 
 (call system_read_generic_proc_files (is_common_login_user_subject))
 
+(call files_list_etc (is_common_login_user_subject))
 (call files_read_generic_etc_files (is_common_login_user_subject))
 
 (call devices_read_urandom (is_common_login_user_subject))
