@@ -94,6 +94,9 @@
 (optional nettools_optional_session
     (call session_use_inherited_terminals (nettools_t)))
 
+(optional nettools_optional_usersubject
+    (call usersubject_use_inherited_terminals (nettools_t)))
+
 (allow ping_t self (capability (net_raw)))
 (allow ping_t self (process (getcap setcap)))
 (allow ping_t self create_rawip_socket_perms)
@@ -108,6 +111,9 @@
 
 (optional ping_optional_session
     (call session_use_inherited_terminals (ping_t)))
+
+(optional ping_optional_usersubject
+    (call usersubject_use_inherited_terminals (ping_t)))
 
 (allow traceroute_t self (capability (dac_override net_raw)))
 (allow traceroute_t self (capability2 (block_suspend)))
@@ -136,6 +142,9 @@
 
 (optional traceroute_optional_session
     (call session_use_inherited_terminals (traceroute_t)))
+
+(optional traceroute_optional_usersubject
+    (call usersubject_use_inherited_terminals (traceroute_t)))
 
 (allow is_nettools_admin_subject is_nettools_subject signal_perms)
 (call ps_subject_pattern (is_nettools_admin_subject is_nettools_subject))

@@ -88,6 +88,9 @@
     (call storage_read_removable_nodes (fstools_t))
     (call storage_write_removable_nodes (fstools_t)))
 
+(optional fstools_optional_usersubject
+    (call usersubject_use_inherited_terminals (fstools_t)))
+
 (macro fstools_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 fstools_exec_t fstools_t)))
 

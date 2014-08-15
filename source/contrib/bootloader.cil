@@ -86,6 +86,9 @@
 (optional grubby_optional_storage
     (call storage_read_fixed_disk_nodes (grubby_t)))
 
+(optional grubby_optional_usersubject
+    (call usersubject_use_inherited_terminals (grubby_t)))
+
 (allow is_bootloader_admin_subject is_bootloader_subject signal_perms)
 (call ps_subject_pattern (is_bootloader_subject is_bootloader_subject))
 

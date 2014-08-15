@@ -76,6 +76,9 @@
 (optional mount_optional_storage
     (call storage_read_fixed_disk_nodes (mount_t)))
 
+(optional mount_optional_usersubject
+    (call usersubject_use_inherited_terminals (mount_t)))
+
 (macro mount_exec ((type ARG1))
     (call can_exec (ARG1 mount_exec_t)))
 

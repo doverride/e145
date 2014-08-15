@@ -14,6 +14,9 @@
 (optional hostname_optional_session
     (call session_use_inherited_terminals (hostname_t)))
 
+(optional hostname_optional_usersubject
+    (call usersubject_use_inherited_terminals (hostname_t)))
+
 (macro hostname_exec ((type ARG1))
     (call can_exec (ARG1 hostname_exec_t)))
 

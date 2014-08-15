@@ -105,6 +105,9 @@
     (call udevd_read_config_files (dmcrypt_t))
     (call udevd_read_run_files (dmcrypt_t)))
 
+(optional dmcrypt_optional_usersubject
+    (call usersubject_use_inherited_terminals (dmcrypt_t)))
+
 (call files_run_filetrans (dmeventd_t dmeventd_run_t fifo_file "*"))
 (call files_run_filetrans (dmeventd_t dmeventd_run_t file "*"))
 

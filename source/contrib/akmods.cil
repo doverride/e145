@@ -143,6 +143,9 @@
     (call rpm_signull (akmods_t))
     (call rpm_manage_var_lib_files (akmods_t)))
 
+(optional akmods_optional_usersubject
+    (call usersubject_use_inherited_terminals (akmods_t)))
+
 (allow is_akmods_admin_subject is_akmods_subject signal_perms)
 (call ps_subject_pattern (is_akmods_admin_subject is_akmods_subject))
 

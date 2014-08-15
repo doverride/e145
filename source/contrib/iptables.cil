@@ -118,6 +118,9 @@
 (optional iptables_optional_session
     (call session_use_inherited_terminals (iptables_t)))
 
+(optional iptables_optional_usersubject
+    (call usersubject_use_inherited_terminals (iptables_t)))
+
 (allow is_iptables_admin_subject iptables_t signal_perms)
 (call ps_subject_pattern (is_iptables_admin_subject iptables_t))
 

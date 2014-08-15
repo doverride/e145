@@ -148,6 +148,9 @@
 (optional ntp_optional_session
     (call session_use_inherited_terminals (ntp_t)))
 
+(optional ntp_optional_usersubject
+    (call usersubject_use_inherited_terminals (ntp_t)))
+
 (allow is_ntp_admin_subject is_ntp_subject signal_perms)
 (call ps_subject_pattern (is_ntp_admin_subject is_ntp_subject))
 

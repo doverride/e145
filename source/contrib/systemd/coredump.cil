@@ -92,6 +92,9 @@
     (call session_read_generic_home_content_files (coredumpctl_t)) ; ~/.lesshst
     (call session_use_inherited_terminals (coredumpctl_t)))
 
+(optional coredumpctl_optional_usersubject
+    (call usersubject_use_inherited_terminals (coredumpctl_t)))
+
 (call admin_pattern (is_coredump_admin_subject is_coredump_file_object))
 
 (macro coredump_subtrans_coredumpctl ((type ARG1))

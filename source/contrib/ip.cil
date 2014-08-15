@@ -26,6 +26,9 @@
 (optional ip_optional_session
     (call session_use_inherited_terminals (ip_t)))
 
+(optional ip_optional_usersubject
+    (call usersubject_use_inherited_terminals (ip_t)))
+
 (macro ip_exec ((type ARG1))
     (call can_exec (ARG1 ip_exec_t)))
 

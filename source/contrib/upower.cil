@@ -70,6 +70,9 @@
 (optional upower_optional_session
     (call session_use_inherited_terminals (upower_t)))
 
+(optional upower_optional_usersubject
+    (call usersubject_use_inherited_terminals (upower_t)))
+
 (allow upowerd_t self create_netlink_kobject_uevent_socket_perms)
 (allow upowerd_t self rw_fifo_file_perms)
 

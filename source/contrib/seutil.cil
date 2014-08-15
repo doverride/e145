@@ -137,6 +137,9 @@
 (optional seutil_optional_session
     (call session_use_inherited_terminals (is_seutil_subject)))
 
+(optional seutil_optional_usersubject
+    (call usersubject_use_inherited_terminals (is_seutil_subject)))
+
 (call selinux_getattr_filesystems (load_policy_t))
 (call selinux_load_policy (load_policy_t))
 
