@@ -57,6 +57,8 @@
 (call selinux_getattr_filesystems (is_sudo_subject))
 (call selinux_compute_relabel_context (is_sudo_subject))
 
+(call subject_role_change_exemption (is_sudo_subject))
+
 (call terminal_search_devpts (is_sudo_subject))
 
 (call auth_read_authconfig_pam_config_files (is_sudo_subject))
