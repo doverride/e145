@@ -41,6 +41,8 @@
 (portcon "tcp" 22 port_ssh)
 (portcon "udp" 22 port_ssh)
 
+(allow is_ssh_subject self (process (setfscreate)))
+
 (call devices_read_urandom (is_ssh_subject))
 
 (call files_list_etc (is_ssh_subject)) ; /etc/gss/mech.d
@@ -65,7 +67,8 @@
 
 (optional ssh_optional_usersubject
     (type user_ssh_home_t)
-    (call usersubject_home_object (user_ssh_home_t)))
+    (call usersubject_home_object (user_ssh_home_t))
+    (call usersubject_use_inherited_terminals (is_ssh_subject)))
 
 (macro ssh_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_ssh_role ARG1)

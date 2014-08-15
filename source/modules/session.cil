@@ -810,6 +810,14 @@
         (call stream_connect_pattern (session_ssh_t session_gpg_home_t session_gpgagent_home_t
             session_gpgagent_t)))
 
+    (optional session_ssh_optional_usersubject
+        (call usersubject_search_home_dir (session_ssh_t))
+        (call manage_files_pattern (session_ssh_t user_ssh_home_t user_ssh_home_t))
+
+        (optional session_ssh_optional_joe_gpgagent
+            (call stream_connect_pattern (session_ssh_t user_gpg_home_t user_gpgagent_home_t
+            joe_gpgagent_t))))
+
     (type session_sshagent_t)
     (call ssh_role_template_agent (session_r session_t session_sshagent_t))
 
