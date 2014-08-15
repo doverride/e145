@@ -540,6 +540,10 @@
     (call systemd_search_generic_unit (ARG1))
     (allow ARG1 systemd_unit_t (service (start))))
 
+(macro systemd_stop_generic_service ((type ARG1))
+    (call systemd_search_generic_unit (ARG1))
+    (allow ARG1 systemd_unit_t (service (stop))))
+
 (macro systemd_start_power_service ((type ARG1))
     (call systemd_search_generic_unit (ARG1))
     (allow ARG1 systemd_power_unit_t (service (start))))

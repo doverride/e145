@@ -112,9 +112,10 @@
 (call systemd_get_status_system (logind_t))
 (call systemd_search_var_lib (logind_t)) ; not sure where it wants to go
 (call systemd_start_generic_service (logind_t)) ; user@.service
+(call systemd_stop_generic_service (logind_t)) ; user@.service
 (call systemd_start_power_service (logind_t)) ; sleep
-(call systemd_start_system (logind_t))
-(call systemd_stop_system (logind_t))
+(call systemd_start_system (logind_t)) ; these seem like bugs
+(call systemd_stop_system (logind_t)) ; these seem like bugs
 (call systemd_start_transient_system_service (logind_t))
 (call systemd_stream_connect (logind_t))
 
