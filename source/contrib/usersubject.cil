@@ -143,6 +143,9 @@
     (call tmpfiles_manageable_object_exception (is_user_run_file_object))
     (call tmpfiles_relabelable_object_exception (is_user_run_file_object)))
 
+(optional usersubject_common_login_user_optional_utmp
+    (call utmp_read_run_files (is_common_login_user_subject)))
+
 (macro usersubject_base_login_user_template ((user ARG1)(role ARG2)(type ARG3)
     (level ARG4)(level ARG5)(level ARG6))
     (call object_userrole (ARG1))
