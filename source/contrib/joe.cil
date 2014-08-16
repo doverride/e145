@@ -209,6 +209,10 @@
     (type joe_emacsclient_t)
     (call emacs_role_template_client (joe_r joe_t joe_emacsclient_t))
 
+    (allow joe_t joe_emacsclient_t (process (getattr)))
+    (allow joe_t joe_emacsclient_t (dirs (list)))
+    (allow joe_t joe_emacsclient_t read_file_perms)
+
     (call usersubject_application_subject (joe_emacsclient_t))
     (call usersubject_use_terminals (joe_emacsclient_t))
 
