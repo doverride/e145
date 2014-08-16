@@ -1,3 +1,10 @@
+systemd: emergency service
+    the kids changed emergency.service in rawhide to run sulogin and systemctl
+    from a shell
+
+    i copied /usr/lib/systemd/system/emergency.service to /etc/systemd/system/
+    and modified it to reflect upstream (upstream does it right)
+
 git: make git work with gpg signing (session_git_t -> joe_gpg_t)
 
 login: allow session_t logins conditionally

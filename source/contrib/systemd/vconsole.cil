@@ -24,6 +24,17 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-vconsole-setup.*" file
     file_vconsole_unit)
 
+(allow vconsole_t self (capability (net_admin sys_tty_config)))
+
+(call system_read_generic_proc_files (vconsole_t))
+
+(call terminal_use_unallocated_tty_nodes (vconsole_t))
+
+(call vconsole_read_config_files (vconsole_t))
+
+(optional vconsole_optional_miscfiles
+    (call miscfiles_read_localization_files (vconsole_t)))
+
 (optional vconsole_optional_journald
     (call journald_client_subject (vconsole_t)))
 
@@ -33,6 +44,10 @@
 (allow is_vconsole_admin_subject vconsole_unit_t (service (all)))
 
 (call admin_pattern (is_vconsole_admin_subject is_vconsole_file_object))
+
+(macro vconsole_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 vconsole_conf_t read_file_perms))
 
 (macro vconsole_admin ((type ARG1))
     (typeattributeset is_vconsole_admin_subject ARG1))
