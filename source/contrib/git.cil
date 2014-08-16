@@ -71,7 +71,9 @@
     (type user_git_home_t)
     (call usersubject_home_object (user_git_home_t))
     (type user_git_conf_t)
-    (call usersubject_home_object (user_git_conf_t)))
+    (call usersubject_home_object (user_git_conf_t))
+    (type user_git_tmp_t)
+    (call usersubject_tmp_object (user_git_tmp_t)))
 
 (allow is_tig_subject self rw_fifo_file_perms)
 
@@ -115,7 +117,8 @@
     (type user_gitemail_home_t)
     (call usersubject_home_object (user_gitemail_home_t)))
 
-(macro git_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
+(macro git_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5)
+    (type ARG6))
     (roleattributeset is_git_role ARG1)
     (typeattributeset is_git_subject ARG3)
     (roletype ARG1 ARG3)
@@ -125,7 +128,8 @@
     (allow ARG3 ARG4 list_dir_perms)
     (allow ARG3 ARG4 read_file_perms)
     (allow ARG3 ARG4 read_lnk_file_perms)
-    (allow ARG3 ARG5 read_file_perms))
+    (allow ARG3 ARG5 read_file_perms)
+    (allow ARG3 ARG6 manage_file_perms))
 
 (macro git_role_template_tig ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_tig_role ARG1)

@@ -512,7 +512,8 @@
 
 (optional session_optional_session_git
     (type session_git_t)
-    (call git_role_template (session_r session_t session_git_t session_git_home_t session_git_conf_t))
+    (call git_role_template (session_r session_t session_git_t session_git_home_t session_git_conf_t
+        session_git_tmp_t))
 
     (type session_git_home_t)
     (call session_home_object (session_git_home_t))
@@ -538,6 +539,14 @@
     (allow session_git_t session_git_home_t manage_file_perms)
     (allow session_git_t session_git_home_t manage_lnk_file_perms)
     (call session_home_filetrans (session_git_t session_git_home_t dir ".git"))
+
+    (type session_git_tmp_t)
+    (call session_tmp_object (session_git_tmp_t))
+
+    (allow session_t session_git_tmp_t manage_file_perms)
+    (allow session_t session_git_tmp_t relabel_file_perms)
+
+    (call files_tmp_filetrans (session_git_t session_git_tmp_t file "*"))
 
     (call subtrans_pattern (session_git_t session_git_home_t session_t))
 
@@ -600,7 +609,8 @@
 
     (call commands_bin_auto_subject_type_transition (session_tig_t session_t))
 
-    (call git_role_template (session_r session_tig_t session_git_t session_git_home_t session_git_conf_t))
+    (call git_role_template (session_r session_tig_t session_git_t session_git_home_t session_git_conf_t
+        session_git_tmp_t))
 
     (type session_gitemail_t)
     (call git_role_template_email (session_r session_git_t session_gitemail_t
@@ -621,7 +631,8 @@
     (call session_application_subject (session_gitemail_t))
     (call session_read_generic_home_content_files (session_gitemail_t))
 
-    (call git_role_template (session_r session_gitemail_t session_git_t session_git_home_t session_git_conf_t)))
+    (call git_role_template (session_r session_gitemail_t session_git_t session_git_home_t session_git_conf_t
+        session_git_tmp_t)))
 
 (optional session_optional_session_gpg
     (type session_gpg_t)
@@ -649,11 +660,15 @@
 
     (optional session_gpg_optional_usersubject
         (call usersubject_use_inherited_terminals (session_gpg_t))
-        (call read_files_pattern (session_gpg_t user_gpg_home_t user_gpg_home_t))
+        (call usersubject_search_home_dir (session_gpg_t))
+        (call manage_files_pattern (session_gpg_t user_gpg_home_t user_gpg_home_t))
 
         (optional session_gpg_optional_joe
-            (call stream_connect_pattern (session_gpg_t user_gpgagent_home_t user_gpgagent_home_t
+            (call stream_connect_pattern (session_gpg_t user_gpg_home_t user_gpgagent_home_t
             joe_gpgagent_t))))
+
+    (optional session_gpg_optional_session_git
+        (allow session_gpg_t session_git_tmp_t read_file_perms))
 
     (type session_gpgagent_t)
     (call gpg_role_template_agent (session_r session_t session_gpgagent_t
