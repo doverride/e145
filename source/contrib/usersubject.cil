@@ -109,14 +109,18 @@
 (call files_read_generic_etc_files (is_common_login_user_subject))
 (call files_read_generic_usr_files (is_common_login_user_subject))
 
-(call files_dontaudit_getattr_all_files (is_common_login_user_subject)) ; catchall 
-(call files_dontaudit_getattr_all_lnk_files (is_common_login_user_subject)) ; catchall 
+(call files_dontaudit_read_all_files (is_common_login_user_subject)) ; catchall 
+(call files_dontaudit_read_all_lnk_files (is_common_login_user_subject)) ; catchall 
 (call files_dontaudit_list_all (is_common_login_user_subject)) ; catchall
 
 (call filesystem_dontaudit_list_cgroup (is_common_login_user_subject))
 
 (call devices_read_urandom (is_common_login_user_subject))
 (call devices_read_sysfs_files (is_common_login_user_subject))
+
+(call network_dontaudit_udp_bind_all_ports (is_common_login_user_subject))
+(call network_dontaudit_tcp_bind_all_ports (is_common_login_user_subject))
+(call network_dontaudit_tcp_connect_all_ports (is_common_login_user_subject))
 
 (call selinux_getattr_filesystems (is_common_login_user_subject))
 (call selinux_get_enforce_mode (is_common_login_user_subject))
