@@ -101,6 +101,8 @@
 
 (call files_search_run (journalctl_t))
 
+(call filesystem_getattr_tmpfs_filesystems (journalctl_t))
+
 (call journald_list_log (journalctl_t))
 (call journald_read_log_files (journalctl_t))
 
