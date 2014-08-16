@@ -135,6 +135,7 @@
 
 (optional usersubject_common_login_user_optional_miscfiles
     (call miscfiles_read_localization_files (is_common_login_user_subject))
+    (call miscfiles_read_man_files (is_common_login_user_subject))
     (call miscfiles_read_terminfo_files (is_common_login_user_subject)))
 
 (optional usersubject_optional_tmpfiles
@@ -211,6 +212,9 @@
 (macro usersubject_manage_generic_home_content_files ((type ARG1))
     (call usersubject_search_home_dir (ARG1))
     (call manage_files_pattern (ARG1 user_home_t user_home_t)))
+
+(macro usersubject_write_inherited_generic_home_content_files ((type ARG1))
+    (allow ARG1 user_home_t write_inherited_file_perms))
 
 (macro usersubject_manage_generic_home_content_lnk_files ((type ARG1))
     (call usersubject_search_home_dir (ARG1))
