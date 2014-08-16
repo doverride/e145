@@ -110,6 +110,8 @@
 (call files_dontaudit_getattr_all_lnk_files (is_common_login_user_subject)) ; catchall 
 (call files_dontaudit_list_all (is_common_login_user_subject)) ; catchall
 
+(call filesystem_dontaudit_list_cgroup (is_common_login_user_subject))
+
 (call devices_read_urandom (is_common_login_user_subject))
 (call devices_read_sysfs_files (is_common_login_user_subject))
 

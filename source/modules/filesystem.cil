@@ -364,6 +364,9 @@
     (call system_search_sysctl_fs (ARG1))
     (call read_files_pattern (ARG1 binfmt_misc_t binfmt_misc_t)))
 
+(macro filesystem_dontaudit_list_cgroup ((type ARG1))
+    (dontaudit ARG1 cgroup_t (dirs (list))))
+
 (macro filesystem_list_cgroup ((type ARG1))
     (allow ARG1 cgroup_t (dirs (list))))
 
