@@ -134,6 +134,8 @@
     not_associated_with_can_write_binary_policy
         policy_conf_t (file (create write)))
 
+(call terminal_use_inherited_unallocated_tty_nodes (is_seutil_subject))
+
 (optional seutil_optional_session
     (call session_use_inherited_terminals (is_seutil_subject)))
 

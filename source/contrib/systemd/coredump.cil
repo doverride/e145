@@ -72,6 +72,8 @@
 
 (call filesystem_getattr_filesystems (coredumpctl_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (coredumpctl_t))
+
 (call coredump_read_var_lib_files (coredumpctl_t)) ; only search is confirmed
 
 (optional coredumpctl_optional_auth

@@ -11,6 +11,8 @@
 
 (call files_search_etc (hostname_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (hostname_t))
+
 (optional hostname_optional_session
     (call session_use_inherited_terminals (hostname_t)))
 

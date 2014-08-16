@@ -142,6 +142,8 @@
 (optional ntpd_optional_miscfiles
     (call miscfiles_read_network_config_files (ntpd_t)))
 
+(call terminal_use_inherited_unallocated_tty_nodes (ntp_t))
+
 (optional ntp_optional_miscfiles
     (call miscfiles_read_terminfo_files (is_ntp_client_subject)))
 

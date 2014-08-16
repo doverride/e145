@@ -71,6 +71,8 @@
 
 (call selinux_getattr_filesystems (grubby_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (grubby_t))
+
 (optional grubby_optional_miscfiles
     (call miscfiles_read_localization_files (grubby_t)))
 

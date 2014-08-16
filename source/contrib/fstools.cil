@@ -70,6 +70,8 @@
 
 (call selinux_get_filesystems_mount (fstools_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (fstools_t))
+
 (optional fstools_optional_application
     (call application_subject (fstools_t)))
 

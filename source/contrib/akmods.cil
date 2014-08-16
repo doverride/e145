@@ -98,6 +98,8 @@
 
 (call subject_obj_id_change_exemption (akmods_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (akmods_t))
+
 (call akmods_manage_var_cache_files (akmods_t))
 (call akmods_read_config_files (akmods_t))
 

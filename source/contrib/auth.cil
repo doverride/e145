@@ -296,7 +296,7 @@
 (call selinux_get_filesystems_mount (chkpwd_t))
 
 (call terminal_dontaudit_use_console_nodes (chkpwd_t))
-(call terminal_dontaudit_use_unallocated_tty_nodes (chkpwd_t))
+(call terminal_use_inherited_unallocated_tty_nodes (chkpwd_t))
 
 (call auth_read_shadow_files (chkpwd_t))
 (call auth_nsswitch_client_subject (chkpwd_t))

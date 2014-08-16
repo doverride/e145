@@ -94,6 +94,8 @@
 
 (call files_read_generic_etc_files (iptables_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (iptables_t))
+
 (call iptables_read_env_files (iptables_t))
 
 (optional iptables_optional_application

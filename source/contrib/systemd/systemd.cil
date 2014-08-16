@@ -382,6 +382,7 @@
 
 (call terminal_use_console_nodes (is_systemd_subject))
 (call terminal_write_inherited_generic_pty_nodes (is_systemd_subject))
+(call terminal_use_inherited_unallocated_tty_nodes (systemctl_t))
 
 (call systemd_dgram_send (is_systemctl_client_subject))
 (call systemd_list_run (is_systemctl_client_subject))

@@ -106,6 +106,8 @@
 
 (call journald_manage_var_lib_files (journalctl_t)) ; /var/lib/systemd/catalog
 
+(call terminal_use_inherited_unallocated_tty_nodes (journalctl_t))
+
 (call systemd_search_run (journalctl_t))
 
 (optional journalctl_optional_application

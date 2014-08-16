@@ -12,6 +12,8 @@
 
 (call devices_read_kmsg (dmesg_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (dmesg_t))
+
 (optional dmesg_optional_miscfiles
     (call miscfiles_read_localization_files (dmesg_t)))
 

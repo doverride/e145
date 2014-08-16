@@ -60,6 +60,8 @@
 
 (call selinux_get_filesystems_mount (mount_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (mount_t))
+
 (call application_subject (mount_t))
 
 (booleanif mount_any_file

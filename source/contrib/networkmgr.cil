@@ -263,6 +263,8 @@
 
 (call selinux_getattr_filesystems (networkmgrcli_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (networkmgrcli_t))
+
 (call networkmgr_stream_connect (networkmgrcli_t))
 (call networkmgr_dbus_chat (networkmgrcli_t))
 

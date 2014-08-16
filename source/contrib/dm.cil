@@ -89,6 +89,8 @@
 
 (call selinux_getattr_filesystems (dmcrypt_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (dmcrypt_t))
+
 (optional dmcrypt_optional_miscfiles
     (call miscfiles_read_localization_files (dmcrypt_t)))
 

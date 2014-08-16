@@ -10,6 +10,8 @@
 
 (call files_search_etc (consoletype_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (consoletype_t))
+
 (optional consoletype_optional_session
     (call session_use_inherited_terminals (consoletype_t)))
 

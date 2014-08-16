@@ -20,6 +20,8 @@
 (call system_read_sysctl_net_files (ip_t))
 (call system_read_proc_net_files (ip_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (ip_t))
+
 (optional ip_optional_miscfiles
     (call miscfiles_read_localization_files (ip_t)))
 

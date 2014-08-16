@@ -84,6 +84,8 @@
 (call subject_getattr_all_subjects (nettools_t))
 (call subject_read_all_subjects_state (nettools_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (nettools_t))
+
 (optional nettools_optional_auth
     (call auth_nsswitch_client_subject (nettools_t)))
 
@@ -101,6 +103,8 @@
 (allow ping_t self (process (getcap setcap)))
 (allow ping_t self create_rawip_socket_perms)
 (allow ping_t self create_unix_stream_socket_perms)
+
+(call terminal_use_inherited_unallocated_tty_nodes (ping_t))
 
 (optional ping_optional_auth
     (call auth_nsswitch_client_subject (ping_t)))
@@ -132,6 +136,8 @@
 (call network_udp_bind_generic_node (traceroute_t))
 
 (call selinux_getattr_filesystems (traceroute_t))
+
+(call terminal_use_inherited_unallocated_tty_nodes (traceroute_t))
 
 (optional traceroute_optional_auth
     (call auth_nsswitch_client_subject (traceroute_t)))
