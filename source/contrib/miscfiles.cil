@@ -108,7 +108,8 @@
 
 (macro miscfiles_read_man_files ((type ARG1))
     (call files_search_usr (ARG1))
-    (call read_files_pattern (ARG1 man_t man_t)))
+    (allow ARG1 man_t (dirs (list)))
+    (allow ARG1 man_t read_file_perms))
 
 (macro miscfiles_read_module_files ((type ARG1))
     (call files_search_usr (ARG1))
