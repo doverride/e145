@@ -1,3 +1,5 @@
+(boolean priv_user_login false)
+
 (typeattribute is_login_admin_subject)
 
 (typeattribute is_login_subject)
@@ -5,6 +7,14 @@
 
 (typeattribute is_login_file_object)
 (typeattributeset is_login_file_object (login_pam_conf_t sulogin_unit_t))
+
+(type priv_user_login_t)
+(call selinux_boolean_object (priv_user_login_t))
+
+(context priv_user_login (system_u object_r
+    priv_user_login_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/priv_user_login"
+    priv_user_login)
 
 (type login_t)
 (type login_exec_t)
@@ -67,9 +77,13 @@
 (call auth_manage_pam_console_run_files (login_t)) ; does this apply to all login_program_subjects instead?
 
 (optional login_optional_session
-    (call session_relabel_tty_nodes (login_t))
-    (call session_setattr_tty_nodes (login_t))
-    (call session_use_tty_nodes (login_t)))
+    (booleanif priv_user_login
+        (true
+                (call session_relabel_tty_nodes (login_t))
+                (call session_setattr_tty_nodes (login_t))
+                (call session_use_tty_nodes (login_t)))
+        (false
+                (call session_dontaudit_use_tty_nodes (login_t)))))
 
 (optional login_optional_usersubject
     (call usersubject_relabel_tty_nodes (login_t))

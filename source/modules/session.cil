@@ -1187,6 +1187,9 @@
 (macro session_setattr_tty_nodes ((type ARG1))
     (allow ARG1 device_session_tty_t (chr_file (setattr))))
 
+(macro session_dontaudit_use_tty_nodes ((type ARG1))
+    (dontaudit ARG1 device_session_tty_t rw_term_perms))
+
 (macro session_use_tty_nodes ((type ARG1))
     (allow ARG1 device_session_tty_t rw_term_perms))
 
