@@ -7,10 +7,6 @@ systemd: emergency service
 
 git: make git work with gpg signing (session_git_t -> joe_gpg_t)
 
-login: allow session_t logins conditionally
-
-sulogin: test it to see if it still work (boot in emergency mode)
-
 grubby/bootloader: deal with /boot/grub2/grub (.cfg) on non-efi systems
     kernel upgrade fails on non efi systems
 
@@ -40,7 +36,7 @@ generators:
     target them because else we have no way to make them generate the units with
     their appropriate types
 
-fedora-readonly/fedora-autorelabel:
+fedora-readonly:
     target these oneshots
 
 session:
