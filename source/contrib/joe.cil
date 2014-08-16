@@ -367,6 +367,10 @@
     (call gpg_role_template_scd (joe_r joe_gpgagent_t joe_scd_t user_scd_tmp_t
         user_scd_home_t))
 
+    (allow joe_t joe_scd_t (process (getattr)))
+    (allow joe_t joe_scd_t (dirs (list)))
+    (allow joe_t joe_scd_t read_file_perms)
+
     (allow joe_t user_scd_tmp_t manage_dir_perms)
     (allow joe_t user_scd_tmp_t relabel_dir_perms)
     (allow joe_t user_scd_tmp_t manage_sock_file_perms)
@@ -385,6 +389,10 @@
 
     (type joe_gpgpcsc_t)
     (call gpg_role_template_pcsc (joe_r joe_scd_t joe_gpgpcsc_t))
+
+    (allow joe_t joe_gpgpcsc_t (process (getattr)))
+    (allow joe_t joe_gpgpcsc_t (dirs (list)))
+    (allow joe_t joe_gpgpcsc_t read_file_perms)
 
     (call usersubject_application_subject (joe_gpgpcsc_t)))
 
