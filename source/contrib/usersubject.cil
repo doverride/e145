@@ -97,10 +97,17 @@
 (call system_read_generic_proc_files (is_common_login_user_subject))
 (call system_read_sysctl_kernel_files (is_common_login_user_subject))
 
+(call system_dontaudit_list_all_proc_dirs (is_common_login_user_subject))
+(call system_dontaudit_getattr_all_proc_files (is_common_login_user_subject))
+(call system_dontaudit_list_all_sysctl_dirs (is_common_login_user_subject))
+(call system_dontaudit_getattr_all_sysctl_files (is_common_login_user_subject))
+
 (call files_list_etc (is_common_login_user_subject))
 (call files_read_generic_etc_files (is_common_login_user_subject))
 (call files_read_generic_usr_files (is_common_login_user_subject))
 
+(call files_dontaudit_getattr_all_files (is_common_login_user_subject)) ; catchall 
+(call files_dontaudit_getattr_all_lnk_files (is_common_login_user_subject)) ; catchall 
 (call files_dontaudit_list_all (is_common_login_user_subject)) ; catchall
 
 (call devices_read_urandom (is_common_login_user_subject))

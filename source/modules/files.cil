@@ -599,6 +599,12 @@
 (macro files_search_all_mnt_dirs ((type ARG1))
     (allow ARG1 is_mnt_file_object (dirs (search))))
 
+(macro files_dontaudit_getattr_all_files ((type ARG1))
+    (dontaudit ARG1 is_file_object (file (getattr))))
+
+(macro files_dontaudit_getattr_all_lnk_files ((type ARG1))
+    (dontaudit ARG1 is_file_object (lnk_file (getattr))))
+
 (macro files_getattr_all_files ((type ARG1)) ; for auditctl to add watches
     (call getattr_files_pattern (ARG1 is_file_object
         is_file_object)))
