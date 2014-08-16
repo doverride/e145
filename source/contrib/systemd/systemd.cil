@@ -659,6 +659,9 @@
 (macro systemd_use_fd ((type ARG1))
     (allow ARG1 systemd_t (fd (use))))
 
+(macro systemd_getattr ((type ARG1))
+    (allow ARG1 systemd_t (process (getattr))))
+
 (macro systemd_getpgid ((type ARG1))
     (allow ARG1 systemd_t (process (getpgid))))
 

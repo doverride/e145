@@ -68,9 +68,12 @@
 (call usersubject_use_inherited_terminals (is_user_application_subject))
 (call usersubject_search_all_home (is_user_application_subject))
 
-(allow is_common_login_user_subject self (process (setpgid signal sigkill sigstop signull)))
+(allow is_common_login_user_subject self (process (setpgid signal sigkill sigstop signull getattr)))
 (allow is_common_login_user_subject self create_unix_stream_socket_perms)
 (allow is_common_login_user_subject self rw_fifo_file_perms)
+
+(allow is_common_login_user_subject self (dirs (list)))
+(allow is_common_login_user_subject self read_file_perms)
 
 (call commands_execute_bin_files (is_common_login_user_subject))
 (call commands_execute_shell_files (is_common_login_user_subject))
@@ -118,8 +121,7 @@
 (call selinux_getattr_filesystems (is_common_login_user_subject))
 (call selinux_get_enforce_mode (is_common_login_user_subject))
 
-(call subject_getattr_all_subjects (is_common_login_user_subject))
-(call subject_read_all_subjects_state (is_common_login_user_subject))
+(call subject_dontaudit_read_all_subjects_state (is_common_login_user_subject))
 
 (optional usersubject_common_login_user_optional_auth
     (call auth_nsswitch_client_subject (is_common_login_user_subject)))
@@ -137,6 +139,10 @@
     (call miscfiles_read_localization_files (is_common_login_user_subject))
     (call miscfiles_read_man_files (is_common_login_user_subject))
     (call miscfiles_read_terminfo_files (is_common_login_user_subject)))
+
+(optional usersubject_common_login_user_optional_systemd
+    (call systemd_getattr (is_common_login_user_subject))
+    (call systemd_read_state (is_common_login_user_subject)))
 
 (optional usersubject_optional_tmpfiles
     (call tmpfiles_manageable_object_exception (is_user_home_file_object))
