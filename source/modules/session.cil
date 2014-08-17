@@ -169,6 +169,7 @@
 (call system_read_all_proc_files (session_t))
 (call system_read_all_sysctl_files (session_t))
 
+(call commands_audit_access_all_bin_files (session_t))
 (call commands_execute_bin_files (session_t))
 (call commands_execute_shell_files (session_t))
 (call commands_bin_files_entry_subject (session_t))

@@ -59,6 +59,9 @@
 (macro commands_read_all_bin_files ((type ARG1))
     (call read_files_pattern (ARG1 is_bin_file_object is_bin_file_object)))
 
+(macro commands_audit_access_all_bin_files ((type ARG1))
+    (dontaudit ARG1 is_bin_file_object (file (audit_access))))
+
 (macro commands_bin_files_entry_subject ((type ARG1))
     (call subject_entry (ARG1 bin_t)))
 
