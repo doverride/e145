@@ -394,6 +394,9 @@
 (macro files_search_home_root ((type ARG1))
     (allow ARG1 home_root_t (dirs (search))))
 
+(macro files_rw_home_root_dirs ((type ARG1))
+    (allow ARG1 home_root_t rw_dir_perms))
+
 (macro files_home_root_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
     (call files_search_home_root (ARG1))
