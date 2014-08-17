@@ -89,6 +89,7 @@
 (call selinux_validate_context (useradd_t))
 
 (call subject_obj_id_change_exemption (useradd_t)) ; setfscreate related
+(call subject_read_all_subjects_state (useradd_t)) ; userdel
  
 (call auth_rw_lastlog_log_files (useradd_t))
 
