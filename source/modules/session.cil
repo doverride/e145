@@ -782,11 +782,7 @@
     (context file_session_irssi_home (session_u object_r session_irssi_home_t ((s0)(s0))))
     (filecon "/root/\.irssi(/.*)?" any file_session_irssi_home)
 
-    (allow session_irssi_t session_irssi_home_t manage_dir_perms)
-    (allow session_irssi_t session_irssi_home_t manage_file_perms)
-    (allow session_irssi_t session_irssi_home_t read_lnk_file_perms)
     (call session_home_dir_filetrans (session_irssi_t session_irssi_home_t dir ".irssi"))
-
     (call session_home_dir_filetrans (session_t session_irssi_home_t dir ".irssi"))
 
     ; /exec: not sure if good idea

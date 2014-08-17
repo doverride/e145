@@ -61,8 +61,8 @@
     (call subtrans_pattern (ARG2 irssi_exec_t ARG3))
     (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
     (call ps_subject_pattern (ARG2 ARG3))
-    (allow ARG3 ARG4 list_dir_perms)
-    (allow ARG3 ARG4 read_file_perms)
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG4 read_lnk_file_perms))
 
 (macro irc_read_irssi_config_files ((type ARG1))
