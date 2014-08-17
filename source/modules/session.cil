@@ -320,6 +320,10 @@
 (optional session_optional_upower
     (call upower_run (session_t session_r)))
 
+(optional session_optional_usermanage
+    (call usermanage_run_groupadd (session_t session_r))
+    (call usermanage_run_useradd (session_t session_r)))
+
 (optional session_optional_usersubject
     (call usersubject_use_inherited_terminals (session_t))
     (call usersubject_home_dir_filetrans_user_home (session_t dir "*"))
@@ -375,6 +379,17 @@
     (call seutil_run_setsebool (session_t session_r))
     (call seutil_run_secilc (session_t session_r))
     (call seutil_run_setfiles (session_t session_r)))
+
+(optional session_optional_session_usermanage
+    (type session_chfn_t)
+    (call usermanage_role_template_chfn (session_r session_t session_chfn_t))
+
+    (call session_application_subject (session_chfn_t))
+
+    (type session_passwd_t)
+    (call usermanage_role_template_passwd (session_r session_t session_passwd_t))
+
+    (call session_application_subject (session_passwd_t)))
 
 (optional session_optional_session_bti
     (type session_bti_t)

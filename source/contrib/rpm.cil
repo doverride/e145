@@ -142,6 +142,10 @@
 (optional rpm_script_optional_libraries
     (call libraries_run_ldconfig (rpm_script_t is_rpm_role)))
 
+(optional rpm_script_optional_usermanage
+    (call usermanage_run_groupadd (rpm_script_t is_rpm_role))
+    (call usermanage_run_useradd (rpm_script_t is_rpm_role)))
+
 (allow is_rpm_admin_subject is_rpm_subject signal_perms)
 (call ps_subject_pattern (is_rpm_admin_subject is_rpm_subject))
 

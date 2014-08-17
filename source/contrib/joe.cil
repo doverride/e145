@@ -74,6 +74,17 @@
 (optional joe_optional_wpacli
     (call wpa_run_wpacli (joe_t joe_r)))
 
+(optional joe_optional_joe_usermanage
+    (type joe_chfn_t)
+    (call usermanage_role_template_chfn (joe_r joe_t joe_chfn_t))
+
+    (call usersubject_application_subject (joe_chfn_t))
+
+    (type joe_passwd_t)
+    (call usermanage_role_template_passwd (joe_r joe_t joe_passwd_t))
+
+    (call usersubject_application_subject (joe_passwd_t)))
+
 (optional joe_optional_joe_bti
     (type joe_bti_t)
     (call bti_role_template (joe_r joe_t joe_bti_t

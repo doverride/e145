@@ -62,6 +62,7 @@ contrib/ssh.cil
 contrib/sudo.cil
 contrib/tune.cil
 contrib/upower.cil
+contrib/usermanage.cil
 contrib/usersubject.cil
 contrib/wpa.cil
 contrib/systemd/askpwd.cil

@@ -1,0 +1,95 @@
+(roleattribute is_chfn_role)
+(roleattribute is_cracklib_role)
+(roleattribute is_groupadd_role)
+(roleattribute is_passwd_role)
+(roleattribute is_useradd_role)
+
+(typeattribute is_chfn_subject)
+(typeattribute is_passwd_subject)
+
+(type cracklib_t)
+(type cracklib_exec_t)
+(call application_subject_entry (cracklib_t cracklib_exec_t))
+(roleattributeset is_cracklib_role system_r)
+(roletype is_cracklib_role cracklib_t)
+
+(context file_cracklib_exec (system_u object_r cracklib_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/cracklib-check" file file_cracklib_exec)
+(filecon "/usr/sbin/cracklib-format" file file_cracklib_exec)
+(filecon "/usr/sbin/cracklib-packer" file file_cracklib_exec)
+(filecon "/usr/sbin/cracklib-unpacker" file file_cracklib_exec)
+(filecon "/usr/sbin/create-cracklib-dict" file file_cracklib_exec)
+
+(type cracklib_var_cache_t)
+(call files_var_cache_object (cracklib_var_cache_t))
+
+(context file_cracklib_var_cache (system_u object_r cracklib_var_cache_t ((s0) (s0))))
+(filecon "/usr/sbin/cracklib(/.*)?" any file_cracklib_var_cache)
+
+(type useradd_t)
+(type useradd_exec_t)
+(call application_subject_entry (useradd_t useradd_exec_t))
+(roleattributeset is_useradd_role system_r)
+(roletype is_useradd_role useradd_t)
+
+(context file_useradd_exec (system_u object_r useradd_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/useradd" file file_useradd_exec)
+(filecon "/usr/sbin/userdel" file file_useradd_exec)
+(filecon "/usr/sbin/usermod" file file_useradd_exec)
+(filecon "/usr/sbin/newusers" file file_useradd_exec)
+
+(type groupadd_t)
+(type groupadd_exec_t)
+(call application_subject_entry (groupadd_t groupadd_exec_t))
+(roleattributeset is_groupadd_role system_r)
+(roletype is_groupadd_role groupadd_t)
+
+(context file_groupadd_exec (system_u object_r groupadd_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/groupadd" file file_groupadd_exec)
+(filecon "/usr/sbin/groupdel" file file_groupadd_exec)
+(filecon "/usr/sbin/groupmod" file file_groupadd_exec)
+(filecon "/usr/sbin/gpasswd" file file_groupadd_exec)
+
+(type chfn_exec_t)
+(call application_subject_entry (is_chfn_subject chfn_exec_t))
+
+(context file_chfn_exec (system_u object_r chfn_exec_t ((s0)(s0))))
+(filecon "/usr/bin/chfn" file file_chfn_exec)
+(filecon "/usr/bin/chsh" file file_chfn_exec)
+
+(type passwd_exec_t)
+(call application_subject_entry (is_passwd_subject passwd_exec_t))
+
+(context file_passwd_exec (system_u object_r passwd_exec_t ((s0)(s0))))
+(filecon "/usr/bin/passwd" file file_passwd_exec)
+
+(macro usermanage_role_template_chfn ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_chfn_role ARG1)
+    (typeattributeset is_chfn_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 chfn_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3)))
+
+(macro usermanage_role_template_passwd ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_passwd_role ARG1)
+    (typeattributeset is_passwd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 passwd_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3)))
+
+(macro usermanage_subtrans_groupadd ((type ARG1))
+    (call subtrans_pattern (ARG1 groupadd_exec_t groupadd_t)))
+
+(macro usermanage_run_groupadd ((type ARG1)(role ARG2))
+    (call usermanage_subtrans_groupadd (ARG1))
+    (roleattributeset is_groupadd_role (ARG2)))
+
+(macro usermanage_subtrans_useradd ((type ARG1))
+    (call subtrans_pattern (ARG1 useradd_exec_t useradd_t)))
+
+(macro usermanage_run_useradd ((type ARG1)(role ARG2))
+    (call usermanage_subtrans_useradd (ARG1))
+    (roleattributeset is_useradd_role (ARG2)))
+
