@@ -86,6 +86,7 @@
 (call system_read_sysctl_kernel_files (useradd_t))
 
 (call files_read_generic_etc_files (useradd_t)) ; /etc/skell
+(call files_rw_home_root_dirs (useradd_t))
 
 (call selinux_getattr_filesystems (useradd_t))
 (call selinux_validate_context (useradd_t))
@@ -118,17 +119,16 @@
 
 (optional useradd_optional_session
     (call session_manage_session_home_dirs (useradd_t))
-    (call session_delete_all_home_file_objects (useradd_t))
     (call session_manage_mail_spool_files (useradd_t))
+    (call session_delete_all_home_file_objects (useradd_t))
+    (call session_manage_generic_home_content_files (useradd_t))
     (call session_use_inherited_terminals (useradd_t)))
 
 (optional useradd_optional_usersubject
     (call usersubject_manage_user_home_dirs (useradd_t))
-    (call usersubject_home_root_filetrans_user_home_dirs (useradd_t))
     (call usersubject_manage_mail_spool_files (useradd_t))
     (call usersubject_delete_all_user_home_file_objects (useradd_t))
     (call usersubject_manage_generic_home_content_files (useradd_t))
-    (call usersubject_home_dir_filetrans_user_home (useradd_t file "*"))
     (call usersubject_use_inherited_terminals (useradd_t)))
 
 (allow is_usermanage_admin_subject is_usermanage_subject signal_perms)

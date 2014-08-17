@@ -189,9 +189,6 @@
     (call files_rw_home_root_dirs (ARG1))
     (allow ARG1 user_home_dir_t manage_dir_perms))
 
-(macro usersubject_home_root_filetrans_user_home_dirs ((type ARG1))
-    (call files_home_root_filetrans (ARG1 user_home_dir_t dir "*")))
-
 (macro usersubject_home_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
     (call usersubject_search_home_dir (ARG1))
