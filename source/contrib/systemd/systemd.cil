@@ -263,7 +263,6 @@
 (call auth_write_wtmp_log_files (systemd_t))
 
 (call dbus_acquire_service_system (systemd_t))
-(call dbus_system_client_subject (systemd_t))
 
 (call polkit_dbus_chat_polkitd (systemd_t))
 
@@ -383,6 +382,8 @@
 (call terminal_use_console_nodes (is_systemd_subject))
 (call terminal_write_inherited_generic_pty_nodes (is_systemd_subject))
 (call terminal_use_inherited_unallocated_tty_nodes (systemctl_t))
+
+(call dbus_system_client_subject (is_systemd_subject))
 
 (call systemd_dgram_send (is_systemctl_client_subject))
 (call systemd_list_run (is_systemctl_client_subject))
