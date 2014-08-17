@@ -7,6 +7,14 @@
 (typeattribute is_chfn_subject)
 (typeattribute is_passwd_subject)
 
+(typeattribute is_usermanage_admin_subject)
+
+(typeattribute is_usermanage_subject)
+(typeattributeset is_usermanage_subject (cracklib_t useradd_t groupadd_t))
+
+(typeattribute is_usermanage_file_object)
+(typeattributeset is_usermanage_file_object (cracklib_var_cache_t useradd_conf_t))
+
 (type cracklib_t)
 (type cracklib_exec_t)
 (call application_subject_entry (cracklib_t cracklib_exec_t))
@@ -38,6 +46,12 @@
 (filecon "/usr/sbin/usermod" file file_useradd_exec)
 (filecon "/usr/sbin/newusers" file file_useradd_exec)
 
+(type useradd_conf_t)
+(call files_etc_object (useradd_conf_t))
+
+(context file_useradd_conf (system_u object_r useradd_conf_t ((s0) (s0))))
+(filecon "/etc/default/useradd" file file_useradd_conf)
+
 (type groupadd_t)
 (type groupadd_exec_t)
 (call application_subject_entry (groupadd_t groupadd_exec_t))
@@ -62,6 +76,56 @@
 
 (context file_passwd_exec (system_u object_r passwd_exec_t ((s0)(s0))))
 (filecon "/usr/bin/passwd" file file_passwd_exec)
+
+(allow useradd_t self (capability (dac_override chown fsetid fowner)))
+(allow useradd_t self (process (setfscreate)))
+
+(call system_read_sysctl_kernel_files (useradd_t))
+
+(call files_read_generic_etc_files (useradd_t)) ; /etc/skell
+
+(call selinux_getattr_filesystems (useradd_t))
+(call selinux_validate_context (useradd_t))
+
+(call auth_rw_lastlog_log_files (useradd_t))
+
+(call auth_manage_shadow_files (useradd_t)) ; unlink, rename
+
+(call auth_manage_passwd_files (useradd_t))
+(call auth_etc_filetrans_passwd_files (useradd_t "*"))
+
+(call auth_nsswitch_client_subject (useradd_t))
+
+(call seutil_read_config_files (useradd_t))
+(call seutil_read_file_context_files (useradd_t))
+
+(call usermanage_read_useradd_config_files (useradd_t))
+
+(optional useradd_optional_auditd
+    (call audit_client_subject (useradd_t)))
+
+(optional useradd_optional_journald
+    (call journald_client_subject (useradd_t)))
+
+(optional useradd_optional_miscfiles
+    (call miscfiles_read_localization_files (useradd_t)))
+
+(optional useradd_optional_session
+    (call session_manage_mail_spool_files (useradd_t))
+    (call session_use_inherited_terminals (useradd_t)))
+
+(optional useradd_optional_usersubject
+    (call usersubject_home_root_filetrans_user_home_dirs (useradd_t))
+    (call usersubject_manage_mail_spool_files (useradd_t))
+    (call usersubject_delete_all_user_home_file_objects (useradd_t))
+    (call usersubject_manage_generic_home_content_files (useradd_t))
+    (call usersubject_home_dir_filetrans_user_home (useradd_t file "*"))
+    (call usersubject_use_inherited_terminals (useradd_t)))
+
+(allow is_usermanage_admin_subject is_usermanage_subject signal_perms)
+(call ps_subject_pattern (is_usermanage_admin_subject is_usermanage_subject))
+
+(call admin_pattern (is_usermanage_admin_subject is_usermanage_file_object))
 
 (macro usermanage_role_template_chfn ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_chfn_role ARG1)
@@ -93,3 +157,9 @@
     (call usermanage_subtrans_useradd (ARG1))
     (roleattributeset is_useradd_role (ARG2)))
 
+(macro usermanage_read_useradd_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 useradd_conf_t read_file_perms))
+
+(macro usermanage_admin ((type ARG1))
+    (typeattributeset is_usermanage_admin_subject (ARG1)))

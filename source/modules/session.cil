@@ -5,11 +5,12 @@
 (typeattribute is_session_run_file_object)
 (typeattribute is_session_tmp_file_object)
 (typeattribute is_session_tmpfs_file_object)
+(typeattribute is_session_mail_spool_file_object)
 
 (typeattribute is_session_file_object)
 (typeattributeset is_session_file_object (is_session_home_file_object
     is_session_run_file_object is_session_tmp_file_object
-    is_session_tmpfs_file_object))
+    is_session_tmpfs_file_object is_session_mail_spool_file_object))
 
 (typeattribute is_session_application_subject)
 
@@ -99,6 +100,13 @@
 
 (type session_tmpfs_t)
 (call session_tmpfs_object (session_tmpfs_t))
+
+(type session_mail_spool_t)
+(call session_mail_spool_object (session_mail_spool_t))
+
+(context file_session_mail_spool (session_u object_r session_mail_spool_t ((s0)
+    mls_systemhigh)))
+(filecon "/var/spool/mail/root" file file_session_mail_spool)
 
 (type device_session_pts_t)
 (call terminal_user_pty_object (session_t device_session_pts_t))
@@ -1024,6 +1032,10 @@
     (call files_object (ARG1))
     (typeattributeset is_session_run_file_object ARG1))
 
+(macro session_mail_spool_object ((type ARG1))
+    (call files_var_spool_object (ARG1))
+    (typeattributeset is_session_mail_spool_file_object ARG1))
+
 (macro session_create_keyring ((type ARG1))
     (allow ARG1 self (process (setkeycreate)))
     (allow ARG1 session_t (key (create search link write))))
@@ -1208,6 +1220,13 @@
 (macro session_manage_run_user_dir ((type ARG1))
     (call files_rw_run_user_root_dirs (ARG1))
     (allow ARG1 session_run_user_dir_t manage_dir_perms))
+
+(macro session_manage_mail_spool_files ((type ARG1))
+    (call files_rw_var_spool_dirs (ARG1))
+    (allow ARG1 session_mail_spool_t manage_file_perms))
+
+(macro session_relabel_mail_spool_files ((type ARG1))
+    (allow ARG1 session_mail_spool_t relabel_file_perms))
 
 (macro session_mounton_run_user_dir ((type ARG1))
     (allow ARG1 session_run_user_dir_t (dir (mounton))))

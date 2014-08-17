@@ -61,6 +61,10 @@
     (s0))))
 (filecon "/run/user/1000/.*" any file_joe_user_run)
 
+(context file_joe_user_mail_spool (joe_u object_r user_mail_spool_t ((s0)
+    mls_systemhigh)))
+(filecon "/var/spool/mail/joe" file file_joe_user_mail_spool)
+
 (optional joe_optional_sensors
     (call sensors_run_sensors (joe_t joe_r)))
 

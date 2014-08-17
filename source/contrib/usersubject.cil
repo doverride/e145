@@ -8,11 +8,12 @@
 (typeattribute is_user_run_file_object)
 (typeattribute is_user_tmp_file_object)
 (typeattribute is_user_tmpfs_file_object)
+(typeattribute is_user_mail_spool_file_object)
 
 (typeattribute is_user_file_object)
 (typeattributeset is_user_file_object (is_user_home_file_object
     is_user_run_file_object is_user_tmp_file_object
-    is_user_tmpfs_file_object))
+    is_user_tmpfs_file_object is_user_mail_spool_file_object))
 
 (typeattribute is_user_application_subject)
 
@@ -51,6 +52,9 @@
 
 (type user_tmpfs_t)
 (call usersubject_tmpfs_object (user_tmpfs_t))
+
+(type user_mail_spool_t)
+(call usersubject_mail_spool_object (user_mail_spool_t))
 
 (type device_user_pts_t)
 (call terminal_pty_object (device_user_pts_t))
@@ -95,6 +99,8 @@
 (call usersubject_generic_run_template (is_common_login_user_subject))
 (call usersubject_generic_tmp_template (is_common_login_user_subject))
 (call usersubject_generic_tmpfs_template (is_common_login_user_subject))
+
+(call usersubject_read_mail_spool_files (is_common_login_user_subject))
 
 (call system_list_proc (is_common_login_user_subject))
 (call system_read_generic_proc_files (is_common_login_user_subject))
@@ -178,6 +184,9 @@
     (call usersubject_base_login_user_template (ARG1 ARG2 ARG3 ARG4 ARG5 ARG6))
     (call subject_common_subject (ARG3))
     (typeattributeset is_common_login_user_subject ARG3))
+
+(macro usersubject_home_root_filetrans_user_home_dirs ((type ARG1))
+    (call files_home_root_filetrans (ARG1 user_home_dir_t dir "*")))
 
 (macro usersubject_home_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
@@ -942,14 +951,38 @@
     (call filesystem_search_tmpfs (ARG1))
     (call relabel_chr_files_pattern (ARG1 user_tmpfs_t user_tmpfs_t)))
 
+(macro usersubject_manage_mail_spool_files ((type ARG1))
+    (call files_rw_var_spool_dirs (ARG1))
+    (allow ARG1 user_mail_spool_t manage_file_perms))
+
+(macro usersubject_read_mail_spool_files ((type ARG1))
+    (call files_search_var_spool (ARG1))
+    (allow ARG1 user_mail_spool_t read_file_perms))
+
+(macro usersubject_rw_mail_spool_files ((type ARG1))
+    (call files_search_var_spool (ARG1))
+    (allow ARG1 user_mail_spool_t rw_file_perms))
+
+(macro usersubject_relabel_mail_spool_files ((type ARG1))
+    (allow ARG1 user_mail_spool_t relabel_file_perms))
+
 (macro usersubject_manage_all_user_home_file_objects ((type ARG1))
-    (allow ARG1 is_user_home_file_object relabel_dir_perms)
-    (allow ARG1 is_user_home_file_object relabel_file_perms)
-    (allow ARG1 is_user_home_file_object relabel_lnk_file_perms)
-    (allow ARG1 is_user_home_file_object relabel_fifo_file_perms)
-    (allow ARG1 is_user_home_file_object relabel_sock_file_perms)
-    (allow ARG1 is_user_home_file_object relabel_blk_file_perms)
-    (allow ARG1 is_user_home_file_object relabel_chr_file_perms))
+    (allow ARG1 is_user_home_file_object manage_dir_perms)
+    (allow ARG1 is_user_home_file_object manage_file_perms)
+    (allow ARG1 is_user_home_file_object manage_lnk_file_perms)
+    (allow ARG1 is_user_home_file_object manage_fifo_file_perms)
+    (allow ARG1 is_user_home_file_object manage_sock_file_perms)
+    (allow ARG1 is_user_home_file_object manage_blk_file_perms)
+    (allow ARG1 is_user_home_file_object manage_chr_file_perms))
+
+(macro usersubject_delete_all_user_home_file_objects ((type ARG1))
+    (allow ARG1 is_user_home_file_object delete_dir_perms)
+    (allow ARG1 is_user_home_file_object delete_file_perms)
+    (allow ARG1 is_user_home_file_object delete_lnk_file_perms)
+    (allow ARG1 is_user_home_file_object delete_fifo_file_perms)
+    (allow ARG1 is_user_home_file_object delete_sock_file_perms)
+    (allow ARG1 is_user_home_file_object delete_blk_file_perms)
+    (allow ARG1 is_user_home_file_object delete_chr_file_perms))
 
 (macro usersubject_relabel_all_user_home_file_objects ((type ARG1))
     (allow ARG1 is_user_home_file_object relabel_dir_perms)
@@ -961,13 +994,13 @@
     (allow ARG1 is_user_home_file_object relabel_chr_file_perms))
 
 (macro usersubject_manage_all_user_run_file_objects ((type ARG1))
-    (allow ARG1 is_user_run_file_object relabel_dir_perms)
-    (allow ARG1 is_user_run_file_object relabel_file_perms)
-    (allow ARG1 is_user_run_file_object relabel_lnk_file_perms)
-    (allow ARG1 is_user_run_file_object relabel_fifo_file_perms)
-    (allow ARG1 is_user_run_file_object relabel_sock_file_perms)
-    (allow ARG1 is_user_run_file_object relabel_blk_file_perms)
-    (allow ARG1 is_user_run_file_object relabel_chr_file_perms))
+    (allow ARG1 is_user_run_file_object manage_dir_perms)
+    (allow ARG1 is_user_run_file_object manage_file_perms)
+    (allow ARG1 is_user_run_file_object manage_lnk_file_perms)
+    (allow ARG1 is_user_run_file_object manage_fifo_file_perms)
+    (allow ARG1 is_user_run_file_object manage_sock_file_perms)
+    (allow ARG1 is_user_run_file_object manage_blk_file_perms)
+    (allow ARG1 is_user_run_file_object manage_chr_file_perms))
 
 (macro usersubject_relabel_all_user_run_file_objects ((type ARG1))
     (allow ARG1 is_user_run_file_object relabel_dir_perms)
@@ -979,13 +1012,13 @@
     (allow ARG1 is_user_run_file_object relabel_chr_file_perms))
 
 (macro usersubject_manage_all_user_tmp_file_objects ((type ARG1))
-    (allow ARG1 is_user_tmp_file_object relabel_dir_perms)
-    (allow ARG1 is_user_tmp_file_object relabel_file_perms)
-    (allow ARG1 is_user_tmp_file_object relabel_lnk_file_perms)
-    (allow ARG1 is_user_tmp_file_object relabel_fifo_file_perms)
-    (allow ARG1 is_user_tmp_file_object relabel_sock_file_perms)
-    (allow ARG1 is_user_tmp_file_object relabel_blk_file_perms)
-    (allow ARG1 is_user_tmp_file_object relabel_chr_file_perms))
+    (allow ARG1 is_user_tmp_file_object manage_dir_perms)
+    (allow ARG1 is_user_tmp_file_object manage_file_perms)
+    (allow ARG1 is_user_tmp_file_object manage_lnk_file_perms)
+    (allow ARG1 is_user_tmp_file_object manage_fifo_file_perms)
+    (allow ARG1 is_user_tmp_file_object manage_sock_file_perms)
+    (allow ARG1 is_user_tmp_file_object manage_blk_file_perms)
+    (allow ARG1 is_user_tmp_file_object manage_chr_file_perms))
 
 (macro usersubject_relabel_all_user_tmp_file_objects ((type ARG1))
     (allow ARG1 is_user_tmp_file_object relabel_dir_perms)
@@ -997,13 +1030,13 @@
     (allow ARG1 is_user_tmp_file_object relabel_chr_file_perms))
 
 (macro usersubject_manage_all_user_tmpfs_file_objects ((type ARG1))
-    (allow ARG1 is_user_tmpfs_file_object relabel_dir_perms)
-    (allow ARG1 is_user_tmpfs_file_object relabel_file_perms)
-    (allow ARG1 is_user_tmpfs_file_object relabel_lnk_file_perms)
-    (allow ARG1 is_user_tmpfs_file_object relabel_fifo_file_perms)
-    (allow ARG1 is_user_tmpfs_file_object relabel_sock_file_perms)
-    (allow ARG1 is_user_tmpfs_file_object relabel_blk_file_perms)
-    (allow ARG1 is_user_tmpfs_file_object relabel_chr_file_perms))
+    (allow ARG1 is_user_tmpfs_file_object manage_dir_perms)
+    (allow ARG1 is_user_tmpfs_file_object manage_file_perms)
+    (allow ARG1 is_user_tmpfs_file_object manage_lnk_file_perms)
+    (allow ARG1 is_user_tmpfs_file_object manage_fifo_file_perms)
+    (allow ARG1 is_user_tmpfs_file_object manage_sock_file_perms)
+    (allow ARG1 is_user_tmpfs_file_object manage_blk_file_perms)
+    (allow ARG1 is_user_tmpfs_file_object manage_chr_file_perms))
 
 (macro usersubject_relabel_all_user_tmpfs_file_objects ((type ARG1))
     (allow ARG1 is_user_tmpfs_file_object relabel_dir_perms)
@@ -1015,13 +1048,13 @@
     (allow ARG1 is_user_tmpfs_file_object relabel_chr_file_perms))
 
 (macro usersubject_manage_all_user_file_objects ((type ARG1))
-    (allow ARG1 is_user_file_object relabel_dir_perms)
-    (allow ARG1 is_user_file_object relabel_file_perms)
-    (allow ARG1 is_user_file_object relabel_lnk_file_perms)
-    (allow ARG1 is_user_file_object relabel_fifo_file_perms)
-    (allow ARG1 is_user_file_object relabel_sock_file_perms)
-    (allow ARG1 is_user_file_object relabel_blk_file_perms)
-    (allow ARG1 is_user_file_object relabel_chr_file_perms))
+    (allow ARG1 is_user_file_object manage_dir_perms)
+    (allow ARG1 is_user_file_object manage_file_perms)
+    (allow ARG1 is_user_file_object manage_lnk_file_perms)
+    (allow ARG1 is_user_file_object manage_fifo_file_perms)
+    (allow ARG1 is_user_file_object manage_sock_file_perms)
+    (allow ARG1 is_user_file_object manage_blk_file_perms)
+    (allow ARG1 is_user_file_object manage_chr_file_perms))
 
 (macro usersubject_relabel_all_user_file_objects ((type ARG1))
     (allow ARG1 is_user_file_object relabel_dir_perms)
@@ -1055,6 +1088,10 @@
 (macro usersubject_tmpfs_object ((type ARG1))
     (call files_tmpfs_object (ARG1))
     (typeattributeset is_user_tmpfs_file_object ARG1))
+
+(macro usersubject_mail_spool_object ((type ARG1))
+    (call files_var_spool_object (ARG1))
+    (typeattributeset is_user_mail_spool_file_object ARG1))
 
 (macro usersubject_run_object ((type ARG1))
     (call files_object (ARG1))
