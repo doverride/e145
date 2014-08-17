@@ -86,6 +86,7 @@
     (call subtrans_pattern (ARG2 screen_exec_t ARG3))
     (typeattributeset is_screen_home_file_object ARG4)
     (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (allow ARG3 ARG2 (process (signal)))
     (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 list_dir_perms)
     (allow ARG3 ARG4 read_file_perms)
