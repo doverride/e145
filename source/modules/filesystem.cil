@@ -353,6 +353,9 @@
 (macro filesystem_getattr_tmpfs_filesystems ((type ARG1))
     (allow ARG1 tmpfs_t (filesystem (getattr))))
 
+(macro filesystem_getattr_xattr_filesystems ((type ARG1))
+    (allow ARG1 is_xattr_filesystem_object (filesystem (getattr))))
+
 (macro filesystem_list_autofs ((type ARG1))
     (allow ARG1 autofs_t (dirs (list))))
 
