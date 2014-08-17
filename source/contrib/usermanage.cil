@@ -83,6 +83,7 @@
 
 (call system_read_sysctl_kernel_files (useradd_t))
 
+(call files_manage_generic_var_spool_files (useradd_t)) ; see git blame
 (call files_read_generic_etc_files (useradd_t)) ; /etc/skell
 
 (call selinux_getattr_filesystems (useradd_t))

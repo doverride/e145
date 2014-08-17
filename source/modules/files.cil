@@ -560,6 +560,9 @@
     (call files_search_var_spool (ARG1))
     (allow ARG1 var_spool_t rw_dir_perms))
 
+(macro files_manage_generic_var_spool_files ((type ARG1))
+    (call manage_files_pattern (ARG1 var_spool_t var_spool_t))) ; useradd
+
 (macro files_search_var_spool ((type ARG1))
     (call search_dirs_pattern (ARG1 var_t var_spool_t)))
 
