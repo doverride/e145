@@ -115,7 +115,7 @@
 (call terminal_user_tty_object (session_t device_session_tty_t))
 
 (allow session_t self (capability (dac_override kill chown sys_ptrace)))
-(allow session_t self (process (setpgid signal sigkill sigstop signull getsched)))
+(allow session_t self (process (setpgid signal sigkill sigstop signull getsched ptrace)))
 (allow session_t self create_unix_stream_socket_perms)
 (allow session_t self r_netlink_route_socket_perms)
 (allow session_t self create_udp_socket_perms)
