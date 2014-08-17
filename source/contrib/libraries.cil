@@ -72,6 +72,17 @@
 (optional ldconfig_optional_miscfiles
     (call miscfiles_read_localization_files (ldconfig_t)))
 
+(optional ldconfig_optional_rpm
+    (call rpm_append_inherited_tmp_files (ldconfig_t))
+    (call rpm_read_inherited_tmp_files (ldconfig_t))
+    (call rpm_use_fd (ldconfig_t)))
+
+(optional ldconfig_optional_session
+    (call session_use_inherited_terminals (ldconfig_t)))
+
+(optional ldconfig_optional_usersubject
+    (call usersubject_use_inherited_terminals (ldconfig_t)))
+
 (allow is_libraries_admin_subject ldconfig_t signal_perms)
 (call ps_subject_pattern (is_libraries_admin_subject ldconfig_t))
 
