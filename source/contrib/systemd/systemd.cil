@@ -264,8 +264,6 @@
 
 (call dbus_acquire_service_system (systemd_t))
 
-(call polkit_dbus_chat_polkitd (systemd_t))
-
 (call systemd_exec (systemd_t))
 (call systemd_exec_helper (systemd_t))
 (auditallow systemd_t sd_helper_exec_t (file (execute_no_trans))) ; auditing hack
@@ -385,6 +383,8 @@
 
 (call dbus_system_client_subject (is_systemd_subject))
 
+(call polkit_dbus_chat_polkitd (is_systemd_subject))
+
 (call systemd_dgram_send (is_systemctl_client_subject))
 (call systemd_list_run (is_systemctl_client_subject))
 (call systemd_manage_all_services (systemctl_t))
@@ -405,6 +405,9 @@
 (optional systemctl_optional_askpwdagent
     (call askpwd_run_agent (systemctl_t is_systemctl_role))
     (call askpwd_send_signal_agent (systemctl_t)))
+
+(optional systemctl_optional_logind
+    (call logind_dbus_chat (systemctl_t)))
 
 (optional systemctl_optional_machined
     (call machined_read_config_files (is_systemd_subject)))
