@@ -41,6 +41,7 @@
 
 (context file_authconfig_exec (system_u object_r authconfig_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/authconfig" file file_authconfig_exec)
+(filecon "/usr/share/authconfig/authconfig\.py" file file_authconfig_exec)
 
 (type authconfig_pam_conf_t)
 (call auth_pam_etc_object (authconfig_pam_conf_t))

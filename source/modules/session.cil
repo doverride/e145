@@ -1,11 +1,3 @@
-(context file_test_user_home (joe_u object_r session_home_t ((s0)
-    (s0))))
-(filecon "/home/test/.*" any file_test_user_home)
-
-(context file_test_user_home_dir (joe_u object_r session_home_dir_t ((s0)
-    mls_systemhigh)))
-(filecon "/home/test" dir file_test_user_home_dir)
-
 (typeattribute is_session_cache_file_object)
 (typeattribute is_session_config_file_object)
 (typeattribute is_session_data_file_object)
