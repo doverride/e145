@@ -490,7 +490,12 @@
     (call commands_shell_auto_subject_type_transition (joe_irssi_t joe_t))
 
     (call usersubject_application_subject (joe_irssi_t))
-    (call usersubject_read_cert_files (joe_irssi_t)))
+    (call usersubject_read_cert_files (joe_irssi_t))
+
+    (optional joe_irssi_optional_joe_moc
+        (call moc_role_template (joe_r joe_irssi_t joe_moc_t
+            user_moc_home_t))
+        (allow joe_moc_t joe_irssi_t (tcp_socket (read write)))))
     
 (optional joe_optional_joe_newsb
     (type joe_newsb_t)
