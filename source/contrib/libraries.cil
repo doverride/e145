@@ -74,6 +74,7 @@
 
 (optional ldconfig_optional_rpm
     (call rpm_append_inherited_tmp_files (ldconfig_t))
+    (call rpm_read_inherited_fifo_files (ldconfig_t))
     (call rpm_read_inherited_tmp_files (ldconfig_t))
     (call rpm_use_fd (ldconfig_t)))
 
