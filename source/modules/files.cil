@@ -288,6 +288,14 @@
 (call filesystem_associate_all_xattr (is_file_object))
 (call filesystem_associate_all_noxattr (is_file_object))
 
+(optional files_optional_tmpfiles
+    (call tmpfiles_manageable_object_exception (is_boot_file_object))
+    (call tmpfiles_relabelable_object_exception (is_boot_file_object))
+    (call tmpfiles_manageable_object_exception (is_usr_file_object))
+    (call tmpfiles_relabelable_object_exception (is_usr_file_object))
+    (call tmpfiles_manageable_object_exception (is_tmpfs_file_object))
+    (call tmpfiles_relabelable_object_exception (is_tmpfs_file_object)))
+ 
 (typeattributeset all_files_except
     (and (is_file_object)
         (not (is_all_files_exception))))
