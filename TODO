@@ -1,3 +1,6 @@
+tmpfiles: exempt more from being tmpfiles manageable/relabelable
+    is_bin_file_objects lib_t textrel_shlib_t etc etc
+
 useradd:
     due to not using libsemanage/genhomedircon, useradd requires a user manual for
     this implementation
