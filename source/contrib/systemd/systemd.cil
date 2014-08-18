@@ -396,7 +396,8 @@
     (call miscfiles_read_localization_files (is_systemctl_client_subject)))
 
 (optional systemctl_optional_application
-    (call application_subject (systemctl_t)))
+    (call application_subject (systemctl_t))
+    (call application_executable_object (systemctl_exec_t)))
 
 (optional systemctl_optional_askpwdagent
     (call askpwd_run_agent (systemctl_t is_systemctl_role))

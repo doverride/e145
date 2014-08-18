@@ -93,6 +93,7 @@
 (call devices_getattr_sysfs_filesystems (sensors_t))
 
 (call application_subject (sensors_t))
+(call application_executable_object (sensors_exec_t))
 
 (call sensors_read_sensors_config_files (sensors_t))
 

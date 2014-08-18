@@ -222,7 +222,6 @@
 
 (optional session_optional_askpwd
     (call askpwd_admin (session_t))
-    (call askpwd_run (session_t session_r))
     (call askpwd_run_agent (session_t session_r)))
 
 (optional session_optional_backlight

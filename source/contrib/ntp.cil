@@ -110,7 +110,8 @@
 (call ntp_list_ntpd_var_lib (ntp_t))
 
 (optional ntp_optional_application
-    (call application_subject (ntp_t)))
+    (call application_subject (ntp_t))
+    (call application_executable_object (ntp_exec_t)))
 
 (allow ntpd_t self (capability (sys_time setuid setgid)))
 (allow ntpd_t self (process (setcap)))

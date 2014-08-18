@@ -52,9 +52,6 @@
     (s0))))
 (filecon "/run/systemd/ask-password-block(/.*)?" any file_askpwdagent_run)
 
-(optional askpwd_subhect_optional_application
-    (call application_subject (is_askpwd_subject)))
-
 (call systemd_run_filetrans (askpwd_t askpwd_run_t dir "*"))
 
 (allow askpwdagent_t askpwdagent_run_t manage_dir_perms)
@@ -76,7 +73,8 @@
 (call systemd_use_fd (askpwdagent_t))
 
 (optional askpwdagent_optional_application
-    (call application_subject (askpwdagent_t)))
+    (call application_subject (askpwdagent_t))
+    (call application_executable_object (askpwdagent_exec_t)))
 
 (optional askpwdagent_optional_session
     (call session_use_inherited_terminals (askpwdagent_t)))
@@ -91,13 +89,6 @@
 (allow is_askpwd_admin_subject askpwdagent_unit_t (service (all)))
 
 (call admin_pattern (is_askpwd_admin_subject is_askpwd_file_object))
-
-(macro askpwd_subtrans ((type ARG1))
-    (call subtrans_pattern (ARG1 askpwd_exec_t askpwd_t)))
-
-(macro askpwd_run ((type ARG1)(role ARG2))
-    (call askpwd_subtrans (ARG1))
-    (roleattributeset is_askpwd_role (ARG2)))
 
 (macro askpwd_subtrans_agent ((type ARG1))
     (call askpwd_send_signal_agent (ARG1))

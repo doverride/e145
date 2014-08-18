@@ -73,7 +73,8 @@
 (call terminal_use_inherited_unallocated_tty_nodes (fstools_t))
 
 (optional fstools_optional_application
-    (call application_subject (fstools_t)))
+    (call application_subject (fstools_t))
+    (call application_executable_object (fstools_exec_t)))
 
 (optional fstools_optional_miscfiles
     (call miscfiles_read_localization_files (fstools_t)))

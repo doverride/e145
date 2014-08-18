@@ -161,6 +161,7 @@
 (call audit_set_parameters (auditctl_t))
 
 (call application_subject (auditctl_t))
+(call application_executable_object (auditctl_exec_t))
 
 (optional auditctl_optional_session
     (call session_use_inherited_terminals (auditctl_t)))

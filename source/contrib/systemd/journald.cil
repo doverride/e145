@@ -113,7 +113,8 @@
 (call systemd_search_run (journalctl_t))
 
 (optional journalctl_optional_application
-    (call application_subject (journalctl_t)))
+    (call application_subject (journalctl_t))
+    (call application_executable_object (journalctl_exec_t)))
 
 (optional journalctl_optional_miscfiles
     (call miscfiles_read_terminfo_files (journalctl_t)))

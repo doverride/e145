@@ -67,7 +67,8 @@
 (call files_read_generic_etc_files (ldconfig_t)) ; /etc/ld.so.conf
 
 (optional ldconfig_optional_application
-    (call application_subject (ldconfig_t)))
+    (call application_subject (ldconfig_t))
+    (call application_executable_object (ldconfig_exec_t)))
 
 (optional ldconfig_optional_miscfiles
     (call miscfiles_read_localization_files (ldconfig_t)))

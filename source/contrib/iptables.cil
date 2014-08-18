@@ -99,7 +99,8 @@
 (call iptables_read_env_files (iptables_t))
 
 (optional iptables_optional_application
-    (call application_subject (iptables_t)))
+    (call application_subject (iptables_t))
+    (call application_executable_object (iptables_exec_t)))
 
 (optional iptables_optional_auth
     (call auth_nsswitch_client_subject (iptables_t)))

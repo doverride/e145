@@ -63,6 +63,7 @@
 (call terminal_use_inherited_unallocated_tty_nodes (mount_t))
 
 (call application_subject (mount_t))
+(call application_executable_object (mount_exec_t))
 
 (booleanif mount_any_file
     (true
