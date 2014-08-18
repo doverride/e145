@@ -2,6 +2,9 @@
 
 (typeattribute is_coredump_admin_subject)
 
+(typeattribute is_coredump_subject)
+(typeattributeset is_coredump_subject (coredump_t coredumpctl_t))
+
 (typeattribute is_coredump_file_object)
 (typeattributeset is_coredump_file_object (coredump_conf_t
     coredump_var_lib_t))
@@ -96,6 +99,10 @@
 
 (optional coredumpctl_optional_usersubject
     (call usersubject_use_inherited_terminals (coredumpctl_t)))
+
+(allow is_coredump_admin_subject is_coredump_subject signal_perms)
+(allow is_coredump_admin_subject is_coredump_subject (process (ptrace)))
+(call ps_subject_pattern (is_coredump_admin_subject is_coredump_subject))
 
 (call admin_pattern (is_coredump_admin_subject is_coredump_file_object))
 

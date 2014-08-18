@@ -114,6 +114,7 @@
 (call files_run_filetrans (dmeventd_t dmeventd_run_t file "*"))
 
 (allow is_dm_admin_subject is_dm_subject signal_perms)
+(allow is_dm_admin_subject is_dm_subject (process (ptrace)))
 (call ps_subject_pattern (is_dm_admin_subject is_dm_subject))
 
 (call admin_pattern (is_dm_admin_subject dmeventd_unit_t))

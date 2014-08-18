@@ -92,6 +92,7 @@
     (call usersubject_use_inherited_terminals (grubby_t)))
 
 (allow is_bootloader_admin_subject is_bootloader_subject signal_perms)
+(allow is_bootloader_admin_subject is_bootloader_subject (process (ptrace)))
 (call ps_subject_pattern (is_bootloader_subject is_bootloader_subject))
 
 (call admin_pattern (is_bootloader_subject is_bootloader_file_object))

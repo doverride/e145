@@ -58,6 +58,7 @@
 (call files_search_etc (updated_generator_t))
 
 (allow is_updated_admin_subject is_updated_subject signal_perms)
+(allow is_updated_admin_subject is_updated_subject (process (ptrace)))
 (call ps_subject_pattern (is_updated_admin_subject is_updated_subject))
 
 (allow is_updated_admin_subject updated_unit_t (service (all)))

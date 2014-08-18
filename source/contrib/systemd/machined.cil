@@ -53,6 +53,7 @@
 (filecon "/usr/lib/systemd/system/[^/]*machine.*" file file_machined_unit)
 
 (allow is_machined_admin_subject is_machined_subject signal_perms)
+(allow is_machined_admin_subject is_machined_subject (process (ptrace)))
 (call ps_subject_pattern (is_machined_admin_subject is_machined_subject))
 
 (allow is_machined_admin_subject machined_unit_t (service (all)))

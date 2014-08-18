@@ -68,6 +68,7 @@
     (call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*")))
 
 (allow is_kmod_admin_subject kmod_t signal_perms)
+(allow is_kmod_admin_subject kmod_t (process (ptrace)))
 (call ps_subject_pattern (is_kmod_admin_subject kmod_t))
 
 (allow is_kmod_admin_subject kmod_unit_t (service (all)))

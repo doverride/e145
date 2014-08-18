@@ -115,7 +115,7 @@
 (call terminal_user_tty_object (session_t device_session_tty_t))
 
 (allow session_t self (capability (dac_override kill chown sys_ptrace)))
-(allow session_t self (process (setpgid signal sigkill sigstop signull getsched)))
+(allow session_t self (process (setpgid signal sigkill sigstop signull getsched ptrace)))
 (allow session_t self create_unix_stream_socket_perms)
 (allow session_t self r_netlink_route_socket_perms)
 (allow session_t self create_udp_socket_perms)
@@ -210,81 +210,124 @@
     (call audit_run_ausearch (session_t session_r)))
 
 (optional session_optional_autorelabel
-    (call autorelabel_manage_flag_files (session_t))
-    (call autorelabel_root_filetrans_autorelabel_flag_files (session_t)))
+    (call autorelabel_admin (session_t)))
 
 (optional session_optional_alsactl
+    (call alsa_admin (session_t))
     (call alsa_run_alsactl (session_t session_r)))
 
 (optional session_optional_akmods
+    (call akmods_admin (session_t))
     (call akmods_run (session_t session_r)))
 
 (optional session_optional_askpwd
+    (call askpwd_admin (session_t))
     (call askpwd_run (session_t session_r))
     (call askpwd_run_agent (session_t session_r)))
+
+(optional session_optional_backlight
+    (call backlight_admin (session_t)))
+
+(optional session_optional_binfmt
+    (call binfmt_admin (session_t)))
 
 (optional session_optional_bootchart
     (call bootchart_run (session_t session_r)))
 
 (optional session_optional_bootloader
+    (call bootloader_admin (session_t))
     (call bootloader_run_grub (session_t session_r))
     (call bootloader_run_grubby (session_t session_r)))
 
 (optional session_optional_coredump
+    (call coredump_admin (session_t))
     (call coredump_run_coredumpctl (session_t session_r)))
 
 (optional session_optional_consoletype
     (call consoletype_run (session_t session_r)))
 
+(optional session_optional_cryptsetup
+    (call cryptsetup_admin (session_t)))
+
+(optional session_optional_dbus
+    (call dbus_admin (session_t)))
+
 (optional session_optional_dhcp
+    (call dhcp_admin (session_t))
     (call dhcp_run_dhclient (session_t session_r)))
 
 (optional session_optional_dm
+    (call dm_admin (session_t))
     (call dm_run_dmcrypt (session_t session_r))
     (call dm_run_dmsetup (session_t session_r)))
 
 (optional session_optional_dmesg
     (call dmesg_run (session_t session_r)))
 
+(optional session_optional_fsck
+    (call fsck_admin (session_t)))
+
 (optional session_optional_fstools
     (call fstools_run (session_t session_r)))
+
+(optional session_optional_getty
+    (call getty_admin (session_t)))
 
 (optional session_optional_hostname
     (call hostname_run (session_t session_r)))
 
-(optional session_optional_hostnamectl
+(optional session_optional_hostnamed
+    (call hostnamed_admin (session_t))
     (call hostnamed_run_hostnamectl (session_t session_r)))
 
 (optional session_optional_hwclock
     (call hwclock_run (session_t session_r)))
 
+(optional session_optional_initctl
+    (call initctl_admin (session_t)))
+
 (optional session_optional_ip
     (call ip_run (session_t session_r)))
 
 (optional session_optional_iptables
+    (call iptables_admin (session_t))
     (call iptables_run (session_t session_r)))
 
-(optional session_optional_journalctl
+(optional session_optional_journald
+    (call journald_admin (session_t))
     (call journald_client_subject (session_t))
     (call journald_run_journalctl (session_t session_r)))
 
 (optional session_optional_kmod
+    (call kmod_admin (session_t))
     (call kmod_run (session_t session_r)))
 
-(optional session_optional_localectl
+(optional session_optional_libraries
+    (call libraries_admin (session_t))
+    (call libraries_run_ldconfig (session_t session_r)))
+
+(optional session_optional_localed
+    (call localed_admin (session_t))
     (call localed_run_localectl (session_t session_r)))
 
 (optional session_optional_login
+    (call login_admin (session_t))
     (call login_signull (session_t)))
 
-(optional session_optional_loginctl
+(optional session_optional_logind
+    (call logind_admin (session_t))
     (call logind_run_loginctl (session_t session_r)))
 
 (optional session_optional_lvm
+    (call lvm_admin (session_t))
     (call lvm_run_lvm (session_t session_r)))
 
-(optional session_optional_machinectl
+(optional session_optional_machined
+    (call machined_admin (session_t))
     (call machined_run_machinectl (session_t session_r)))
+
+(optional session_optional_modules
+    (call modules_admin (session_t)))
 
 (optional session_optional_mount
     (call mount_run (session_t session_r))
@@ -297,38 +340,94 @@
     (call nettools_run_traceroute (session_t session_r)))
 
 (optional session_optional_networkmgr
+    (call networkmgr_admin (session_t))
     (call networkmgr_run_networkmgrcli (session_t session_r)))
 
 (optional session_optional_ntp
+    (call ntp_admin (session_t))
     (call ntp_run (session_t session_r)))
 
+(optional session_optional_pa
+    (call pa_admin (session_t))
+    (call pa_run_pactl (session_t session_r)))
+
+(optional session_optional_pcsc
+    (call pcsc_admin (session_t)))
+
 (optional session_optional_plymouth
+    (call plymouth_admin (session_t))
     (call plymouth_run (session_t session_r)))
 
+(optional session_optional_polkit
+    (call polkit_admin (session_t)))
+
+(optional session_optional_ppp
+    (call ppp_admin (session_t)))
+
+(optional session_optional_proxyd
+    (call proxyd_admin (session_t))
+    (call proxyd_run_busproxyd (session_t session_r)))
+
+(optional session_optional_random
+    (call random_admin (session_t)))
+
+(optional session_optional_readahead
+    (call readahead_admin (session_t)))
+
+(optional session_optional_remountfs
+    (call remountfs_admin (session_t)))
+
+(optional session_optional_rfkill
+    (call rfkill_admin (session_t)))
+
+(optional session_optional_rtkit
+    (call rtkit_admin (session_t))
+    (call rtkit_run (session_t session_r)))
+
 (optional session_optional_sensors
+    (call sensors_admin (session_t))
     (call sensors_run_sensors (session_t session_r))
     (call sensors_run_detect (session_t session_r))
     (call sensors_run_fancontrol (session_t session_r)))
 
-(optional session_optional_systemctl
+(optional session_optional_sessions
+    (call sessions_admin (session_t)))
+
+(optional session_optional_shutdownd
+    (call shutdownd_admin (session_t)))
+
+(optional session_optional_sleep
+    (call sleep_admin (session_t)))
+
+(optional session_optional_systemd
+    (call systemd_admin (session_t))
     (call systemd_run_systemctl (session_t session_r)))
 
 (optional session_optional_sysctl
+    (call sysctl_admin (session_t))
     (call sysctl_run_sctl (session_t session_r)))
 
-(optional session_optional_timedatectl
+(optional session_optional_timedated
+    (call timedated_admin (session_t))
     (call timedated_run_timedatectl (session_t session_r)))
 
-(optional session_optional_tuneadm
+(optional session_optional_tune
+    (call tune_admin (session_t))
     (call tune_run_tuneadm (session_t session_r)))
 
-(optional session_optional_udevadm
+(optional session_optional_udevd
+    (call udevd_admin (session_t))
     (call udevd_run_udevadm (session_t session_r)))
 
+(optional session_optional_updated
+    (call updated_admin (session_t)))
+
 (optional session_optional_upower
+    (call upower_admin (session_t))
     (call upower_run (session_t session_r)))
 
 (optional session_optional_usermanage
+    (call usermanage_admin (session_t))
     (call usermanage_run_groupadd (session_t session_r))
     (call usermanage_run_useradd (session_t session_r)))
 
@@ -357,10 +456,18 @@
     (call usersubject_run_user_dir_filetrans_user_run (session_t blk_file "*"))
     (call usersubject_run_user_dir_filetrans_user_run (session_t chr_file "*")))
 
-(optional session_optional_wpacli
+(optional session_optional_utmp
+    (call utmp_admin (session_t)))
+
+(optional session_optional_vconsole
+    (call vconsole_admin (session_t)))
+
+(optional session_optional_wpa
+    (call wpa_admin (session_t))
     (call wpa_run_wpacli (session_t session_r)))
 
 (optional session_optional_tmpfiles
+    (call tmpfiles_admin (session_t))
     (call tmpfiles_run (session_t session_r))
     (call tmpfiles_manageable_object_exception (is_session_home_file_object))
     (call tmpfiles_relabelable_object_exception (is_session_home_file_object))
@@ -370,7 +477,8 @@
     (call tmpfiles_relabelable_object_exception (is_session_run_file_object)))
 
 (optional session_optional_auth
-    (call auth_change_user_passwd (session_t))
+    (call auth_admin (session_t))
+    (call auth_pam_rootok (session_t))
     (call auth_read_shadow_files (session_t))
     (call auth_run_authconfig (session_t session_r))
     (call auth_run_updpwd (session_t session_r))
@@ -378,6 +486,7 @@
     (call auth_run_chkpwd (session_t session_r)))
 
 (optional session_optional_rpm
+    (call rpm_admin (session_t))
     (call rpm_run (session_t session_r)))
 
 (optional session_optional_seutil

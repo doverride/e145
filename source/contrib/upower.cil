@@ -102,6 +102,7 @@
     (call udevd_read_run_files (upowerd_t)))
 
 (allow is_upower_admin_subject is_upower_subject signal_perms)
+(allow is_upower_admin_subject is_upower_subject (process (ptrace)))
 (call ps_subject_pattern (is_upower_admin_subject is_upower_subject))
 
 (allow is_upower_admin_subject upowerd_unit_t (service (all)))

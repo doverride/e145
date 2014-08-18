@@ -42,6 +42,7 @@
     (call udevd_read_run_files (rfkill_t)))
 
 (allow is_rfkill_admin_subject rfkill_t signal_perms)
+(allow is_rfkill_admin_subject rfkill_t (process (ptrace)))
 (call ps_subject_pattern (is_rfkill_admin_subject rfkill_t))
 
 (allow is_rfkill_admin_subject rfkill_unit_t (service (all)))

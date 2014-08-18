@@ -45,6 +45,7 @@
     (call udevd_read_config_files (backlight_t)))
 
 (allow is_backlight_admin_subject backlight_t signal_perms)
+(allow is_backlight_admin_subject backlight_t (process (ptrace)))
 (call ps_subject_pattern (is_backlight_admin_subject backlight_t))
 
 (allow is_backlight_admin_subject backlight_unit_t (service (all)))

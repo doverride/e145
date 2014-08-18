@@ -75,6 +75,7 @@
     (call polkit_dbus_chat_polkitd (rtkitd_t)))
 
 (allow is_rtkit_admin_subject is_rtkit_subject signal_perms)
+(allow is_rtkit_admin_subject is_rtkit_subject (process (ptrace)))
 (call ps_subject_pattern (is_rtkit_admin_subject is_rtkit_subject))
 
 (allow is_rtkit_admin_subject rtkitd_unit_t (service (all)))

@@ -94,6 +94,10 @@
 (optional dhclient_optional_ntp
     (call ntp_subtrans (dhclient_t)))
 
+(allow is_dhcp_admin_subject dhclient_t signal_perms)
+(allow is_dhcp_admin_subject dhclient_t (process (ptrace)))
+(call ps_subject_pattern (is_dhcp_admin_subject dhclient_t))
+
 (call admin_pattern (is_dhcp_admin_subject is_dhcp_file_object))
 
 (macro dhcp_subtrans_dhclient ((type ARG1))

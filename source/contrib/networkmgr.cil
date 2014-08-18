@@ -282,6 +282,7 @@
     (call usersubject_use_inherited_terminals (networkmgrcli_t)))
 
 (allow is_networkmgr_admin_subject is_networkmgr_subject signal_perms)
+(allow is_networkmgr_admin_subject is_networkmgr_subject (process (ptrace)))
 (call ps_subject_pattern (is_networkmgr_admin_subject is_networkmgr_subject))
 
 (allow is_networkmgr_admin_subject networkmgr_unit_t (service (all)))
@@ -335,4 +336,4 @@
         networkmgr_t)))
 
 (macro networkmgr_admin ((type ARG1))
-    (typeattributeset is_networkgr_admin_subject ARG1))
+    (typeattributeset is_networkmgr_admin_subject ARG1))

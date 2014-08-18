@@ -147,6 +147,7 @@
     (call usermanage_run_useradd (rpm_script_t is_rpm_role)))
 
 (allow is_rpm_admin_subject is_rpm_subject signal_perms)
+(allow is_rpm_admin_subject is_rpm_subject (process (ptrace)))
 (call ps_subject_pattern (is_rpm_admin_subject is_rpm_subject))
 
 (allow is_rpm_admin_subject rpm_unit_t (service (all)))

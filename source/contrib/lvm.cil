@@ -154,6 +154,7 @@
 (call files_run_filetrans (lvmetad_t lvmetad_run_t file "*"))
 
 (allow is_lvm_admin_subject is_lvm_subject signal_perms)
+(allow is_lvm_admin_subject is_lvm_subject (process (ptrace)))
 (call ps_subject_pattern (is_lvm_admin_subject is_lvm_subject))
 
 (allow is_lvm_admin_subject is_lvm_unit_file_object (service (all)))

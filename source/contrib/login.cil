@@ -133,6 +133,7 @@
     (call seutil_read_default_context_files (sulogin_t)))
 
 (allow is_login_admin_subject is_login_subject signal_perms)
+(allow is_login_admin_subject is_login_subject (process (ptrace)))
 (call ps_subject_pattern (is_login_admin_subject is_login_subject))
 
 (allow is_login_admin_subject sulogin_unit_t (service (all)))

@@ -104,6 +104,7 @@
     (call auth_nsswitch_client_subject (plymouthd_t)))
 
 (allow is_plymouth_admin_subject is_plymouth_subject signal_perms)
+(allow is_plymouth_admin_subject is_plymouth_subject (process (ptrace)))
 (call ps_subject_pattern (is_plymouth_admin_subject is_plymouth_subject))
 
 (allow is_plymouth_admin_subject plymouthd_unit_t (service (all)))

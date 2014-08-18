@@ -66,6 +66,7 @@
 (call systemd_unit_filetrans (cryptsetup_generator_t cryptsetup_unit_t file "*"))
 
 (allow is_cryptsetup_admin_subject is_cryptsetup_subject signal_perms)
+(allow is_cryptsetup_admin_subject is_cryptsetup_subject (process (ptrace)))
 (call ps_subject_pattern (is_cryptsetup_admin_subject is_cryptsetup_subject))
 
 (allow is_cryptsetup_admin_subject cryptsetup_unit_t (service (all)))

@@ -74,6 +74,7 @@
     (call udevd_read_run_files (pcscd_t)))
 
 (allow is_pcsc_admin_subject pcscd_t signal_perms)
+(allow is_pcsc_admin_subject pcscd_t (process (ptrace)))
 (call ps_subject_pattern (is_pcsc_admin_subject pcscd_t))
 
 (allow is_pcsc_admin_subject pcscd_unit_t (service (all)))

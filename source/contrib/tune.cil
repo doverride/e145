@@ -133,6 +133,7 @@
     (call udevd_read_config_files (tuned_t)))
 
 (allow is_tune_admin_subject is_tune_subject signal_perms)
+(allow is_tune_admin_subject is_tune_subject (process (ptrace)))
 (call ps_subject_pattern (is_tune_admin_subject is_tune_subject))
 
 (allow is_tune_admin_subject tuned_unit_t (service (all)))

@@ -51,6 +51,7 @@
 (call polkit_dbus_chat_polkitd (timedated_t))
 
 (allow is_timedated_admin_subject is_timedated_subject signal_perms)
+(allow is_timedated_admin_subject is_timedated_subject (process (ptrace)))
 (call ps_subject_pattern (is_timedated_admin_subject is_timedated_subject))
 
 (allow is_timedated_admin_subject timedated_unit_t (service (all)))

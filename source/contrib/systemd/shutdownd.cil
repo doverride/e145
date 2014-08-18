@@ -155,6 +155,7 @@
     (call sessions_run_filetrans_run_files (shutdownd_t)))
 
 (allow is_shutdownd_admin_subject is_shutdownd_subject signal_perms)
+(allow is_shutdownd_admin_subject is_shutdownd_subject (process (ptrace)))
 (call ps_subject_pattern (is_shutdownd_admin_subject is_shutdownd_subject))
 
 (allow is_shutdownd_admin_subject shutdownd_unit_t (service (all)))

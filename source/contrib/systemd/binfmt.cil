@@ -34,6 +34,7 @@
     (call journald_client_subject (binfmt_t)))
 
 (allow is_binfmt_admin_subject binfmt_t signal_perms)
+(allow is_binfmt_admin_subject binfmt_t (process (ptrace)))
 (call ps_subject_pattern (is_binfmt_admin_subject binfmt_t))
 
 (allow is_binfmt_admin_subject binfmt_unit_t (service (all)))

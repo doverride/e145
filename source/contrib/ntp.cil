@@ -154,6 +154,7 @@
     (call usersubject_use_inherited_terminals (ntp_t)))
 
 (allow is_ntp_admin_subject is_ntp_subject signal_perms)
+(allow is_ntp_admin_subject is_ntp_subject (process (ptrace)))
 (call ps_subject_pattern (is_ntp_admin_subject is_ntp_subject))
 
 (allow is_ntp_admin_subject ntpd_unit_t (service (all)))

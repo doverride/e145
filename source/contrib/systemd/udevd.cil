@@ -180,6 +180,7 @@
 (call systemd_search_run (udevadm_t)) ; /run/systemd/container
 
 (allow is_udevd_admin_subject is_udevd_subject signal_perms)
+(allow is_udevd_admin_subject is_udevd_subject (process (ptrace)))
 (call ps_subject_pattern (is_udevd_admin_subject is_udevd_subject))
 
 (allow is_udevd_admin_subject udevd_unit_t (service (all)))

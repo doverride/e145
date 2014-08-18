@@ -173,6 +173,7 @@
     (call udevd_read_run_files (journald_t)))
 
 (allow is_journald_admin_subject is_journald_subject signal_perms)
+(allow is_journald_admin_subject is_journald_subject (process (ptrace)))
 (call ps_subject_pattern (is_journald_admin_subject is_journald_subject))
 
 (allow is_journald_admin_subject journald_unit_t (service (all)))

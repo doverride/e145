@@ -85,6 +85,7 @@
     (call usersubject_use_inherited_terminals (askpwdagent_t)))
 
 (allow is_askpwd_admin_subject is_askpwd_subject signal_perms)
+(allow is_askpwd_admin_subject is_askpwd_subject (process (ptrace)))
 (call ps_subject_pattern (is_askpwd_admin_subject is_askpwd_subject))
 
 (allow is_askpwd_admin_subject askpwdagent_unit_t (service (all)))

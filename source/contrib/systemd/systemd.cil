@@ -448,6 +448,7 @@
 (call systemd_search_run (is_systemd_generator_subject))
 
 (allow is_systemd_admin_subject is_systemd_subject signal_perms)
+(allow is_systemd_admin_subject is_systemd_subject (process (ptrace)))
 (call ps_subject_pattern (is_systemd_admin_subject is_systemd_subject))
 
 (allow is_systemd_admin_subject is_systemd_unit_file_object

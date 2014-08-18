@@ -124,6 +124,7 @@
     (call usersubject_use_inherited_terminals (iptables_t)))
 
 (allow is_iptables_admin_subject iptables_t signal_perms)
+(allow is_iptables_admin_subject iptables_t (process (ptrace)))
 (call ps_subject_pattern (is_iptables_admin_subject iptables_t))
 
 (allow is_iptables_admin_subject iptables_unit_t (service (all)))

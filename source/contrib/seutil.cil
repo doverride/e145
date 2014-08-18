@@ -224,6 +224,7 @@
     (call auth_relabel_shadow_files (setfiles_t)))
 
 (allow is_seutil_admin_subject is_seutil_subject signal_perms)
+(allow is_seutil_admin_subject is_seutil_subject (process (ptrace)))
 (call ps_subject_pattern (is_seutil_admin_subject is_seutil_subject))
 
 (call admin_pattern (is_seutil_admin_subject is_seutil_file_object))

@@ -106,9 +106,11 @@
     (call seutil_read_default_context_files (dbusd_t)))
 
 (allow is_dbus_admin_subject dbusd_t signal_perms)
+(allow is_dbus_admin_subject dbusd_t (process (ptrace)))
 (call ps_subject_pattern (is_dbus_admin_subject dbusd_t))
 
 (allow is_dbus_admin_subject dbusd_unit_t (service (all)))
+(allow is_dbus_admin_subject self (dbus (all)))
 
 (call admin_pattern (is_dbus_admin_subject is_dbus_file_object))
 

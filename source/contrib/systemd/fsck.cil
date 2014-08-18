@@ -41,6 +41,7 @@
     (call udevd_read_run_files (fsck_t)))
 
 (allow is_fsck_admin_subject fsck_t signal_perms)
+(allow is_fsck_admin_subject fsck_t (process (ptrace)))
 (call ps_subject_pattern (is_fsck_admin_subject fsck_t))
 
 (allow is_fsck_admin_subject fsck_unit_t (service (all)))

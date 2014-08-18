@@ -25,6 +25,7 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-initctl.*" file file_initctl_unit)
 
 (allow is_initctl_admin_subject initctl_t signal_perms)
+(allow is_initctl_admin_subject initctl_t (process (ptrace)))
 (call ps_subject_pattern (is_initctl_admin_subject initctl_t))
 
 (allow is_initctl_admin_subject initctl_unit_t (service (all)))

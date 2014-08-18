@@ -71,6 +71,7 @@
 (call systemd_create_generic_unit_symlinks (getty_generator_t))
 
 (allow is_getty_admin_subject is_getty_subject signal_perms)
+(allow is_getty_admin_subject is_getty_subject (process (ptrace)))
 (call ps_subject_pattern (is_getty_admin_subject is_getty_subject))
 
 (call admin_pattern (is_getty_admin_subject getty_unit_t))

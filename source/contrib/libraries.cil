@@ -85,6 +85,7 @@
     (call usersubject_use_inherited_terminals (ldconfig_t)))
 
 (allow is_libraries_admin_subject ldconfig_t signal_perms)
+(allow is_libraries_admin_subject ldconfig_t (process (ptrace)))
 (call ps_subject_pattern (is_libraries_admin_subject ldconfig_t))
 
 (allow is_libraries_admin_subject ldconfig_unit_t (service (all)))

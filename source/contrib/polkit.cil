@@ -114,6 +114,7 @@
 (call polkit_read_var_lib_files (polkitd_auth_t))
 
 (allow is_polkit_admin_subject is_polkit_subject signal_perms)
+(allow is_polkit_admin_subject is_polkit_subject (process (ptrace)))
 (call ps_subject_pattern (is_polkit_admin_subject is_polkit_subject))
 
 (allow is_polkit_admin_subject polkitd_unit_t (service (all)))

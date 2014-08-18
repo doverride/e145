@@ -155,6 +155,7 @@
     (call usersubject_use_terminals (logind_t)))
 
 (allow is_logind_admin_subject is_logind_subject signal_perms)
+(allow is_logind_admin_subject is_logind_subject (process (ptrace)))
 (call ps_subject_pattern (is_logind_admin_subject is_logind_subject))
 
 (allow is_logind_admin_subject logind_unit_t (service (all)))

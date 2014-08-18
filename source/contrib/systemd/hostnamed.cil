@@ -63,6 +63,7 @@
     (call machined_etc_filetrans_config_files (hostnamed_t)))
 
 (allow is_hostnamed_admin_subject is_hostnamed_subject signal_perms)
+(allow is_hostnamed_admin_subject is_hostnamed_subject (process (ptrace)))
 (call ps_subject_pattern (is_hostnamed_admin_subject is_hostnamed_subject))
 
 (allow is_hostnamed_admin_subject hostnamed_unit_t (service (all)))

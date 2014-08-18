@@ -53,6 +53,10 @@
 (filecon "/dev/ppp" char device_ppp)
 (filecon "/dev/pppox.*" char device_ppp)
 
+(allow is_ppp_admin_subject pppd_t signal_perms)
+(allow is_ppp_admin_subject pppd_t (process (ptrace)))
+(call ps_subject_pattern (is_ppp_admin_subject pppd_t))
+
 (call admin_pattern (is_ppp_admin_subject is_ppp_file_object))
 
 (macro ppp_subtrans_pppd ((type ARG1))

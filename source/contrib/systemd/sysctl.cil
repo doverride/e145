@@ -74,6 +74,7 @@
     (call session_use_inherited_terminals (sctl_t)))
 
 (allow is_sysctl_admin_subject is_sysctl_subject signal_perms)
+(allow is_sysctl_admin_subject is_sysctl_subject (process (ptrace)))
 (call ps_subject_pattern (is_sysctl_admin_subject is_sysctl_subject))
 
 (allow is_sysctl_admin_subject sysctl_unit_t (service (all)))

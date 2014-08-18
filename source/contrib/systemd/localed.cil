@@ -55,6 +55,7 @@
 (call polkit_dbus_chat_polkitd (localed_t))
 
 (allow is_localed_admin_subject is_localed_subject signal_perms)
+(allow is_localed_admin_subject is_localed_subject (process (ptrace)))
 (call ps_subject_pattern (is_localed_admin_subject is_localed_subject))
 
 (allow is_localed_admin_subject localed_unit_t (service (all)))

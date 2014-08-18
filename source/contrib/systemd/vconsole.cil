@@ -39,6 +39,7 @@
     (call journald_client_subject (vconsole_t)))
 
 (allow is_vconsole_admin_subject vconsole_t signal_perms)
+(allow is_vconsole_admin_subject vconsole_t (process (ptrace)))
 (call ps_subject_pattern (is_vconsole_admin_subject vconsole_t))
 
 (allow is_vconsole_admin_subject vconsole_unit_t (service (all)))

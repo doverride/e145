@@ -338,9 +338,12 @@
     (call utmp_rw_run_files (utempter_t)))
 
 (allow is_auth_admin_subject is_auth_subject signal_perms)
+(allow is_auth_admin_subject is_auth_subject (process (ptrace)))
 (call ps_subject_pattern (is_auth_admin_subject is_auth_subject))
 
 (call admin_pattern (is_auth_admin_subject is_auth_file_object))
+
+(allow is_auth_admin_subject self (passwd (all)))
 
 (call auth_manage_shadow_files (is_auth_admin_subject))
 (call auth_relabel_shadow_files (is_auth_admin_subject))

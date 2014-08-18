@@ -198,6 +198,7 @@
     (call usersubject_use_inherited_terminals (ausearch_t)))
 
 (allow is_audit_admin_subject is_audit_subject signal_perms)
+(allow is_audit_admin_subject is_audit_subject (process (ptrace)))
 (call ps_subject_pattern (is_audit_admin_subject is_audit_subject))
 
 (allow is_audit_admin_subject auditd_unit_t (service (all)))

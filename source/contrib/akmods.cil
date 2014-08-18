@@ -149,6 +149,7 @@
     (call usersubject_use_inherited_terminals (akmods_t)))
 
 (allow is_akmods_admin_subject is_akmods_subject signal_perms)
+(allow is_akmods_admin_subject is_akmods_subject (process (ptrace)))
 (call ps_subject_pattern (is_akmods_admin_subject is_akmods_subject))
 
 (allow is_akmods_admin_subject akmods_unit_t (service (all)))

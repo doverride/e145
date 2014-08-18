@@ -35,6 +35,7 @@
     (call journald_client_subject (modules_t)))
 
 (allow is_modules_admin_subject modules_t signal_perms)
+(allow is_modules_admin_subject modules_t (process (ptrace)))
 (call ps_subject_pattern (is_modules_admin_subject modules_t))
 
 (allow is_modules_admin_subject modules_unit_t (service (all)))

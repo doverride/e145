@@ -28,6 +28,7 @@
 (call files_run_filetrans (socketproxyd_t socketproxyd_run_t fifo_file "*"))
 
 (allow is_proxyd_admin_subject socketproxyd_t signal_perms)
+(allow is_proxyd_admin_subject socketproxyd_t (process (ptrace)))
 (call ps_subject_pattern (is_proxyd_admin_subject socketproxyd_t))
 
 (call admin_pattern (is_proxyd_admin_subject socketproxyd_run_t))
