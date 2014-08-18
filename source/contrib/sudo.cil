@@ -64,6 +64,8 @@
 
 (call terminal_search_devpts (is_sudo_subject))
 
+(call application_getattr_all_application_executable_files (is_sudo_subject))
+
 (call auth_read_authconfig_pam_config_files (is_sudo_subject))
 (call auth_list_pam_config (is_sudo_subject))
 (call auth_read_generic_pam_config_files (is_sudo_subject))
@@ -73,9 +75,6 @@
 (call sudo_read_config_files (is_sudo_subject))
 (call sudo_read_pam_config_files (is_sudo_subject))
 (call sudo_manage_var_files (is_sudo_subject))
-
-(optional sudo_optional_application
-    (call application_getattr_all_application_executable_files (is_sudo_subject)))
 
 (optional sudo_optional_auditd
     (call audit_client_subject (is_sudo_subject)))
