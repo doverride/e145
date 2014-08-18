@@ -329,7 +329,6 @@
     (call upower_run (session_t session_r)))
 
 (optional session_optional_usermanage
-    (call usermanage_change_user_passwd (session_t))
     (call usermanage_run_groupadd (session_t session_r))
     (call usermanage_run_useradd (session_t session_r)))
 
@@ -371,6 +370,7 @@
     (call tmpfiles_relabelable_object_exception (is_session_run_file_object)))
 
 (optional session_optional_auth
+    (call auth_change_user_passwd (session_t))
     (call auth_read_shadow_files (session_t))
     (call auth_run_authconfig (session_t session_r))
     (call auth_run_updpwd (session_t session_r))

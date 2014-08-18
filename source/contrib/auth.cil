@@ -408,6 +408,9 @@
     (call files_search_var_log (ARG1))
     (allow ARG1 wtmp_t write_file_perms))
 
+(macro auth_change_user_passwd ((type ARG1))
+    (allow ARG1 self (passwd (passwd))))
+
 (macro auth_create_faillog_log_files ((type ARG1))
     (call files_search_var (ARG1))
     (call files_add_entry_var_log_dirs (ARG1))
