@@ -221,7 +221,7 @@
     (call commands_bin_auto_subject_type_transition (joe_emacs_t joe_t))
     (call commands_shell_auto_subject_type_transition (joe_emacs_t joe_t))
 
-    (call usersubject_read_mail_spool_files (joe_emacs_t))
+    (call usersubject_getattr_mail_spool_files (joe_emacs_t))
 
     (type joe_emacsclient_t)
     (call emacs_role_template_client (joe_r joe_t joe_emacsclient_t))
