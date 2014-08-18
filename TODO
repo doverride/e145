@@ -1,3 +1,15 @@
+socket: do what i did for stream_connect_pattern()
+    for dgram_sendto_pattern, and the various corenet_tcp/udp bind, and tcp_connect.*
+    interfaces
+
+    but change the implementation as it was dont for stream_connect_pattern,
+    use type attributes instead:
+
+    - (allow ARG1 self create_unix_stream_socket_perms)
+    + (typeattribute creates_unix_stream_sockets)
+    + (allow creates_unix_stream_sockets self create_unix_stream_socket_perms)
+    + (typeattributeset creates_unix_stream_sockets (ARG1))
+
 tmpfiles: exempt more from being tmpfiles manageable/relabelable
     is_bin_file_objects lib_t textrel_shlib_t etc etc
 
