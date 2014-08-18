@@ -132,6 +132,7 @@
 (call selinux_getattr_filesystems (is_common_login_user_subject))
 (call selinux_get_enforce_mode (is_common_login_user_subject))
 
+(call subject_dontaudit_getattr_all_subjects (is_common_login_user_subject))
 (call subject_dontaudit_read_all_subjects_state (is_common_login_user_subject))
 
 (optional usersubject_common_login_user_optional_auth
