@@ -147,6 +147,7 @@
 
 (call files_read_generic_etc_files (is_passwd_subject)) ; /etc/login.defs
 
+(call selinux_list (is_passwd_subject))
 (call selinux_getattr_filesystems (is_passwd_subject))
 (call selinux_compute_access_vector (is_passwd_subject))
 
