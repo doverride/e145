@@ -48,8 +48,6 @@
 (call system_read_sysctl_kernel_files (is_sudo_subject))
 (call system_search_keyring (is_sudo_subject))
 
-(call commands_getattr_all_bin_files (is_sudo_subject))
-
 (call devices_list (is_sudo_subject))
 (call devices_getattr_all_nodes (is_sudo_subject))
 (call devices_dontaudit_getattr_generic_nodes (is_sudo_subject))
@@ -73,6 +71,9 @@
 (call sudo_read_config_files (is_sudo_subject))
 (call sudo_read_pam_config_files (is_sudo_subject))
 (call sudo_manage_var_files (is_sudo_subject))
+
+(optional sudo_optional_application
+    (call application_getattr_all_application_executable_files (is_sudo_subject)))
 
 (optional sudo_optional_auditd
     (call audit_client_subject (is_sudo_subject)))

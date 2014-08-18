@@ -56,9 +56,6 @@
 (macro commands_bin_object ((type ARG1))
     (typeattributeset is_bin_file_object ARG1))
 
-(macro commands_getattr_all_bin_files ((type ARG1))
-    (allow ARG1 is_bin_file_object (file (getattr))))
-
 (macro commands_read_all_bin_files ((type ARG1))
     (call read_files_pattern (ARG1 is_bin_file_object is_bin_file_object)))
 
