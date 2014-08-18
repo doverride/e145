@@ -411,6 +411,18 @@
 (macro auth_change_user_passwd ((type ARG1))
     (allow ARG1 self (passwd (passwd))))
 
+(macro auth_change_user_finger_info ((type ARG1))
+    (allow ARG1 self (passwd (chfn))))
+
+(macro auth_change_user_login_shell ((type ARG1))
+    (allow ARG1 self (passwd (chsh))))
+
+(macro auth_change_user_crontab ((type ARG1))
+    (allow ARG1 self (passwd (crontab))))
+
+(macro auth_pam_rootok ((type ARG1))
+    (allow ARG1 self (passwd (rootok))))
+
 (macro auth_create_faillog_log_files ((type ARG1))
     (call files_search_var (ARG1))
     (call files_add_entry_var_log_dirs (ARG1))
