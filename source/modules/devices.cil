@@ -505,6 +505,12 @@
 
 (allow is_dev_file_object device_t (filesystem (associate)))
 
+(optional devices_optional_tmpfiles
+    (call tmpfiles_manageable_object_exception (is_dev_file_object))
+    (call tmpfiles_relabelable_object_exception (is_dev_file_object))
+    (call tmpfiles_manageable_object_exception (device_t))
+    (call tmpfiles_relabelable_object_exception (device_t)))
+
 (allow has_unconfined_access_to_devices_assets self (capability
     (sys_rawio)))
 (allow has_unconfined_access_to_devices_assets is_dev_file_object
