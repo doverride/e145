@@ -477,7 +477,6 @@
 
 (optional session_optional_auth
     (call auth_admin (session_t))
-    (call auth_pam_rootok (session_t))
     (call auth_read_shadow_files (session_t))
     (call auth_run_authconfig (session_t session_r))
     (call auth_run_updpwd (session_t session_r))
