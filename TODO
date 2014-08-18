@@ -1,3 +1,13 @@
+useradd:
+    due to not using libsemanage/genhomedircon, useradd requires a user manual for
+    this implementation
+
+    if you add a new user, you should make sure that file context specifications
+    for that users home dir exist (explicit entries)
+
+    if you don't then useradd will fail with "cannot get selinux context for /home/joe"
+    (or something similar)
+
 systemd: emergency service
     the kids changed emergency.service in rawhide to run sulogin and systemctl
     from a shell
