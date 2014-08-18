@@ -70,7 +70,8 @@
 (call system_read_sysctl_kernel_files (tmpfiles_t))
 (call system_read_proc_net_files (tmpfiles_t))
 
-(call devices_setattr_dirs (tmpfiles_t)) ; /dev/cpu
+(call devices_manage_dirs (tmpfiles_t)) ; cpu, net
+(call devices_manage_lnk_files (tmpfiles_t))
 (call devices_manage_all_nodes (tmpfiles_t))
 (call devices_relabel_all_nodes (tmpfiles_t))
 
