@@ -329,6 +329,7 @@
     (call upower_run (session_t session_r)))
 
 (optional session_optional_usermanage
+    (call usermanage_change_user_passwd (session_t))
     (call usermanage_run_groupadd (session_t session_r))
     (call usermanage_run_useradd (session_t session_r)))
 
