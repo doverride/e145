@@ -97,7 +97,6 @@
 (allow is_visudo_subject self (capability (dac_override)))
 (allow is_visudo_subject self create_unix_stream_socket_perms)
 
-(allow is_visudo_subject sudo_conf_t manage_file_perms)
 (call files_etc_filetrans (is_visudo_subject sudo_conf_t file "*"))
 
 (call auth_nsswitch_client_subject (is_visudo_subject))
