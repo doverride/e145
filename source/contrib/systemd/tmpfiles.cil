@@ -71,9 +71,8 @@
 (call system_read_proc_net_files (tmpfiles_t))
 
 (call devices_setattr_dirs (tmpfiles_t)) ; /dev/cpu
-(call devices_setattr_all_nodes (tmpfiles_t))
-(call devices_manage_lnk_files (tmpfiles_t))
-(call devices_read_urandom (tmpfiles_t))
+(call devices_manage_all_nodes (tmpfiles_t))
+(call devices_relabel_all_nodes (tmpfiles_t))
 
 (call selinux_getattr_filesystems (tmpfiles_t))
 (call selinux_set_check_req_prot (tmpfiles_t))
