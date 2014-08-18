@@ -136,17 +136,23 @@
     (call usersubject_use_inherited_terminals (is_useradd_or_groupadd_subject)))
 
 (allow is_passwd_subject self (capability (setuid dac_override)))
+(allow is_passwd_subject self (process (setfscreate)))
 (allow is_passwd_subject self create_unix_stream_socket_perms)
+(allow is_passwd_subject self create_netlink_selinux_socket_perms)
 (allow is_passwd_subject self rw_fifo_file_perms)
 
 (call system_read_sysctl_crypto_files (is_passwd_subject))
 
+(call devices_read_urandom (is_passwd_subject))
+
 (call files_read_generic_etc_files (is_passwd_subject)) ; /etc/login.defs
 
 (call selinux_getattr_filesystems (is_passwd_subject))
+(call selinux_compute_access_vector (is_passwd_subject))
 
 (call auth_nsswitch_client_subject (is_passwd_subject))
-(call auth_read_shadow_files (is_passwd_subject))
+(call auth_manage_shadow_files (is_passwd_subject))
+(call auth_manage_passwd_files (is_passwd_subject))
 (call auth_read_generic_pam_config_files (is_passwd_subject))
 (call auth_read_authconfig_pam_config_files (is_passwd_subject))
 
