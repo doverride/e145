@@ -57,6 +57,10 @@
 
 (typeattributeset is_lib_or_textrel_shlib_file_object (lib_t textrel_shlib_t))
 
+(optional libraries_optional_tmpfiles
+    (call tmpfiles_manageable_object_exception (is_lib_or_textrel_shlib_file_object))
+    (call tmpfiles_relabelable_object_exception (is_lib_or_textrel_shlib_file_object)))
+
 (allow ldconfig_t self (capability (sys_chroot)))
 
 (allow ldconfig_t ld_so_cache_t manage_file_perms)
