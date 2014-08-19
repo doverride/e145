@@ -63,7 +63,6 @@
 (context file_journald_var_lib (system_u object_r journald_var_lib_t ((s0) (s0))))
 (filecon "/var/lib/systemd/catalog(/.*)?" any file_journald_var_lib)
 
-(allow is_journald_client_subject self create_unix_dgram_socket_perms)
 (allow is_journald_client_subject self (unix_dgram_socket (sendto)))
 
 (call dgram_send_pattern (is_journald_client_subject journald_run_t journald_run_t journald_t))
@@ -129,7 +128,6 @@
 
 (allow journald_t self (capability (setgid setuid sys_admin sys_ptrace)))
 (allow journald_t self (process (getcap)))
-(allow journald_t self create_unix_dgram_socket_perms)
 
 (call manage_dirs_pattern (journald_t journald_log_t journald_log_t))
 (call manage_files_pattern (journald_t journald_log_t journald_log_t))

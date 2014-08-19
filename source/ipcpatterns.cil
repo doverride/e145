@@ -1,10 +1,17 @@
+(typeattribute creates_unix_dgram_sockets)
+(typeattribute creates_unix_stream_sockets)
+
+(allow creates_unix_dgram_sockets self create_unix_dgram_socket_perms)
+(allow creates_unix_stream_sockets self create_unix_stream_socket_perms)
+
 (macro stream_connect_pattern ((type ARG1)(type ARG2)(type ARG3)(type ARG4))
-    (allow ARG1 self create_unix_stream_socket_perms)
+    (typeattributeset creates_unix_stream_sockets (ARG1))
     (allow ARG1 ARG2 (dirs (search)))
     (allow ARG1 ARG3 write_sock_file_perms)
     (allow ARG1 ARG4 (unix_stream_socket (connectto))))
 
 (macro dgram_send_pattern ((type ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (typeattributeset creates_unix_dgram_sockets (ARG1))
     (allow ARG1 ARG2 (dirs (search)))
     (allow ARG1 ARG3 write_sock_file_perms)
     (allow ARG1 ARG4 (unix_dgram_socket (sendto))))

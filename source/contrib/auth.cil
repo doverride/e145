@@ -290,7 +290,6 @@
     (call journald_client_subject (is_pam_client_subject)))
 
 (allow chkpwd_t self (capability (dac_override)))
-(allow chkpwd_t self create_unix_stream_socket_perms)
 
 (call system_read_sysctl_crypto_files (chkpwd_t))
 
