@@ -8,7 +8,6 @@
 (context file_bti_exec (system_u object_r bti_exec_t ((s0)(s0))))
 (filecon "/usr/bin/bti" file file_bti_exec)
 
-(allow is_bti_subject self create_unix_stream_socket_perms)
 (allow is_bti_subject self rw_fifo_file_perms)
 
 (call system_read_generic_proc_files (is_bti_subject))

@@ -88,8 +88,6 @@
 (filecon "/usr/lib/systemd/system/[^/]*chrony-wait.*" file file_ntpd_unit)
 (filecon "/usr/lib/systemd/system/[^/]*chronyd.*" file file_ntpd_unit)
 
-(allow is_ntp_subject self create_unix_stream_socket_perms)
-
 (call system_read_generic_proc_files (is_ntp_subject))
 (call system_read_sysctl_crypto_files (is_ntp_subject))
 

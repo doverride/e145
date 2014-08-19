@@ -64,7 +64,6 @@
 (allow nettools_t self (capability (sys_ptrace dac_override net_raw
     net_admin setgid setuid)))
 (allow nettools_t self create_netlink_socket_perms)
-(allow nettools_t self create_unix_stream_socket_perms)
 (allow nettools_t self create_socket_perms)
 (allow nettools_t self create_packet_socket_perms)
 
@@ -103,7 +102,6 @@
 (allow ping_t self (capability (net_raw)))
 (allow ping_t self (process (getcap setcap)))
 (allow ping_t self create_rawip_socket_perms)
-(allow ping_t self create_unix_stream_socket_perms)
 
 (call terminal_use_inherited_unallocated_tty_nodes (ping_t))
 
@@ -122,7 +120,6 @@
 
 (allow traceroute_t self (capability (dac_override net_raw)))
 (allow traceroute_t self (capability2 (block_suspend)))
-(allow traceroute_t self create_unix_stream_socket_perms)
 (allow traceroute_t self create_unix_dgram_socket_perms)
 (allow traceroute_t self create_packet_socket_perms)
 (allow traceroute_t self create_rawip_socket_perms)

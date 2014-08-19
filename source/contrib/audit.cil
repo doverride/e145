@@ -123,7 +123,6 @@
 (allow auditd_t self (process (setsched)))
 (allow auditd_t self (capability (audit_control sys_nice sys_resource)))
 (allow auditd_t self create_netlink_audit_socket_perms)
-(allow auditd_t self create_unix_stream_socket_perms)
 
 (allow auditd_t auditd_log_t manage_dir_perms)
 (allow auditd_t auditd_log_t create_file_perms)
@@ -176,8 +175,6 @@
 
 (call audit_list_audispd_config (audispd_t))
 (call audit_read_audispd_config_files (audispd_t))
-
-(allow ausearch_t self create_unix_stream_socket_perms)
 
 (call terminal_use_inherited_unallocated_tty_nodes (ausearch_t))
 

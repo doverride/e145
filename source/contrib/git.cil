@@ -35,7 +35,6 @@
 (filecon "/etc/tigrc" file file_tig_conf)
 
 (allow is_git_subject self (process (signal)))
-(allow is_git_subject self create_unix_stream_socket_perms)
 (allow is_git_subject self rw_fifo_file_perms)
 
 (call can_exec (is_git_subject git_exec_t))
@@ -89,7 +88,6 @@
     (type user_tig_home_t)
     (call usersubject_home_object (user_tig_home_t)))
 
-(allow is_gitemail_subject self create_unix_stream_socket_perms)
 (allow is_gitemail_subject self rw_fifo_file_perms)
 
 (call system_read_generic_proc_files (is_gitemail_subject))

@@ -46,7 +46,6 @@
 (portcon "tcp" 587 port_smtp)
 (portcon "udp" 587 port_smtp)
 
-(allow is_mutt_subject self create_unix_stream_socket_perms)
 (allow is_mutt_subject self rw_fifo_file_perms)
 
 (call system_read_generic_proc_files (is_mutt_subject))

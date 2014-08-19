@@ -83,7 +83,6 @@
 (allow useradd_t self (capability (chown fsetid fowner sys_ptrace)))
 (allow is_useradd_or_groupadd_subject self (capability (dac_override)))
 (allow is_useradd_or_groupadd_subject self (process (setfscreate)))
-(allow useradd_t self create_unix_stream_socket_perms)
 
 (call system_list_proc (useradd_t))
 (call system_read_generic_proc_files (useradd_t))
@@ -137,7 +136,6 @@
 
 (allow is_passwd_subject self (capability (setuid dac_override)))
 (allow is_passwd_subject self (process (setfscreate)))
-(allow is_passwd_subject self create_unix_stream_socket_perms)
 (allow is_passwd_subject self create_netlink_selinux_socket_perms)
 (allow is_passwd_subject self rw_fifo_file_perms)
 

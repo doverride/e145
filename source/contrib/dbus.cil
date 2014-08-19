@@ -55,7 +55,7 @@
 (allow dbusd_t self (process (signal getcap setcap setrlimit)))
 (allow dbusd_t self (capability (setgid setuid)))
 (allow dbusd_t self create_netlink_selinux_socket_perms)
-(allow dbusd_t self create_unix_stream_stream_socket_perms)
+(allow dbusd_t self (unix_stream_socket (listen accept)))
 
 (allow dbusd_t dbusd_run_t manage_dir_perms)
 (call files_run_filetrans (dbusd_t dbusd_run_t dir "*"))

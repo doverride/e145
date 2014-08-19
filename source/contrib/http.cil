@@ -24,8 +24,7 @@
 (portcon "udp" 443 port_http)
 
 (allow is_elinks_subject self (process (execmem getsched setsched)))
-(allow is_elinks_subject self create_unix_stream_stream_socket_perms)
-(allow is_elinks_subject self (unix_stream_socket (connectto)))
+(allow is_elinks_subject self (unix_stream_socket (listen accept connectto)))
 (allow is_elinks_subject self rw_fifo_file_perms)
 
 (call system_read_generic_proc_files (is_elinks_subject))

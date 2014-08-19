@@ -73,7 +73,6 @@
 (call usersubject_search_all_home (is_user_application_subject))
 
 (allow is_common_login_user_subject self (process (setpgid signal sigkill sigstop signull getattr)))
-(allow is_common_login_user_subject self create_unix_stream_socket_perms)
 (allow is_common_login_user_subject self rw_fifo_file_perms)
 
 (allow is_common_login_user_subject self (dirs (list)))

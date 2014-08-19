@@ -25,7 +25,6 @@
 (context file_irssi_conf (system_u object_r irssi_conf_t ((s0)(s0))))
 (filecon "/etc/irssi\.conf" file file_irssi_conf)
 
-(allow is_irssi_subject self create_unix_stream_socket_perms)
 (allow is_irssi_subject self rw_fifo_file_perms)
 
 (call can_exec (is_irssi_subject irssi_exec_t))

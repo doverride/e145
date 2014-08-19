@@ -8,8 +8,6 @@
 (context file_newsb_exec (system_u object_r newsb_exec_t ((s0)(s0))))
 (filecon "/usr/bin/newsbeuter" file file_newsb_exec)
 
-(allow is_newsb_subject self create_unix_stream_socket_perms)
-
 (call system_read_generic_proc_files (is_newsb_subject))
 (call system_read_sysctl_vm_files (is_newsb_subject))
 (call system_read_sysctl_vm_overcommit_files (is_newsb_subject))

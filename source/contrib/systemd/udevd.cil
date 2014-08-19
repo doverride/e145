@@ -79,7 +79,7 @@
 (allow udevd_t self create_netlink_kobject_uevent_socket_perms)
 (allow udevd_t self (netlink_route_socket (nlmsg_write)))
 (allow udevd_t self create_netlink_socket_perms) ; crda
-(allow udevd_t self create_unix_stream_stream_socket_perms)
+(allow udevd_t self (unix_stream_socket (listen accept)))
 
 (allow udevd_t udevd_run_t manage_dir_perms)
 (allow udevd_t udevd_run_t manage_file_perms)
