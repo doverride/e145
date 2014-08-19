@@ -1423,7 +1423,7 @@
     (allow ARG1 is_session_home_file_object delete_blk_file_perms)
     (allow ARG1 is_session_home_file_object delete_chr_file_perms))
 
-(macro session_role_change ((role ARG1))
+(macro session_role_allow ((role ARG1))
     (roleallow ARG1 session_r))
 
 (macro session_user_role ((user ARG1))

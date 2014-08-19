@@ -69,7 +69,7 @@
     (call sensors_run_sensors (joe_t joe_r)))
 
 (optional joe_optional_session
-    (call session_role_change (joe_r))
+    (call session_role_allow (joe_r))
     (call session_user_role (joe_u)))
 
 (optional joe_optional_upower
@@ -662,6 +662,7 @@
     (optional joe_sudo_optional_session
         (call session_create_keyring (joe_sudo_t))
         (call session_send_signal (joe_sudo_t))
+        (call session_send_signal (joe_t))
         (call session_shell_manual_subject_type_transition (joe_sudo_t)))
  
     (type joe_visudo_t)
