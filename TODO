@@ -1,3 +1,7 @@
+newsb: does not make sense to have a podb domain
+    might as well just run podbeuter in the newsb domain, and to extend
+    the newsb domain to run moc with a subject transition
+
 tmpfiles: exempt more from being tmpfiles manageable/relabelable
     is_bin_file_objects lib_t textrel_shlib_t etc etc
 
