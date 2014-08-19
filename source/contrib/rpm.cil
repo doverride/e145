@@ -206,5 +206,9 @@
 (macro rpm_read_inherited_tmp_files ((type ARG1))
     (allow ARG1 rpm_tmp_t read_inherited_file_perms))
 
+(macro rpm_manage_tmp_files ((type ARG1))
+    (call files_search_tmp (ARG1))
+    (call manage_files_pattern (ARG1 rpm_tmp_t rpm_tmp_t)))
+
 (macro rpm_admin ((type ARG1))
     (typeattributeset is_rpm_admin_subject ARG1))

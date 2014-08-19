@@ -57,6 +57,8 @@
 
 (typeattributeset is_lib_or_textrel_shlib_file_object (lib_t textrel_shlib_t))
 
+(allow ldconfig_t self (capability (sys_chroot)))
+
 (allow ldconfig_t ld_so_cache_t manage_file_perms)
 (call files_etc_filetrans (ldconfig_t ld_so_cache_t file "*"))
 
@@ -74,9 +76,8 @@
     (call miscfiles_read_localization_files (ldconfig_t)))
 
 (optional ldconfig_optional_rpm
-    (call rpm_append_inherited_tmp_files (ldconfig_t))
     (call rpm_read_inherited_fifo_files (ldconfig_t))
-    (call rpm_read_inherited_tmp_files (ldconfig_t))
+    (call rpm_manage_tmp_files (ldconfig_t))
     (call rpm_use_fd (ldconfig_t)))
 
 (optional ldconfig_optional_session

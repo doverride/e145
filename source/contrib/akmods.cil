@@ -145,6 +145,7 @@
     (call rpm_manage_var_lib_files (akmods_t)))
 
 (optional akmods_optional_usersubject
+    (call usersubject_search_keyring_all_common_login_user_subjects (akmods_t))
     (call usersubject_use_inherited_terminals (akmods_t)))
 
 (allow is_akmods_admin_subject is_akmods_subject signal_perms)
