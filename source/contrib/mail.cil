@@ -110,8 +110,10 @@
     (allow ARG1 mutt_conf_t read_file_perms))
 
 (macro mail_tcp_connect_imap_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_imap_t (tcp_socket (name_connect))))
 
 (macro mail_tcp_connect_smtp_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_smtp_t (tcp_socket (name_connect))))
 

@@ -16,7 +16,6 @@
 (portcon "udp" 6881 port_bt)
 
 (allow is_rtorrent_subject self create_unix_stream_socket_perms)
-(allow is_rtorrent_subject self create_tcp_stream_socket_perms)
 
 (call files_dontaudit_list_all (is_rtorrent_subject)) ; catchall
 
@@ -48,4 +47,5 @@
 
 (macro bt_tcp_bind_bt_port ((type ARG1))
     (allow ARG1 self (capability (net_bind_service)))
+    (call network_tcp_bind_subject (ARG1))
     (allow ARG1 port_bt_t (tcp_socket (name_bind))))

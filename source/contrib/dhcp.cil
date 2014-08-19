@@ -132,6 +132,7 @@
 
 (macro dhcp_udp_bind_dhcp_port ((type ARG1))
     (allow ARG1 self (capability (net_bind_service)))
+    (call network_udp_subject (ARG1))
     (allow ARG1 port_dhcp_t (udp_socket (name_bind))))
 
 (macro dhcp_admin ((type ARG1))

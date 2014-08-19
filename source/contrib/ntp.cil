@@ -191,10 +191,12 @@
 
 (macro ntp_udp_bind_ntp_port ((type ARG1))
     (allow ARG1 self (capability (net_bind_service)))
+    (call network_udp_subject (ARG1))
     (allow ARG1 port_ntp_t (udp_socket (name_bind))))
 
 (macro ntp_udp_bind_ntp_cmdmon_port ((type ARG1))
     (allow ARG1 self (capability (net_bind_service)))
+    (call network_udp_subject (ARG1))
     (allow ARG1 port_ntp_cmdmon_t (udp_socket (name_bind))))
 
 (macro ntp_admin ((type ARG1))

@@ -79,5 +79,6 @@
     (allow ARG1 is_irssi_subject rw_inherited_fifo_file_perms))
 
 (macro irc_tcp_connect_irc_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_irc_t (tcp_socket (name_connect))))
 

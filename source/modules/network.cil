@@ -5,6 +5,12 @@
 (typeattribute is_packet_object)
 (typeattribute is_port_object)
 
+(typeattribute creates_dccp_sockets)
+(typeattribute creates_dccp_stream_sockets)
+(typeattribute creates_tcp_sockets)
+(typeattribute creates_tcp_stream_sockets)
+(typeattribute creates_udp_sockets)
+
 (typeattribute has_unconfined_access_to_network_assets)
 
 (typeattribute is_ephemeral_port_object)
@@ -99,6 +105,14 @@
 (portcon "tcp" 8000 port_icecast)
 (portcon "udp" 8000 port_icecast)
 
+(allow creates_dccp_sockets self create_dccp_socket_perms)
+(allow creates_dccp_stream_sockets self create_dccp_stream_socket_perms)
+
+(allow creates_tcp_sockets self create_tcp_socket_perms)
+(allow creates_tcp_stream_sockets self create_tcp_stream_socket_perms)
+
+(allow creates_udp_sockets self create_udp_socket_perms)
+
 (allow has_unconfined_access_to_network_assets is_interface_object
     (netif (all)))
 (allow has_unconfined_access_to_network_assets is_node_object (node
@@ -171,13 +185,30 @@
     (call network_port_object (ARG1))
     (typeattributeset is_ephemeral_port_object ARG1))
 
+(macro network_dccp_connect_subject ((type ARG1))
+    (typeattributeset creates_dccp_sockets ARG1))
+
+(macro network_dccp_bind_subject ((type ARG1))
+    (typeattributeset creates_dccp_stream_sockets ARG1))
+
+(macro network_tcp_connect_subject ((type ARG1))
+    (typeattributeset creates_tcp_sockets ARG1))
+
+(macro network_tcp_bind_subject ((type ARG1))
+    (typeattributeset creates_tcp_stream_sockets ARG1))
+
+(macro network_udp_subject ((type ARG1))
+    (typeattributeset creates_udp_sockets ARG1))
+
 (macro network_dontaudit_udp_bind_all_ports ((type ARG1))
     (dontaudit ARG1 is_port_object (udp_socket (name_bind))))
 
 (macro network_udp_bind_all_unreserved_ports ((type ARG1))
+    (call network_udp_subject (ARG1))
     (allow ARG1 is_unreserved_port_object (udp_socket (name_bind))))
 
 (macro network_tcp_bind_all_unreserved_ports ((type ARG1))
+    (call network_tcp_bind_subject (ARG1))
     (allow ARG1 is_unreserved_port_object (tcp_socket (name_bind))))
 
 (macro network_dontaudit_tcp_connect_all_ports ((type ARG1))
@@ -187,12 +218,15 @@
     (dontaudit ARG1 is_port_object (tcp_socket (name_bind))))
 
 (macro network_tcp_connect_all_ports ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 is_port_object (tcp_socket (name_connect))))
 
 (macro network_tcp_connect_all_ephemeral_ports ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 is_ephemeral_port_object (tcp_socket (name_connect))))
 
 (macro network_tcp_connect_all_unreserved_ports ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 is_unreserved_port_object (tcp_socket (name_connect))))
 
 (macro network_tcp_sendrecv_generic_interface ((type ARG1))
@@ -214,6 +248,7 @@
     (allow ARG1 node_t (node (udp_send sendto))))
 
 (macro network_tcp_connect_icecast_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_icecast_t (tcp_socket (name_connect))))
 
 (macro network_unconfined ((type ARG1))

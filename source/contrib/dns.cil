@@ -20,9 +20,9 @@
 (context file_resolv_conf (system_u object_r resolv_conf_t ((s0) (s0))))
 (filecon "/etc/resolv\.conf.*" file file_resolv_conf)
 
-(allow is_dns_resolve_client_subject self create_tcp_socket_perms)
-(allow is_dns_resolve_client_subject self create_udp_socket_perms)
 (allow is_dns_resolve_client_subject self r_netlink_route_socket_perms)
+
+(call network_udp_subject (is_dns_resolve_client_subject))
 
 (call network_tcp_sendrecv_generic_interface (is_dns_resolve_client_subject))
 (call network_udp_send_generic_interface (is_dns_resolve_client_subject))
@@ -53,7 +53,9 @@
     (typeattributeset is_dns_resolve_client_subject ARG1))
 
 (macro dns_tcp_connect_dns_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_dns_t (tcp_socket (name_connect))))
 
 (macro dns_tcp_connect_dnssec_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_dnssec_t (tcp_socket (name_connect))))

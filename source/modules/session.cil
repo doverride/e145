@@ -118,8 +118,6 @@
 (allow session_t self (process (setpgid signal sigkill sigstop signull getsched ptrace)))
 (allow session_t self create_unix_stream_socket_perms)
 (allow session_t self r_netlink_route_socket_perms)
-(allow session_t self create_udp_socket_perms)
-(allow session_t self create_tcp_socket_perms)
 (allow session_t self rw_fifo_file_perms)
 
 (call session_use_inherited_terminals (is_session_application_subject))
@@ -191,6 +189,7 @@
 (call filesystem_getattr_all_filesystems (session_t))
 (call filesystem_read_cgroup_files (session_t))
 
+(call network_udp_subject (session_t))
 (call network_tcp_connect_all_ports (session_t))
 
 (call subject_getattr_all_subjects (session_t))

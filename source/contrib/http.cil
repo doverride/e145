@@ -80,4 +80,5 @@
     (allow ARG1 elinks_conf_t read_file_perms))
 
 (macro http_tcp_connect_http_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_http_t (tcp_socket (name_connect))))

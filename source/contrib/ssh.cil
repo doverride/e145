@@ -95,6 +95,7 @@
     (allow ARG1 ssh_conf_t read_file_perms))
 
 (macro ssh_tcp_connect_ssh_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_ssh_t (tcp_socket (name_connect))))
 
 (macro ssh_getattr_ssh_executable_files ((type ARG1))
