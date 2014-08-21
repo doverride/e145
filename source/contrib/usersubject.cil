@@ -113,6 +113,7 @@
 (call files_list_etc (is_common_login_user_subject))
 (call files_read_generic_etc_files (is_common_login_user_subject))
 (call files_read_generic_usr_files (is_common_login_user_subject))
+(call files_search_mnt (is_common_login_user_subject))
 
 (call files_dontaudit_read_all_files (is_common_login_user_subject)) ; catchall 
 (call files_dontaudit_read_all_lnk_files (is_common_login_user_subject)) ; catchall 
