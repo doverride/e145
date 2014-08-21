@@ -490,6 +490,7 @@
     (call seutil_admin (session_t))
     (call seutil_run_setools (session_t session_r))
     (call seutil_run_load_policy (session_t session_r))
+    (call seutil_run_matchpathcon (session_t session_r))
     (call seutil_run_setenforce (session_t session_r))
     (call seutil_run_setsebool (session_t session_r))
     (call seutil_run_secilc (session_t session_r))

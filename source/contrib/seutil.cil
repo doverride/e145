@@ -1,4 +1,5 @@
 (roleattribute is_load_policy_role)
+(roleattribute is_matchpathcon_role)
 (roleattribute is_secilc_role)
 (roleattribute is_setfiles_role)
 (roleattribute is_setsebool_role)
@@ -15,7 +16,7 @@
 
 (typeattribute is_seutil_subject)
 (typeattributeset is_seutil_subject (load_policy_t secilc_t setfiles_t
-    setsebool_t setools_t setenforce_t))
+    setsebool_t setools_t setenforce_t matchpathcon_t))
 
 (typeattribute is_seutil_file_object)
 (typeattributeset is_seutil_file_object (default_context_t selinux_conf_t
@@ -31,6 +32,14 @@
 
 (context file_load_policy_exec (system_u object_r load_policy_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/load_policy" file file_load_policy_exec)
+
+(type matchpathcon_t)
+(type matchpathcon_exec_t)
+(call application_subject_entry (matchpathcon_t matchpathcon_exec_t))
+(roletype is_matchpathcon_role matchpathcon_t)
+
+(context file_matchpathcon_exec (system_u object_r matchpathcon_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/matchpathcon" file file_matchpathcon_exec)
 
 (type setsebool_t)
 (type setsebool_exec_t)
@@ -136,23 +145,31 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (is_seutil_subject))
 
+(call selinux_getattr_filesystems (is_seutil_subject))
+
 (optional seutil_optional_session
     (call session_use_inherited_terminals (is_seutil_subject)))
 
 (optional seutil_optional_usersubject
     (call usersubject_use_inherited_terminals (is_seutil_subject)))
 
-(call selinux_getattr_filesystems (load_policy_t))
 (call selinux_load_policy (load_policy_t))
 
 (call seutil_read_config_files (load_policy_t))
 (call seutil_read_policy_config_files (load_policy_t))
 
-(optional seutil_optional_miscfiles
+(optional load_policy_optional_miscfiles
     (call miscfiles_read_localization_files (load_policy_t)))
 
+(call files_getattr_all_dirs (matchpathcon_t))
+(call files_getattr_all_files (matchpathcon_t))
+
+(call selinux_validate_context (matchpathcon_t))
+
+(call seutil_read_config_files (matchpathcon_t))
+(call seutil_read_file_context_files (matchpathcon_t))
+
 (call selinux_list (setsebool_t))
-(call selinux_getattr_filesystems (setsebool_t))
 (call selinux_set_all_booleans (setsebool_t))
 
 (call seutil_read_config_files (setsebool_t))
@@ -168,12 +185,10 @@
 
 (call files_dontaudit_list_all (setools_t)) ; catchall
 
-(call selinux_getattr_filesystems (setools_t))
 (call selinux_read_policy (setools_t))
 
 (call seutil_read_config_files (setools_t))
 
-(call selinux_getattr_filesystems (setenforce_t))
 (call selinux_set_enforce_mode (setenforce_t))
 
 (call seutil_read_config_files (setenforce_t))
@@ -201,7 +216,6 @@
 (call filesystem_getattr_all_filesystems (setfiles_t))
 (call filesystem_read_cgroup_files (setfiles_t))
 
-(call selinux_getattr_filesystems (setfiles_t))
 (call selinux_get_enforce_mode (setfiles_t))
 (call selinux_validate_context (setfiles_t))
 
@@ -241,6 +255,13 @@
 (macro seutil_run_load_policy ((type ARG1)(role ARG2))
     (call seutil_subtrans_load_policy (ARG1))
     (roleattributeset is_load_policy_role (ARG2)))
+
+(macro seutil_subtrans_matchpathcon ((type ARG1))
+    (call subtrans_pattern (ARG1 matchpathcon_exec_t matchpathcon_t)))
+
+(macro seutil_run_matchpathcon ((type ARG1)(role ARG2))
+    (call seutil_subtrans_matchpathcon (ARG1))
+    (roleattributeset is_matchpathcon_role (ARG2)))
 
 (macro seutil_subtrans_setsebool ((type ARG1))
     (call subtrans_pattern (ARG1 setsebool_exec_t setsebool_t)))
