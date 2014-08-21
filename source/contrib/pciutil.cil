@@ -23,9 +23,11 @@
     (call miscfiles_read_hwdata_files (pciutil_t)))
 
 (optional pciutil_optional_session
+    (call session_search_all_home (pciutil_t))
     (call session_use_inherited_terminals (pciutil_t)))
 
 (optional pciutil_optional_usersubject
+    (call usersubject_search_all_home (pciutil_t))
     (call usersubject_use_inherited_terminals (pciutil_t)))
 
 (macro pciutil_subtrans ((type ARG1))
