@@ -48,6 +48,7 @@ contrib/networkmgr.cil
 contrib/newsb.cil
 contrib/ntp.cil
 contrib/pa.cil
+contrib/pciutil.cil
 contrib/pcsc.cil
 contrib/pinentry.cil
 contrib/plymouth.cil

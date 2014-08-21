@@ -1,0 +1,39 @@
+(roleattribute is_pciutil_role)
+
+(type pciutil_t)
+(type pciutil_exec_t)
+(call application_subject_entry (pciutil_t pciutil_exec_t))
+(roletype is_pciutil_role pciutil_t)
+
+(context file_pciutil_exec (system_u object_r pciutil_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/lspci" file file_pciutil_exec)
+(filecon "/usr/sbin/setpci" file file_pciutil_exec)
+(filecon "/usr/sbin/update-pciids" file file_pciutil_exec)
+
+(allow pciutil_t self (capability (sys_admin)))
+
+(call devices_list_sysfs (pciutil_t))
+(call devices_read_sysfs_files (pciutil_t))
+
+(optional pciutil_optional_auth
+    (call auth_nsswitch_client_subject (pciutil_t)))
+
+(optional pciutil_optional_miscfiles
+    (call miscfiles_read_hwdata_files (pciutil_t)))
+
+(optional pciutil_optional_session
+    (call session_use_inherited_terminals (pciutil_t)))
+
+(optional pciutil_optional_usersubject
+    (call usersubject_use_inherited_terminals (pciutil_t)))
+
+(macro pciutil_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 pciutil_exec_t pciutil_t)))
+
+(macro pciutil_exec ((type ARG1))
+    (call can_exec (ARG1 pciutil_exec_t)))
+
+(macro pciutil_run ((type ARG1)(role ARG2))
+    (call pciutil_subtrans (ARG1))
+    (roleattributeset is_pciutil_role (ARG2)))
