@@ -349,9 +349,6 @@
     (call pa_admin (session_t))
     (call pa_run_pactl (session_t session_r)))
 
-(optional session_optional_pciutil
-    (call pciutil_run (session_t session_r)))
-
 (optional session_optional_pcsc
     (call pcsc_admin (session_t)))
 
@@ -531,6 +528,21 @@
     (call commands_shell_auto_subject_type_transition (session_bti_t session_t))
 
     (call session_application_subject (session_bti_t)))
+
+(optional session_optional_session_pciutil
+    (type session_pciutil_t)
+    (call pciutil_role_template (session_r session_t session_pciutil_t
+        session_pciutil_home_t))
+
+    (type session_pciutil_home_t)
+    (call session_home_object (session_pciutil_home_t))
+
+    (context file_session_pciutil_home (session_u object_r session_pciutil_home_t ((s0)(s0))))
+    (filecon "/root/\.pciids-cache" file file_session_pciutil_home)
+
+    (call session_home_dir_filetrans (session_pciutil_t session_pciutil_home_t file ".pciids-cache"))
+
+    (call session_application_subject (session_pciutil_t)))
 
 (optional session_optional_session_ffmpeg
     (type session_ffmpeg_t)
