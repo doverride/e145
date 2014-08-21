@@ -53,6 +53,8 @@ generators:
     target them because else we have no way to make them generate the units with
     their appropriate types
 
+    Update: looks like gpt generator writes (or checks for write xs) to /sys
+
 fedora-readonly:
     target these oneshots
 
