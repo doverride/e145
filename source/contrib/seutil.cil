@@ -1,5 +1,6 @@
 (roleattribute is_load_policy_role)
 (roleattribute is_matchpathcon_role)
+(roleattribute is_chcon_role)
 (roleattribute is_secilc_role)
 (roleattribute is_setfiles_role)
 (roleattribute is_setsebool_role)
@@ -16,7 +17,7 @@
 
 (typeattribute is_seutil_subject)
 (typeattributeset is_seutil_subject (load_policy_t secilc_t setfiles_t
-    setsebool_t setools_t setenforce_t matchpathcon_t))
+    setsebool_t setools_t setenforce_t matchpathcon_t chcon_t))
 
 (typeattribute is_seutil_file_object)
 (typeattributeset is_seutil_file_object (default_context_t selinux_conf_t
@@ -40,6 +41,14 @@
 
 (context file_matchpathcon_exec (system_u object_r matchpathcon_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/matchpathcon" file file_matchpathcon_exec)
+
+(type chcon_t)
+(type chcon_exec_t)
+(call application_subject_entry (chcon_t chcon_exec_t))
+(roletype is_chcon_role chcon_t)
+
+(context file_chcon_exec (system_u object_r chcon_exec_t ((s0) (s0))))
+(filecon "/usr/bin/chcon" file file_chcon_exec)
 
 (type setsebool_t)
 (type setsebool_exec_t)
@@ -153,6 +162,17 @@
 (optional seutil_optional_usersubject
     (call usersubject_use_inherited_terminals (is_seutil_subject)))
 
+(allow chcon_t self (capability (fowner)))
+
+(call files_relabel_non_auth_except (chcon_t))
+
+(call selinux_get_enforce_mode (chcon_t))
+
+(call subject_obj_id_change_exemption (chcon_t))
+
+(optional chcon_optional_miscfiles
+    (call miscfiles_read_localization_files (chcon_t)))
+
 (call selinux_load_policy (load_policy_t))
 
 (call seutil_read_config_files (load_policy_t))
@@ -262,6 +282,16 @@
 (macro seutil_run_matchpathcon ((type ARG1)(role ARG2))
     (call seutil_subtrans_matchpathcon (ARG1))
     (roleattributeset is_matchpathcon_role (ARG2)))
+
+(macro seutil_exec_chcon ((type ARG1))
+    (call can_exec (ARG1 chcon_exec_t)))
+
+(macro seutil_subtrans_chcon ((type ARG1))
+    (call subtrans_pattern (ARG1 chcon_exec_t chcon_t)))
+
+(macro seutil_run_chcon ((type ARG1)(role ARG2))
+    (call seutil_subtrans_chcon (ARG1))
+    (roleattributeset is_chcon_role (ARG2)))
 
 (macro seutil_subtrans_setsebool ((type ARG1))
     (call subtrans_pattern (ARG1 setsebool_exec_t setsebool_t)))
