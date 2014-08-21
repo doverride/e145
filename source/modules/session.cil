@@ -936,6 +936,7 @@
     (context file_session_newsb_home (session_u object_r session_newsb_home_t ((s0)(s0))))
     (filecon "/root/\.newsbeuter(/.*)?" any file_session_newsb_home)
 
+    (call session_manage_generic_home_content_dirs (session_newsb_t))
     (call session_manage_generic_home_content_files (session_newsb_t))
     (call session_home_dir_filetrans_session_home (session_newsb_t file "*"))
 
@@ -947,20 +948,9 @@
     (call session_use_terminals (session_newsb_t))
     (call session_read_cert_files (session_newsb_t))
 
-    (type session_podb_t)
-    (call newsb_role_template_podb (session_r session_t session_podb_t
-        session_newsb_home_t))
-
-    (call session_manage_generic_home_content_dirs (session_podb_t))
-    (call session_manage_generic_home_content_files (session_podb_t))
-    (call session_home_dir_filetrans_session_home (session_podb_t file "*"))
-
-    (call session_application_subject (session_podb_t))
-    (call session_use_terminals (session_podb_t))
-
-    (optional session_podb_optional_session_moc
+    (optional session_newsb_optional_session_moc
         (allow session_moc_t session_newsb_home_t rw_inherited_file_perms)
-        (call moc_role_template (session_r session_podb_t session_moc_t
+        (call moc_role_template (session_r session_newsb_t session_moc_t
             session_moc_home_t)))
 
     (optional session_newsb_optional_session_elinks

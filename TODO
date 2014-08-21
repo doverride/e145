@@ -3,10 +3,6 @@ block_suspend review block_suspend use
     a patch to fix that has been submitted, and once this bug is fixed, remove
     all block suspend calls to see who really needs it 
 
-newsb: does not make sense to have a podb domain
-    might as well just run podbeuter in the newsb domain, and to extend
-    the newsb domain to run moc with a subject transition
-
 useradd:
     due to not using libsemanage/genhomedircon, useradd requires a user manual for
     this implementation

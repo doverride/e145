@@ -511,6 +511,7 @@
     (allow joe_t user_newsb_home_t relabel_file_perms)
     (call usersubject_home_dir_filetrans (joe_t user_newsb_home_t dir ".newsbeuter"))
 
+    (call usersubject_manage_generic_home_content_dirs (joe_newsb_t))
     (call usersubject_manage_generic_home_content_files (joe_newsb_t))
     (call usersubject_home_dir_filetrans_user_home (joe_newsb_t file "*"))
 
@@ -520,20 +521,9 @@
     (call usersubject_use_terminals (joe_newsb_t))
     (call usersubject_read_cert_files (joe_newsb_t))
 
-    (type joe_podb_t)
-    (call newsb_role_template_podb (joe_r joe_t joe_podb_t
-        user_newsb_home_t))
-
-    (call usersubject_manage_generic_home_content_dirs (joe_podb_t))
-    (call usersubject_manage_generic_home_content_files (joe_podb_t))
-    (call usersubject_home_dir_filetrans_user_home (joe_podb_t file "*"))
-
-    (call usersubject_application_subject (joe_podb_t))
-    (call usersubject_use_terminals (joe_podb_t))
-
-    (optional joe_podb_optional_joe_moc
+    (optional joe_newsb_optional_joe_moc
         (allow joe_moc_t user_newsb_home_t rw_inherited_file_perms)
-        (call moc_role_template (joe_r joe_podb_t joe_moc_t
+        (call moc_role_template (joe_r joe_newsb_t joe_moc_t
             user_moc_home_t)))
 
     (optional joe_newsb_optional_joe_elinks

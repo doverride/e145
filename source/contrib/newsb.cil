@@ -1,19 +1,13 @@
 (roleattribute is_newsb_role)
 
 (typeattribute is_newsb_subject)
-(typeattribute is_podb_subject)
 
 (type newsb_exec_t)
 (call application_subject_entry (is_newsb_subject newsb_exec_t))
 
 (context file_newsb_exec (system_u object_r newsb_exec_t ((s0)(s0))))
 (filecon "/usr/bin/newsbeuter" file file_newsb_exec)
-
-(type podb_exec_t)
-(call application_subject_entry (is_podb_subject podb_exec_t))
-
-(context file_podb_exec (system_u object_r podb_exec_t ((s0)(s0))))
-(filecon "/usr/bin/podbeuter" file file_podb_exec)
+(filecon "/usr/bin/podbeuter" file file_newsb_exec)
 
 (call system_read_generic_proc_files (is_newsb_subject))
 (call system_read_sysctl_vm_files (is_newsb_subject))
@@ -44,23 +38,6 @@
     (type user_newsb_home_t)
     (call usersubject_home_object (user_newsb_home_t)))
 
-(call system_read_generic_proc_files (is_podb_subject))
-
-(call commands_execute_shell_files (is_podb_subject))
-
-(call selinux_getattr_filesystems (is_podb_subject))
-
-(optional podb_optional_auth
-    (call auth_nsswitch_client_subject (is_podb_subject)))
-
-(optional podb_optional_http
-    (call http_tcp_connect_http_port (is_podb_subject)))
-
-(optional podb_optional_miscfiles
-    (call miscfiles_read_terminfo_files (is_podb_subject))
-    (call miscfiles_read_network_config_files (is_podb_subject))
-    (call miscfiles_read_localization_files (is_podb_subject)))
-
 (macro newsb_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_newsb_role ARG1)
     (typeattributeset is_newsb_subject ARG3)
@@ -71,14 +48,3 @@
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG4 manage_lnk_file_perms))
-
-(macro newsb_role_template_podb ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
-    (roleattributeset is_newsb_role ARG1)
-    (typeattributeset is_podb_subject ARG3)
-    (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 podb_exec_t ARG3))
-    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (ARG2 ARG3))
-    (allow ARG3 ARG4 rw_dir_perms)
-    (allow ARG3 ARG4 manage_file_perms)
-    (allow ARG3 ARG4 read_lnk_file_perms))
