@@ -5,8 +5,6 @@
 (type pciutil_exec_t)
 (call application_subject_entry (is_pciutil_subject pciutil_exec_t))
 
-; ~/.pciids-cache
-
 (context file_pciutil_exec (system_u object_r pciutil_exec_t ((s0)
     (s0))))
 (filecon "/usr/sbin/lspci" file file_pciutil_exec)
