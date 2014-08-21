@@ -1,7 +1,3 @@
-auth: remove is_nsswitch_client_subject self (key (all)))
-    see how that affects things
-    investigate why nsswitch clients would need full access to their own keyrings
-
 block_suspend review block_suspend use
     these is a bug in kernel which triggers false block suspend
     a patch to fix that has been submitted, and once this bug is fixed, remove
