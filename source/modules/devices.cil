@@ -688,6 +688,9 @@
 (macro devices_read_sysfs_files ((type ARG1))
     (call read_files_pattern (ARG1 sysfs_t sysfs_t)))
 
+(macro devices_audit_access_sysfs_dirs ((type ARG1))
+    (dontaudit ARG1 sysfs_t (dir (audit_access))))
+
 (macro devices_search_sysfs ((type ARG1))
     (allow ARG1 sysfs_t (dirs (search))))
 

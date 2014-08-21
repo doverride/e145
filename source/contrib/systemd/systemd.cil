@@ -211,6 +211,8 @@
 (call system_stream_connectto (systemd_t))
 (call system_use_fd (systemd_t))
 
+(call devices_audit_access_sysfs_dirs (systemd_t)) ; i think these are generators
+
 (call devices_manage_dirs (systemd_t))
 (call devices_manage_lnk_files (systemd_t))
 (call devices_manage_generic_chr_files (systemd_t))
@@ -219,6 +221,9 @@
 (call devices_read_memory_raw (systemd_t))
 (call devices_relabel_all_nodes (systemd_t))
 (call devices_write_kmsg (systemd_t))
+
+(call files_audit_access_etc_dirs (systemd_t)) ; i think these are generators
+(call files_audit_access_var_dirs (systemd_t))
 
 (call files_list_boot (systemd_t))
 (call files_list_etc (systemd_t))
