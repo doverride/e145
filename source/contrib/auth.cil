@@ -250,7 +250,6 @@
 (optional login_program_subject_optional_utmp
     (call utmp_rw_run_files (is_login_program_subject)))
 
-(allow is_nsswitch_client_subject self (key (all)))
 (allow is_nsswitch_client_subject self create_unix_stream_socket_perms)
 
 (call auth_read_nsswitch_config_files (is_nsswitch_client_subject))
