@@ -19,6 +19,12 @@
 (context file_fonts_cache (system_u object_r fonts_cache_t ((s0) (s0))))
 (filecon "/var/cache/fontconfig(/.*)?" any file_fonts_cache)
 
+(type factory_t)
+(call files_usr_object (factory_t))
+
+(context file_factory (system_u object_r factory_t ((s0) (s0))))
+(filecon "/usr/share/factory(/.*)?" any file_factory)
+
 (type hwdata_t)
 (call files_usr_object (hwdata_t))
 
@@ -105,6 +111,11 @@
     (call read_files_pattern (ARG1 locale_t locale_t))
     (optional miscfiles_optional_localed
         (call localed_read_config_files (ARG1))))
+
+(macro miscfiles_read_factory_files ((type ARG1))
+    (call files_search_usr (ARG1))
+    (allow ARG1 factory_t (dirs (list)))
+    (allow ARG1 factory_t read_file_perms))
 
 (macro miscfiles_read_hwdata_files ((type ARG1))
     (call files_search_usr (ARG1))
