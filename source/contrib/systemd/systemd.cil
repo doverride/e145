@@ -185,7 +185,7 @@
 (allow systemd_t self (netlink_route_socket (nlmsg_write)))
 (allow systemd_t self create_netlink_selinux_socket_perms)
 (allow systemd_t self rw_fifo_file_perms)
-(allow systemd_t self (key (create write)))
+(allow systemd_t self (key (search write)))
 
 (allow systemd_t systemd_var_lib_t manage_dir_perms)
 (call files_var_lib_filetrans (systemd_t systemd_var_lib_t dir "*"))
