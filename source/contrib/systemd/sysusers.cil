@@ -1,3 +1,5 @@
+(typepermissive sysusers_t)
+
 (typeattribute is_sysusers_admin_subject)
 
 (type sysusers_t)
@@ -12,6 +14,9 @@
 
 (context file_sysusers_unit (system_u object_r sysusers_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*sysusers.*" file file_sysusers_unit)
+
+(optional sysusers_optional_auth
+    (call auth_read_shadow_files (sysusers_t)))
 
 (allow is_sysusers_admin_subject sysusers_t signal_perms)
 (allow is_sysusers_admin_subject sysusers_t (process (ptrace)))
