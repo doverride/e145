@@ -92,6 +92,7 @@ contrib/systemd/shutdownd.cil
 contrib/systemd/sleep.cil
 contrib/systemd/sysctl.cil
 contrib/systemd/systemd.cil
+contrib/systemd/sysusers.cil
 contrib/systemd/timedated.cil
 contrib/systemd/tmpfiles.cil
 contrib/systemd/udevd.cil

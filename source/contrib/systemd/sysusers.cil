@@ -1,0 +1,25 @@
+(typeattribute is_sysusers_admin_subject)
+
+(type sysusers_t)
+(type sysusers_exec_t)
+(call systemd_oneshot_subject_entry (sysusers_t sysusers_exec_t))
+
+(context file_sysusers_exec (system_u object_r sysusers_exec_t ((s0) (s0))))
+(filecon "/usr/bin/systemd-sysusers" file file_sysusers_exec)
+
+(type sysusers_unit_t)
+(call systemd_unit_object (sysusers_unit_t))
+
+(context file_sysusers_unit (system_u object_r sysusers_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*sysusers.*" file file_sysusers_unit)
+
+(allow is_sysusers_admin_subject sysusers_t signal_perms)
+(allow is_sysusers_admin_subject sysusers_t (process (ptrace)))
+(call ps_subject_pattern (is_sysusers_admin_subject sysusers_t))
+
+(allow is_sysusers_admin_subject sysusers_unit_t (service (all)))
+
+(call admin_pattern (is_sysusers_admin_subject sysusers_unit_t))
+
+(macro sysusers_admin ((type ARG1))
+    (typeattributeset is_sysusers_admin_subject ARG1))

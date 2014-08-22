@@ -405,6 +405,9 @@
     (call sysctl_admin (session_t))
     (call sysctl_run_sctl (session_t session_r)))
 
+(optional session_optional_sysusers
+    (call sysusers_admin (session_t)))
+
 (optional session_optional_timedated
     (call timedated_admin (session_t))
     (call timedated_run_timedatectl (session_t session_r)))
