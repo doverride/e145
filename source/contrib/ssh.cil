@@ -41,7 +41,8 @@
 (portcon "tcp" 22 port_ssh)
 (portcon "udp" 22 port_ssh)
 
-(allow is_ssh_subject self (process (setfscreate)))
+(allow is_ssh_subject self (process (setfscreate signal)))
+(allow is_ssh_subject self rw_fifo_file_perms)
 
 (call devices_read_urandom (is_ssh_subject))
 
