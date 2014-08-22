@@ -596,9 +596,7 @@
     (filecon "/home/joe/\.esd_auth" file file_joe_user_pa_home)
     (filecon "/home/joe/\.config/pulse(/.*)?" any file_joe_user_pa_home)
 
-    (allow joe_t user_pa_home_t manage_dir_perms)
     (allow joe_t user_pa_home_t relabel_dir_perms)
-    (allow joe_t user_pa_home_t manage_file_perms)
     (allow joe_t user_pa_home_t relabel_file_perms)
     (call usersubject_home_dir_filetrans (joe_t user_pa_home_t file ".esd_auth")) 
     (call usersubject_home_dir_filetrans (joe_pa_t user_pa_home_t file ".esd_auth"))
@@ -607,21 +605,15 @@
     (context file_joe_user_pa_run (joe_u object_r user_pa_run_t ((s0)(s0))))
     (filecon "/run/user/1000/pulse(/.*)?" any file_joe_user_pa_run)
 
-    (allow joe_t user_pa_run_t manage_dir_perms)
     (allow joe_t user_pa_run_t relabel_dir_perms)
-    (allow joe_t user_pa_run_t manage_file_perms)
     (allow joe_t user_pa_run_t relabel_file_perms)
-    (allow joe_t user_pa_run_t manage_sock_file_perms)
     (allow joe_t user_pa_run_t relabel_sock_file_perms)
     (call usersubject_run_user_dir_filetrans (joe_t user_pa_run_t dir "pulse")) 
 
-    (allow joe_t user_pa_tmp_t manage_dir_perms)
     (allow joe_t user_pa_tmp_t relabel_dir_perms)
-    (allow joe_t user_pa_tmp_t manage_sock_file_perms)
     (allow joe_t user_pa_tmp_t relabel_sock_file_perms)
     (call files_tmp_filetrans (joe_pa_t user_pa_tmp_t dir "*"))
 
-    (allow joe_t user_pa_tmpfs_t manage_file_perms)
     (allow joe_t user_pa_tmpfs_t relabel_file_perms)
     (call filesystem_tmpfs_filetrans (joe_pa_t user_pa_tmpfs_t file "*"))
 
