@@ -432,7 +432,7 @@
     (call session_use_inherited_terminals (systemctl_t)))
 
 (optional systemctl_optional_shutdownd
-    (call shutdownd_stream_connect_shutdownd (systemctl_t)))
+    (call shutdownd_dgram_send_shutdownd (systemctl_t)))
 
 (optional systemctl_optional_usersubject
     (call usersubject_use_inherited_terminals (systemctl_t)))

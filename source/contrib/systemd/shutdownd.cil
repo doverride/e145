@@ -41,6 +41,8 @@
 (context file_shutdownd_run (system_u object_r shutdownd_run_t ((s0) (s0))))
 (filecon "/run/systemd/shutdownd" socket file_shutdownd_run)
 
+(call system_read_generic_proc_files (is_shutdownd_subject))
+
 (call selinux_get_filesystems_mount (is_shutdownd_subject))
 
 (optional shutdown_optional_utmp
@@ -55,7 +57,6 @@
 (call systemd_run_filetrans (shutdown_t shutdown_run_t dir "*"))
 
 (call system_request_load_module (shutdown_t))
-(call system_read_generic_proc_files (shutdown_t))
 (call system_rw_sysctl_kernel_files (shutdown_t))
 (call system_setkeycreate (shutdown_t))
 (call system_setpgid (shutdown_t))
@@ -131,10 +132,12 @@
 (optional shutdown_optional_usersubject
     (call usersubject_use_inherited_terminals (shutdown_t)))
 
-(allow shutdownd_t self (capability (dac_override net_admin)))
+(allow shutdownd_t self (capability (dac_override net_admin sys_tty_config)))
 
 (allow shutdownd_t shutdownd_run_t manage_sock_file_perms)
 (call systemd_run_filetrans (shutdownd_t shutdownd_run_t sock_file "*"))
+
+(allow shutdownd_t shutdown_run_t (dir (setattr)))
 
 (call shutdownd_manage_run_files (shutdownd_t))
 
@@ -154,6 +157,9 @@
     (call sessions_manage_run_files (shutdownd_t))
     (call sessions_run_filetrans_run_files (shutdownd_t)))
 
+(optional shutdownd_optional_usersubject
+    (call usersubject_use_terminals (shutdownd_t)))
+
 (allow is_shutdownd_admin_subject is_shutdownd_subject signal_perms)
 (allow is_shutdownd_admin_subject is_shutdownd_subject (process (ptrace)))
 (call ps_subject_pattern (is_shutdownd_admin_subject is_shutdownd_subject))
@@ -172,8 +178,8 @@
 (macro shutdownd_sigchld_shutdown ((type ARG1))
     (allow ARG1 shutdown_t (process (sigchld))))
 
-(macro shutdownd_stream_connect_shutdownd ((type ARG1))
-    (call stream_connect_pattern (ARG1 shutdownd_run_t shutdownd_run_t shutdownd_t)))
+(macro shutdownd_dgram_send_shutdownd ((type ARG1))
+    (call dgram_send_pattern (ARG1 shutdownd_run_t shutdownd_run_t shutdownd_t)))
 
 (macro shutdownd_admin ((type ARG1))
     (typeattributeset is_shutdownd_admin_subject ARG1))
