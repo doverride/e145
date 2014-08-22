@@ -1012,6 +1012,9 @@
     (call session_manage_generic_home_content_files (session_ssh_t))
     (call session_home_dir_filetrans_session_home (session_ssh_t file "*"))
 
+    (call session_manage_generic_tmp_files (session_ssh_t))
+    (call session_tmp_filetrans_generic_tmp (session_ssh_t file "*"))
+
     (type session_ssh_home_t)
     (call session_home_object (session_ssh_home_t))
 

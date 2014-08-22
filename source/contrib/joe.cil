@@ -563,6 +563,9 @@
     (call usersubject_manage_generic_home_content_files (joe_ssh_t))
     (call usersubject_home_dir_filetrans_user_home (joe_ssh_t file "*"))
 
+    (call usersubject_manage_generic_tmp_content_files (joe_ssh_t))
+    (call usersubject_tmp_filetrans_generic_user_tmp (joe_ssh_t file "*"))
+ 
     (allow joe_t user_ssh_home_t manage_dir_perms)
     (allow joe_t user_ssh_home_t relabel_dir_perms)
     (allow joe_t user_ssh_home_t manage_file_perms)
