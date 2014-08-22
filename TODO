@@ -1,5 +1,11 @@
-sys_admin/net_admin
-    requests for these capabilities need to be reviewed system-wide
+role_templates:
+    make per role template a litte more inclusive
+    for example if we allow caller to relabel the user content that
+    it is also allowed to manage then we can remove those rules from
+    the actual blocks where the template is called
+
+net_admin
+    requests for this capability need to be reviewed system-wide
 
 /usr/lib/.*\.d(/.*)?
     create private types for the various .d dirs in there
@@ -48,6 +54,7 @@ systemd:
 
     /usr/lib/tmpfiles.d/initscripts.conf
     /usr/lib/tmpfiles.d/pam.conf
+    /usr/lib/tmpfiles.d/screen.conf
 
     the workaround is to copy these to /etc/systemd/system, and /etc/tmpfiles.d
     respecitively and then s/'/var/run'/run there
