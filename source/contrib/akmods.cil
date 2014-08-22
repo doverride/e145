@@ -61,6 +61,7 @@
 (allow akmods_t self (capability (dac_override setgid setuid chown)))
 (allow akmods_t self (process (getsched setsched setrlimit setexec setfscreate)))
 (allow akmods_t self rw_fifo_file_perms)
+(allow akmods_t self (key (search)))
 
 (allow akmods_t akmods_lock_t manage_file_perms)
 (call files_run_lock_filetrans (akmods_t akmods_lock_t file "*"))

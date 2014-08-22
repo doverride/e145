@@ -203,6 +203,9 @@
 (macro rpm_read_inherited_fifo_files ((type ARG1))
     (allow ARG1 rpm_t (fifo_file (read))))
 
+(macro rpm_write_inherited_tmp_fifo_files ((type ARG1))
+    (allow ARG1 rpm_tmp_t (fifo_file (write))))
+
 (macro rpm_read_inherited_tmp_files ((type ARG1))
     (allow ARG1 rpm_tmp_t read_inherited_file_perms))
 
