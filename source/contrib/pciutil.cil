@@ -11,6 +11,8 @@
 (filecon "/usr/sbin/setpci" file file_pciutil_exec)
 (filecon "/usr/sbin/update-pciids" file file_pciutil_exec)
 
+(allow is_pciutil_subject self (capability (sys_admin)))
+
 (call devices_list_sysfs (is_pciutil_subject))
 (call devices_read_sysfs_files (is_pciutil_subject))
 

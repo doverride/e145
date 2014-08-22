@@ -172,5 +172,8 @@
 (macro shutdownd_sigchld_shutdown ((type ARG1))
     (allow ARG1 shutdown_t (process (sigchld))))
 
+(macro shutdownd_stream_connect_shutdownd ((type ARG1))
+    (call stream_connect_pattern (ARG1 shutdownd_run_t shutdownd_run_t shutdownd_t)))
+
 (macro shutdownd_admin ((type ARG1))
     (typeattributeset is_shutdownd_admin_subject ARG1))

@@ -51,7 +51,7 @@
     (s0))))
 (filecon "/usr/sbin/cryptsetup" file file_dmcrypt_exec)
 
-(allow dmsetup_t self (capability (sys_admin)))
+(allow is_dm_subject self (capability (sys_admin)))
 
 (call system_read_generic_proc_files (dmsetup_t))
 (call system_get_sysvipc_info (dmsetup_t))
