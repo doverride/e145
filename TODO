@@ -1,3 +1,6 @@
+sys_admin/net_admin
+    requests for these capabilities need to be reviewed system-wide
+
 /usr/lib/.*\.d(/.*)?
     create private types for the various .d dirs in there
     binfmt.d, modprobe.d, modules-load,d, sysctl.d, sysusers.d, tmpfiles.d
