@@ -13,7 +13,7 @@
 (typeattributeset is_usermanage_subject (cracklib_t useradd_t groupadd_t))
 
 (typeattribute is_useradd_or_groupadd_subject)
-(typeattributeset is_usermanage_subject (useradd_t groupadd_t))
+(typeattributeset is_useradd_or_groupadd_subject (useradd_t groupadd_t))
 
 (typeattribute is_usermanage_file_object)
 (typeattributeset is_usermanage_file_object (cracklib_var_cache_t useradd_conf_t))
@@ -111,6 +111,12 @@
 
 (call usermanage_read_useradd_config_files (useradd_t))
 
+(optional useradd_optional_rpm
+    (call rpm_append_inherited_tmp_files (is_useradd_or_groupadd_subject))
+    (call rpm_read_inherited_fifo_files (is_useradd_or_groupadd_subject))
+    (call rpm_read_inherited_fifo_files (is_useradd_or_groupadd_subject))
+    (call rpm_use_fd (is_useradd_or_groupadd_subject)))
+ 
 (optional useradd_optional_auditd
     (call audit_client_subject (is_useradd_or_groupadd_subject)))
 
