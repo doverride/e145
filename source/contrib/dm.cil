@@ -82,6 +82,7 @@
 (call system_read_sysctl_crypto_files (dmcrypt_t))
 
 (call devices_getattr_device_filesystems (dmcrypt_t))
+(call devices_read_lnk_files (dmcrypt_t))
 (call devices_rw_lvm_control (dmcrypt_t))
 (call devices_read_sysfs_files (dmcrypt_t))
 (call devices_read_urandom (dmcrypt_t))
