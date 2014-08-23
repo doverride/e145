@@ -472,7 +472,7 @@
 
 (classpermission manage_lnk_file_perms)
 (classpermissionset manage_lnk_file_perms (lnk_file
-    (create read write getattr setattr link unlink rename)))
+    (create read write getattr setattr link lock ioctl unlink rename)))
 
 (classpermission relabelfrom_lnk_file_perms)
 (classpermissionset relabelfrom_lnk_file_perms (lnk_file (getattr
