@@ -1,11 +1,3 @@
-role_templates:
-    make per role template a litte more inclusive
-    for example if we allow caller to relabel the user content that
-    it is also allowed to manage then we can remove those rules from
-    the actual blocks where the template is called
-
-    update: this is what i mean (see git blame)
-
 net_admin
     requests for this capability need to be reviewed system-wide
 
