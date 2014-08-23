@@ -367,9 +367,17 @@
         (call usersubject_application_subject (joe_pincurses_t))
         (call usersubject_use_terminals (joe_pincurses_t)))
 
-    (type joe_scd_t)
+    (type joe_scd_t) 
     (call gpg_role_template_scd (joe_r joe_gpgagent_t joe_scd_t user_scd_tmp_t
         user_scd_home_t))
+
+    (allow joe_t user_scd_home_t manage_file_perms)
+    (allow joe_t user_scd_home_t relabel_file_perms)
+
+    (allow joe_t user_scd_tmp_t manage_dir_perms)
+    (allow joe_t user_scd_tmp_t relabel_dir_perms)
+    (allow joe_t user_scd_tmp_t manage_sock_file_perms)
+    (allow joe_t user_scd_tmp_t relabel_sock_file_perms)
 
     (context file_joe_user_scd_home (joe_u object_r user_scd_home_t ((s0)(s0))))
     (filecon "/home/joe/\.gnupg/reader_0\.status" file file_joe_user_scd_home)

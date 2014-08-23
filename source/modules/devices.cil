@@ -656,6 +656,9 @@
 (macro devices_rw_event ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_event_t)))
 
+(macro devices_rw_framebuf ((type ARG1))
+    (call rw_chr_files_pattern (ARG1 device_t device_framebuf_t)))
+
 (macro devices_rw_lvm_control ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_lvm_control_t)))
 
@@ -686,7 +689,8 @@
     (allow ARG1 sysfs_t (dirs (list))))
 
 (macro devices_read_sysfs_files ((type ARG1))
-    (call read_files_pattern (ARG1 sysfs_t sysfs_t)))
+    (allow ARG1 sysfs_t (dirs (search)))
+    (allow ARG1 sysfs_t read_file_perms))
 
 (macro devices_audit_access_sysfs_dirs ((type ARG1))
     (dontaudit ARG1 sysfs_t (dir (audit_access))))

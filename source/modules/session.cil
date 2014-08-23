@@ -876,8 +876,16 @@
     (type session_scd_tmp_t)
     (call session_tmp_object (session_scd_tmp_t))
 
+    (allow session_t session_scd_tmp_t manage_dir_perms)
+    (allow session_t session_scd_tmp_t relabel_dir_perms)
+    (allow session_t session_scd_tmp_t manage_sock_file_perms)
+    (allow session_t session_scd_tmp_t relabel_sock_file_perms)
+
     (type session_scd_home_t)
     (call session_home_object (session_scd_home_t))
+
+    (allow session_t session_scd_home_t manage_file_perms)
+    (allow session_t session_scd_home_t relabel_file_perms)
 
     (context file_session_scd_home (session_u object_r session_scd_home_t ((s0)(s0))))
     (filecon "/root/\.gnupg/reader_0\.status" file file_session_scd_home)

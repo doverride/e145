@@ -87,6 +87,7 @@
 
 (call devices_read_sysfs_files (plymouthd_t))
 (call devices_rw_dri (plymouthd_t))
+(call devices_rw_framebuf (plymouthd_t))
 
 (call files_read_generic_etc_files (plymouthd_t)) ; fedora-release
 (call files_read_generic_usr_files (plymouthd_t))
