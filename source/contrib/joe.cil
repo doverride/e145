@@ -233,6 +233,7 @@
 
     (call usersubject_home_bin_auto_subject_type_transition (joe_emacs_t joe_t))
 
+    (call usersubject_dontaudit_getattr_all_home_content_files (joe_emacs_t))
     (call usersubject_getattr_mail_spool_files (joe_emacs_t))
 
     (type joe_emacsclient_t)

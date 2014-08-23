@@ -678,6 +678,7 @@
 
     (call session_home_bin_auto_subject_type_transition (session_emacs_t session_t))
 
+    (call session_dontaudit_getattr_all_home_content_files (session_emacs_t))
     (call session_getattr_mail_spool_files (session_emacs_t))
 
     (type session_emacsclient_t)
@@ -1291,6 +1292,9 @@
 
 (macro session_dontaudit_search_generic_home_content ((type ARG1))
     (dontaudit ARG1 session_home_t (dirs (search))))
+
+(macro session_dontaudit_getattr_all_home_content_files ((type ARG1))
+    (dontaudit ARG1 is_session_home_file_object (file (getattr))))
 
 (macro session_home_dir_filetrans_session_bin_dir ((type ARG1))
     (call session_search_home_dir (ARG1))
