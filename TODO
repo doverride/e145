@@ -1,3 +1,7 @@
+readahead: implement similar solution to tmpfiles for readahead
+    "readahead_readable_content_exception"
+    do not want readahead reading user content for example
+
 net_admin
     requests for this capability need to be reviewed system-wide
 
