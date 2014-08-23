@@ -107,6 +107,9 @@
     (call usersubject_application_subject (joe_bti_t)))
 
 (optional joe_optional_java
+    (context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.java(/.*)?" any file_joe_user_java_home)
+
     (allow joe_t user_java_home_t manage_dir_perms)
     (allow joe_t user_java_home_t relabel_dir_perms)
     (allow joe_t user_java_home_t manage_file_perms)
