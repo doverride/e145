@@ -8,7 +8,10 @@
 
 (allow is_java_client_subject self (process (execmem)))
 
+(call system_read_proc_net_files (is_java_client_subject))
 (call system_read_sysctl_vm_overcommit_files (is_java_client_subject))
+
+(call devices_read_random (is_java_client_subject))
 
 (macro java_client_subject ((type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_java_client_subject ARG1)
