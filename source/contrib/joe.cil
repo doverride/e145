@@ -106,21 +106,39 @@
 
     (call usersubject_application_subject (joe_bti_t)))
 
-(optional joe_optional_joe_fop
-    (type joe_fop_t)
-    (call fop_role_template (joe_r joe_t joe_fop_t
-        user_fop_home_t))
+(optional joe_optional_java
+    ; because joe_t is not a java client subject
+    (allow joe_t user_java_home_t manage_dir_perms)
+    (allow joe_t user_java_home_t relabel_dir_perms)
+    (allow joe_t user_java_home_t manage_file_perms)
+    (allow joe_t user_java_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_java_home_t dir ".java"))
 
-    (context file_joe_user_fop_home (joe_u object_r user_fop_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.fop(/.*)?" file file_joe_user_fop_home)
-    (filecon "/home/joe/\.foprc" file file_joe_user_fop_home)
+    (allow joe_t user_java_tmp_t manage_dir_perms)
+    (allow joe_t user_java_tmp_t relabel_dir_perms)
+    (allow joe_t user_java_tmp_t manage_file_perms)
+    (allow joe_t user_java_tmp_t relabel_file_perms)
 
-    (call usersubject_home_dir_filetrans (joe_t user_fop_home_t dir ".fop"))
-    (call usersubject_home_dir_filetrans (joe_t user_fop_home_t file ".foprc"))
+    (optional joe_optional_joe_fop
+        (type joe_fop_t)
+        (call fop_role_template (joe_r joe_t joe_fop_t
+            user_fop_home_t user_java_home_t user_java_tmp_t))
 
-    (call usersubject_home_dir_filetrans (joe_fop_t user_fop_home_t dir ".fop"))
+        (context file_joe_user_fop_home (joe_u object_r user_fop_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.fop(/.*)?" any file_joe_user_fop_home)
+        (filecon "/home/joe/\.foprc" file file_joe_user_fop_home)
 
-    (call usersubject_application_subject (joe_fop_t)))
+        (call usersubject_home_dir_filetrans (joe_t user_fop_home_t dir ".fop"))
+        (call usersubject_home_dir_filetrans (joe_t user_fop_home_t file ".foprc"))
+
+        (call usersubject_home_dir_filetrans (joe_fop_t user_fop_home_t dir ".fop"))
+
+        (call usersubject_home_dir_filetrans (joe_fop_t user_java_home_t dir ".java"))
+
+        (call usersubject_manage_generic_home_content_files (joe_fop_t))
+        (call usersubject_home_dir_filetrans_user_home (joe_fop_t file "*"))
+
+        (call usersubject_application_subject (joe_fop_t))))
 
 (optional joe_optional_joe_ffmpeg
     (type joe_ffmpeg_t)

@@ -532,24 +532,41 @@
 
     (call session_application_subject (session_bti_t)))
 
-(optional session_optional_session_fop
-    (type session_fop_t)
-    (call fop_role_template (session_r session_t session_fop_t
-        session_fop_home_t))
+(optional session_optional_java
+    (type session_java_home_t)
+    (call session_home_object (session_java_home_t))
 
-    (type session_fop_home_t)
-    (call session_home_object (session_fop_home_t))
+    (context file_session_java_home (session_u object_r session_java_home_t ((s0)(s0))))
+    (filecon "/root/\.java(/.*)?" any file_session_java_home)
 
-    (context file_session_fop_home (session_u object_r session_fop_home_t ((s0)(s0))))
-    (filecon "/root/\.fop(/.*)?" file file_session_fop_home)
-    (filecon "/root/\.foprc" file file_session_fop_home)
+    (call session_home_dir_filetrans (session_t session_java_home_t dir ".java"))
 
-    (call session_home_dir_filetrans (session_t session_fop_home_t dir ".fop"))
-    (call session_home_dir_filetrans (session_t session_fop_home_t file ".foprc"))
+    (type session_java_tmp_t)
+    (call session_tmp_object (session_java_tmp_t))
 
-    (call session_home_dir_filetrans (session_fop_t session_fop_home_t dir ".fop"))
+    (optional session_optional_session_fop
+        (type session_fop_t)
+        (call fop_role_template (session_r session_t session_fop_t
+            session_fop_home_t session_java_home_t session_java_tmp_t))
 
-    (call session_application_subject (session_fop_t)))
+        (type session_fop_home_t)
+        (call session_home_object (session_fop_home_t))
+
+        (context file_session_fop_home (session_u object_r session_fop_home_t ((s0)(s0))))
+        (filecon "/root/\.fop(/.*)?" any file_session_fop_home)
+        (filecon "/root/\.foprc" file file_session_fop_home)
+
+        (call session_home_dir_filetrans (session_t session_fop_home_t dir ".fop"))
+        (call session_home_dir_filetrans (session_t session_fop_home_t file ".foprc"))
+
+        (call session_home_dir_filetrans (session_fop_t session_fop_home_t dir ".fop"))
+
+        (call session_home_dir_filetrans (session_fop_t session_java_home_t dir ".java"))
+
+        (call session_manage_generic_home_content_files (session_fop_t))
+        (call session_home_dir_filetrans_session_home (session_fop_t file "*"))
+
+        (call session_application_subject (session_fop_t))))
 
 (optional session_optional_session_pciutil
     (type session_pciutil_t)

@@ -117,6 +117,16 @@
     (allow ARG1 factory_t (dirs (list)))
     (allow ARG1 factory_t read_file_perms))
 
+(macro miscfiles_read_fonts_files ((type ARG1))
+    (call files_search_usr (ARG1))
+    (allow ARG1 fonts_t (dirs (list)))
+    (allow ARG1 fonts_t read_file_perms))
+
+(macro miscfiles_read_fonts_cache_files ((type ARG1))
+    (call files_search_var_cache (ARG1))
+    (allow ARG1 fonts_cache_t (dirs (list)))
+    (allow ARG1 fonts_cache_t read_file_perms))
+
 (macro miscfiles_read_hwdata_files ((type ARG1))
     (call files_search_usr (ARG1))
     (allow ARG1 hwdata_t (dirs (list)))

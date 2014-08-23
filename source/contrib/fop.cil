@@ -14,12 +14,26 @@
 (context file_fop_conf (system_u object_r fop_conf_t ((s0)(s0))))
 (filecon "/etc/fop\.conf" file file_fop_conf)
 
+(allow is_fop_subject self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (is_fop_subject))
+
+(call commands_execute_shell_files (is_fop_subject))
+(call commands_execute_bin_files (is_fop_subject))
+
+(call files_search_var_lib (is_fop_subject)) ; non-existent /var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType
+
+(call selinux_getattr_filesystems (is_fop_subject))
+
 (call fop_read_config_files (is_fop_subject))
 
-(optional fop_subject_optional_java
-    (call java_client_subject (is_fop_subject)))
+(optional fop_subject_optional_miscfiles
+    (call miscfiles_read_fonts_files (is_fop_subject))
+    (call miscfiles_read_fonts_cache_files (is_fop_subject))
+    (call miscfiles_read_network_config_files (is_fop_subject))
+    (call miscfiles_read_localization_files (is_fop_subject)))
 
-(optional fop_optional_usersubject
+(optional fop_subject_optional_usersubject
     (type user_fop_home_t)
     (call usersubject_home_object (user_fop_home_t)))
 
@@ -27,7 +41,8 @@
     (call files_search_etc (ARG1))
     (allow ARG1 fop_conf_t read_file_perms))
 
-(macro fop_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+(macro fop_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
+    (type ARG5)(type ARG6))
     (roleattributeset is_fop_role ARG1)
     (typeattributeset is_fop_subject ARG3)
     (roletype ARG1 ARG3)
@@ -39,4 +54,5 @@
     (allow ARG2 ARG4 manage_file_perms)
     (allow ARG2 ARG4 relabel_file_perms)
     (allow ARG3 ARG4 manage_dir_perms)
-    (allow ARG3 ARG4 manage_file_perms))
+    (allow ARG3 ARG4 manage_file_perms)
+    (call java_client_subject (ARG3 ARG5 ARG6)))
