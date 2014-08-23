@@ -107,11 +107,11 @@
     (call usersubject_application_subject (joe_bti_t)))
 
 (optional joe_optional_java
-    ; because joe_t is not a java client subject
     (allow joe_t user_java_home_t manage_dir_perms)
     (allow joe_t user_java_home_t relabel_dir_perms)
     (allow joe_t user_java_home_t manage_file_perms)
     (allow joe_t user_java_home_t relabel_file_perms)
+
     (call usersubject_home_dir_filetrans (joe_t user_java_home_t dir ".java"))
 
     (allow joe_t user_java_tmp_t manage_dir_perms)
