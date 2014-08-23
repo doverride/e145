@@ -119,6 +119,7 @@
 (call system_use_fd (lvm_t))
 
 (call devices_getattr_all_nodes (lvm_t))
+(call devices_read_lnk_files (lvm_t))
 (call devices_list_sysfs (lvm_t))
 (call devices_read_sysfs_files (lvm_t))
 (call devices_read_urandom (lvm_t))

@@ -62,6 +62,7 @@
 
 (call system_read_generic_proc_files (fstools_t))
 
+(call devices_read_lnk_files (fstools_t))
 (call devices_list_sysfs (fstools_t))
 (call devices_read_sysfs_files (fstools_t))
 (call devices_read_urandom (fstools_t)) ; mkfs.ext4
