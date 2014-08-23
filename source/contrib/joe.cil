@@ -582,13 +582,8 @@
         (call session_create_keyring (joe_sudo_t))
         (call session_send_signal (joe_sudo_t))
         (call session_send_signal (joe_t))
-        (call session_shell_manual_subject_type_transition (joe_sudo_t)))
+        (call session_shell_manual_subject_type_transition (joe_sudo_t))))
  
-    (type joe_visudo_t)
-    (call sudo_visudo_role_template (joe_r joe_t joe_visudo_t))
-
-    (call usersubject_application_subject (joe_visudo_t)))
-
 (macro joe_use_fd ((type ARG1))
     (allow ARG1 joe_t (fd (use))))
 
