@@ -98,8 +98,6 @@
     (filecon "/home/joe/\.bti" file file_joe_user_bti_home)
     (filecon "/home/joe/\.bti\.log.*" file file_joe_user_bti_home)
 
-    (allow joe_t user_bti_home_t manage_file_perms)
-    (allow joe_t user_bti_home_t relabel_file_perms)
     (call usersubject_home_dir_filetrans (joe_t user_bti_home_t file ".bti"))
     (call usersubject_home_dir_filetrans (joe_t user_bti_home_t file ".bti.log")) 
 
@@ -140,12 +138,6 @@
     (filecon "/home/joe/\.rtorrent\.rc" file file_joe_user_rtorrent_home)
     (filecon "/home/joe/\.rtorrent(/.*)?" any file_joe_user_rtorrent_home)
 
-    (allow joe_t user_rtorrent_home_t manage_dir_perms)
-    (allow joe_t user_rtorrent_home_t relabel_dir_perms)
-    (allow joe_t user_rtorrent_home_t manage_file_perms)
-    (allow joe_t user_rtorrent_home_t relabel_file_perms)
-    (allow joe_t user_rtorrent_home_t manage_lnk_file_perms)
-    (allow joe_t user_rtorrent_home_t relabel_lnk_file_perms)
     (call usersubject_home_dir_filetrans (joe_t user_rtorrent_home_t file ".rtorrent.rc")) 
     (call usersubject_home_dir_filetrans (joe_t user_rtorrent_home_t dir ".rtorrent")) 
     (call usersubject_read_generic_home_content_files (joe_rtorrent_t))
@@ -626,12 +618,6 @@
     (call usersubject_list_generic_home_content (joe_moc_t))
     (call usersubject_read_generic_home_content_files (joe_moc_t))
 
-    (allow joe_t user_moc_home_t manage_dir_perms)
-    (allow joe_t user_moc_home_t relabel_dir_perms)
-    (allow joe_t user_moc_home_t manage_file_perms)
-    (allow joe_t user_moc_home_t relabel_file_perms)
-    (allow joe_t user_moc_home_t manage_sock_file_perms)
-    (allow joe_t user_moc_home_t relabel_sock_file_perms)
     (call usersubject_home_dir_filetrans (joe_t user_moc_home_t dir ".moc")) 
 
     (optional joe_moc_optional_joe_pa
