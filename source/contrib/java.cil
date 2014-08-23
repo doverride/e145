@@ -13,6 +13,6 @@
 
 (call devices_read_random (is_java_client_subject))
 
-(macro java_client_subject ((type ARG2)(type ARG3)(type ARG4))
-    (roleattributeset is_java_client_subject ARG1)
+(macro java_client_subject ((type ARG1))
+    (typeattributeset is_java_client_subject ARG1)
     (call can_exec (ARG1 java_exec_t)))

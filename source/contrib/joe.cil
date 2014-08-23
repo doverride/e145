@@ -106,6 +106,22 @@
 
     (call usersubject_application_subject (joe_bti_t)))
 
+(optional joe_optional_joe_fop
+    (type joe_fop_t)
+    (call fop_role_template (joe_r joe_t joe_fop_t
+        user_fop_home_t))
+
+    (context file_joe_user_fop_home (joe_u object_r user_fop_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.fop(/.*)?" file file_joe_user_fop_home)
+    (filecon "/home/joe/\.foprc" file file_joe_user_fop_home)
+
+    (call usersubject_home_dir_filetrans (joe_t user_fop_home_t dir ".fop"))
+    (call usersubject_home_dir_filetrans (joe_t user_fop_home_t file ".foprc"))
+
+    (call usersubject_home_dir_filetrans (joe_fop_t user_fop_home_t dir ".fop"))
+
+    (call usersubject_application_subject (joe_fop_t)))
+
 (optional joe_optional_joe_ffmpeg
     (type joe_ffmpeg_t)
     (call ffmpeg_role_template (joe_r joe_t joe_ffmpeg_t))
