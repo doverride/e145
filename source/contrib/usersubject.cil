@@ -1109,11 +1109,11 @@
     (call files_object (ARG1))
     (typeattributeset is_user_run_file_object ARG1))
 
-(macro usersubject_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
-    (call usersubject_bin_manual_subject_type_transition (ARG1 ARG2))
+(macro usersubject_home_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
+    (call usersubject_home_bin_manual_subject_type_transition (ARG1 ARG2))
     (typetransition ARG1 user_bin_t process "*" ARG2))
 
-(macro usersubject_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
+(macro usersubject_home_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
     (call usersubject_search_generic_bin (ARG1))
     (call manual_subject_type_transition_pattern (ARG1 user_bin_t ARG2))
     (allow ARG2 ARG1 (fd (use)))
@@ -1217,10 +1217,7 @@
         is_common_login_user_subject)))
 
 (macro usersubject_shell_manual_subject_type_transition_all_common_login_user_subjects ((type ARG1))
-    (call commands_shell_manual_subject_type_transition (ARG1 is_common_login_user_subject))
-    (allow is_common_login_user_subject ARG1 (fd (use)))
-    (allow is_common_login_user_subject ARG1 rw_inherited_fifo_file_perms)
-    (allow is_common_login_user_subject ARG1 (process (sigchld))))
+    (call commands_shell_manual_subject_type_transition (ARG1 is_common_login_user_subject)))
 
 (macro usersubject_create_keyring_all_common_login_user_subjects ((type ARG1))
     (allow ARG1 self (process (setkeycreate)))

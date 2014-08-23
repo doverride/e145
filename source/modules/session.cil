@@ -530,8 +530,6 @@
     (call session_home_dir_filetrans (session_bti_t session_bti_home_t file ".bti"))
     (call session_home_dir_filetrans (session_bti_t session_bti_home_t file ".bti.log"))
 
-    (call commands_shell_auto_subject_type_transition (session_bti_t session_t))
-
     (call session_application_subject (session_bti_t)))
 
 (optional session_optional_session_pciutil
@@ -567,8 +565,7 @@
 
         (call session_home_dir_filetrans_session_config_dir (session_ffmpeg_t))
         (call session_config_filetrans (session_ffmpeg_t session_pa_home_t dir "pulse"))
-        (call session_run_user_dir_filetrans (session_ffmpeg_t session_pa_run_t dir "pulse"))
-        (call filesystem_tmpfs_filetrans (session_ffmpeg_t session_pa_tmpfs_t file "*")))
+        (call session_run_user_dir_filetrans (session_ffmpeg_t session_pa_run_t dir "pulse")))
 
 (optional session_optional_session_rtorrent
     (type session_rtorrent_t)
@@ -622,15 +619,9 @@
     (filecon "/root/\.emacs" file file_session_emacs_home)
     (filecon "/root/\.emacs\.d(/.*)?" any file_session_emacs_home)
 
-    (allow session_emacs_t session_emacs_home_t manage_dir_perms)
-    (allow session_emacs_t session_emacs_home_t manage_file_perms)
     (call session_home_dir_filetrans (session_t session_emacs_home_t file ".emacs")) 
     (call session_home_dir_filetrans (session_t session_emacs_home_t dir ".emacs.d")) 
 
-    (allow session_emacs_t session_tmp_t manage_dir_perms)
-    (allow session_emacs_t session_tmp_t manage_file_perms)
-    (allow session_emacs_t session_tmp_t manage_lnk_file_perms)
-    (allow session_emacs_t session_tmp_t manage_sock_file_perms)
     (call session_tmp_filetrans_generic_tmp (session_emacs_t dir "*"))
     (call session_tmp_filetrans_generic_tmp (session_emacs_t file "*"))
     (call session_tmp_filetrans_generic_tmp (session_emacs_t lnk_file "*"))
@@ -649,9 +640,7 @@
     (call session_home_dir_filetrans_session_home (session_emacs_t file "*"))
     (call session_home_dir_filetrans_session_home (session_emacs_t lnk_file "*"))
 
-    (call session_bin_auto_subject_type_transition (session_emacs_t session_t))
-    (call commands_bin_auto_subject_type_transition (session_emacs_t session_t))
-    (call commands_shell_auto_subject_type_transition (session_emacs_t session_t))
+    (call session_home_bin_auto_subject_type_transition (session_emacs_t session_t))
 
     (call session_getattr_mail_spool_files (session_emacs_t))
 
@@ -689,27 +678,15 @@
 
     (call session_application_subject (session_git_t))
 
-    (allow session_git_t session_git_home_t manage_dir_perms)
-    (allow session_git_t session_git_home_t manage_file_perms)
-    (allow session_git_t session_git_home_t manage_lnk_file_perms)
     (call session_home_filetrans (session_git_t session_git_home_t dir ".git"))
 
     (type session_git_tmp_t)
     (call session_tmp_object (session_git_tmp_t))
 
-    (allow session_t session_git_tmp_t manage_file_perms)
-    (allow session_t session_git_tmp_t relabel_file_perms)
-
-    (call files_tmp_filetrans (session_git_t session_git_tmp_t file "*"))
-
     (call subtrans_pattern (session_git_t session_git_home_t session_t))
-
-    (call commands_bin_auto_subject_type_transition (session_git_t session_t))
-    (call commands_shell_auto_subject_type_transition (session_git_t session_t))
-
-    (call can_exec (session_t session_git_home_t))
-    (call subject_entry (session_t session_git_home_t))
-
+    (call session_bin_auto_subject_type_transition (session_git_t))
+    (call session_shell_auto_subject_type_transition (session_git_t))
+ 
     (call session_manage_generic_home_content_dirs (session_git_t))
     (call session_manage_generic_home_content_files (session_git_t))
     (call session_manage_generic_home_content_symlinks (session_git_t))
@@ -758,10 +735,7 @@
 
     (call session_home_dir_filetrans (session_t session_tig_home_t file ".tigrc"))
 
-    (allow session_tig_t session_tig_home_t read_file_perms)
     (call getattr_files_pattern (session_tig_t session_git_home_t session_git_home_t))
-
-    (call commands_bin_auto_subject_type_transition (session_tig_t session_t))
 
     (call git_role_template (session_r session_tig_t session_git_t session_git_home_t session_git_conf_t
         session_git_tmp_t))
@@ -776,10 +750,6 @@
     (context file_session_gitemail_home (session_u object_r session_gitemail_home_t ((s0)(s0))))
     (filecon "/root/.*/\.git/\.gitsendemail\.msg.*" file file_session_gitemail_home)
 
-    (call commands_bin_auto_subject_type_transition (session_gitemail_t session_t))
-    (call commands_shell_auto_subject_type_transition (session_gitemail_t session_t))
-
-    (allow session_gitemail_t session_gitemail_home_t manage_file_perms)
     (call filetrans_pattern (session_gitemail_t session_git_home_t session_gitemail_home_t file "*"))
 
     (call session_application_subject (session_gitemail_t))
@@ -939,9 +909,6 @@
     (call session_home_dir_filetrans (session_irssi_t session_irssi_home_t dir ".irssi"))
     (call session_home_dir_filetrans (session_t session_irssi_home_t dir ".irssi"))
 
-    ; /exec: not sure if good idea
-    (call commands_shell_auto_subject_type_transition (session_irssi_t session_t))
-
     (call session_application_subject (session_irssi_t))
     (call session_read_cert_files (session_irssi_t)))
     
@@ -961,7 +928,6 @@
     (call session_home_dir_filetrans_session_home (session_newsb_t file "*"))
 
     (call session_home_dir_filetrans (session_t session_newsb_home_t dir ".newsbeuter"))
-
     (call session_home_dir_filetrans (session_newsb_t session_newsb_home_t dir ".newsbeuter"))
 
     (call session_application_subject (session_newsb_t))
@@ -994,15 +960,11 @@
     (type session_screen_tmp_t)
     (call session_tmp_object (session_screen_tmp_t))
 
-    (call files_tmp_filetrans (session_screen_t session_screen_tmp_t file "*"))
-
     (call session_application_subject (session_screen_t))
     (call session_use_terminals (session_screen_t))
     (call session_setattr_terminals (session_screen_t))
     (call session_create_pty_node (session_screen_t))
-    (call session_bin_auto_subject_type_transition (session_screen_t session_t))
-    (call commands_bin_auto_subject_type_transition (session_screen_t session_t))
-    (call commands_shell_auto_subject_type_transition (session_screen_t session_t)))
+    (call session_home_bin_auto_subject_type_transition (session_screen_t session_t)))
 
 (optional session_optional_session_ssh
     (type session_ssh_t)
@@ -1068,8 +1030,6 @@
     (type session_pa_tmp_t)
     (call session_tmp_object (session_pa_tmp_t))
 
-    (call files_tmp_filetrans (session_pa_t session_pa_tmp_t dir "*"))
-
     (type session_pa_tmpfs_t)
     (call session_tmpfs_object (session_pa_tmpfs_t))
 
@@ -1103,8 +1063,7 @@
 
         (call session_home_dir_filetrans_session_config_dir (session_moc_t))
         (call session_config_filetrans (session_moc_t session_pa_home_t dir "pulse"))
-        (call session_run_user_dir_filetrans (session_moc_t session_pa_run_t dir "pulse"))
-        (call filesystem_tmpfs_filetrans (session_moc_t session_pa_tmpfs_t file "*")))
+        (call session_run_user_dir_filetrans (session_moc_t session_pa_run_t dir "pulse")))
 
 (optional session_optional_session_sudo
     (type session_sudo_t)
@@ -1112,16 +1071,12 @@
 
     (call session_application_subject (session_sudo_t))
 
-    (call session_bin_auto_subject_type_transition (session_sudo_t session_t))
-    (call commands_bin_auto_subject_type_transition (session_sudo_t session_t))
-    (call commands_shell_auto_subject_type_transition (session_sudo_t session_t))
+    (call session_home_bin_auto_subject_type_transition (session_sudo_t session_t))
 
     (type session_visudo_t)
     (call sudo_visudo_role_template (session_r session_t session_visudo_t))
 
     (call session_application_subject (session_visudo_t))
-
-    (call commands_bin_auto_subject_type_transition (session_visudo_t session_t))
 
     (optional session_sudo_optional_usersubject
         (call usersubject_use_inherited_terminals (session_sudo_t))
@@ -1218,11 +1173,11 @@
     (call session_search_generic_data (ARG1))
     (allow ARG1 session_bin_t manage_dir_perms))
 
-(macro session_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
-    (call session_bin_manual_subject_type_transition (ARG1 ARG2))
+(macro session_home_bin_auto_subject_type_transition ((type ARG1)(type ARG2))
+    (call session_home_bin_manual_subject_type_transition (ARG1 ARG2))
     (typetransition ARG1 session_bin_t process "*" ARG2))
 
-(macro session_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
+(macro session_home_bin_manual_subject_type_transition ((type ARG1)(type ARG2))
     (call session_search_bin (ARG1))
     (call manual_subject_type_transition_pattern (ARG1 session_bin_t ARG2))
     (allow session_t ARG1 (fd (use)))
@@ -1414,10 +1369,13 @@
     (allow ARG1 session_t (process (setsched))))
 
 (macro session_shell_manual_subject_type_transition ((type ARG1))
-    (call commands_shell_manual_subject_type_transition (ARG1 session_t))
-    (allow session_t ARG1 (fd (use)))
-    (allow session_t ARG1 rw_inherited_fifo_file_perms)
-    (allow session_t ARG1 (process (sigchld))))
+    (call commands_shell_manual_subject_type_transition (ARG1 session_t)))
+
+(macro session_shell_auto_subject_type_transition ((type ARG1))
+    (call commands_shell_auto_subject_type_transition (ARG1 session_t)))
+
+(macro session_bin_auto_subject_type_transition ((type ARG1))
+    (call commands_bin_auto_subject_type_transition (ARG1 session_t)))
 
 (macro session_relabel_tty_nodes ((type ARG1))
     (allow ARG1 device_session_tty_t relabel_chr_file_perms))

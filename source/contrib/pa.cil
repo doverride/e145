@@ -177,7 +177,9 @@
     (allow ARG3 ARG7 manage_file_perms)
     (allow ARG3 ARG7 relabel_file_perms)
     (allow ARG3 ARG7 manage_sock_file_perms)
-    (allow ARG3 ARG7 relabel_sock_file_perms))
+    (allow ARG3 ARG7 relabel_sock_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 dir "*"))
+    (call filesystem_tmpfs_filetrans (ARG3 ARG6 file "*")))
 
 (macro pa_client_subject ((role ARG1)(type ARG2)(type ARG3)(type
         ARG4)(type ARG5)(type ARG6))
@@ -191,7 +193,8 @@
     (allow ARG2 ARG4 manage_file_perms)
     (allow ARG2 ARG5 manage_dir_perms)
     (allow ARG2 ARG6 manage_file_perms)
-    (call stream_connect_pattern (ARG2 ARG5 ARG5 ARG3)))
+    (call stream_connect_pattern (ARG2 ARG5 ARG5 ARG3))
+    (call filesystem_tmpfs_filetrans (ARG2 ARG6 file "*")))
 
 (macro pa_list_config ((type ARG1))
     (call files_search_etc (ARG1))
