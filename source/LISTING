@@ -34,6 +34,7 @@ contrib/hwclock.cil
 contrib/ip.cil
 contrib/iptables.cil
 contrib/irc.cil
+contrib/java.cil
 contrib/joe.cil
 contrib/kmod.cil
 contrib/libraries.cil

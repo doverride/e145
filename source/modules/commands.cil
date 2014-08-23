@@ -27,7 +27,6 @@
 (filecon "/usr/sbin" dir bin)
 (filecon "/usr/src/kernels/[^/]*/scripts/.*" file bin)
 (filecon "/usr/lib/rpm(/.*)?" file bin)
-(filecon "/usr/lib/jvm/java-.*-openjdk-.*/jre/bin/java" file bin)
 
 (type shell_t)
 (call commands_bin_object (shell_t))
