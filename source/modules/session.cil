@@ -881,6 +881,9 @@
     (allow session_t session_scd_tmp_t manage_sock_file_perms)
     (allow session_t session_scd_tmp_t relabel_sock_file_perms)
 
+    (allow session_t session_scd_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (session_t session_scd_t))
+
     (type session_scd_home_t)
     (call session_home_object (session_scd_home_t))
 
@@ -891,12 +894,16 @@
     (filecon "/root/\.gnupg/reader_0\.status" file file_session_scd_home)
 
     (allow session_scd_t session_gpgagent_t (process (signal)))
+
     (call filetrans_pattern (session_scd_t session_gpg_home_t session_scd_home_t file "*"))
 
     (call session_application_subject (session_scd_t))
 
     (type session_gpgpcsc_t)
     (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t))
+
+    (allow session_t session_gpgpcsc_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (session_t session_gpgpcsc_t))
 
     (call session_application_subject (session_gpgpcsc_t)))
 

@@ -379,6 +379,9 @@
     (allow joe_t user_scd_tmp_t manage_sock_file_perms)
     (allow joe_t user_scd_tmp_t relabel_sock_file_perms)
 
+    (allow joe_t joe_scd_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (joe_t joe_scd_t))
+
     (context file_joe_user_scd_home (joe_u object_r user_scd_home_t ((s0)(s0))))
     (filecon "/home/joe/\.gnupg/reader_0\.status" file file_joe_user_scd_home)
 
@@ -390,6 +393,9 @@
 
     (type joe_gpgpcsc_t)
     (call gpg_role_template_pcsc (joe_r joe_scd_t joe_gpgpcsc_t))
+
+    (allow joe_t joe_gpgpcsc_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (joe_t joe_gpgpcsc_t))
 
     (call usersubject_application_subject (joe_gpgpcsc_t)))
 
