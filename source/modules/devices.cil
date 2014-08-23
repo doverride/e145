@@ -557,10 +557,10 @@
         (call storage_update_timestamp_scsi_generic_nodes (ARG1))))
 
 (macro devices_list ((type ARG1))
-    (allow ARG1 device_t (dirs (list))))
+    (allow ARG1 device_t list_dir_perms))
 
 (macro devices_search ((type ARG1))
-    (allow ARG1 device_t (dirs (search))))
+    (allow ARG1 device_t search_dir_perms))
 
 (macro devices_manage_dirs ((type ARG1))
     (call manage_dirs_pattern (ARG1 device_t device_t)))
