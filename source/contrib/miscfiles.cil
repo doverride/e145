@@ -108,7 +108,8 @@
 
 (macro miscfiles_read_localization_files ((type ARG1))
     (call files_search_usr (ARG1))
-    (call read_files_pattern (ARG1 locale_t locale_t))
+    (allow ARG1 locale_t (dirs (list)))
+    (allow ARG1 locale_t read_file_perms)
     (optional miscfiles_optional_localed
         (call localed_read_config_files (ARG1))))
 
