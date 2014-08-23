@@ -186,7 +186,17 @@
     (context file_joe_user_elinks_home (joe_u object_r user_elinks_home_t ((s0)(s0))))
     (filecon "/home/joe/\.elinks(/.*)?" any file_joe_user_elinks_home)
 
+    (allow joe_t user_elinks_home_t manage_dir_perms)
+    (allow joe_t user_elinks_home_t relabel_dir_perms)
+    (allow joe_t user_elinks_home_t manage_file_perms)
+    (allow joe_t user_elinks_home_t relabel_file_perms)
+    (allow joe_t user_elinks_home_t manage_lnk_file_perms)
+    (allow joe_t user_elinks_home_t relabel_lnk_file_perms)
+    (allow joe_t user_elinks_home_t manage_sock_file_perms)
+    (allow joe_t user_elinks_home_t relabel_sock_file_perms)
+ 
     (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t dir ".elinks")) 
+    (call usersubject_home_dir_filetrans (joe_elinks_t user_elinks_home_t dir ".elinks")) 
 
     (call usersubject_manage_generic_home_content_dirs (joe_elinks_t))
     (call usersubject_manage_generic_home_content_files (joe_elinks_t))
@@ -318,8 +328,16 @@
     (context file_joe_user_gpg_home (joe_u object_r user_gpg_home_t ((s0)(s0))))
     (filecon "/home/joe/\.gnupg(/.*)?" any file_joe_user_gpg_home)
 
+    (allow joe_t user_gpg_home_t manage_dir_perms)
+    (allow joe_t user_gpg_home_t relabel_dir_perms)
+    (allow joe_t user_gpg_home_t manage_file_perms)
+    (allow joe_t user_gpg_home_t relabel_file_perms)
+ 
     (call usersubject_home_dir_filetrans (joe_t user_gpg_home_t dir ".gnupg")) 
     (call usersubject_home_dir_filetrans (joe_gpg_t user_gpg_home_t dir ".gnupg"))
+
+    (call usersubject_manage_generic_home_content_files (joe_gpg_t))
+    (call usersubject_home_dir_filetrans_user_home (joe_gpg_t file "*"))
 
     (call stream_connect_pattern (joe_gpg_t user_gpgagent_home_t user_gpgagent_home_t
         joe_gpgagent_t))
@@ -502,16 +520,27 @@
     (type joe_ssh_t)
     (call ssh_role_template (joe_r joe_t joe_ssh_t user_ssh_home_t))
 
+    (context file_joe_user_ssh_home (joe_u object_r user_ssh_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.ssh(/.*)?" any file_joe_user_ssh_home)
+
     (call usersubject_application_subject (joe_ssh_t))
+
+    (allow joe_t user_ssh_home_t manage_dir_perms)
+    (allow joe_t user_ssh_home_t relabel_dir_perms)
+    (allow joe_t user_ssh_home_t manage_file_perms)
+    (allow joe_t user_ssh_home_t relabel_file_perms)
+    (allow joe_t user_ssh_home_t manage_lnk_file_perms)
+    (allow joe_t user_ssh_home_t relabel_lnk_file_perms)
+
+    (call usersubject_home_dir_filetrans (joe_t user_ssh_home_t dir ".ssh")) 
+    (call usersubject_home_dir_filetrans (joe_ssh_t user_ssh_home_t dir ".ssh")) 
+ 
     (call usersubject_manage_generic_home_content_files (joe_ssh_t))
     (call usersubject_home_dir_filetrans_user_home (joe_ssh_t file "*"))
 
     (call usersubject_manage_generic_tmp_content_files (joe_ssh_t))
     (call usersubject_tmp_filetrans_generic_user_tmp (joe_ssh_t file "*"))
  
-    (context file_joe_user_ssh_home (joe_u object_r user_ssh_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.ssh(/.*)?" any file_joe_user_ssh_home)
-
     (optional joe_ssh_optional_joe_gpgagent
         (call stream_connect_pattern (joe_ssh_t user_gpg_home_t user_gpgagent_home_t
             joe_gpgagent_t)))

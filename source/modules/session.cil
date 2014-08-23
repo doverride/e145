@@ -809,6 +809,9 @@
     (call session_home_dir_filetrans (session_t session_gpg_home_t dir ".gnupg")) 
     (call session_home_dir_filetrans (session_gpg_t session_gpg_home_t dir ".gnupg"))
 
+    (call session_manage_generic_home_content_files (session_gpg_t))
+    (call session_home_dir_filetrans_session_home (session_gpg_t file "*"))
+
     (call stream_connect_pattern (session_gpg_t session_gpgagent_home_t session_gpgagent_home_t
         session_gpgagent_t))
 
@@ -876,19 +879,11 @@
     (type session_scd_tmp_t)
     (call session_tmp_object (session_scd_tmp_t))
 
-    (allow session_t session_scd_tmp_t manage_dir_perms)
-    (allow session_t session_scd_tmp_t relabel_dir_perms)
-    (allow session_t session_scd_tmp_t manage_sock_file_perms)
-    (allow session_t session_scd_tmp_t relabel_sock_file_perms)
-
     (allow session_t session_scd_t (process (signal signull sigkill sigstop)))
     (call ps_subject_pattern (session_t session_scd_t))
 
     (type session_scd_home_t)
     (call session_home_object (session_scd_home_t))
-
-    (allow session_t session_scd_home_t manage_file_perms)
-    (allow session_t session_scd_home_t relabel_file_perms)
 
     (context file_session_scd_home (session_u object_r session_scd_home_t ((s0)(s0))))
     (filecon "/root/\.gnupg/reader_0\.status" file file_session_scd_home)
@@ -1023,6 +1018,10 @@
     (call ssh_role_template (session_r session_t session_ssh_t session_ssh_home_t))
 
     (call session_application_subject (session_ssh_t))
+
+    (call session_home_dir_filetrans (session_t session_ssh_home_t dir ".ssh"))
+    (call session_home_dir_filetrans (session_ssh_t session_ssh_home_t dir ".ssh"))
+
     (call session_manage_generic_home_content_files (session_ssh_t))
     (call session_home_dir_filetrans_session_home (session_ssh_t file "*"))
 

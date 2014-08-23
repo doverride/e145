@@ -128,10 +128,6 @@
     (call subtrans_pattern (ARG2 gpg_exec_t ARG3))
     (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
     (call ps_subject_pattern (ARG2 ARG3))
-    (allow ARG2 ARG4 manage_dir_perms)
-    (allow ARG2 ARG4 relabel_dir_perms)
-    (allow ARG2 ARG4 manage_file_perms)
-    (allow ARG2 ARG4 relabel_file_perms)
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms))
 
