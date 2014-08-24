@@ -797,6 +797,8 @@
     (call git_role_template_email (session_r session_git_t session_gitemail_t
         session_gitemail_home_t))
 
+    (allow session_t session_gitemail_t (process (signal signull sigkill sigstop)))
+
     (type session_gitemail_home_t)
     (call session_home_object (session_gitemail_home_t))
 

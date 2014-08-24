@@ -326,6 +326,12 @@
     (call git_role_template_email (joe_r joe_git_t joe_gitemail_t
         user_gitemail_home_t))
 
+    (allow joe_t joe_gitemail_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (joe_t joe_gitemail_t))
+
+    (allow joe_t user_gitemail_home_t manage_file_perms)
+    (allow joe_t user_gitemail_home_t relabel_file_perms)
+
     (context file_joe_user_gitemail_home (joe_u object_r user_gitemail_home_t ((s0)(s0))))
     (filecon "/home/joe/.*/\.git/\.gitsendemail\.msg.*" file file_joe_user_gitemail_home)
 
