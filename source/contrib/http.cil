@@ -23,7 +23,7 @@
 (portcon "tcp" 443 port_http)
 (portcon "udp" 443 port_http)
 
-(allow is_elinks_subject self (process (execmem getsched setsched)))
+(allow is_elinks_subject self (process (execmem getsched setsched signal)))
 (allow is_elinks_subject self (unix_stream_socket (listen accept connectto)))
 (allow is_elinks_subject self rw_fifo_file_perms)
 
