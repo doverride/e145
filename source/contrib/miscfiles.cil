@@ -104,7 +104,8 @@
 
 (macro miscfiles_read_generic_cert_files ((type ARG1))
     (call files_search_etc (ARG1))
-    (call read_files_pattern (ARG1 cert_t cert_t)))
+    (allow ARG1 cert_t (dirs (list)))
+    (allow ARG1 cert_t read_file_perms))
 
 (macro miscfiles_read_localization_files ((type ARG1))
     (call files_search_usr (ARG1))
