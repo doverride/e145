@@ -1,5 +1,8 @@
 (typeattribute is_readahead_admin_subject)
 
+(typeattribute is_readahead_readable_file_object)
+(typeattribute is_readahead_readable_file_object_exception)
+
 (typeattribute is_readahead_file_object)
 (typeattributeset is_readahead_file_object (readahead_data_t
     readahead_unit_t))
@@ -30,6 +33,17 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-readahead.*" file
     file_readahead_unit)
 
+(call files_spec_all_non_auth_files_except (is_readahead_readable_file_object
+    is_readahead_readable_file_object_exception))
+
+(allow readahead_t is_readahead_readable_file_object list_dir_perms)
+(allow readahead_t is_readahead_readable_file_object read_file_perms)
+(allow readahead_t is_readahead_readable_file_object read_lnk_file_perms)
+(allow readahead_t is_readahead_readable_file_object read_fifo_file_perms)
+(allow readahead_t is_readahead_readable_file_object read_sock_file_perms)
+(allow readahead_t is_readahead_readable_file_object read_blk_file_perms)
+(allow readahead_t is_readahead_readable_file_object read_chr_file_perms)
+
 (allow readahead_t self (capability (sys_admin net_admin fowner dac_override)))
 (allow readahead_t self (process (setsched)))
 
@@ -48,7 +62,6 @@
 (call devices_write_kmsg (readahead_t))
 
 (call files_dontaudit_read_auth (readahead_t))
-(call files_read_all_non_auth_files_except (readahead_t))
 
 (call filesystem_getattr_filesystems (readahead_t))
 
@@ -64,6 +77,9 @@
 (allow is_readahead_admin_subject readahead_unit_t (service (all)))
 
 (call admin_pattern (is_readahead_admin_subject is_readahead_file_object))
+
+(macro readahead_readable_object_exception ((type ARG1))
+    (call files_spec_all_non_auth_files_exception (is_readahead_readable_file_object_exception ARG1)))
 
 (macro readahead_admin ((type ARG1))
     (typeattributeset is_readahead_admin_subject ARG1))

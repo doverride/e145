@@ -155,16 +155,30 @@
 (optional usersubject_common_login_user_optional_pciutil
     (call pciutil_exec (is_common_login_user_subject)))
 
+(optional usersubject_optional_readahead
+    (call readahead_readable_object_exception (is_user_home_file_object))
+    (call readahead_readable_object_exception (is_user_mail_spool_file_object))
+    (call readahead_readable_object_exception (is_user_tmp_file_object))
+    (call readahead_readable_object_exception (is_user_tmpfs_file_object))
+    (call readahead_readable_object_exception (is_user_run_file_object)))
+
 (optional usersubject_common_login_user_optional_seutil
     (call seutil_exec_chcon (is_common_login_user_subject)))
 
 (optional usersubject_common_login_user_optional_systemd
     (call systemd_getattr (is_common_login_user_subject))
-    (call systemd_read_state (is_common_login_user_subject)))
+    (call systemd_read_state (is_common_login_user_subject))
+    (call systemd_relabelable_object_exception (is_user_home_file_object))
+    (call systemd_relabelable_object_exception (is_user_mail_spool_file_object))
+    (call systemd_relabelable_object_exception (is_user_tmp_file_object))
+    (call systemd_relabelable_object_exception (is_user_tmpfs_file_object))
+    (call systemd_relabelable_object_exception (is_user_run_file_object)))
 
 (optional usersubject_optional_tmpfiles
     (call tmpfiles_manageable_object_exception (is_user_home_file_object))
     (call tmpfiles_relabelable_object_exception (is_user_home_file_object))
+    (call tmpfiles_manageable_object_exception (is_user_mail_spool_file_object))
+    (call tmpfiles_relabelable_object_exception (is_user_mail_spool_file_object))
     (call tmpfiles_manageable_object_exception (is_user_tmpfs_file_object))
     (call tmpfiles_relabelable_object_exception (is_user_tmpfs_file_object))
     (call tmpfiles_manageable_object_exception (is_user_run_file_object))

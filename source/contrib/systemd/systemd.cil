@@ -15,6 +15,9 @@
 
 (typeattribute is_systemctl_client_subject)
 
+(typeattribute is_systemd_relabelable_file_object)
+(typeattribute is_systemd_relabelable_file_object_exception)
+
 (typeattribute is_systemd_daemon_or_systemd_oneshot_subject)
 (typeattributeset is_systemd_daemon_or_systemd_oneshot_subject
     (is_systemd_daemon_subject is_systemd_oneshot_subject))
@@ -148,19 +151,28 @@
     create_netlink_kobject_uevent_socket_perms)
 
 (allow systemd_t is_systemd_socket_activated_object manage_dir_perms)
-
-(call manage_fifo_files_pattern (systemd_t
-    is_systemd_socket_activated_object
-        is_systemd_socket_activated_object))
-(call manage_sock_files_pattern (systemd_t
-    is_systemd_socket_activated_object
-        is_systemd_socket_activated_object))
+(allow systemd_t is_systemd_socket_activated_object relabel_dir_perms)
+(allow systemd_t is_systemd_socket_activated_object manage_fifo_file_perms)
+(allow systemd_t is_systemd_socket_activated_object relabel_fifo_file_perms)
+(allow systemd_t is_systemd_socket_activated_object manage_sock_file_perms)
+(allow systemd_t is_systemd_socket_activated_object relabel_sock_file_perms)
 
 (call files_delete_entry_run_dirs (systemd_t))
 (call read_files_pattern (systemd_t is_systemd_pid_file_object
 	is_systemd_pid_file_object))
 (call delete_files_pattern (systemd_t is_systemd_pid_file_object
 	is_systemd_pid_file_object))
+
+(call files_spec_all_non_auth_files_except (is_systemd_relabelable_file_object
+    is_systemd_relabelable_file_object_exception))
+
+(allow systemd_t is_systemd_relabelable_file_object relabel_dir_perms)
+(allow systemd_t is_systemd_relabelable_file_object relabel_file_perms)
+(allow systemd_t is_systemd_relabelable_file_object relabel_lnk_file_perms)
+(allow systemd_t is_systemd_relabelable_file_object relabel_fifo_file_perms)
+(allow systemd_t is_systemd_relabelable_file_object relabel_sock_file_perms)
+(allow systemd_t is_systemd_relabelable_file_object relabel_blk_file_perms)
+(allow systemd_t is_systemd_relabelable_file_object relabel_chr_file_perms)
 
 (call commands_bin_files_entry_subject (systemd_daemon_t))
 (call commands_shell_files_entry_subject (systemd_daemon_t))
@@ -235,7 +247,6 @@
 (call files_read_all_env_files (systemd_t))
 (call files_read_all_lock_files (systemd_t))
 (call files_read_generic_etc_files (systemd_t)) ; /etc/login.defs
-(call files_relabel_non_auth_except (systemd_t)) ; hard to trim
 (call files_list_run_lock (systemd_t))
 
 (call filesystem_create_generic_tmpfs_sock_files (systemd_t)) ; early /run/systemd/notify
@@ -680,6 +691,9 @@
 
 (macro systemd_pid_object ((type ARG1))
     (typeattributeset is_systemd_pid_file_object ARG1))
+
+(macro systemd_relabelable_object_exception ((type ARG1))
+    (call files_spec_all_non_auth_files_exception (is_systemd_relabelable_file_object_exception ARG1)))
 
 (macro systemd_admin ((type ARG1))
     (typeattributeset is_systemd_admin_subject ARG1))

@@ -370,7 +370,12 @@
     (call random_admin (session_t)))
 
 (optional session_optional_readahead
-    (call readahead_admin (session_t)))
+    (call readahead_admin (session_t))
+    (call readahead_readable_object_exception (is_session_home_file_object))
+    (call readahead_readable_object_exception (is_session_mail_spool_file_object))
+    (call readahead_readable_object_exception (is_session_tmp_file_object))
+    (call readahead_readable_object_exception (is_session_tmpfs_file_object))
+    (call readahead_readable_object_exception (is_session_run_file_object)))
 
 (optional session_optional_remountfs
     (call remountfs_admin (session_t)))
@@ -399,7 +404,12 @@
 
 (optional session_optional_systemd
     (call systemd_admin (session_t))
-    (call systemd_run_systemctl (session_t session_r)))
+    (call systemd_run_systemctl (session_t session_r))
+    (call systemd_relabelable_object_exception (is_session_home_file_object))
+    (call systemd_relabelable_object_exception (is_session_mail_spool_file_object))
+    (call systemd_relabelable_object_exception (is_session_tmp_file_object))
+    (call systemd_relabelable_object_exception (is_session_tmpfs_file_object))
+    (call systemd_relabelable_object_exception (is_session_run_file_object)))
 
 (optional session_optional_sysctl
     (call sysctl_admin (session_t))
@@ -472,6 +482,8 @@
     (call tmpfiles_run (session_t session_r))
     (call tmpfiles_manageable_object_exception (is_session_home_file_object))
     (call tmpfiles_relabelable_object_exception (is_session_home_file_object))
+    (call tmpfiles_manageable_object_exception (is_session_mail_spool_file_object))
+    (call tmpfiles_relabelable_object_exception (is_session_mail_spool_file_object))
     (call tmpfiles_manageable_object_exception (is_session_tmpfs_file_object))
     (call tmpfiles_relabelable_object_exception (is_session_tmpfs_file_object))
     (call tmpfiles_manageable_object_exception (is_session_run_file_object))
