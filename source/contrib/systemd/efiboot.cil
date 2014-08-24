@@ -1,0 +1,24 @@
+(typepermissive efiboot_generator_t)
+
+(typeattribute is_efiboot_admin_subject)
+
+(type efiboot_generator_t)
+(type efiboot_generator_exec_t)
+(call systemd_generator_subject_entry (efiboot_generator_t
+    efiboot_generator_exec_t))
+
+(context file_efiboot_generator_exec (system_u object_r efiboot_generator_exec_t
+    ((s0) (s0))))
+(filecon "/usr/lib/systemd/system-generators/systemd-efi-boot-generator" file
+    file_efiboot_generator_exec)
+
+(call files_list_boot (efiboot_generator_t))
+
+(call filesystem_search_efivarfs (efiboot_generator_t))
+
+(allow is_efiboot_admin_subject efiboot_generator_t signal_perms)
+(allow is_efiboot_admin_subject efiboot_generator_t (process (ptrace)))
+(call ps_subject_pattern (is_efiboot_admin_subject efiboot_generator_t))
+
+(macro efiboot_admin ((type ARG1))
+    (typeattributeset is_efiboot_admin_subject ARG1))

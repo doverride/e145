@@ -1167,6 +1167,9 @@
     (call usersubject_search_home_dir (ARG1))
     (call read_files_pattern (ARG1 user_home_t user_home_t)))
 
+(macro usersubject_dontaudit_read_generic_home_content_files ((type ARG1))
+    (dontaudit ARG1 user_home_t read_file_perms))
+
 (macro usersubject_dontaudit_manage_all_home_content_files ((type ARG1))
     (dontaudit ARG1 is_user_home_file_object manage_file_perms))
 

@@ -288,6 +288,9 @@
 (call systemd_read_all_unit_files (systemd_t))
 (call systemd_read_pam_config_files (systemd_t))
 
+(optional systemd_optional_alsa
+    (call alsa_read_config_files (systemd_t)))
+
 (optional systemd_optional_askpwd
     (call askpwd_list_run (systemd_t))
     (call askpwd_read_run_files (systemd_t)))
@@ -329,9 +332,9 @@
 
 (optional systemd_optional_session
     (call session_link_keyring (systemd_t))
-    (call session_search_home_dir (systemd_t)) ; temporary
     (call session_search_run_user_dir (systemd_t))
-    (call session_search_generic_home_content (systemd_t)) ; temporary for ~/.local/share/systemd
+    (call session_search_generic_config (systemd_t)) ; temporary for ~/.config/systemd
+    (call session_search_generic_data (systemd_t)) ; temporary for ~/.local/share/systemd
     (call session_use_tty_nodes (systemd_t)))
 
 (optional systemd_optional_seutil
@@ -362,9 +365,9 @@
 
 (optional systemd_optional_usersubject
     (call usersubject_link_keyring_all_common_login_user_subjects (systemd_t))
-    (call usersubject_search_home_dir (systemd_t)) ; temporary
-    (call usersubject_search_run_user_dir (systemd_t))
-    (call usersubject_search_generic_home_content (systemd_t)) ; temporary for ~/.local/share/systemd
+    (call usersubject_search_run_user_dir (systemd_t)) ; temporary for /run/user/$UID/systemd
+    (call usersubject_search_generic_config (systemd_t)) ; temporary for ~/.config/systemd
+    (call usersubject_search_generic_data (systemd_t)) ; temporary for ~/.local/share/systemd
     (call usersubject_use_tty_nodes (systemd_t)))
 
 (allow systemctl_t self (capability (net_admin ipc_lock)))
