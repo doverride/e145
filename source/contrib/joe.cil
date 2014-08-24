@@ -195,6 +195,9 @@
     (allow joe_t user_elinks_home_t manage_sock_file_perms)
     (allow joe_t user_elinks_home_t relabel_sock_file_perms)
  
+    (allow joe_t joe_elinks_t (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (joe_t joe_elinks_t))
+ 
     (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t dir ".elinks")) 
     (call usersubject_home_dir_filetrans (joe_elinks_t user_elinks_home_t dir ".elinks")) 
 
@@ -263,6 +266,20 @@
     (filecon "/home/joe/\.gitaliases" file file_user_joe_git_conf)
     (filecon "/home/joe/\.gitconfig" file file_user_joe_git_conf)
 
+    (allow joe_t joe_git_t (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (joe_t joe_git_t))
+ 
+    (allow joe_t user_git_home_t manage_dir_perms)
+    (allow joe_t user_git_home_t relabel_dir_perms)
+    (allow joe_t user_git_home_t manage_file_perms)
+    (allow joe_t user_git_home_t relabel_file_perms)
+    (allow joe_t user_git_home_t manage_lnk_file_perms)
+    (allow joe_t user_git_home_t relabel_lnk_file_perms)
+    (allow joe_t user_git_conf_t manage_file_perms)
+    (allow joe_t user_git_conf_t relabel_file_perms)
+    (allow joe_t user_git_tmp_t manage_file_perms)
+    (allow joe_t user_git_tmp_t relabel_file_perms)
+ 
     (call usersubject_home_dir_filetrans (joe_t user_git_conf_t file ".gitconfig")) 
     (call usersubject_home_dir_filetrans (joe_t user_git_conf_t file ".gitaliases")) 
 
@@ -328,6 +345,9 @@
     (context file_joe_user_gpg_home (joe_u object_r user_gpg_home_t ((s0)(s0))))
     (filecon "/home/joe/\.gnupg(/.*)?" any file_joe_user_gpg_home)
 
+    (allow joe_t joe_gpg_t (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (joe_t joe_gpg_t))
+ 
     (allow joe_t user_gpg_home_t manage_dir_perms)
     (allow joe_t user_gpg_home_t relabel_dir_perms)
     (allow joe_t user_gpg_home_t manage_file_perms)
@@ -525,6 +545,9 @@
 
     (call usersubject_application_subject (joe_ssh_t))
 
+    (allow joe_t joe_ssh_t (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (joe_t joe_ssh_t))
+ 
     (allow joe_t user_ssh_home_t manage_dir_perms)
     (allow joe_t user_ssh_home_t relabel_dir_perms)
     (allow joe_t user_ssh_home_t manage_file_perms)

@@ -626,6 +626,8 @@
     (call http_role_template_elinks (session_r session_t session_elinks_t
         session_elinks_home_t))
 
+    (allow session_t session_elinks_t (process (signal signull sigkill sigstop)))
+
     (type session_elinks_home_t)
     (call session_home_object (session_elinks_home_t))
 
@@ -694,6 +696,8 @@
     (type session_git_t)
     (call git_role_template (session_r session_t session_git_t session_git_home_t session_git_conf_t
         session_git_tmp_t))
+
+    (allow session_t session_git_t (process (signal signull sigstop sigkill)))
 
     (type session_git_home_t)
     (call session_home_object (session_git_home_t))
@@ -800,6 +804,8 @@
     (call gpg_role_template (session_r session_t session_gpg_t
         session_gpg_home_t))
 
+    (allow session_t session_gpg_t (process (signal signull sigstop sigkill)))
+
     (type session_gpg_home_t)
     (call session_home_object (session_gpg_home_t))
 
@@ -880,7 +886,6 @@
     (call session_tmp_object (session_scd_tmp_t))
 
     (allow session_t session_scd_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (session_t session_scd_t))
 
     (type session_scd_home_t)
     (call session_home_object (session_scd_home_t))
@@ -898,7 +903,6 @@
     (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t))
 
     (allow session_t session_gpgpcsc_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (session_t session_gpgpcsc_t))
 
     (call session_application_subject (session_gpgpcsc_t)))
 
@@ -1018,6 +1022,8 @@
     (call ssh_role_template (session_r session_t session_ssh_t session_ssh_home_t))
 
     (call session_application_subject (session_ssh_t))
+
+    (allow session_t session_ssh_t (process (signal signull sigkill sigstop)))
 
     (call session_home_dir_filetrans (session_t session_ssh_home_t dir ".ssh"))
     (call session_home_dir_filetrans (session_ssh_t session_ssh_home_t dir ".ssh"))

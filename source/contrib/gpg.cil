@@ -126,8 +126,6 @@
     (typeattributeset is_gpg_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gpg_exec_t ARG3))
-    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms))
 
