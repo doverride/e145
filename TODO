@@ -1,7 +1,3 @@
-readahead: implement similar solution to tmpfiles for readahead
-    "readahead_readable_content_exception"
-    do not want readahead reading user content for example
-
 net_admin
     requests for this capability need to be reviewed system-wide
 
@@ -103,24 +99,6 @@ pulseaudio:
 tmpfiles.cil:
     implement a tmpfiles_config_object(), and apply that to targeted subjects where possible
     this is for administration purposes
-
-systemd.cil: 
-    files_relabel_non_auth_except() is too coarse, and is a temporary solution
-
-    (also applies to readahead, udev and others: grep -i non_auth .)
-
-    hopefully this can be trimmed to for example files_relabel_all_run_files(), or less
-
-    systemd needs to at least be able to relabel the sock files of socket activated subjects
-    there is probably more but the current solution can hopefully be improved
-
-    update:
-        it is not as easy as i thought it would be
-        systemd relabels almost all over the place
-
-    update:
-        it is certainly feasible
-        example: systemd does not have to relabel user content (except maybe systemd user content)_
 
 various:
     systemd uses tmpfs a lot but does not fix labels right after it mounts, or is not able to
