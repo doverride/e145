@@ -67,7 +67,8 @@
 (classcommon msgq ipc)
 (class msgq (enqueue))
 
-(class netif (ingress egress))
+(class netif (tcp_recv tcp_send udp_recv udp_send rawip_recv rawip_send
+    dccp_recv dccp_send ingress egress))
 
 (classcommon netlink_audit_socket socket)
 (class netlink_audit_socket (nlmsg_read nlmsg_write nlmsg_relay
@@ -103,7 +104,8 @@
 (classcommon netlink_xfrm_socket socket)
 (class netlink_xfrm_socket (nlmsg_read nlmsg_write))
 
-(class node (enforce_dest recvfrom sendto))
+(class node (tcp_recv tcp_send udp_recv udp_send rawip_recv rawip_send
+    enforce_dest dccp_recv dccp_send recvfrom sendto))
 
 (class packet (send recv relabelto forward_in forward_out))
 

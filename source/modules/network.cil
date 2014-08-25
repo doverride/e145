@@ -230,10 +230,10 @@
     (allow ARG1 is_unreserved_port_object (tcp_socket (name_connect))))
 
 (macro network_tcp_sendrecv_generic_interface ((type ARG1))
-    (allow ARG1 netif_t (netif (egress ingress))))
+    (allow ARG1 netif_t (netif (tcp_send tcp_recv egress ingress))))
 
 (macro network_udp_send_generic_interface ((type ARG1))
-    (allow ARG1 netif_t (netif (egress))))
+    (allow ARG1 netif_t (netif (udp_send egress))))
 
 (macro network_tcp_bind_generic_node ((type ARG1))
     (allow ARG1 node_t (tcp_socket (node_bind))))
@@ -242,10 +242,10 @@
     (allow ARG1 node_t (udp_socket (node_bind))))
 
 (macro network_tcp_sendrecv_generic_node ((type ARG1))
-    (allow ARG1 node_t (node (sendto recvfrom))))
+    (allow ARG1 node_t (node (tcp_send tcp_recv sendto recvfrom))))
 
 (macro network_udp_send_generic_node ((type ARG1))
-    (allow ARG1 node_t (node (sendto))))
+    (allow ARG1 node_t (node (udp_send sendto))))
 
 (macro network_tcp_connect_icecast_port ((type ARG1))
     (call network_tcp_connect_subject (ARG1))
