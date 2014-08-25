@@ -185,6 +185,8 @@
 
     (context file_joe_user_elinks_home (joe_u object_r user_elinks_home_t ((s0)(s0))))
     (filecon "/home/joe/\.elinks(/.*)?" any file_joe_user_elinks_home)
+    (filecon "/home/joe/\.lynxrc" file file_joe_user_elinks_home)
+    (filecon "/home/joe/lynx_bookmarks\.html" file file_joe_user_elinks_home)
 
     (allow joe_t user_elinks_home_t manage_dir_perms)
     (allow joe_t user_elinks_home_t relabel_dir_perms)
@@ -200,6 +202,12 @@
  
     (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t dir ".elinks")) 
     (call usersubject_home_dir_filetrans (joe_elinks_t user_elinks_home_t dir ".elinks")) 
+
+    (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t file ".lynxrc")) 
+    (call usersubject_home_dir_filetrans (joe_elinks_t user_elinks_home_t file ".lynxrc")) 
+
+    (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t file "lynx_bookmarks.html")) 
+    (call usersubject_home_dir_filetrans (joe_elinks_t user_elinks_home_t file "lynx_bookmarks.html")) 
 
     (call usersubject_manage_generic_home_content_dirs (joe_elinks_t))
     (call usersubject_manage_generic_home_content_files (joe_elinks_t))
