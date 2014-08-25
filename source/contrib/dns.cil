@@ -24,6 +24,9 @@
 
 (call network_udp_subject (is_dns_resolve_client_subject))
 
+(call network_tcp_sendrecv_generic_interface (is_dns_resolve_client_subject))
+(call network_udp_send_generic_interface (is_dns_resolve_client_subject))
+
 (call network_tcp_sendrecv_generic_node (is_dns_resolve_client_subject))
 (call network_udp_send_generic_node (is_dns_resolve_client_subject))
 
