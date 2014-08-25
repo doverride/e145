@@ -132,10 +132,12 @@
 
 (call manage_dirs_pattern (journald_t journald_log_t journald_log_t))
 (call manage_files_pattern (journald_t journald_log_t journald_log_t))
+(call files_var_log_filetrans (journald_t journald_log_t dir "*"))
 
 (allow journald_t journald_run_t manage_dir_perms)
 (allow journald_t journald_run_t manage_file_perms)
 (allow journald_t journald_run_t manage_sock_file_perms)
+(call systemd_run_filetrans (journald_t journald_run_t dir "*"))
 
 (call systemd_var_lib_filetrans (journald_t journald_var_lib_t dir "*")) ; /var/lib/systemd/catalog
 

@@ -54,6 +54,7 @@
 (allow shutdown_t self manage_fifo_file_perms)
 
 (allow shutdown_t shutdown_run_t manage_dir_perms)
+(call systemd_run_filetrans (shutdown_t shutdown_run_t dir "*"))
 
 (call system_request_load_module (shutdown_t))
 (call system_rw_sysctl_kernel_files (shutdown_t))

@@ -42,6 +42,8 @@
 
 (allow coredump_t self (capability (setuid setgid sys_ptrace net_admin)))
 
+(call systemd_var_lib_filetrans (coredump_t coredump_var_lib_t dir "*"))
+
 (call system_read_sysctl_kernel_files (coredump_t))
 
 (call commands_read_all_bin_files (coredump_t))

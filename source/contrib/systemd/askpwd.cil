@@ -52,6 +52,8 @@
     (s0))))
 (filecon "/run/systemd/ask-password-block(/.*)?" any file_askpwdagent_run)
 
+(call systemd_run_filetrans (askpwd_t askpwd_run_t dir "*"))
+
 (allow askpwdagent_t askpwdagent_run_t manage_dir_perms)
 (allow askpwdagent_t askpwdagent_run_t manage_fifo_file_perms)
 (call systemd_run_filetrans (askpwdagent_t askpwdagent_run_t dir "*"))
