@@ -475,6 +475,11 @@
 
     (call usersubject_application_subject (joe_mutt_gpg_t))
 
+    (optional joe_mutt_optional_joe_elinks
+        (allow joe_elinks_t user_mutt_tmp_t rw_file_perms)
+        (call http_role_template_elinks (joe_r joe_mutt_t joe_elinks_t
+            user_elinks_home_t)))
+
     (optional joe_mutt_gpg_optional_joe_gpg
         (call gpg_role_template (joe_r joe_mutt_t joe_gpg_t user_gpg_home_t))
         (call gpg_role_template (joe_r joe_mutt_gpg_t joe_gpg_t user_gpg_home_t))

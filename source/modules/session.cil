@@ -957,6 +957,11 @@
 
     (call session_application_subject (session_mutt_gpg_t))
 
+    (optional session_mutt_optional_session_elinks
+        (allow session_elinks_t session_mutt_tmp_t rw_file_perms)
+        (call http_role_template_elinks (session_r session_mutt_t session_elinks_t
+            session_elinks_home_t)))
+
     (optional session_mutt_gpg_optional_session_gpg
         (call gpg_role_template (session_r session_mutt_t session_gpg_t session_gpg_home_t))
         (call gpg_role_template (session_r session_mutt_gpg_t session_gpg_t session_gpg_home_t))
