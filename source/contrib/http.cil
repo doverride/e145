@@ -7,12 +7,16 @@
 
 (context file_elinks_exec (system_u object_r elinks_exec_t ((s0)(s0))))
 (filecon "/usr/bin/elinks" file file_elinks_exec)
+(filecon "/usr/bin/lynx" file file_elinks_exec)
 
 (type elinks_conf_t)
 (call files_etc_object (elinks_conf_t))
 
 (context file_elinks_conf (system_u object_r elinks_conf_t ((s0)(s0))))
 (filecon "/etc/elinks\.conf" file file_elinks_conf)
+(filecon "/etc/lynx-site\.cfg" file file_elinks_conf)
+(filecon "/etc/lynx\.cfg" file file_elinks_conf)
+(filecon "/etc/lynx\.lss" file file_elinks_conf)
 
 (type port_http_t)
 (call network_reserved_port_object (port_http_t))
