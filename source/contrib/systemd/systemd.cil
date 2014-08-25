@@ -283,7 +283,6 @@
 
 (call systemd_exec (systemd_t))
 (call systemd_exec_helper (systemd_t))
-(auditallow systemd_t sd_helper_exec_t (file (execute_no_trans))) ; auditing hack
 (call systemd_delete_all_unit_files (systemd_t))
 (call systemd_read_all_unit_files (systemd_t))
 (call systemd_read_pam_config_files (systemd_t))
