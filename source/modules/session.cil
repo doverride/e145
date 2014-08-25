@@ -646,16 +646,12 @@
     (context file_session_elinks_home (session_u object_r session_elinks_home_t ((s0)(s0))))
     (filecon "/root/\.elinks(/.*)?" any file_session_elinks_home)
     (filecon "/root/\.lynxrc" file file_session_elinks_home)
-    (filecon "/root/lynx_bookmarks\.html" file file_session_elinks_home)
 
     (call session_home_dir_filetrans (session_t session_elinks_home_t dir ".elinks")) 
     (call session_home_dir_filetrans (session_elinks_t session_elinks_t dir ".elinks"))
 
     (call session_home_dir_filetrans (session_t session_elinks_home_t file ".lynxrc")) 
     (call session_home_dir_filetrans (session_elinks_t session_elinks_t file ".lynxrc"))
-
-    (call session_home_dir_filetrans (session_t session_elinks_home_t file "lynx_bookmarks.html")) 
-    (call session_home_dir_filetrans (session_elinks_t session_elinks_t file "lynx_bookmarks.html"))
 
     (call session_manage_generic_home_content_dirs (session_elinks_t))
     (call session_manage_generic_home_content_files (session_elinks_t))
