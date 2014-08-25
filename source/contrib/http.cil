@@ -29,6 +29,7 @@
 
 (call system_read_generic_proc_files (is_elinks_subject))
 
+(call devices_read_lnk_files (is_elinks_subject))
 (call devices_read_urandom (is_elinks_subject))
 
 ; (call files_dontaudit_list_all (is_elinks_subject)) ; catchall
@@ -36,12 +37,11 @@
 (call files_list_tmp (is_elinks_subject))
 (call files_search_mnt (is_elinks_subject)) ; use removable devices
 
-(call http_tcp_connect_http_port (is_elinks_subject))
-
 (call selinux_getattr_filesystems (is_elinks_subject))
 
 (call terminal_dontaudit_use_unallocated_tty_nodes (is_elinks_subject))
 
+(call http_tcp_connect_http_port (is_elinks_subject))
 (call http_read_elinks_config_files (is_elinks_subject))
 
 (optional elinks_optional_auth
