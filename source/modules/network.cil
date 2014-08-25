@@ -120,13 +120,13 @@
 (allow has_unconfined_access_to_network_assets is_packet_object (packet
     (all)))
 (allow has_unconfined_access_to_network_assets is_port_object
-    (dccp_socket (send_msg recv_msg name_bind name_connect)))
+    (dccp_socket (name_bind name_connect)))
 (allow has_unconfined_access_to_network_assets is_port_object (tcp_socket
-    (send_msg recv_msg name_bind name_connect)))
+    (name_bind name_connect)))
 (allow has_unconfined_access_to_network_assets is_port_object (udp_socket
-    (send_msg recv_msg name_bind)))
+    (name_bind)))
 (allow has_unconfined_access_to_network_assets is_port_object
-    (rawip_socket (send_msg recv_msg name_bind)))
+    (rawip_socket (name_bind)))
 
 (allow has_unconfined_access_to_network_assets is_node_object
     (dccp_socket (node_bind)))
@@ -136,15 +136,6 @@
     (node_bind)))
 (allow has_unconfined_access_to_network_assets is_node_object
     (rawip_socket (node_bind)))
-
-(allow has_unconfined_access_to_network_assets unlabeled_t (dccp_socket
-    (recvfrom)))
-(allow has_unconfined_access_to_network_assets unlabeled_t (tcp_socket
-    (recvfrom)))
-(allow has_unconfined_access_to_network_assets unlabeled_t (udp_socket
-    (recvfrom)))
-(allow has_unconfined_access_to_network_assets unlabeled_t (rawip_socket
-    (recvfrom)))
 
 (allow has_unconfined_access_to_network_assets unlabeled_t (peer
     (recv)))
@@ -230,22 +221,16 @@
     (allow ARG1 is_unreserved_port_object (tcp_socket (name_connect))))
 
 (macro network_tcp_sendrecv_generic_interface ((type ARG1))
-    (allow ARG1 netif_t (netif (tcp_send tcp_recv egress ingress))))
+    (allow ARG1 netif_t (netif (egress ingress))))
 
 (macro network_udp_send_generic_interface ((type ARG1))
-    (allow ARG1 netif_t (netif (udp_send egress))))
+    (allow ARG1 netif_t (netif (egress))))
 
 (macro network_tcp_bind_generic_node ((type ARG1))
     (allow ARG1 node_t (tcp_socket (node_bind))))
 
 (macro network_udp_bind_generic_node ((type ARG1))
     (allow ARG1 node_t (udp_socket (node_bind))))
-
-(macro network_tcp_sendrecv_generic_node ((type ARG1))
-    (allow ARG1 node_t (node (tcp_send tcp_recv sendto recvfrom))))
-
-(macro network_udp_send_generic_node ((type ARG1))
-    (allow ARG1 node_t (node (udp_send sendto))))
 
 (macro network_tcp_connect_icecast_port ((type ARG1))
     (call network_tcp_connect_subject (ARG1))
