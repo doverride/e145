@@ -34,6 +34,11 @@ systemd: i added file transition rules for dirs that are not created but are
     instead installed by tmpfiles (see /usr/lib/tmpfiles.d/systemd.conf)
     remove those file type transition rules as they are redundant
 
+    update: if and when i do this then i must take time to actually
+    make sure that these locations arent created by these processes
+    e.g. delete the dir, then reproduce an event that requires the location
+    and see if something creates the location or fails
+
 investigate support debug-shell / systemd-debug-generator
 
 autorelabel: find a way to deal with fedora-autorelabel-mark.service
