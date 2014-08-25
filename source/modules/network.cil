@@ -1,4 +1,3 @@
-(typeattribute is_interface_object)
 (typeattribute is_ipsec_security_policy_database_object)
 (typeattribute is_netlabel_peer_object)
 (typeattribute is_node_object)
@@ -18,7 +17,6 @@
 (typeattribute is_rpc_port_object)
 (typeattribute is_unreserved_port_object)
 
-(call object_roletype (is_interface_object))
 (call object_roletype (is_node_object))
 (call object_roletype (is_packet_object))
 (call object_roletype (is_port_object))
@@ -33,13 +31,6 @@
     (s0))))
 (filecon "/dev/tap.*" char device_tun_tap)
 (filecon "/dev/net/.*" char device_tun_tap)
-
-(type netif_t)
-(call network_interface_object (netif_t))
-
-(sid netif)
-(context netif (system_u object_r netif_t ((s0) mls_systemhigh)))
-(sidcontext netif netif)
 
 (type netlabel_peer_t)
 (call object_roletype (netlabel_peer_t))
@@ -113,8 +104,6 @@
 
 (allow creates_udp_sockets self create_udp_socket_perms)
 
-(allow has_unconfined_access_to_network_assets is_interface_object
-    (netif (all)))
 (allow has_unconfined_access_to_network_assets is_node_object (node
     (all)))
 (allow has_unconfined_access_to_network_assets is_packet_object (packet
@@ -148,9 +137,6 @@
 
 (allow has_unconfined_access_to_network_assets unlabeled_t (peer
     (recv)))
-
-(macro network_interface_object ((type ARG1))
-    (typeattributeset is_interface_object ARG1))
 
 (macro network_ipsec_security_policy_database_object ((type ARG1))
     (typeattributeset
@@ -228,12 +214,6 @@
 (macro network_tcp_connect_all_unreserved_ports ((type ARG1))
     (call network_tcp_connect_subject (ARG1))
     (allow ARG1 is_unreserved_port_object (tcp_socket (name_connect))))
-
-(macro network_tcp_sendrecv_generic_interface ((type ARG1))
-    (allow ARG1 netif_t (netif (tcp_send tcp_recv egress ingress))))
-
-(macro network_udp_send_generic_interface ((type ARG1))
-    (allow ARG1 netif_t (netif (udp_send egress))))
 
 (macro network_tcp_bind_generic_node ((type ARG1))
     (allow ARG1 node_t (tcp_socket (node_bind))))
