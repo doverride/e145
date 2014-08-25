@@ -12,7 +12,6 @@
 (sid sysctl_vm)
 (sid sysctl_dev)
 (sid kmod)
-(sid netif)
 (sid policy)
 (sid scmp_packet)
 
@@ -31,7 +30,6 @@
 (sidcontext sysctl_vm unused_isid)
 (sidcontext sysctl_dev unused_isid)
 (sidcontext kmod unused_isid)
-(sidcontext netif unused_isid)
 (sidcontext policy unused_isid)
 (sidcontext scmp_packet unused_isid)
 
