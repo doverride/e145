@@ -695,6 +695,9 @@
     (call session_dontaudit_getattr_all_home_content_files (session_emacs_t))
     (call session_getattr_mail_spool_files (session_emacs_t))
 
+    (call git_role_template (session_r session_emacs_t session_git_t session_git_home_t
+        session_git_conf_t session_git_tmp_t))
+
     (type session_emacsclient_t)
     (call emacs_role_template_client (session_r session_t session_emacsclient_t))
 
