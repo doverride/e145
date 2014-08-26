@@ -4,6 +4,11 @@
 (optional application_optional_auth
 	(call auth_use_login_program_subject_fd (is_application_subject)))
 
+(optional application_optional_elinks
+    (call http_dontaudit_rw_all_elinks_unix_stream_sockets (is_application_subject))
+    (call http_dontaudit_rw_all_elinks_tcp_sockets (is_application_subject))
+    (call http_dontaudit_use_fd_all_elinks (is_application_subject)))
+
 (optional application_optional_emacs
     (call emacs_send_sigchld_all (is_application_subject))
     (call emacs_use_fd_all (is_application_subject))

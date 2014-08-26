@@ -197,6 +197,8 @@
     (allow joe_t user_elinks_home_t relabel_sock_file_perms)
  
     (allow joe_t joe_elinks_t (process (sigkill sigstop signal signull)))
+    (dontaudit joe_t joe_elinks_t (unix_stream_socket (read write)))
+    (dontaudit joe_t joe_elinks_t (tcp_socket (read write)))
     (call ps_subject_pattern (joe_t joe_elinks_t))
  
     (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t dir ".elinks")) 
@@ -209,6 +211,8 @@
     (call usersubject_manage_generic_home_content_files (joe_elinks_t))
     (call usersubject_home_dir_filetrans_user_home (joe_elinks_t file "*"))
     (call usersubject_home_dir_filetrans_user_home (joe_elinks_t dir "*"))
+
+    (call commands_shell_auto_subject_type_transition (joe_elinks_t joe_t))
 
     (call usersubject_application_subject (joe_elinks_t))
     (call usersubject_use_terminals (joe_elinks_t)))

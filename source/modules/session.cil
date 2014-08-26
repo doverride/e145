@@ -639,6 +639,8 @@
         session_elinks_home_t))
 
     (allow session_t session_elinks_t (process (signal signull sigkill sigstop)))
+    (dontaudit session_t session_elinks_t (unix_stream_socket (read write)))
+    (dontaudit session_t session_elinks_t (tcp_socket (read write)))
 
     (type session_elinks_home_t)
     (call session_home_object (session_elinks_home_t))
@@ -657,6 +659,8 @@
     (call session_manage_generic_home_content_files (session_elinks_t))
     (call session_home_dir_filetrans_session_home (session_elinks_t file "*"))
     (call session_home_dir_filetrans_session_home (session_elinks_t dir "*"))
+
+    (call commands_shell_auto_subject_type_transition (session_elinks_t session_t))
 
     (call session_application_subject (session_elinks_t))
     (call session_use_terminals (session_elinks_t)))

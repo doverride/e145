@@ -89,3 +89,12 @@
 (macro http_tcp_connect_http_port ((type ARG1))
     (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_http_t (tcp_socket (name_connect))))
+
+(macro http_dontaudit_use_fd_all_elinks ((type ARG1))
+    (dontaudit ARG1 is_elinks_subject (fd (use))))
+
+(macro http_dontaudit_rw_all_elinks_unix_stream_sockets ((type ARG1))
+    (dontaudit ARG1 is_elinks_subject (unix_stream_socket (read write))))
+
+(macro http_dontaudit_rw_all_elinks_tcp_sockets ((type ARG1))
+    (dontaudit ARG1 is_elinks_subject (tcp_socket (read write))))
