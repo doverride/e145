@@ -636,7 +636,7 @@
 (optional session_optional_session_elinks
     (type session_elinks_t)
     (call http_role_template_elinks (session_r session_t session_elinks_t
-        session_elinks_home_t))
+        session_elinks_home_t session_elinks_tmp_t))
 
     (allow session_t session_elinks_t (process (signal signull sigkill sigstop)))
     (dontaudit session_t session_elinks_t (unix_stream_socket (read write)))
@@ -649,11 +649,16 @@
     (filecon "/root/\.elinks(/.*)?" any file_session_elinks_home)
     (filecon "/root/\.lynxrc" file file_session_elinks_home)
 
+    (type session_elinks_tmp_t)
+    (call session_tmp_object (session_elinks_tmp_t))
+
     (call session_home_dir_filetrans (session_t session_elinks_home_t dir ".elinks")) 
     (call session_home_dir_filetrans (session_elinks_t session_elinks_t dir ".elinks"))
 
     (call session_home_dir_filetrans (session_t session_elinks_home_t file ".lynxrc")) 
     (call session_home_dir_filetrans (session_elinks_t session_elinks_t file ".lynxrc"))
+
+    (call files_tmp_filetrans (session_elinks_t session_elinks_tmp_t file "*"))
 
     (call session_manage_generic_home_content_dirs (session_elinks_t))
     (call session_manage_generic_home_content_files (session_elinks_t))
@@ -663,7 +668,12 @@
     (call commands_shell_auto_subject_type_transition (session_elinks_t session_t))
 
     (call session_application_subject (session_elinks_t))
-    (call session_use_terminals (session_elinks_t)))
+    (call session_use_terminals (session_elinks_t))
+
+    (optional session_elinks_optional_session_mutt
+        (allow session_mutt_t session_elinks_tmp_t rw_file_perms)
+        (call mail_role_template_mutt (session_r session_elinks_t session_mutt_t
+            session_mutt_home_t session_mutt_tmp_t))))
 
 (optional session_optional_session_emacs
     (type session_emacs_t)
@@ -853,6 +863,10 @@
     (call session_application_subject (session_gpg_t))
     (call session_use_terminals (session_gpg_t))
 
+    (optional session_gpg_optional_session_elinks
+        (allow session_gpg_t session_elinks_t (fifo_file (write)))
+        (allow session_gpg_t session_elinks_tmp_t rw_file_perms))
+
     (optional session_gpg_optional_usersubject
         (call usersubject_use_inherited_terminals (session_gpg_t))
         (call usersubject_search_home_dir (session_gpg_t))
@@ -945,6 +959,8 @@
     (filecon "/root/\.mutt_certificates" file file_session_mutt_home)
     (filecon "/root/\.mutt_passwords\.gpg" file file_session_mutt_home)
 
+    (allow session_t session_mutt_t (process (signal sigkill signull sigstop)))
+
     (call session_home_dir_filetrans (session_t session_mutt_home_t file ".muttrc")) 
     (call session_home_dir_filetrans (session_t session_mutt_home_t file ".mutt_passwords")) 
 
@@ -969,7 +985,7 @@
         (allow session_elinks_t session_mutt_t read_fifo_file_perms)
         (allow session_elinks_t session_mutt_tmp_t rw_file_perms)
         (call http_role_template_elinks (session_r session_mutt_t session_elinks_t
-            session_elinks_home_t)))
+            session_elinks_home_t session_elinks_tmp_t)))
 
     (optional session_mutt_gpg_optional_session_gpg
         (call gpg_role_template (session_r session_mutt_t session_gpg_t session_gpg_home_t))
@@ -1023,7 +1039,7 @@
 
     (optional session_newsb_optional_session_elinks
         (call http_role_template_elinks (session_r session_newsb_t session_elinks_t
-            session_elinks_home_t))
+            session_elinks_home_t session_elinks_tmp_t))
         (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms)))
 
 (optional session_optional_session_screen

@@ -181,7 +181,7 @@
 (optional joe_optional_joe_elinks
     (type joe_elinks_t)
     (call http_role_template_elinks (joe_r joe_t joe_elinks_t
-        user_elinks_home_t))
+        user_elinks_home_t user_elinks_tmp_t))
 
     (context file_joe_user_elinks_home (joe_u object_r user_elinks_home_t ((s0)(s0))))
     (filecon "/home/joe/\.elinks(/.*)?" any file_joe_user_elinks_home)
@@ -195,6 +195,9 @@
     (allow joe_t user_elinks_home_t relabel_lnk_file_perms)
     (allow joe_t user_elinks_home_t manage_sock_file_perms)
     (allow joe_t user_elinks_home_t relabel_sock_file_perms)
+
+    (allow joe_t user_elinks_tmp_t manage_sock_file_perms)
+    (allow joe_t user_elinks_tmp_t relabel_sock_file_perms)
  
     (allow joe_t joe_elinks_t (process (sigkill sigstop signal signull)))
     (dontaudit joe_t joe_elinks_t (unix_stream_socket (read write)))
@@ -207,6 +210,8 @@
     (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t file ".lynxrc")) 
     (call usersubject_home_dir_filetrans (joe_elinks_t user_elinks_home_t file ".lynxrc")) 
 
+    (call files_tmp_filetrans (joe_elinks_t user_elinks_tmp_t file "*"))
+
     (call usersubject_manage_generic_home_content_dirs (joe_elinks_t))
     (call usersubject_manage_generic_home_content_files (joe_elinks_t))
     (call usersubject_home_dir_filetrans_user_home (joe_elinks_t file "*"))
@@ -215,7 +220,12 @@
     (call commands_shell_auto_subject_type_transition (joe_elinks_t joe_t))
 
     (call usersubject_application_subject (joe_elinks_t))
-    (call usersubject_use_terminals (joe_elinks_t)))
+    (call usersubject_use_terminals (joe_elinks_t))
+
+    (optional joe_elinks_optional_joe_mutt
+        (allow joe_mutt_t user_elinks_tmp_t rw_file_perms)
+        (call mail_role_template_mutt (joe_r joe_elinks_t joe_mutt_t
+            user_mutt_home_t user_mutt_tmp_t))))
 
 (optional joe_optional_joe_emacs
     (type joe_emacs_t)
@@ -387,6 +397,10 @@
     (call usersubject_application_subject (joe_gpg_t))
     (call usersubject_use_terminals (joe_gpg_t))
 
+    (optional joe_gpg_optional_joe_elinks
+        (allow joe_gpg_t joe_elinks_t (fifo_file (write)))
+        (allow joe_gpg_t user_elinks_tmp_t rw_file_perms))
+
     (optional joe_gpg_optional_joe_git
         (allow joe_gpg_t user_git_tmp_t read_file_perms))
 
@@ -466,6 +480,16 @@
     (filecon "/home/joe/\.mutt_certificates" file file_joe_user_mutt_home)
     (filecon "/home/joe/\.mutt_passwords\.gpg" file file_joe_user_mutt_home)
 
+    (allow joe_t joe_mutt_t (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (joe_t joe_mutt_t))
+
+    (allow joe_t user_mutt_home_t manage_file_perms)
+    (allow joe_t user_mutt_home_t relabel_file_perms)
+    (allow joe_t user_mutt_tmp_t manage_dir_perms)
+    (allow joe_t user_mutt_tmp_t relabel_dir_perms)
+    (allow joe_t user_mutt_tmp_t manage_file_perms)
+    (allow joe_t user_mutt_tmp_t relabel_file_perms) 
+
     (call usersubject_home_dir_filetrans (joe_t user_mutt_home_t file ".muttrc")) 
     (call usersubject_home_dir_filetrans (joe_t user_mutt_home_t file ".mutt_passwords")) 
 
@@ -487,7 +511,7 @@
         (allow joe_elinks_t joe_mutt_t read_fifo_file_perms)
         (allow joe_elinks_t user_mutt_tmp_t rw_file_perms)
         (call http_role_template_elinks (joe_r joe_mutt_t joe_elinks_t
-            user_elinks_home_t)))
+            user_elinks_home_t user_elinks_tmp_t)))
 
     (optional joe_mutt_gpg_optional_joe_gpg
         (call gpg_role_template (joe_r joe_mutt_t joe_gpg_t user_gpg_home_t))
@@ -541,7 +565,7 @@
 
     (optional joe_newsb_optional_joe_elinks
         (call http_role_template_elinks (joe_r joe_newsb_t joe_elinks_t
-            user_elinks_home_t))
+            user_elinks_home_t user_elinks_tmp_t))
         (allow joe_elinks_t user_newsb_home_t rw_inherited_file_perms)))
 
 (optional joe_optional_joe_screen
