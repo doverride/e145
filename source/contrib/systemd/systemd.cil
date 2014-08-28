@@ -287,6 +287,7 @@
 
 (call terminal_use_unallocated_tty_nodes (systemd_t))
 (call terminal_remount_devpts_filesystems (systemd_t))
+(call terminal_search_devpts (systemd_t))
 (call terminal_create_controlling_terminal (systemd_t))
 
 (call auth_list_pam_config (systemd_t))

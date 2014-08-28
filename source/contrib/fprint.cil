@@ -83,7 +83,8 @@
     (call polkit_dbus_chat_polkitd (fprintd_t)))
 
 (optional fprint_optional_udevd
-    (call udevd_read_config_files (fprintd_t)))
+    (call udevd_read_config_files (fprintd_t))
+    (call udevd_read_run_files (fprintd_t)))
 
 (allow is_fprint_admin_subject is_fprint_subject signal_perms)
 (allow is_fprint_admin_subject is_fprint_subject (process (ptrace)))

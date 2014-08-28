@@ -64,6 +64,8 @@
 
 (call files_read_generic_etc_files (hostnamed_t)) ; /etc/os-release
 
+(call filesystem_search_tmpfs (hostnamed_t))
+
 (call selinux_getattr_filesystems (hostnamed_t))
 
 (call dbus_acquire_service_system (hostnamed_t))
