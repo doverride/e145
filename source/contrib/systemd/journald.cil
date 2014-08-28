@@ -98,12 +98,13 @@
 
 (call commands_execute_bin_files (journalctl_t)) ; less
 
+(call devices_read_random (journalctl_t))
+
 (call files_search_run (journalctl_t))
 
 (call filesystem_getattr_tmpfs_filesystems (journalctl_t))
 
-(call journald_list_log (journalctl_t))
-(call journald_read_log_files (journalctl_t))
+(call journald_manage_log_files (journalctl_t))
 
 (call journald_manage_var_lib_files (journalctl_t)) ; /var/lib/systemd/catalog
 
@@ -199,6 +200,10 @@
 (macro journald_read_log_files ((type ARG1))
     (call files_search_var_log (ARG1))
     (call read_files_pattern (ARG1 journald_log_t journald_log_t)))
+
+(macro journald_manage_log_files ((type ARG1))
+    (call files_search_var_log (ARG1))
+    (call manage_files_pattern (ARG1 journald_log_t journald_log_t)))
 
 (macro journald_manage_var_lib_files ((type ARG1))
     (call systemd_search_var_lib (ARG1))
