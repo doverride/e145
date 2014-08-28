@@ -16,7 +16,8 @@
 (typeattributeset is_useradd_or_groupadd_subject (useradd_t groupadd_t))
 
 (typeattribute is_usermanage_file_object)
-(typeattributeset is_usermanage_file_object (cracklib_var_cache_t useradd_conf_t))
+(typeattributeset is_usermanage_file_object (cracklib_var_cache_t useradd_conf_t
+    usermanage_pam_conf_t))
 
 (type cracklib_t)
 (type cracklib_exec_t)
@@ -79,6 +80,14 @@
 
 (context file_passwd_exec (system_u object_r passwd_exec_t ((s0)(s0))))
 (filecon "/usr/bin/passwd" file file_passwd_exec)
+
+(type usermanage_pam_conf_t)
+(call auth_pam_etc_object (usermanage_pam_conf_t))
+
+(context file_usermanage_pam_conf (system_u object_r usermanage_pam_conf_t ((s0)(s0))))
+(filecon "/etc/pam\.d/chfn" file file_usermanage_pam_conf)
+(filecon "/etc/pam\.d/chsh" file file_usermanage_pam_conf)
+(filecon "/etc/pam\.d/passwd" file file_usermanage_pam_conf)
 
 (allow useradd_t self (capability (chown fsetid fowner sys_ptrace)))
 (allow is_useradd_or_groupadd_subject self (capability (dac_override)))
@@ -160,8 +169,9 @@
 (call auth_nsswitch_client_subject (is_passwd_subject))
 (call auth_manage_shadow_files (is_passwd_subject))
 (call auth_manage_passwd_files (is_passwd_subject))
-(call auth_read_generic_pam_config_files (is_passwd_subject))
 (call auth_read_authconfig_pam_config_files (is_passwd_subject))
+
+(call usermanage_read_pam_config_files (is_passwd_subject))
 
 (optional passwd_subject_optional_auditd
     (call audit_client_subject (is_passwd_subject)))
@@ -212,6 +222,10 @@
 (macro usermanage_read_useradd_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 useradd_conf_t read_file_perms))
+
+(macro usermanage_read_pam_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 usermanage_pam_conf_t read_file_perms))
 
 (macro usermanage_admin ((type ARG1))
     (typeattributeset is_usermanage_admin_subject (ARG1)))
