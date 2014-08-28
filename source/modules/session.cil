@@ -262,6 +262,10 @@
 (optional session_optional_dmesg
     (call dmesg_run (session_t session_r)))
 
+(optional session_optional_fprint
+    (call fprint_admin (session_t))
+    (call fprint_run_fprintcli (session_t session_r)))
+
 (optional session_optional_fsck
     (call fsck_admin (session_t)))
 

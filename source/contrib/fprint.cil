@@ -94,7 +94,7 @@
 (call admin_pattern (is_fprint_admin_subject is_fprint_file_object))
 
 (macro fprint_subtrans_fprintcli ((type ARG1))
-    (call subtrans_pattern (ARG1 fprintcli_exec_t fprintrcli_t)))
+    (call subtrans_pattern (ARG1 fprintcli_exec_t fprintcli_t)))
 
 (macro fprint_run_fprintcli ((type ARG1)(role ARG2))
     (call fprint_subtrans_fprintcli (ARG1))
