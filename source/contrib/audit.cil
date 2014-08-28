@@ -176,6 +176,8 @@
 (call audit_list_audispd_config (audispd_t))
 (call audit_read_audispd_config_files (audispd_t))
 
+(call files_read_generic_etc_files (ausearch_t)) ; /etc/protocols
+
 (call terminal_use_inherited_unallocated_tty_nodes (ausearch_t))
 
 (call audit_list_auditd_config (ausearch_t))
