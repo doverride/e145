@@ -98,7 +98,6 @@
 (call commands_execute_bin_files (udevd_t))
 (call commands_execute_shell_files (udevd_t))
 
-(call devices_list_sysfs (udevd_t))
 (call devices_manage_dirs (udevd_t))
 (call devices_manage_files (udevd_t))
 (call devices_manage_generic_blk_files (udevd_t))
@@ -114,6 +113,7 @@
 (call devices_setattr_all_nodes (udevd_t))
 (call devices_update_timestamp_all_nodes (udevd_t))
 (call devices_write_kmsg (udevd_t))
+(call devices_rw_sysfs_dirs (udevd_t)) ; write is for power dir, its looking for control (i suspect bug)
 
 (call files_list_etc (udevd_t))
 

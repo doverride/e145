@@ -83,6 +83,7 @@
 (call files_var_log_filetrans (wpa_t wpa_log_t file "*"))
 
 (call system_read_proc_net_files (wpa_t))
+(call system_list_debugfs (wpa_t))
 
 (call devices_read_random (wpa_t))
 (call devices_read_urandom (wpa_t))

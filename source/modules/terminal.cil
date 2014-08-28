@@ -122,6 +122,9 @@
     (call terminal_getattr_devpts_filesystems (ARG1))
     (call filetrans_pattern (ARG1 devpts_t ARG2 chr_file "*")))
 
+(macro terminal_remount_devpts_filesystems ((type ARG1))
+    (allow ARG1 devpts_t (filesystem (remount))))
+
 (macro terminal_getattr_devpts_filesystems ((type ARG1))
     (allow ARG1 devpts_t (filesystem (getattr))))
 
@@ -184,6 +187,10 @@
 (macro terminal_use_inherited_unallocated_tty_nodes ((type ARG1))
     (call devices_search (ARG1))
     (allow ARG1 device_tty_t rw_inherited_term_perms))
+
+(macro terminal_create_controlling_terminal ((type ARG1))
+    (call devices_add_entry_dirs (ARG1))
+    (call create_chr_files_pattern (ARG1 device_devtty_t device_devtty_t)))
 
 (macro terminal_use_controlling_terminal ((type ARG1))
     (call devices_search (ARG1))

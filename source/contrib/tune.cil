@@ -97,7 +97,7 @@
 
 (call devices_list (tuned_t))
 (call devices_list_sysfs (tuned_t))
-(call devices_read_cpu (tuned_t))
+(call devices_rw_cpu (tuned_t))
 (call devices_rw_sysfs_files (tuned_t))
 (call devices_read_urandom (tuned_t))
 (call devices_write_net_control (tuned_t))

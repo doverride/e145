@@ -127,6 +127,7 @@
 (allow networkmgr_t networkmgrcli_t (dirs (list)))
 (allow networkmgr_t networkmgrcli_t read_file_perms)
 
+(call system_load_kernel_modules (networkmgr_t))
 (call system_read_generic_proc_files (networkmgr_t))
 (call system_read_proc_net_files (networkmgr_t))
 (call system_request_load_module (networkmgr_t))

@@ -50,6 +50,7 @@
 (call system_link_keyring (kmod_t))
 (call system_list_debugfs (kmod_t))
 (call system_load_kernel_modules (kmod_t))
+(call system_request_load_module (kmod_t))
 (call system_read_generic_proc_files (kmod_t))
 
 (call devices_list_sysfs (kmod_t))

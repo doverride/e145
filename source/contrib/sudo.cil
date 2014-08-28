@@ -41,6 +41,7 @@
 (allow is_sudo_subject self (capability (setuid setgid sys_resource fowner dac_override kill)))
 (allow is_sudo_subject self (process (setsched setrlimit setexec signal)))
 (allow is_sudo_subject self rw_fifo_file_perms)
+(allow is_sudo_subject self (key (search)))
 
 (call system_getattr_core_if (is_sudo_subject))
 (call system_read_generic_proc_files (is_sudo_subject))
@@ -77,6 +78,11 @@
 
 (optional sudo_optional_auditd
     (call audit_client_subject (is_sudo_subject)))
+
+(optional sudo_optional_dbus
+    (call dbus_system_client_subject (is_sudo_subject)) ; pam_fingerprintd
+    (optional sudo_optional_fprint
+        (call fprint_dbus_chat_fprintd (is_sudo_subject))))
 
 (optional sudo_optional_initctl
     (call initctl_getattr_run_fifo_files (is_sudo_subject)))

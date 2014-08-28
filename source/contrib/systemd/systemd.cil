@@ -224,9 +224,13 @@
 (call system_stream_connectto (systemd_t))
 (call system_use_fd (systemd_t))
 
-(call devices_audit_access_sysfs_dirs (systemd_t)) ; i think these are generators
-
+(call devices_create_null (systemd_t))
+(call devices_create_random (systemd_t))
+(call devices_create_urandom (systemd_t))
+(call devices_create_zero (systemd_t))
+(call devices_audit_access_sysfs_dirs (systemd_t))
 (call devices_manage_dirs (systemd_t))
+(call devices_mounton_dirs (systemd_t))
 (call devices_manage_lnk_files (systemd_t))
 (call devices_manage_generic_chr_files (systemd_t))
 (call devices_list_sysfs (systemd_t))
@@ -244,6 +248,9 @@
 (call files_manage_generic_tmp_dirs (systemd_t)) ; private /tmp
 (call files_mounton_generic_tmp_dirs (systemd_t)) ; private /tmp
 (call files_mounton_all_rootfs_mnt_dirs (systemd_t))
+(call files_mounton_home_root_dirs (systemd_t))
+(call files_mounton_run_user_root_dirs (systemd_t))
+(call files_mounton_usr_dirs (systemd_t))
 (call files_read_all_env_files (systemd_t))
 (call files_read_all_lock_files (systemd_t))
 (call files_read_generic_etc_files (systemd_t)) ; /etc/login.defs
@@ -256,10 +263,17 @@
 (call filesystem_mount_autofs_filesystems (systemd_t))
 (call filesystem_remount_filesystems (systemd_t))
 (call filesystem_remount_tmpfs_filesystems (systemd_t))
+(call filesystem_mount_tmpfs_filesystems (systemd_t))
 (call filesystem_rw_cgroup_files (systemd_t))
 (call filesystem_read_generic_tmpfs_files (systemd_t))
 (call filesystem_unmount_all_filesystems (systemd_t))
 (call filesystem_setattr_cgroup_files (systemd_t))
+(call filesystem_search_efivarfs (systemd_t))
+(call filesystem_remount_hugetlbfs_filesystems (systemd_t))
+(call filesystem_remount_dosfs_filesystems (systemd_t))
+(call filesystem_mounton_generic_tmpfs_dirs (systemd_t))
+(call filesystem_manage_generic_tmpfs_dirs (systemd_t))
+(call filesystem_manage_generic_tmpfs_lnk_files (systemd_t))
 
 (call selinux_compute_access_vector (systemd_t))
 (call selinux_compute_create_context (systemd_t))
@@ -272,6 +286,8 @@
 (call subject_signull_all_subjects (systemd_t))
 
 (call terminal_use_unallocated_tty_nodes (systemd_t))
+(call terminal_remount_devpts_filesystems (systemd_t))
+(call terminal_create_controlling_terminal (systemd_t))
 
 (call auth_list_pam_config (systemd_t))
 (call auth_read_authconfig_pam_config_files (systemd_t))
@@ -330,6 +346,7 @@
     (call plymouth_use_fd_plymouth (systemd_t)))
 
 (optional systemd_optional_session
+    (call session_mounton_home_dirs (systemd_t))
     (call session_link_keyring (systemd_t))
     (call session_search_run_user_dir (systemd_t))
     (call session_search_generic_config (systemd_t)) ; temporary for ~/.config/systemd
@@ -363,6 +380,7 @@
     (call utmp_rw_run_files (systemd_t)))
 
 (optional systemd_optional_usersubject
+    (call usersubject_mounton_user_home_dirs (systemd_t)) 
     (call usersubject_link_keyring_all_common_login_user_subjects (systemd_t))
     (call usersubject_search_run_user_dir (systemd_t)) ; temporary for /run/user/$UID/systemd
     (call usersubject_search_generic_config (systemd_t)) ; temporary for ~/.config/systemd

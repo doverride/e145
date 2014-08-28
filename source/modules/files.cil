@@ -399,6 +399,9 @@
 (macro files_list_home_root ((type ARG1))
     (allow ARG1 home_root_t (dirs (list))))
 
+(macro files_mounton_home_root_dirs ((type ARG1))
+    (allow ARG1 home_root_t (dir (mounton))))
+
 (macro files_dontaudit_search_home_root ((type ARG1))
     (dontaudit ARG1 home_root_t (dirs (search))))
 
@@ -434,6 +437,9 @@
 (macro files_search_run_user_root ((type ARG1))
     (call files_search_run (ARG1))
     (allow ARG1 run_user_root_t (dirs (search))))
+
+(macro files_mounton_run_user_root_dirs ((type ARG1))
+    (allow ARG1 run_user_root_t (dir (mounton))))
 
 (macro files_rw_run_user_root_dirs ((type ARG1))
     (call files_search_run (ARG1))
@@ -518,6 +524,9 @@
 
 (macro files_usr_object ((type ARG1))
     (typeattributeset is_usr_file_object ARG1))
+
+(macro files_mounton_usr_dirs ((type ARG1))
+    (allow ARG1 usr_t (dir (mounton))))
 
 (macro files_search_usr ((type ARG1))
     (allow ARG1 usr_t (dirs (list))))
