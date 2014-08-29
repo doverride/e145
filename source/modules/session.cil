@@ -34,6 +34,13 @@
     (s0))))
 (filecon "/root/\.cache(/.*)?" any file_session_cache)
 
+(type session_font_cache_t)
+(call session_cache_object (session_font_cache_t))
+
+(context file_session_font_cache (session_u object_r session_font_cache_t ((s0)
+    (s0))))
+(filecon "/root/\.cache/fontconfig(/.*)?" any file_session_font_cache)
+
 (type session_conf_t)
 (call session_config_object (session_conf_t))
 
@@ -139,6 +146,8 @@
 (call session_home_dir_filetrans_session_cert_dir (session_t))
 
 (call session_data_filetrans_session_bin_dir (session_t))
+
+(call session_cache_filetrans_session_font_cache_dir (session_t))
 
 (call session_run_user_dir_filetrans_session_run (session_t dir "*"))
 (call session_run_user_dir_filetrans_session_run (session_t file "*"))
@@ -515,6 +524,9 @@
     (call seutil_run_setsebool (session_t session_r))
     (call seutil_run_secilc (session_t session_r))
     (call seutil_run_setfiles (session_t session_r)))
+
+(optional session_optional_xserver
+    (call xserver_admin (session_t)))
 
 (optional session_optional_session_usermanage
     (type session_chfn_t)
@@ -1380,6 +1392,9 @@
 (macro session_home_dir_filetrans_session_cache_dir ((type ARG1))
     (call session_search_home_dir (ARG1))
     (call filetrans_pattern (ARG1 session_home_dir_t session_cache_t dir ".cache")))
+
+(macro session_cache_filetrans_session_font_cache_dir ((type ARG1))
+    (call session_cache_filetrans (ARG1 session_font_cache_t dir "fontconfig")))
 
 (macro session_home_dir_filetrans_session_cert_dir ((type ARG1))
     (call session_search_home_dir (ARG1))

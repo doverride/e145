@@ -50,6 +50,7 @@
 (context file_gpg_conf (system_u object_r gpg_conf_t ((s0)(s0))))
 (filecon "/etc/gnupg(/.*)?" any file_gpg_conf)
 
+(allow is_gpg_subject self (process (signal)))
 (allow is_gpg_subject self rw_fifo_file_perms)
 
 (call can_exec (is_gpg_subject gpg_helper_exec_t))

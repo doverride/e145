@@ -57,6 +57,7 @@ contrib/pinentry.cil
 contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
+contrib/ratpoison.cil
 contrib/rpm.cil
 contrib/rtkit.cil
 contrib/screen.cil
@@ -69,6 +70,7 @@ contrib/upower.cil
 contrib/usermanage.cil
 contrib/usersubject.cil
 contrib/wpa.cil
+contrib/xserver.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/autorelabel.cil
 contrib/systemd/backlight.cil

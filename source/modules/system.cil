@@ -463,6 +463,9 @@
 (macro system_read_generic_proc_files ((type ARG1))
     (allow ARG1 proc_t read_file_perms))
 
+(macro system_write_proc_mtrr_files ((type ARG1))
+    (call write_files_pattern (ARG1 proc_t proc_mtrr_t)))
+
 (macro system_read_messages ((type ARG1))
     (call read_files_pattern (ARG1 proc_t proc_kmsg_t))
     (typeattributeset can_receive_kernel_messages ARG1))

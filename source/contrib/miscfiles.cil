@@ -6,6 +6,12 @@
 (context file_cert (system_u object_r cert_t ((s0) (s0))))
 (filecon "/etc/pki(/.*)?" any file_cert)
 
+(type fonts_conf_t)
+(call files_etc_object (fonts_conf_t))
+
+(context file_fonts_conf (system_u object_r fonts_conf_t ((s0) (s0))))
+(filecon "/etc/fonts(/.*)?" any file_fonts_conf)
+
 (type fonts_t)
 (call files_usr_object (fonts_t))
 
@@ -124,10 +130,21 @@
     (allow ARG1 fonts_t (dirs (list)))
     (allow ARG1 fonts_t read_file_perms))
 
+(macro miscfiles_read_fonts_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 fonts_conf_t (dirs (list)))
+    (allow ARG1 fonts_conf_t read_file_perms))
+
 (macro miscfiles_read_fonts_cache_files ((type ARG1))
     (call files_search_var_cache (ARG1))
     (allow ARG1 fonts_cache_t (dirs (list)))
     (allow ARG1 fonts_cache_t read_file_perms))
+
+(macro miscfiles_manage_fonts_cache ((type ARG1))
+    (call files_search_var_cache (ARG1))
+    (call manage_dirs_pattern (ARG1 fonts_cache_t fonts_cache_t))
+    (call manage_files_pattern (ARG1 fonts_cache_t fonts_cache_t))
+    (call manage_lnk_files_pattern (ARG1 fonts_cache_t fonts_cache_t)))
 
 (macro miscfiles_read_hwdata_files ((type ARG1))
     (call files_search_usr (ARG1))

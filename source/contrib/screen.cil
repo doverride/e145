@@ -58,6 +58,11 @@
 (optional screen_optional_audit
     (call audit_client_subject (is_screen_subject)))
 
+(optional screen_optional_dbus
+    (call dbus_system_client_subject (is_screen_subject))
+    (optional screen_optional_fprint
+        (call fprint_dbus_chat_fprintd (is_screen_subject))))
+
 (optional screen_optional_journald
     (call journald_client_subject (is_screen_subject)))
 

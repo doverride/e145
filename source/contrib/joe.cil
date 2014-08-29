@@ -28,6 +28,10 @@
     (s0))))
 (filecon "/home/joe/\.cache(/.*)?" any file_joe_user_cache)
 
+(context file_joe_user_font_cache (joe_u object_r user_font_cache_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.cache/fontconfig(/.*)?" any file_joe_user_font_cache)
+
 (context file_joe_user_conf (joe_u object_r user_conf_t ((s0)
     (s0))))
 (filecon "/home/joe/\.config(/.*)?" any file_joe_user_conf)
@@ -105,6 +109,116 @@
     (call usersubject_home_dir_filetrans (joe_bti_t user_bti_home_t file ".bti.log"))
 
     (call usersubject_application_subject (joe_bti_t)))
+
+(optional joe_optional_joe_xserver
+    (type joe_xinit_t)
+    (call xserver_role_template_xinit (joe_r joe_t joe_xinit_t))
+
+    (type joe_xauth_t)
+    (call xserver_role_template_xauth (joe_r joe_t joe_xauth_t user_xauth_home_t))
+
+    (type joe_xterm_t)
+    (call xserver_role_template_xterm (joe_r joe_t joe_xterm_t))
+
+    (type joe_xorg_t)
+    (call xserver_role_template_xorg (joe_r joe_xorg_wrap_t joe_xorg_t
+    user_x_tmp_t))
+
+    (allow joe_t joe_xorg_t (process (signal sigstop signull sigkill)))
+    (call ps_subject_pattern (joe_t joe_xorg_t))
+
+    (type joe_xorg_wrap_t)
+    (call xserver_role_template_xorg_wrap (joe_r joe_xinit_t joe_xorg_wrap_t))
+
+    (allow joe_t joe_xorg_wrap_t (process (signal sigstop signull sigkill)))
+    (call ps_subject_pattern (joe_t joe_xorg_wrap_t))
+
+    (context file_joe_user_xauth_home (joe_u object_r user_xauth_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.Xauthority.*" file file_joe_user_xauth_home)
+    (filecon "/home/joe/\.serverauth.*" file file_joe_user_xauth_home)
+
+    (call usersubject_home_dir_filetrans_user_bin (joe_t file ".xinitrc"))
+    (filecon "/home/joe/\.xinitrc" file file_joe_user_bin)
+
+    (allow joe_xinit_t user_xauth_home_t read_file_perms)
+
+    (call usersubject_execute_generic_bin_files (joe_xinit_t))
+
+    (allow joe_xorg_t joe_xinit_t (process (signal)))
+    (allow joe_xinit_t joe_xorg_t (process (signal)))
+
+    (allow joe_t user_x_tmp_t manage_file_perms)
+    (allow joe_t user_x_tmp_t relabel_file_perms)
+    (allow joe_t user_x_tmp_t manage_sock_file_perms)
+    (allow joe_t user_x_tmp_t relabel_sock_file_perms)
+
+    (allow joe_xorg_t user_xauth_home_t read_file_perms)
+
+    (call files_tmp_filetrans (joe_xorg_t user_x_tmp_t file "*"))
+    (call files_tmp_filetrans (joe_xorg_t user_x_tmp_t sock_file "*"))
+
+    (call stream_connect_pattern (joe_xinit_t user_x_tmp_t user_x_tmp_t joe_xorg_t))
+
+    (allow joe_xorg_t joe_xinit_t (process (sigchld)))
+
+    (allow joe_xorg_t joe_xinit_t (dirs (list)))
+    (allow joe_xorg_t joe_xinit_t read_file_perms)
+
+    (call usersubject_application_subject (joe_xinit_t))
+
+    (call usersubject_application_subject (joe_xorg_t))
+    (call usersubject_use_tty_nodes (joe_xorg_t))
+
+    (call usersubject_application_subject (joe_xorg_wrap_t))
+
+    (allow joe_t user_xauth_home_t manage_file_perms)
+    (allow joe_t user_xauth_home_t relabel_file_perms)
+
+    (allow joe_xinit_t joe_xorg_wrap_t (process (siginh)))
+    (allow joe_xorg_wrap_t joe_xorg_t (process (siginh)))
+
+    (call usersubject_home_dir_filetrans (joe_xauth_t user_xauth_home_t file "*"))
+
+    (call usersubject_read_generic_tmp_files (joe_xauth_t))
+
+    (call usersubject_application_subject (joe_xauth_t))
+
+    (call usersubject_application_subject (joe_xterm_t))
+    (call usersubject_use_terminals (joe_xterm_t))
+    (call usersubject_setattr_terminals (joe_xterm_t))
+    (call usersubject_create_pty_node (joe_xterm_t))
+
+    (call xserver_client_subject (joe_xterm_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (optional joe_xserver_optional_joe_ratpoison
+        (type joe_rp_t)
+        (call ratpoison_role_template (joe_r joe_xinit_t joe_rp_t user_rp_home_t))
+
+        (context file_joe_user_rp_home (joe_u object_r user_rp_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.ratpoisonrc" file file_joe_user_rp_home)
+        (filecon "/home/joe/\.ratpoison_history" file file_joe_user_rp_home)
+
+        (allow joe_t joe_rp_t (process (signal sigkill sigstop signull)))
+        (call ps_subject_pattern (joe_t joe_rp_t))
+
+        (allow joe_t user_rp_home_t manage_file_perms)
+        (allow joe_t user_rp_home_t relabel_file_perms)
+
+        (call usersubject_home_dir_filetrans (joe_t user_rp_home_t file ".ratpoisonrc"))
+        (call usersubject_home_dir_filetrans (joe_rp_t user_rp_home_t file ".ratpoison_history"))
+
+        (call commands_bin_auto_subject_type_transition (joe_rp_t joe_t))
+        (call commands_shell_auto_subject_type_transition (joe_rp_t joe_t))
+
+        (call usersubject_home_bin_auto_subject_type_transition (joe_rp_t joe_t))
+ 
+        (call usersubject_manage_font_cache_dirs (joe_rp_t))
+        (call usersubject_manage_font_cache_files (joe_rp_t))
+        (call usersubject_cache_filetrans_user_font_cache_dir (joe_rp_t))
+ 
+        (call usersubject_application_subject (joe_rp_t))
+
+        (call xserver_client_subject (joe_rp_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))))
 
 (optional joe_optional_java
     (context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))
@@ -642,7 +756,10 @@
     (call usersubject_run_user_dir_filetrans (joe_t user_pa_run_t dir "pulse")) 
 
     (call usersubject_search_generic_config (joe_pa_t))
-    (call usersubject_search_run_user_dir (joe_pa_t)))
+    (call usersubject_search_run_user_dir (joe_pa_t))
+
+    (optional joe_pa_optional_joe_xserver
+        (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))))
 
 (optional joe_optional_joe_moc
     (type joe_moc_t)
@@ -659,6 +776,9 @@
     (call usersubject_read_generic_home_content_files (joe_moc_t))
 
     (call usersubject_home_dir_filetrans (joe_t user_moc_home_t dir ".moc")) 
+
+    (optional joe_moc_optional_joe_xserver
+        (call xserver_client_subject (joe_moc_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
     (optional joe_moc_optional_joe_pa
         (call pa_client_subject (joe_r joe_moc_t joe_pa_t user_pa_home_t

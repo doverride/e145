@@ -31,6 +31,9 @@
 (optional application_optional_screen
 	(call screen_use_all_fd (is_application_subject)))
 
+(optional application_optional_xterm
+    (call xserver_use_fd_all_xterm (is_application_subject)))
+
 (optional application_optional_sulogin
 	(call login_use_fd_sulogin (is_application_subject)))
 

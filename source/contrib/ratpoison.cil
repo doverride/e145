@@ -1,0 +1,40 @@
+(roleattribute is_rp_role)
+
+(typeattribute is_rp_subject)
+(typeattribute is_rp_client_subject)
+
+(type rp_exec_t)
+(call application_subject_entry (is_rp_subject rp_exec_t))
+
+(context file_rp_exec (system_u object_r rp_exec_t ((s0)(s0))))
+(filecon "/usr/bin/ratpoison" file file_rp_exec)
+
+(call system_read_generic_proc_files (is_rp_subject))
+
+(call files_read_generic_usr_files (is_rp_subject))
+
+(call filesystem_getattr_filesystems (is_rp_subject))
+
+(optional ratpoison_optional_miscfiles
+    (call miscfiles_read_fonts_files (is_rp_subject))
+    (call miscfiles_read_fonts_config (is_rp_subject))
+    (call miscfiles_manage_fonts_cache (is_rp_subject))
+    (call miscfiles_read_localization_files (is_rp_subject)))
+
+(optional ratpoison_optional_usersubject
+    (type user_rp_home_t)
+    (call usersubject_home_object (user_rp_home_t)))
+
+(allow is_rp_subject is_rp_client_subject (process (getsession)))
+(allow is_rp_client_subject is_rp_subject (process (sigchld)))
+
+(macro ratpoison_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_rp_role ARG1)
+    (typeattributeset is_rp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 rp_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms))
+
+(macro ratpoison_client_subject ((type ARG1))
+    (typeattributeset is_rp_client_subject ARG1))
+

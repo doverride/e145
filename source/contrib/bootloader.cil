@@ -60,12 +60,14 @@
 (call commands_execute_bin_files (grubby_t)) ; /usr/bin/grub-editenv
 (call commands_execute_shell_files (grubby_t))
 
+(call devices_read_lnk_files (grubby_t))
 (call devices_list_sysfs (grubby_t))
 (call devices_read_sysfs_files (grubby_t))
 
 (call files_list_boot (grubby_t)) ; /boot/grub2/grubenv
 (call files_rw_boot_files (grubby_t)) ; /boot/grub2/grubenv
 (call files_list_etc (grubby_t)) ; /etc/popt.d
+(call files_search_run (grubby_t))
 
 (call filesystem_manage_dosfs_files (grubby_t)) ; /boot/efi/EFI/fedora/grub.cfg
 

@@ -1,0 +1,237 @@
+(roleattribute is_xserver_role)
+(roleattribute is_xterm_role)
+
+(typeattribute is_xinit_subject)
+(typeattribute is_xauth_subject)
+(typeattribute is_xterm_subject)
+(typeattribute is_xorg_subject)
+(typeattribute is_xorg_wrap_subject)
+
+(typeattribute is_xserver_admin_subject)
+(typeattribute is_xserver_client_subject)
+
+(typeattribute is_xserver_file_object)
+(typeattributeset is_xserver_file_object (xserver_conf_t xserver_log_t))
+
+(type xinit_exec_t)
+(call application_subject_entry (is_xinit_subject xinit_exec_t))
+
+(context file_xinit_exec (system_u object_r xinit_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xinit" file file_xinit_exec)
+
+(type xauth_exec_t)
+(call application_subject_entry (is_xauth_subject xauth_exec_t))
+
+(context file_xauth_exec (system_u object_r xauth_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xauth" file file_xauth_exec)
+
+(type xterm_exec_t)
+(call application_subject_entry (is_xterm_subject xterm_exec_t))
+
+(context file_xterm_exec (system_u object_r xterm_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xterm" file file_xterm_exec)
+
+(type xorg_exec_t)
+(call application_subject_entry (is_xorg_subject xorg_exec_t))
+
+(context file_xorg_exec (system_u object_r xorg_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/Xorg\.bin" file file_xorg_exec)
+
+(type xorg_wrap_exec_t)
+(call application_subject_entry (is_xorg_wrap_subject xorg_wrap_exec_t))
+
+(context file_xorg_wrap_exec (system_u object_r xorg_wrap_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/Xorg\.wrap" file file_xorg_wrap_exec)
+
+(type xserver_conf_t)
+(call files_etc_object (xserver_conf_t))
+
+(context file_xserver_conf (system_u object_r xserver_conf_t ((s0)(s0))))
+(filecon "/etc/X11(/.*)?" any file_xserver_conf)
+
+(type xserver_log_t)
+(call files_var_log_object (xserver_log_t))
+
+(context file_xserver_log (system_u object_r xserver_log_t ((s0)(s0))))
+(filecon "/var/log/Xorg.*\.log.*" file file_xserver_log)
+
+(type port_xserver_t)
+(call network_unreserved_port_object (port_xserver_t))
+
+(context port_xserver (system_u object_r port_xserver_t ((s0) (s0))))
+(portcon "tcp" 6000 port_xserver)
+(portcon "udp" 6000 port_xserver)
+
+(call xserver_read_config (is_xorg_wrap_subject))
+
+(allow is_xinit_subject self (process (setpgid)))
+
+(call system_read_generic_proc_files (is_xinit_subject))
+
+(call commands_execute_bin_files (is_xinit_subject))
+(call commands_execute_shell_files (is_xinit_subject))
+
+(optional xinit_optional_miscfiles
+    (call miscfiles_read_localization_files (is_xinit_subject)))
+
+(allow is_xorg_subject self (capability (dac_override setgid setuid sys_admin)))
+(allow is_xorg_subject self (process (signal)))
+(allow is_xorg_subject self (unix_stream_socket (accept listen)))
+(allow is_xorg_subject self r_netlink_route_socket_perms)
+(allow is_xorg_subject self create_netlink_kobject_uevent_socket_perms)
+(allow is_xorg_subject self rw_fifo_file_perms)
+
+(allow is_xorg_subject xserver_log_t manage_file_perms)
+(call files_var_log_filetrans (is_xorg_subject xserver_log_t file "*"))
+
+(call system_read_generic_proc_files (is_xorg_subject))
+(call system_write_proc_mtrr_files (is_xorg_subject))
+
+(call commands_execute_bin_files (is_xorg_subject))
+(call commands_execute_shell_files (is_xorg_subject))
+
+(call devices_list_sysfs (is_xorg_subject))
+(call devices_rw_sysfs_files (is_xorg_subject))
+(call devices_rw_xserver_misc (is_xorg_subject))
+
+(call files_read_generic_usr_files (is_xorg_subject))
+
+(call filesystem_rw_inherited_tmpfs_files (is_xorg_subject))
+
+(call selinux_getattr_filesystems (is_xorg_subject))
+
+(call network_tcp_bind_generic_node (is_xorg_subject))
+
+(call dbus_system_client_subject (is_xorg_subject))
+
+(call xserver_tcp_bind_xserver_port (is_xorg_subject))
+(call xserver_read_config (is_xorg_subject))
+
+(optional xorg_optional_logind
+    (call devices_rw_inherited_event (is_xorg_subject))
+    (call devices_rw_inherited_dri (is_xorg_subject))
+    (call logind_use_fd (is_xorg_subject))
+    (call logind_dbus_chat (is_xorg_subject)))
+
+(optional xorg_optional_miscfiles
+    (call miscfiles_read_fonts_files (is_xorg_subject))
+    (call miscfiles_read_localization_files (is_xorg_subject)))
+
+(optional xorg_optional_udevd
+    (call udevd_read_config_files (is_xorg_subject))
+    (call udevd_read_run_files (is_xorg_subject)))
+
+(optional xinit_optional_usersubject
+    (type user_x_tmp_t)
+    (call usersubject_tmp_object (user_x_tmp_t)))
+
+(allow is_xterm_subject self (process (signal)))
+(allow is_xterm_subject self rw_fifo_file_perms)
+
+(call files_read_generic_etc_files (is_xterm_subject)) ; /etc/shells
+
+(call xserver_read_config (is_xterm_subject))
+
+(optional xterm_optional_auth
+    (call auth_nsswitch_client_subject (is_xterm_subject)))
+
+(optional xterm_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_xterm_subject)))
+
+(call system_read_generic_proc_files (is_xserver_client_subject))
+
+(call files_read_generic_usr_files (is_xserver_client_subject))
+
+(optional xserver_client_subject_optional_miscfiles
+    (call miscfiles_read_localization_files (is_xserver_client_subject)))
+
+(call devices_read_sysfs_files (is_xauth_subject))
+
+(call filesystem_getattr_filesystems (is_xauth_subject))
+
+(optional xauth_optional_auth
+    (call auth_nsswitch_client_subject (is_xauth_subject)))
+
+(optional xauth_optional_miscfiles
+    (call miscfiles_read_network_config_files (is_xauth_subject)))
+
+(optional xauth_optional_usersubject
+    (type user_xauth_home_t)
+    (call usersubject_home_object (user_xauth_home_t)))
+
+(call admin_pattern (is_xserver_admin_subject is_xserver_file_object))
+
+(macro xserver_admin ((type ARG1))
+    (typeattributeset is_xserver_admin_subject ARG1))
+
+(macro xserver_role_template_xinit ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_xserver_role ARG1)
+    (typeattributeset is_xinit_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xinit_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG3 (fd (use))))
+
+(macro xserver_role_template_xorg ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_xserver_role ARG1)
+    (typeattributeset is_xorg_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xorg_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG4 manage_sock_file_perms))
+
+(macro xserver_role_template_xorg_wrap ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_xserver_role ARG1)
+    (typeattributeset is_xorg_wrap_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xorg_wrap_exec_t ARG3)))
+
+(macro xserver_role_template_xauth ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_xserver_role ARG1)
+    (typeattributeset is_xauth_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xauth_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG3 ARG4 manage_file_perms))
+
+(macro xserver_role_template_xterm ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_xterm_role ARG1)
+    (typeattributeset is_xterm_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xterm_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (call commands_shell_auto_subject_type_transition (ARG3 ARG2))
+    (allow ARG3 ARG2 (process (signal)))
+    (optional xterm_role_template_optional_auth
+        (call auth_run_utempter (ARG3 ARG1))))
+
+(macro xserver_client_subject ((type ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
+    (typeattributeset is_xserver_client_subject ARG1)
+    (allow ARG1 ARG2 (fd (use)))
+    (call stream_connect_pattern (ARG1 ARG4 ARG4 ARG3))
+    (allow ARG3 ARG1 (dirs (list)))
+    (allow ARG3 ARG1 read_file_perms)
+    (allow ARG1 ARG5 read_file_perms)
+    (call files_search_var_cache (ARG1))
+        (optional xserver_client_subject_optional_ratpoison
+            (call ratpoison_client_subject (ARG1))))
+
+(macro xserver_read_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 xserver_conf_t (dirs (list)))
+    (allow ARG1 xserver_conf_t read_file_perms))
+
+(macro xserver_use_fd_all_xterm ((type ARG1))
+    (allow ARG1 is_xterm_subject (fd (use))))
+
+(macro xserver_read_state_all_xorg ((type ARG1))
+    (allow ARG1 is_xorg_subject (dirs (list)))
+    (allow ARG1 is_xorg_subject read_file_perms))
+
+(macro xserver_tcp_bind_xserver_port ((type ARG1))
+    (allow ARG1 self (capability (net_bind_service)))
+    (call network_tcp_bind_subject (ARG1))
+    (allow ARG1 port_xserver_t (tcp_socket (name_bind))))

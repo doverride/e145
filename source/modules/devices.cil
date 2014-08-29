@@ -665,8 +665,14 @@
 (macro devices_rw_dri ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_dri_t)))
 
+(macro devices_rw_inherited_dri ((type ARG1))
+    (allow ARG1 device_dri_t rw_inherited_chr_file_perms))
+
 (macro devices_rw_event ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_event_t)))
+
+(macro devices_rw_inherited_event ((type ARG1))
+    (allow ARG1 device_event_t rw_inherited_chr_file_perms))
 
 (macro devices_rw_framebuf ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_framebuf_t)))
@@ -697,6 +703,9 @@
 
 (macro devices_rw_zero ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_zero_t)))
+
+(macro devices_rw_xserver_misc ((type ARG1))
+    (call rw_chr_files_pattern (ARG1 device_t device_xserver_misc_t)))
 
 (macro devices_getattr_sysfs_filesystems ((type ARG1))
     (call devices_search_sysfs (ARG1))
