@@ -158,7 +158,7 @@
     (typeattributeset is_pactl_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 pactl_exec_t ARG3))
-    (allow ARG3 ARG5 (process (signull)))
+    (allow ARG3 ARG5 (process (signull signal)))
     (allow ARG3 ARG5 (dirs (list)))
     (allow ARG3 ARG5 read_file_perms)
     (allow ARG3 ARG4 list_dir_perms)
