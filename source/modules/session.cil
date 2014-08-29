@@ -359,8 +359,7 @@
     (call ntp_run (session_t session_r)))
 
 (optional session_optional_pa
-    (call pa_admin (session_t))
-    (call pa_run_pactl (session_t session_r)))
+    (call pa_admin (session_t)))
 
 (optional session_optional_pcsc
     (call pcsc_admin (session_t)))
@@ -1156,7 +1155,17 @@
     (call filesystem_tmpfs_filetrans (session_pa_t session_pa_tmpfs_t file "*"))
 
     (call session_search_generic_config (session_pa_t))
-    (call session_search_run_user_dir (session_pa_t)))
+    (call session_search_run_user_dir (session_pa_t))
+
+    (type session_pactl_t)
+    (call pa_role_template_pactl (session_r session_t session_pactl_t session_pa_run_t
+        session_pa_t))
+
+    (allow session_t session_pactl_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (session_t session_pactl_t))
+ 
+    (call session_search_run_user_dir (session_pactl_t))
+    (call session_application_subject (session_pactl_t)))
 
 (optional session_optional_session_moc
     (type session_moc_t)

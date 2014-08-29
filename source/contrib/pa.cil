@@ -4,7 +4,9 @@
 (typeattribute is_pa_admin_subject)
 
 (typeattribute is_pa_subject)
-(typeattributeset is_pa_subject (pactl_t pa_t))
+(typeattributeset is_pa_subject (pa_t))
+
+(typeattribute is_pactl_subject)
 
 (typeattribute is_pa_session_subject)
 (typeattribute is_pa_client_subject)
@@ -27,14 +29,13 @@
 (typeattributeset is_pa_file_object (pa_conf_t
     pa_dbus_conf_t pa_var_lib_t))
 
-(type pactl_t)
 (type pactl_exec_t)
-(call application_subject_entry (pactl_t pactl_exec_t))
-(roletype is_pactl_role pactl_t)
+(call application_subject_entry (is_pactl_subject pactl_exec_t))
 
 (context file_pactl_exec (system_u object_r pactl_exec_t ((s0)
     (s0))))
 (filecon "/usr/bin/pactl" file file_pactl_exec)
+(filecon "/usr/bin/pacmd" file file_pactl_exec)
 
 (type pa_t)
 (type pa_exec_t)
@@ -137,8 +138,10 @@
 (allow is_pa_client_subject self rw_fifo_file_perms)
 
 (allow is_pa_client_subject is_pa_client_subject (process (signull)))
-
 (allow is_pa_client_subject is_pa_session_subject (process (signull)))
+
+(optional pactl_optional_miscfiles
+    (call miscfiles_read_localization_files (is_pactl_subject)))
 
 (allow is_pa_admin_subject is_pa_subject signal_perms)
 (allow is_pa_admin_subject is_pa_subject (process (ptrace)))
@@ -149,12 +152,19 @@
 (macro pa_exec_pactl ((type ARG1))
     (call can_exec (ARG1 pactl_exec_t)))
 
-(macro pa_subtrans_pactl ((type ARG1))
-    (call subtrans_pattern (ARG1 pactl_exec_t pactl_t)))
-
-(macro pa_run_pactl ((type ARG1)(role ARG2))
-    (call pa_subtrans_pactl (ARG1))
-    (roleattributeset is_pactl_role ARG2))
+(macro pa_role_template_pactl ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4)(type ARG5))
+    (roleattributeset is_pactl_role ARG1)
+    (typeattributeset is_pactl_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 pactl_exec_t ARG3))
+    (allow ARG3 ARG5 (process (signull)))
+    (allow ARG3 ARG5 (dirs (list)))
+    (allow ARG3 ARG5 read_file_perms)
+    (allow ARG3 ARG4 list_dir_perms)
+    (allow ARG3 ARG4 (dir (setattr)))
+    (allow ARG3 ARG4 read_file_perms)
+    (call stream_connect_pattern (ARG3 ARG4 ARG4 ARG5)))
 
 (macro pa_role_template ((role ARG1)(type ARG2)(type ARG3)
     (type ARG4)(type ARG5)(type ARG6)(type ARG7))

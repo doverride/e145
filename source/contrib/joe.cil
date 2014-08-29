@@ -193,6 +193,9 @@
 
     (call xserver_client_subject (joe_xterm_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
+    (optional joe_xterm_optional_joe_screen
+        (allow joe_xterm_t joe_screen_t (process (signal))))
+
     (call usersubject_manage_font_cache_dirs (joe_xclock_t))
     (call usersubject_manage_font_cache_files (joe_xclock_t))
     (call usersubject_cache_filetrans_user_font_cache_dir (joe_xclock_t))
@@ -800,7 +803,17 @@
     (call usersubject_search_run_user_dir (joe_pa_t))
 
     (optional joe_pa_optional_joe_xserver
-        (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))))
+        (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+
+    (type joe_pactl_t)
+    (call pa_role_template_pactl (joe_r joe_t joe_pactl_t user_pa_run_t
+        joe_pa_t))
+
+    (allow joe_t joe_pactl_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (joe_t joe_pactl_t))
+ 
+    (call usersubject_search_run_user_dir (joe_pactl_t))
+    (call usersubject_application_subject (joe_pactl_t)))
 
 (optional joe_optional_joe_moc
     (type joe_moc_t)
