@@ -39,6 +39,7 @@
 (context file_pcscd_unit (system_u object_r pcscd_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*pcscd.*" file file_pcscd_unit)
 
+(allow pcscd_t self (process (signal)))
 (allow pcscd_t self create_unix_stream_stream_socket_perms)
 (allow pcscd_t self create_netlink_kobject_uevent_socket_perms)
 (allow pcscd_t self rw_fifo_file_perms)
