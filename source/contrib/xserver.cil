@@ -104,6 +104,7 @@
 (call devices_rw_sysfs_files (is_xorg_subject))
 (call devices_rw_xserver_misc (is_xorg_subject))
 (call devices_rw_framebuf (is_xorg_subject))
+(call devices_rw_dri (is_xorg_subject))
 
 (call files_read_generic_etc_files (is_xorg_subject)) ; /etc/drirc
 (call files_read_generic_usr_files (is_xorg_subject))
@@ -121,7 +122,6 @@
 
 (optional xorg_optional_logind
     (call devices_rw_inherited_event (is_xorg_subject))
-    (call devices_rw_inherited_dri (is_xorg_subject))
     (call logind_use_fd (is_xorg_subject))
     (call logind_dbus_chat (is_xorg_subject)))
 

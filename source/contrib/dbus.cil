@@ -96,7 +96,7 @@
 (optional dbus_optional_logind
     (call logind_use_fd (dbusd_t))
     (call logind_read_run_files (dbusd_t))
-    (call devices_rw_inherited_dri (dbusd_t)) ; logind passes this to xorg via dbus
+    (call devices_rw_inherited_dri (dbusd_t))
     (call devices_rw_inherited_event (dbusd_t)) ; logind passes this to xorg via dbus
     (call logind_write_inherited_run_fifo_files (dbusd_t)))
 
