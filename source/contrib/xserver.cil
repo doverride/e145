@@ -103,7 +103,9 @@
 (call devices_list_sysfs (is_xorg_subject))
 (call devices_rw_sysfs_files (is_xorg_subject))
 (call devices_rw_xserver_misc (is_xorg_subject))
+(call devices_rw_framebuf (is_xorg_subject))
 
+(call files_read_generic_etc_files (is_xorg_subject)) ; /etc/drirc
 (call files_read_generic_usr_files (is_xorg_subject))
 
 (call filesystem_rw_inherited_tmpfs_files (is_xorg_subject))
