@@ -193,11 +193,43 @@
 
     (call xserver_client_subject (joe_xterm_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
-    (call read_files_pattern (joe_xclock_t user_font_cache_t user_font_cache_t))
+    (call usersubject_manage_font_cache_dirs (joe_xclock_t))
+    (call usersubject_manage_font_cache_files (joe_xclock_t))
+    (call usersubject_cache_filetrans_user_font_cache_dir (joe_xclock_t))
 
     (call usersubject_application_subject (joe_xclock_t))
 
     (call xserver_client_subject (joe_xclock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (optional joe_xserver_optional_joe_mplayer
+        (type joe_mplayer_t)
+        (call mplayer_role_template (joe_r joe_t joe_mplayer_t user_mplayer_home_t user_mplayer_tmpfs_t))
+
+        (context file_joe_user_mplayer_home (joe_u object_r user_mplayer_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.mplayer(/.*)?" any file_joe_user_mplayer_home)
+
+        (call usersubject_home_dir_filetrans (joe_t user_mplayer_home_t dir ".mplayer"))
+        (call usersubject_home_dir_filetrans (joe_mplayer_t user_mplayer_home_t dir ".mplayer"))
+
+        (call usersubject_list_generic_home_content (joe_mplayer_t))
+        (call usersubject_read_generic_home_content_files (joe_mplayer_t))
+
+        (call usersubject_manage_font_cache_dirs (joe_mplayer_t))
+        (call usersubject_manage_font_cache_files (joe_mplayer_t))
+        (call usersubject_cache_filetrans_user_font_cache_dir (joe_mplayer_t))
+
+        (call usersubject_application_subject (joe_mplayer_t))
+
+        (call xserver_client_subject (joe_mplayer_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_client_subject_tmpfs_template (joe_mplayer_t user_mplayer_tmpfs_t))
+ 
+        (optional joe_mplayer_optional_joe_pa
+            (call pa_client_subject (joe_r joe_mplayer_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_mplayer_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_mplayer_t))
+            (call usersubject_config_filetrans (joe_mplayer_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_mplayer_t user_pa_run_t dir "pulse"))))
 
     (optional joe_xserver_optional_joe_ratpoison
         (type joe_rp_t)
@@ -785,17 +817,18 @@
     (call usersubject_read_generic_home_content_files (joe_moc_t))
 
     (call usersubject_home_dir_filetrans (joe_t user_moc_home_t dir ".moc")) 
+    (call usersubject_home_dir_filetrans (joe_moc_t user_moc_home_t dir ".moc")) 
 
     (optional joe_moc_optional_joe_xserver
         (call xserver_client_subject (joe_moc_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
     (optional joe_moc_optional_joe_pa
         (call pa_client_subject (joe_r joe_moc_t joe_pa_t user_pa_home_t
-            user_pa_run_t user_pa_tmpfs_t)))
+            user_pa_run_t user_pa_tmpfs_t))
 
         (call usersubject_home_dir_filetrans_user_config_dir (joe_moc_t))
         (call usersubject_config_filetrans (joe_moc_t user_pa_home_t dir "pulse"))
-        (call usersubject_run_user_dir_filetrans (joe_moc_t user_pa_run_t dir "pulse")))
+        (call usersubject_run_user_dir_filetrans (joe_moc_t user_pa_run_t dir "pulse"))))
 
 (optional joe_optional_joe_sudo
     (type joe_sudo_t)

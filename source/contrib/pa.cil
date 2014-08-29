@@ -116,6 +116,9 @@
     (type user_pa_tmpfs_t)
     (call usersubject_tmpfs_object (user_pa_tmpfs_t)))
 
+(allow is_pa_session_or_pa_client_subject is_pa_tmpfs_file_object read_file_perms)
+(allow is_pa_session_or_pa_client_subject is_pa_tmpfs_file_object delete_file_perms)
+
 (call devices_list_sysfs (is_pa_session_or_pa_client_subject))
 (call devices_read_sysfs_files (is_pa_session_or_pa_client_subject))
 (call devices_read_urandom (is_pa_session_or_pa_client_subject))
@@ -194,13 +197,15 @@
     (roleattributeset is_pa_role ARG1)
     (typeattributeset is_pa_client_subject ARG2)
     (typeattributeset is_pa_session_subject ARG3)
-    (typeattributeset is_pa_tmpfs_file_object ARG4)
+    (typeattributeset is_pa_tmpfs_file_object ARG6)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 pa_exec_t ARG3))
     (allow ARG2 ARG4 manage_dir_perms)
     (allow ARG2 ARG4 manage_file_perms)
     (allow ARG2 ARG5 manage_dir_perms)
     (allow ARG2 ARG6 manage_file_perms)
+    (allow ARG3 ARG6 read_file_perms)
+    (allow ARG3 ARG6 delete_file_perms)
     (call stream_connect_pattern (ARG2 ARG5 ARG5 ARG3))
     (call filesystem_tmpfs_filetrans (ARG2 ARG6 file "*")))
 

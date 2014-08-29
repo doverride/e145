@@ -12,6 +12,8 @@
 (typeattribute is_xserver_admin_subject)
 (typeattribute is_xserver_client_subject)
 
+(typeattribute is_xserver_tmpfs_file)
+
 (typeattribute is_xserver_file_object)
 (typeattributeset is_xserver_file_object (xserver_conf_t xserver_log_t))
 
@@ -173,6 +175,8 @@
     (call miscfiles_read_fonts_cache_files (is_xserver_client_subject))
     (call miscfiles_read_localization_files (is_xserver_client_subject)))
 
+(allow is_xorg_subject is_xserver_tmpfs_file (file (read write)))
+
 (call admin_pattern (is_xserver_admin_subject is_xserver_file_object))
 
 (macro xserver_admin ((type ARG1))
@@ -240,6 +244,10 @@
     (call files_search_var_cache (ARG1))
         (optional xserver_client_subject_optional_ratpoison
             (call ratpoison_client_subject (ARG1))))
+
+(macro xserver_client_subject_tmpfs_template ((type ARG1)(type ARG2))
+    (allow is_xorg_subject ARG1 rw_shm_perms)
+    (typeattributeset is_xserver_tmpfs_file ARG2))
 
 (macro xserver_signal_all_client_subjects ((type ARG1))
     (allow ARG1 is_xserver_client_subject (process (signal))))

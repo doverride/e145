@@ -1,0 +1,52 @@
+(roleattribute is_mplayer_role)
+
+(typeattribute is_mplayer_subject)
+
+(type mplayer_exec_t)
+(call application_subject_entry (is_mplayer_subject mplayer_exec_t))
+
+(context file_mplayer_exec (system_u object_r mplayer_exec_t ((s0)(s0))))
+(filecon "/usr/bin/mplayer" file file_mplayer_exec)
+
+(type mplayer_conf_t)
+(call files_etc_object (mplayer_conf_t))
+
+(context file_mplayer_conf (system_u object_r mplayer_conf_t ((s0)(s0))))
+(filecon "/etc/mplayer(/.*)?" any file_mplayer_conf)
+
+(allow is_mplayer_subject self create_shm_perms)
+
+(call files_read_generic_etc_files (is_mplayer_subject))
+
+(call selinux_getattr_filesystems (is_mplayer_subject))
+
+(call mplayer_read_config_files (is_mplayer_subject))
+
+(optional mplayer_optional_usersubject
+    (type user_mplayer_home_t)
+    (call usersubject_home_object (user_mplayer_home_t))
+    (type user_mplayer_tmpfs_t)
+    (call usersubject_tmpfs_object (user_mplayer_tmpfs_t)))
+
+(macro mplayer_role_template ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4)(type ARG5))
+    (roleattributeset is_mplayer_role ARG1)
+    (typeattributeset is_mplayer_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 mplayer_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal sigstop sigkill signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_dir_perms)
+    (allow ARG2 ARG4 relabel_dir_perms)
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG5 manage_file_perms)
+    (allow ARG2 ARG5 manage_file_perms)
+    (allow ARG2 ARG5 relabel_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG5 file "*")))
+
+(macro mplayer_read_config_files ((type ARG1))
+    (allow ARG1 mplayer_conf_t (dirs (list)))
+    (allow ARG1 mplayer_conf_t read_file_perms))

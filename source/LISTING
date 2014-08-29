@@ -46,6 +46,7 @@ contrib/mail.cil
 contrib/miscfiles.cil
 contrib/moc.cil
 contrib/mount.cil
+contrib/mplayer.cil
 contrib/nettools.cil
 contrib/networkmgr.cil
 contrib/newsb.cil
