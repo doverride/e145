@@ -84,7 +84,7 @@
 (optional xinit_optional_miscfiles
     (call miscfiles_read_localization_files (is_xinit_subject)))
 
-(allow is_xorg_subject self (capability (dac_override setgid setuid sys_admin)))
+(allow is_xorg_subject self (capability (dac_override setgid setuid sys_admin sys_rawio)))
 (allow is_xorg_subject self (process (signal)))
 (allow is_xorg_subject self (unix_stream_socket (accept listen)))
 (allow is_xorg_subject self r_netlink_route_socket_perms)
