@@ -120,6 +120,9 @@
     (type joe_xterm_t)
     (call xserver_role_template_xterm (joe_r joe_t joe_xterm_t))
 
+    (type joe_xclock_t)
+    (call xserver_role_template_xclock (joe_r joe_t joe_xclock_t))
+
     (type joe_xorg_t)
     (call xserver_role_template_xorg (joe_r joe_xorg_wrap_t joe_xorg_t
     user_x_tmp_t))
@@ -189,6 +192,12 @@
     (call usersubject_create_pty_node (joe_xterm_t))
 
     (call xserver_client_subject (joe_xterm_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call read_files_pattern (joe_xclock_t user_font_cache_t user_font_cache_t))
+
+    (call usersubject_application_subject (joe_xclock_t))
+
+    (call xserver_client_subject (joe_xclock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
     (optional joe_xserver_optional_joe_ratpoison
         (type joe_rp_t)

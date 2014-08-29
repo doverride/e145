@@ -1,9 +1,11 @@
 (roleattribute is_xserver_role)
 (roleattribute is_xterm_role)
+(roleattribute is_xclock_role)
 
 (typeattribute is_xinit_subject)
 (typeattribute is_xauth_subject)
 (typeattribute is_xterm_subject)
+(typeattribute is_xclock_subject)
 (typeattribute is_xorg_subject)
 (typeattribute is_xorg_wrap_subject)
 
@@ -30,6 +32,12 @@
 
 (context file_xterm_exec (system_u object_r xterm_exec_t ((s0)(s0))))
 (filecon "/usr/bin/xterm" file file_xterm_exec)
+
+(type xclock_exec_t)
+(call application_subject_entry (is_xclock_subject xclock_exec_t))
+
+(context file_xclock_exec (system_u object_r xclock_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xclock" file file_xclock_exec)
 
 (type xorg_exec_t)
 (call application_subject_entry (is_xorg_subject xorg_exec_t))
@@ -131,19 +139,13 @@
 (call files_read_generic_etc_files (is_xterm_subject)) ; /etc/shells
 
 (call xserver_read_config (is_xterm_subject))
+(call xserver_signal_all_client_subjects (is_xterm_subject))
 
 (optional xterm_optional_auth
     (call auth_nsswitch_client_subject (is_xterm_subject)))
 
 (optional xterm_optional_miscfiles
     (call miscfiles_read_terminfo_files (is_xterm_subject)))
-
-(call system_read_generic_proc_files (is_xserver_client_subject))
-
-(call files_read_generic_usr_files (is_xserver_client_subject))
-
-(optional xserver_client_subject_optional_miscfiles
-    (call miscfiles_read_localization_files (is_xserver_client_subject)))
 
 (call devices_read_sysfs_files (is_xauth_subject))
 
@@ -158,6 +160,18 @@
 (optional xauth_optional_usersubject
     (type user_xauth_home_t)
     (call usersubject_home_object (user_xauth_home_t)))
+
+(call system_read_generic_proc_files (is_xserver_client_subject))
+
+(call files_read_generic_usr_files (is_xserver_client_subject))
+
+(call filesystem_getattr_filesystems (is_xserver_client_subject))
+
+(optional xserver_client_subject_optional_miscfiles
+    (call miscfiles_read_fonts_config (is_xserver_client_subject))
+    (call miscfiles_read_fonts_files (is_xserver_client_subject))
+    (call miscfiles_read_fonts_cache_files (is_xserver_client_subject))
+    (call miscfiles_read_localization_files (is_xserver_client_subject)))
 
 (call admin_pattern (is_xserver_admin_subject is_xserver_file_object))
 
@@ -196,6 +210,14 @@
     (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_file_perms))
 
+(macro xserver_role_template_xclock ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_xclock_role ARG1)
+    (typeattributeset is_xclock_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xclock_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3)))
+
 (macro xserver_role_template_xterm ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_xterm_role ARG1)
     (typeattributeset is_xterm_subject ARG3)
@@ -218,6 +240,9 @@
     (call files_search_var_cache (ARG1))
         (optional xserver_client_subject_optional_ratpoison
             (call ratpoison_client_subject (ARG1))))
+
+(macro xserver_signal_all_client_subjects ((type ARG1))
+    (allow ARG1 is_xserver_client_subject (process (signal))))
 
 (macro xserver_read_config ((type ARG1))
     (call files_search_etc (ARG1))

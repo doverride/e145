@@ -9,18 +9,6 @@
 (context file_rp_exec (system_u object_r rp_exec_t ((s0)(s0))))
 (filecon "/usr/bin/ratpoison" file file_rp_exec)
 
-(call system_read_generic_proc_files (is_rp_subject))
-
-(call files_read_generic_usr_files (is_rp_subject))
-
-(call filesystem_getattr_filesystems (is_rp_subject))
-
-(optional ratpoison_optional_miscfiles
-    (call miscfiles_read_fonts_files (is_rp_subject))
-    (call miscfiles_read_fonts_config (is_rp_subject))
-    (call miscfiles_manage_fonts_cache (is_rp_subject))
-    (call miscfiles_read_localization_files (is_rp_subject)))
-
 (optional ratpoison_optional_usersubject
     (type user_rp_home_t)
     (call usersubject_home_object (user_rp_home_t)))
