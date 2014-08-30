@@ -1,11 +1,13 @@
 (roleattribute is_xserver_role)
 (roleattribute is_xterm_role)
 (roleattribute is_xclock_role)
+(roleattribute is_xloadimg_role)
 
 (typeattribute is_xinit_subject)
 (typeattribute is_xauth_subject)
 (typeattribute is_xterm_subject)
 (typeattribute is_xclock_subject)
+(typeattribute is_xloadimg_subject)
 (typeattribute is_xorg_subject)
 (typeattribute is_xorg_wrap_subject)
 
@@ -41,6 +43,12 @@
 
 (context file_xclock_exec (system_u object_r xclock_exec_t ((s0)(s0))))
 (filecon "/usr/bin/xclock" file file_xclock_exec)
+
+(type xloadimg_exec_t)
+(call application_subject_entry (is_xloadimg_subject xloadimg_exec_t))
+
+(context file_xloadimg_exec (system_u object_r xloadimg_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xloadimage" file file_xloadimg_exec)
 
 (type xorg_exec_t)
 (call application_subject_entry (is_xorg_subject xorg_exec_t))
@@ -166,6 +174,15 @@
     (type user_xauth_home_t)
     (call usersubject_home_object (user_xauth_home_t)))
 
+(call xserver_read_config (is_xloadimg_subject))
+
+(optional xloadimg_optional_auth
+    (call auth_nsswitch_client_subject (is_xloadimg_subject)))
+
+(optional xloadimg_optional_usersubject
+    (type user_xloadimg_conf_t)
+    (call usersubject_home_object (user_xloadimg_conf_t)))
+
 (allow is_xserver_client_subject_tmpfs self create_shm_perms)
 (allow is_xorg_subject is_xserver_client_subject_tmpfs rw_shm_perms)
 
@@ -219,6 +236,17 @@
     (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
     (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_file_perms))
+
+(macro xserver_role_template_xloadimg ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_xloadimg_role ARG1)
+    (typeattributeset is_xloadimg_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xloadimg_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG3 ARG4 read_file_perms))
 
 (macro xserver_role_template_xclock ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_xclock_role ARG1)

@@ -123,6 +123,9 @@
     (type joe_xclock_t)
     (call xserver_role_template_xclock (joe_r joe_t joe_xclock_t))
 
+    (type joe_xloadimg_t)
+    (call xserver_role_template_xloadimg (joe_r joe_t joe_xloadimg_t user_xloadimg_conf_t))
+
     (type joe_xorg_t)
     (call xserver_role_template_xorg (joe_r joe_xorg_wrap_t joe_xorg_t
     user_x_tmp_t))
@@ -203,6 +206,13 @@
     (call usersubject_application_subject (joe_xclock_t))
 
     (call xserver_common_client_subject (joe_xclock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call usersubject_home_dir_filetrans (joe_t user_xloadimg_conf_t file ".xloadimagerc"))
+
+    (call usersubject_application_subject (joe_xloadimg_t))
+    (call usersubject_read_generic_home_content_files (joe_xloadimg_t))
+
+    (call xserver_common_client_subject (joe_xloadimg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
     (optional joe_xserver_optional_joe_mplayer
         (type joe_mplayer_t)
