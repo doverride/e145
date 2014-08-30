@@ -15,6 +15,7 @@
 (filecon "/etc/mplayer(/.*)?" any file_mplayer_conf)
 
 (call files_read_generic_etc_files (is_mplayer_subject))
+(call files_search_mnt (is_mplayer_subject))
 
 (call selinux_getattr_filesystems (is_mplayer_subject))
 
