@@ -525,7 +525,9 @@
     (call seutil_run_setfiles (session_t session_r)))
 
 (optional session_optional_xserver
-    (call xserver_admin (session_t)))
+    (call xserver_admin (session_t))
+        (optional session_optional_xlock
+            (call xlock_admin (session_t))))
 
 (optional session_optional_session_usermanage
     (type session_chfn_t)

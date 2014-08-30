@@ -1,0 +1,100 @@
+(roleattribute is_xlock_role)
+
+(typeattribute is_xlock_subject)
+(typeattribute is_xlock_admin_subject)
+
+(typeattribute is_xlock_file_object)
+(typeattributeset is_xlock_file_object (xlock_unit_t xlock_pam_conf_t))
+
+(type xlock_pam_conf_t)
+(call auth_pam_etc_object (xlock_pam_conf_t))
+
+(context file_xlock_pam_conf (system_u object_r xlock_pam_conf_t ((s0) (s0))))
+(filecon "/etc/pam\.d/xlock" file file_xlock_pam_conf)
+
+(type xlock_t)
+(type xlock_exec_t)
+(call systemd_daemon_subject_entry (xlock_t xlock_exec_t))
+(call application_subject_entry (is_xlock_subject xlock_exec_t))
+(typeattributeset is_xlock_subject xlock_t)
+
+(context file_xlock_exec (system_u object_r xlock_exec_t ((s0) (s0))))
+(filecon "/usr/bin/xlock" file file_xlock_exec)
+
+(type xlock_unit_t)
+(call systemd_unit_object (xlock_unit_t))
+
+(context file_xlock_unit (system_u object_r xlock_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*xlock.*" file file_xlock_unit)
+
+(allow is_xlock_subject self (process (setsched)))
+(allow is_xlock_subject self rw_fifo_file_perms)
+
+(call devices_list_sysfs (is_xlock_subject))
+(call devices_read_sysfs_files (is_xlock_subject))
+(call devices_rw_inherited_dri (is_xlock_subject)) ; inherited from xorg
+
+(call files_read_generic_etc_files (is_xlock_subject)) ; /etc/drirc
+(call files_read_generic_usr_files (is_xlock_subject)) ; /etc/drirc
+
+(call selinux_getattr_filesystems (is_xlock_subject))
+
+(call auth_nsswitch_client_subject (is_xlock_subject))
+(call auth_run_chkpwd (is_xlock_subject is_xlock_role))
+(call auth_read_generic_pam_config_files (is_xlock_subject))
+(call auth_read_authconfig_pam_config_files (is_xlock_subject))
+
+(call xlock_read_pam_config_files (is_xlock_subject))
+
+(call xserver_use_fd_all_xorg (is_xlock_subject))
+
+(optional xlock_optional_audit
+    (call audit_client_subject (is_xlock_subject)))
+
+(optional xlock_optional_dbus
+    (call dbus_system_client_subject (is_xlock_subject))
+    (optional xlock_optional_fprint
+        (call fprint_dbus_chat_fprintd (is_xlock_subject))))
+
+(optional xlock_optional_journald
+    (call journald_client_subject (is_xlock_subject)))
+
+(optional xlock_optional_miscfiles
+    (call miscfiles_read_localization_files (is_xlock_subject)))
+
+(optional xlock_optional_udevd
+    (call udevd_read_config_files (is_xlock_subject))
+    (call udevd_read_run_files (is_xlock_subject)))
+
+(optional xlock_optional_usersubject
+    (call xserver_client_subject (xlock_t is_xinit_subject is_xorg_subject
+    user_x_tmp_t user_xauth_home_t))
+    (call usersubject_read_generic_home_content_files (xlock_t)))
+
+(optional xlock_optional_utmp
+    (call utmp_read_run_files (is_xlock_subject)))
+
+(allow is_xlock_admin_subject xlock_t signal_perms)
+(allow is_xlock_admin_subject xlock_t (process (ptrace)))
+(call ps_subject_pattern (is_xlock_admin_subject xlock_t))
+
+(allow is_xlock_admin_subject xlock_unit_t (service (all)))
+
+(call admin_pattern (is_xlock_admin_subject is_xlock_file_object))
+
+(macro xlock_role_template ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_xlock_role ARG1)
+    (typeattributeset is_xlock_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xlock_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3)))
+
+(macro xlock_read_pam_config_files ((type ARG1))
+    (call auth_search_pam_config (ARG1))
+    (allow ARG1 xlock_pam_conf_t read_file_perms))
+
+(macro xlock_admin ((type ARG1))
+    (typeattributeset is_xlock_admin_subject ARG1))
+

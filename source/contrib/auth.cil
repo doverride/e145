@@ -291,7 +291,7 @@
 (optional auth_optional_journald
     (call journald_client_subject (is_pam_client_subject)))
 
-(allow chkpwd_t self (capability (dac_override)))
+(allow chkpwd_t self (capability (dac_override setuid)))
 
 (call system_read_sysctl_crypto_files (chkpwd_t))
 

@@ -214,6 +214,15 @@
 
     (call xserver_common_client_subject (joe_xloadimg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
+    (optional joe_xserver_optional_joe_xlock
+        (type joe_xlock_t)
+        (call xlock_role_template (joe_r joe_t joe_xlock_t))
+
+        (call usersubject_application_subject (joe_xlock_t))
+        (call usersubject_read_generic_home_content_files (joe_xlock_t)) ; ~/.signature
+
+        (call xserver_common_client_subject (joe_xlock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+
     (optional joe_xserver_optional_joe_xpdf
         (type joe_xpdf_t)
         (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t))
@@ -228,7 +237,7 @@
         (call usersubject_manage_generic_home_content_files (joe_xpdf_t))
         (call usersubject_home_dir_filetrans_user_home (joe_xpdf_t file "*"))
 
-        (call xserver_common_client_subject (joe_xpdf_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+        (call xserver_client_subject (joe_xpdf_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
     (optional joe_xserver_optional_joe_mplayer
         (type joe_mplayer_t)

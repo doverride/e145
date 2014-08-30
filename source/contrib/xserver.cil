@@ -294,6 +294,9 @@
     (allow ARG1 xserver_conf_t (dirs (list)))
     (allow ARG1 xserver_conf_t read_file_perms))
 
+(macro xserver_use_fd_all_xorg ((type ARG1))
+    (allow ARG1 is_xorg_subject (fd (use))))
+
 (macro xserver_use_fd_all_xterm ((type ARG1))
     (allow ARG1 is_xterm_subject (fd (use))))
 
