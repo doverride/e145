@@ -262,7 +262,14 @@
  
         (call usersubject_application_subject (joe_rp_t))
 
-        (call xserver_common_client_subject (joe_rp_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))))
+        (call xserver_common_client_subject (joe_rp_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+
+        (type joe_rpws_t)
+        (call ratpoison_role_template_rpws (joe_r joe_t joe_rpws_t user_rpws_tmp_t))
+
+        (call xserver_common_client_subject (joe_rpws_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+        (call usersubject_application_subject (joe_rpws_t)))
 
 (optional joe_optional_java
     (context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))

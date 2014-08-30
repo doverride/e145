@@ -1,6 +1,8 @@
 (roleattribute is_rp_role)
 
 (typeattribute is_rp_subject)
+(typeattribute is_rpws_subject)
+
 (typeattribute is_rp_client_subject)
 
 (type rp_exec_t)
@@ -9,12 +11,31 @@
 (context file_rp_exec (system_u object_r rp_exec_t ((s0)(s0))))
 (filecon "/usr/bin/ratpoison" file file_rp_exec)
 
-(optional ratpoison_optional_usersubject
-    (type user_rp_home_t)
-    (call usersubject_home_object (user_rp_home_t)))
+(type rpws_exec_t)
+(call application_subject_entry (is_rpws_subject rpws_exec_t))
+
+(context file_rpws_exec (system_u object_r rpws_exec_t ((s0)(s0))))
+(filecon "/usr/bin/rpws" file file_rpws_exec)
 
 (allow is_rp_subject is_rp_client_subject (process (getsession)))
 (allow is_rp_client_subject is_rp_subject (process (sigchld)))
+
+(optional rp_optional_usersubject
+    (type user_rp_home_t)
+    (call usersubject_home_object (user_rp_home_t)))
+
+(allow is_rpws_subject self rw_fifo_file_perms)
+
+(call can_exec (is_rpws_subject rp_exec_t))
+
+(call commands_execute_bin_files (is_rpws_subject))
+(call commands_execute_shell_files (is_rpws_subject))
+
+(call devices_read_urandom (is_rpws_subject))
+
+(optional rpws_optional_usersubject
+    (type user_rpws_tmp_t)
+    (call usersubject_tmp_object (user_rpws_tmp_t)))
 
 (macro ratpoison_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_rp_role ARG1)
@@ -22,6 +43,18 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 rp_exec_t ARG3))
     (allow ARG3 ARG4 manage_file_perms))
+
+(macro ratpoison_role_template_rpws ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_rp_role ARG1)
+    (typeattributeset is_rpws_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 rpws_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal sigkill sigstop signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG4 file "*")))
 
 (macro ratpoison_client_subject ((type ARG1))
     (typeattributeset is_rp_client_subject ARG1))
