@@ -140,6 +140,9 @@
 (allow is_pa_client_subject is_pa_client_subject (process (signull)))
 (allow is_pa_client_subject is_pa_session_subject (process (signull)))
 
+(optional pactl_optional_miscfiles
+    (call miscfiles_read_localization_files (is_pactl_subject)))
+
 (allow is_pa_admin_subject is_pa_subject signal_perms)
 (allow is_pa_admin_subject is_pa_subject (process (ptrace)))
 (call ps_subject_pattern (is_pa_admin_subject is_pa_subject))
