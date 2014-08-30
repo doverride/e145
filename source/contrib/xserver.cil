@@ -10,8 +10,9 @@
 (typeattribute is_xorg_wrap_subject)
 
 (typeattribute is_xserver_admin_subject)
-(typeattribute is_xserver_client_subject)
 
+(typeattribute is_xserver_client_subject)
+(typeattribute is_xserver_client_subject_tmpfs)
 (typeattribute is_xserver_tmpfs_file)
 
 (typeattribute is_xserver_file_object)
@@ -171,6 +172,9 @@
 
 (call filesystem_getattr_filesystems (is_xserver_client_subject))
 
+(allow is_xserver_client_subject_tmpfs self create_shm_perms)
+(allow is_xorg_subject is_xserver_client_subject_tmpfs rw_shm_perms)
+
 (optional xserver_client_subject_optional_miscfiles
     (call miscfiles_read_fonts_config (is_xserver_client_subject))
     (call miscfiles_read_fonts_files (is_xserver_client_subject))
@@ -248,7 +252,7 @@
             (call ratpoison_client_subject (ARG1))))
 
 (macro xserver_client_subject_tmpfs_template ((type ARG1)(type ARG2))
-    (allow is_xorg_subject ARG1 rw_shm_perms)
+    (typeattributeset is_xserver_client_subject_tmpfs ARG1)
     (typeattributeset is_xserver_tmpfs_file ARG2))
 
 (macro xserver_signal_all_client_subjects ((type ARG1))

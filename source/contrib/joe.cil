@@ -303,7 +303,7 @@
 
 (optional joe_optional_joe_ffmpeg
     (type joe_ffmpeg_t)
-    (call ffmpeg_role_template (joe_r joe_t joe_ffmpeg_t))
+    (call ffmpeg_role_template (joe_r joe_t joe_ffmpeg_t user_ffmpeg_tmpfs_t))
 
     (call usersubject_manage_generic_home_content_files (joe_ffmpeg_t))
     (call usersubject_home_dir_filetrans_user_home (joe_ffmpeg_t file "*"))
@@ -313,9 +313,13 @@
 
     (call usersubject_application_subject (joe_ffmpeg_t))
 
+    (optional joe_ffmeg_optional_joe_xserver
+        (call xserver_client_subject (joe_ffmpeg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_client_subject_tmpfs_template (joe_ffmpeg_t user_ffmpeg_tmpfs_t)))
+
     (optional joe_ffmpeg_optional_joe_pa
         (call pa_client_subject (joe_r joe_ffmpeg_t joe_pa_t user_pa_home_t
-            user_pa_run_t user_pa_tmpfs_t)))
+            user_pa_run_t user_ffmpeg_tmpfs_t)))
  
         (call usersubject_home_dir_filetrans_user_config_dir (joe_ffmpeg_t))
         (call usersubject_config_filetrans (joe_ffmpeg_t user_pa_home_t dir "pulse"))

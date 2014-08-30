@@ -14,8 +14,6 @@
 (context file_mplayer_conf (system_u object_r mplayer_conf_t ((s0)(s0))))
 (filecon "/etc/mplayer(/.*)?" any file_mplayer_conf)
 
-(allow is_mplayer_subject self create_shm_perms)
-
 (call files_read_generic_etc_files (is_mplayer_subject))
 
 (call selinux_getattr_filesystems (is_mplayer_subject))
