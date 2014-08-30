@@ -1172,8 +1172,14 @@
 
     (allow session_t session_pactl_t (process (signal signull sigkill sigstop)))
     (call ps_subject_pattern (session_t session_pactl_t))
+
+    (call pa_client_subject (session_r session_pactl_t session_pa_t session_pa_home_t
+        session_pa_run_t session_pa_tmpfs_t))
+
+    (call session_home_dir_filetrans_session_config_dir (session_pactl_t))
+    (call session_config_filetrans (session_pactl_t session_pa_home_t dir "pulse"))
+    (call session_run_user_dir_filetrans (session_pactl_t session_pa_run_t dir "pulse"))
  
-    (call session_search_run_user_dir (session_pactl_t))
     (call session_application_subject (session_pactl_t)))
 
 (optional session_optional_session_moc
@@ -1198,11 +1204,11 @@
 
     (optional session_moc_optional_session_pa
         (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
-            session_pa_run_t session_pa_tmpfs_t)))
+            session_pa_run_t session_pa_tmpfs_t))
 
         (call session_home_dir_filetrans_session_config_dir (session_moc_t))
         (call session_config_filetrans (session_moc_t session_pa_home_t dir "pulse"))
-        (call session_run_user_dir_filetrans (session_moc_t session_pa_run_t dir "pulse")))
+        (call session_run_user_dir_filetrans (session_moc_t session_pa_run_t dir "pulse"))))
 
 (optional session_optional_session_sudo
     (type session_sudo_t)

@@ -874,9 +874,18 @@
 
     (allow joe_t joe_pactl_t (process (signal signull sigkill sigstop)))
     (call ps_subject_pattern (joe_t joe_pactl_t))
- 
-    (call usersubject_search_run_user_dir (joe_pactl_t))
-    (call usersubject_application_subject (joe_pactl_t)))
+
+    (call pa_client_subject (joe_r joe_pactl_t joe_pa_t user_pa_home_t
+        user_pa_run_t user_pa_tmpfs_t))
+
+    (call usersubject_home_dir_filetrans_user_config_dir (joe_pactl_t))
+    (call usersubject_config_filetrans (joe_pactl_t user_pa_home_t dir "pulse"))
+    (call usersubject_run_user_dir_filetrans (joe_pactl_t user_pa_run_t dir "pulse"))
+
+    (call usersubject_application_subject (joe_pactl_t))
+
+    (optional joe_pactl_optional_joe_xserver
+        (call xserver_client_subject (joe_pactl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))))
 
 (optional joe_optional_joe_moc
     (type joe_moc_t)
