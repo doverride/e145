@@ -83,7 +83,7 @@
 
 (call xserver_read_config (is_xorg_wrap_subject))
 
-(allow is_xinit_subject self (process (setpgid)))
+(allow is_xinit_subject self (process (setpgid signal)))
 
 (call system_read_generic_proc_files (is_xinit_subject))
 

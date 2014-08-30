@@ -630,16 +630,33 @@
     (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t sock_file "*"))
 
     (call usersubject_application_subject (joe_gpgagent_t))
+    (call usersubject_use_terminals (joe_gpgagent_t))
 
-    (optional joe_gpgagent_optional_joe_pinentry_curses
+    (optional joe_gpgagent_optional_joe_pinentry
         (type joe_pincurses_t)
         (call pinentry_role_template_curses (joe_r joe_gpgagent_t joe_pincurses_t))
+
+        (allow joe_t joe_pincurses_t (process (signal signull sigkill sigstop)))
+        (call ps_subject_pattern (joe_t joe_pincurses_t))
 
         (call stream_connect_pattern (joe_pincurses_t user_gpg_home_t user_gpgagent_home_t
             joe_gpgagent_t))
 
         (call usersubject_application_subject (joe_pincurses_t))
-        (call usersubject_use_terminals (joe_pincurses_t)))
+        (call usersubject_use_terminals (joe_pincurses_t))
+
+        (optional joe_pinentry_optional_joe_xserver
+            (type joe_pinentry_t)
+            (call pinentry_role_template (joe_r joe_gpgagent_t joe_pinentry_t))
+
+            (allow joe_t joe_pinentry_t (process (signal signull sigkill sigstop)))
+            (call ps_subject_pattern (joe_t joe_pinentry_t))
+
+            (call stream_connect_pattern (joe_pinentry_t user_gpg_home_t user_gpgagent_home_t
+                joe_gpgagent_t))
+
+            (call usersubject_application_subject (joe_pinentry_t))
+            (call usersubject_use_terminals (joe_pinentry_t))))
 
     (type joe_scd_t) 
     (call gpg_role_template_scd (joe_r joe_gpgagent_t joe_scd_t user_scd_tmp_t

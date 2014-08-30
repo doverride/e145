@@ -87,6 +87,10 @@
 
 (call system_read_sysctl_crypto_files (is_gpgagent_subject))
 
+(call commands_execute_shell_files (is_gpgagent_subject))
+
+(call devices_list (is_gpgagent_subject))
+
 (optional gpgagent_optional_miscfiles
     (call miscfiles_read_localization_files (is_gpgagent_subject)))
 
