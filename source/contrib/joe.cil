@@ -191,7 +191,7 @@
     (call usersubject_setattr_terminals (joe_xterm_t))
     (call usersubject_create_pty_node (joe_xterm_t))
 
-    (call xserver_client_subject (joe_xterm_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+    (call xserver_common_client_subject (joe_xterm_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
     (optional joe_xterm_optional_joe_screen
         (allow joe_xterm_t joe_screen_t (process (signal))))
@@ -202,7 +202,7 @@
 
     (call usersubject_application_subject (joe_xclock_t))
 
-    (call xserver_client_subject (joe_xclock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+    (call xserver_common_client_subject (joe_xclock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
     (optional joe_xserver_optional_joe_mplayer
         (type joe_mplayer_t)
@@ -223,7 +223,7 @@
 
         (call usersubject_application_subject (joe_mplayer_t))
 
-        (call xserver_client_subject (joe_mplayer_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_common_client_subject (joe_mplayer_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
         (call xserver_client_subject_tmpfs_template (joe_mplayer_t user_mplayer_tmpfs_t))
  
         (optional joe_mplayer_optional_joe_pa
@@ -262,7 +262,7 @@
  
         (call usersubject_application_subject (joe_rp_t))
 
-        (call xserver_client_subject (joe_rp_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))))
+        (call xserver_common_client_subject (joe_rp_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))))
 
 (optional joe_optional_java
     (context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))

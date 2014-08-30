@@ -166,14 +166,14 @@
     (type user_xauth_home_t)
     (call usersubject_home_object (user_xauth_home_t)))
 
+(allow is_xserver_client_subject_tmpfs self create_shm_perms)
+(allow is_xorg_subject is_xserver_client_subject_tmpfs rw_shm_perms)
+
 (call system_read_generic_proc_files (is_xserver_client_subject))
 
 (call files_read_generic_usr_files (is_xserver_client_subject))
 
 (call filesystem_getattr_filesystems (is_xserver_client_subject))
-
-(allow is_xserver_client_subject_tmpfs self create_shm_perms)
-(allow is_xorg_subject is_xserver_client_subject_tmpfs rw_shm_perms)
 
 (optional xserver_client_subject_optional_miscfiles
     (call miscfiles_read_fonts_config (is_xserver_client_subject))
@@ -241,12 +241,15 @@
         (call auth_run_utempter (ARG3 ARG1))))
 
 (macro xserver_client_subject ((type ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
-    (typeattributeset is_xserver_client_subject ARG1)
     (allow ARG1 ARG2 (fd (use)))
     (call stream_connect_pattern (ARG1 ARG4 ARG4 ARG3))
     (allow ARG3 ARG1 (dirs (list)))
     (allow ARG3 ARG1 read_file_perms)
-    (allow ARG1 ARG5 read_file_perms)
+    (allow ARG1 ARG5 read_file_perms))
+
+(macro xserver_common_client_subject ((type ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
+    (typeattributeset is_xserver_client_subject ARG1)
+    (call xserver_client_subject (ARG1 ARG2 ARG3 ARG4 ARG5))
     (call files_search_var_cache (ARG1))
         (optional xserver_client_subject_optional_ratpoison
             (call ratpoison_client_subject (ARG1))))
