@@ -214,6 +214,22 @@
 
     (call xserver_common_client_subject (joe_xloadimg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
+    (optional joe_xserver_optional_joe_xpdf
+        (type joe_xpdf_t)
+        (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t))
+
+        (context file_joe_user_xpdf_home (joe_u object_r user_xpdf_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.xpdfrc" file file_joe_user_xpdf_home)
+
+        (call usersubject_home_dir_filetrans (joe_t user_xpdf_home_t file ".xpdfrc"))
+
+        (call usersubject_application_subject (joe_xpdf_t))
+
+        (call usersubject_manage_generic_home_content_files (joe_xpdf_t))
+        (call usersubject_home_dir_filetrans_user_home (joe_xpdf_t file "*"))
+
+        (call xserver_common_client_subject (joe_xpdf_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+
     (optional joe_xserver_optional_joe_mplayer
         (type joe_mplayer_t)
         (call mplayer_role_template (joe_r joe_t joe_mplayer_t user_mplayer_home_t user_mplayer_tmpfs_t))

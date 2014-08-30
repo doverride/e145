@@ -71,6 +71,7 @@ contrib/upower.cil
 contrib/usermanage.cil
 contrib/usersubject.cil
 contrib/wpa.cil
+contrib/xpdf.cil
 contrib/xserver.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/autorelabel.cil

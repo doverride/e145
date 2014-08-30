@@ -1,0 +1,44 @@
+(roleattribute is_xpdf_role)
+
+(typeattribute is_xpdf_subject)
+
+(type xpdf_exec_t)
+(call application_subject_entry (is_xpdf_subject xpdf_exec_t))
+
+(context file_xpdf_exec (system_u object_r xpdf_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xpdf" file file_xpdf_exec)
+(filecon "/usr/bin/pdftopng" file file_xpdf_exec)
+
+(type xpdf_conf_t)
+(call files_etc_object (xpdf_conf_t))
+
+(context file_xpdf_conf (system_u object_r xpdf_conf_t ((s0)(s0))))
+(filecon "/etc/xpdf(/.*)?" any file_xpdf_conf)
+(filecon "/etc/xpdfrc" file file_xpdf_conf)
+
+(call files_read_generic_etc_files (is_xpdf_subject)) ; /etc/papersize
+
+(call xpdf_read_config (is_xpdf_subject))
+
+(call xserver_read_config (is_xpdf_subject))
+
+(optional xpdf_optional_usersubject
+    (type user_xpdf_home_t)
+    (call usersubject_home_object (user_xpdf_home_t)))
+
+(macro xpdf_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_xpdf_role ARG1)
+    (typeattributeset is_xpdf_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xpdf_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG3 ARG4 read_file_perms))
+
+(macro xpdf_read_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 xpdf_conf_t (dirs (list)))
+    (allow ARG1 xpdf_conf_t read_file_perms))
+
