@@ -1,0 +1,133 @@
+(roleattribute is_mozilla_role)
+
+(typeattribute is_firefox_subject)
+(typeattribute is_plugs_subject)
+(typeattribute is_xremotec_subject)
+
+(type firefox_exec_t)
+(call application_subject_entry (is_firefox_subject firefox_exec_t))
+
+(context file_firefox_exec (system_u object_r firefox_exec_t ((s0)(s0))))
+(filecon "/usr/lib/firefox/firefox" file file_firefox_exec)
+
+(type firefox_plugs_exec_t)
+(call application_subject_entry (is_plugs_subject firefox_plugs_exec_t))
+
+(context file_firefox_plugs_exec (system_u object_r firefox_plugs_exec_t ((s0)(s0))))
+(filecon "/usr/lib/firefox/plugin-container" file file_firefox_plugs_exec)
+
+(type mozilla_xremotec_exec_t)
+(call application_subject_entry (is_xremotec_subject mozilla_xremotec_exec_t))
+
+(context file_mozilla_xremotec_exec (system_u object_r mozilla_xremotec_exec_t ((s0)(s0))))
+(filecon "/usr/lib/firefox/mozilla-xremote-client" file file_mozilla_xremotec_exec)
+
+(optional mozilla_optional_usersubject
+    (type user_mozilla_cache_t)
+    (call usersubject_cache_object (user_mozilla_cache_t)))
+
+(allow is_firefox_subject self (process (setsched getsched execmem)))
+(allow is_firefox_subject self rw_fifo_file_perms)
+
+(call system_read_sysctl_crypto_files (is_firefox_subject))
+
+(call commands_execute_bin_files (is_firefox_subject))
+
+(call devices_read_lnk_files (is_firefox_subject))
+(call devices_list_sysfs (is_firefox_subject))
+(call devices_read_urandom (is_firefox_subject))
+(call devices_read_sysfs_files (is_firefox_subject))
+(call devices_rw_inherited_dri (is_firefox_subject)) ; inherited from xorg
+
+(call files_dontaudit_list_all (is_firefox_subject)) ; catchall
+(call files_list_etc (is_firefox_subject)) ; /etc/xdg
+(call files_read_generic_etc_files (is_firefox_subject)) ; /etc/drirc
+(call files_list_mnt (is_firefox_subject)) ; /media/sandisk/joe
+
+(call selinux_getattr_filesystems (is_firefox_subject))
+
+(call dbus_system_client_subject (is_firefox_subject))
+
+(call http_tcp_connect_http_port (is_firefox_subject))
+
+(call xserver_use_fd_all_xorg (is_firefox_subject))
+
+(optional firefox_optional_auth
+    (call auth_nsswitch_client_subject (is_firefox_subject)))
+
+(optional firefox_optional_miscfiles
+    (call miscfiles_read_generic_cert_files (is_firefox_subject))
+    (call miscfiles_read_network_config_files (is_firefox_subject)))
+
+(optional firefox_optional_networkmgr
+    (call networkmgr_dbus_chat (is_firefox_subject)))
+
+(optional firefox_optional_storage
+    (call storage_getattr_fixed_disk_nodes (is_firefox_subject)))
+
+(optional firefox_optional_udevd
+    (call udevd_read_config_files (is_firefox_subject))
+    (call udevd_read_run_files (is_firefox_subject)))
+
+(optional firefox_optional_usersubject
+    (type user_firefox_tmpfs_t)
+    (call usersubject_tmpfs_object (user_firefox_tmpfs_t))
+    (type user_firefox_home_t)
+    (call usersubject_home_object (user_firefox_home_t))
+    (type user_firefox_tmp_t)
+    (call usersubject_tmp_object (user_firefox_tmp_t)))
+
+(optional plugs_optional_usersubject
+    (type user_plugs_tmpfs_t)
+    (call usersubject_tmpfs_object (user_plugs_tmpfs_t)))
+
+(allow is_plugs_subject self (process (setsched execmem)))
+
+(call filesystem_getattr_filesystems (is_plugs_subject))
+
+(macro mozilla_role_template_firefox ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5)(type ARG6)(type ARG7))
+    (roleattributeset is_mozilla_role ARG1)
+    (typeattributeset is_firefox_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 firefox_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_dir_perms)
+    (allow ARG2 ARG4 relabel_dir_perms)
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG2 ARG4 manage_lnk_file_perms)
+    (allow ARG2 ARG4 relabel_lnk_file_perms)
+    (allow ARG2 ARG5 manage_dir_perms)
+    (allow ARG2 ARG5 relabel_dir_perms)
+    (allow ARG2 ARG5 manage_file_perms)
+    (allow ARG2 ARG5 relabel_file_perms)
+    (allow ARG2 ARG6 manage_file_perms)
+    (allow ARG2 ARG6 relabel_file_perms)
+    (allow ARG2 ARG7 manage_file_perms)
+    (allow ARG2 ARG7 relabel_file_perms)
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG4 manage_lnk_file_perms)
+    (allow ARG3 ARG5 manage_dir_perms)
+    (allow ARG3 ARG5 manage_file_perms)
+    (allow ARG3 ARG6 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG6 file "*"))
+    (allow ARG3 ARG7 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG7 file "*")))
+
+(macro mozilla_role_template_plugs ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_mozilla_role ARG1)
+    (typeattributeset is_plugs_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 firefox_plugs_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG4 file "*")))
+
+(macro mozilla_role_template_xremotec ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_mozilla_role ARG1)
+    (typeattributeset is_xremotec_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 mozilla_xremotec_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3)))

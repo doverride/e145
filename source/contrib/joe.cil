@@ -32,9 +32,17 @@
     (s0))))
 (filecon "/home/joe/\.cache/fontconfig(/.*)?" any file_joe_user_font_cache)
 
+(context file_joe_user_gstreamer_cache (joe_u object_r user_gstreamer_cache_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.cache/gstreamer-1\.0(/.*)?" any file_joe_user_gstreamer_cache)
+
 (context file_joe_user_conf (joe_u object_r user_conf_t ((s0)
     (s0))))
 (filecon "/home/joe/\.config(/.*)?" any file_joe_user_conf)
+
+(context file_joe_user_gtk2_conf (joe_u object_r user_gtk2_conf_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.config/gtk-2\.0(/.*)?" any file_joe_user_gtk2_conf)
 
 (context file_joe_user_data (joe_u object_r user_data_t ((s0)
     (s0))))
@@ -43,6 +51,10 @@
 (context file_joe_user_home (joe_u object_r user_home_t ((s0)
     (s0))))
 (filecon "/home/joe/.*" any file_joe_user_home)
+
+(context file_joe_user_mozilla_home (joe_u object_r user_mozilla_home_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.mozilla(/.*)?*" any file_joe_user_mozilla_home)
 
 (context file_joe_user_bin (joe_u object_r user_bin_t ((s0)
     (s0))))
@@ -213,6 +225,106 @@
     (call usersubject_read_generic_home_content_files (joe_xloadimg_t))
 
     (call xserver_common_client_subject (joe_xloadimg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (optional joe_xserver_optional_joe_mozilla
+        (type joe_firefox_t)
+        (call mozilla_role_template_firefox (joe_r joe_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
+        user_firefox_tmp_t user_firefox_tmpfs_t))
+
+        (context file_joe_user_mozilla_cache (joe_u object_r user_mozilla_cache_t ((s0)(s0))))
+        (filecon "/home/joe/\.cache/mozilla(/.*)?" any file_joe_user_mozilla_cache)
+
+        (allow joe_firefox_t joe_plugs_t (unix_stream_socket (read write)))
+        (allow joe_firefox_t joe_plugs_t (fd (use)))
+
+        (call usersubject_application_subject (joe_firefox_t))
+
+        (call usersubject_mozilla_filetrans (joe_t user_firefox_home_t dir "firefox"))
+        (call usersubject_mozilla_filetrans (joe_firefox_t user_firefox_home_t dir "firefox"))
+
+        (call usersubject_manage_mozilla_dirs (joe_firefox_t))
+        (call usersubject_home_dir_filetrans_user_mozilla_dir (joe_firefox_t))
+
+        (call usersubject_cache_filetrans (joe_firefox_t user_mozilla_cache_t dir "mozilla"))
+
+        (call usersubject_manage_generic_cache_dirs (joe_firefox_t))
+        (call usersubject_home_dir_filetrans_user_cache_dir (joe_firefox_t))
+
+        (call usersubject_manage_font_cache_dirs (joe_firefox_t))
+        (call usersubject_manage_font_cache_files (joe_firefox_t))
+        (call usersubject_cache_filetrans_user_font_cache_dir (joe_firefox_t))
+
+        (call usersubject_manage_gstreamer_cache_dirs (joe_firefox_t))
+        (call usersubject_manage_gstreamer_cache_files (joe_firefox_t))
+        (call usersubject_cache_filetrans_user_gstreamer_cache_dir (joe_firefox_t))
+
+        (call usersubject_manage_generic_config_dirs (joe_firefox_t))
+        (call usersubject_home_dir_filetrans_user_config_dir (joe_firefox_t))
+
+        (call usersubject_manage_gtk2_config_dirs (joe_firefox_t))
+        (call usersubject_manage_gtk2_config_files (joe_firefox_t))
+        (call usersubject_config_filetrans_user_gtk2_config_dir (joe_firefox_t))
+
+        (call usersubject_manage_generic_home_content_files (joe_firefox_t))
+        (call usersubject_manage_generic_home_content_dirs (joe_firefox_t))
+        (call usersubject_home_dir_filetrans_user_home (joe_firefox_t dir "Desktop"))
+        (call usersubject_home_dir_filetrans_user_home (joe_firefox_t file "*"))
+
+        (call usersubject_dontaudit_read_all_inherited_user_files (joe_firefox_t))
+
+        (call usersubject_list_generic_data (joe_firefox_t))
+        (call usersubject_read_cert_files (joe_firefox_t))
+
+        (call xserver_common_client_subject (joe_firefox_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_client_subject_tmpfs_template (joe_firefox_t user_firefox_tmpfs_t))
+
+        (allow joe_xorg_t user_firefox_tmp_t rw_inherited_file_perms)
+        (allow joe_xorg_t joe_firefox_t (fd (use)))
+
+        (optional joe_firefox_optional_joe_xpdf
+            (call xpdf_role_template (joe_r joe_firefox_t joe_xpdf_t user_xpdf_home_t)))
+
+        (optional joe_firefox_optional_joe_pa
+            (call pa_client_subject (joe_r joe_firefox_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_firefox_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_firefox_t))
+            (call usersubject_config_filetrans (joe_firefox_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_firefox_t user_pa_run_t dir "pulse")))
+
+        (type joe_plugs_t)
+        (call mozilla_role_template_plugs (joe_r joe_firefox_t joe_plugs_t user_plugs_tmpfs_t))
+
+        (allow joe_plugs_t joe_firefox_t (unix_stream_socket (read write)))
+
+        (allow joe_t joe_plugs_t (process (signal signull sigstop sigkill)))
+        (call ps_subject_pattern (joe_t joe_plugs_t))
+
+        (allow joe_t user_plugs_tmpfs_t manage_file_perms)
+        (allow joe_t user_plugs_tmpfs_t relabel_file_perms)
+
+        (call usersubject_manage_font_cache_dirs (joe_plugs_t))
+        (call usersubject_manage_font_cache_files (joe_plugs_t))
+        (call usersubject_cache_filetrans_user_font_cache_dir (joe_plugs_t))
+
+        (type joe_xremotec_t)
+        (call mozilla_role_template_xremotec (joe_r joe_t joe_xremotec_t))
+
+        (call usersubject_application_subject (joe_plugs_t))
+        (call usersubject_application_subject (joe_xremotec_t))
+
+        (call xserver_common_client_subject (joe_plugs_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_client_subject_tmpfs_template (joe_plugs_t user_plugs_tmpfs_t))
+
+        (call xserver_common_client_subject (joe_xremotec_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+        (optional joe_plugs_optional_joe_pa
+            (call pa_client_subject (joe_r joe_plugs_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_plugs_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_plugs_t))
+            (call usersubject_config_filetrans (joe_plugs_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_plugs_t user_pa_run_t dir "pulse"))))
 
     (optional joe_xserver_optional_joe_xlock
         (type joe_xlock_t)

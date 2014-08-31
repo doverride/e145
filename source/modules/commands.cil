@@ -28,6 +28,7 @@
 (filecon "/usr/src/kernels/[^/]*/scripts/.*" file bin)
 (filecon "/usr/lib/rpm(/.*)?" file bin)
 (filecon "/usr/share/texlive/texmf-dist/scripts(/.*)?" file bin)
+(filecon "/usr/lib/firefox/run-mozilla\.sh" file bin)
 
 (type shell_t)
 (call commands_bin_object (shell_t))

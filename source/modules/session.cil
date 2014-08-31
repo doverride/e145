@@ -468,6 +468,7 @@
     (call usersubject_home_dir_filetrans_user_data_dir (session_t))
     (call usersubject_generic_bin_entry_subject (session_t))
     (call usersubject_execute_generic_bin_files (session_t))
+    (call usersubject_home_dir_filetrans_user_mozilla_dir (session_t))
     (call usersubject_home_dir_filetrans_user_bin_dir (session_t))
     (call usersubject_data_filetrans_user_bin_dir (session_t))
     (call usersubject_home_dir_filetrans_user_cert_dir (session_t))

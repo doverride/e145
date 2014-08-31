@@ -44,6 +44,7 @@
     (roleattributeset is_rp_role ARG1)
     (typeattributeset is_rp_subject ARG3)
     (roletype ARG1 ARG3)
+    (allow ARG2 ARG3 (process (signal)))
     (call subtrans_pattern (ARG2 rp_exec_t ARG3))
     (allow ARG3 ARG4 manage_file_perms))
 

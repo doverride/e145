@@ -23,14 +23,23 @@
 (type user_font_cache_t)
 (call usersubject_cache_object (user_font_cache_t))
 
+(type user_gstreamer_cache_t)
+(call usersubject_cache_object (user_gstreamer_cache_t))
+
 (type user_conf_t)
 (call usersubject_config_object (user_conf_t))
+
+(type user_gtk2_conf_t)
+(call usersubject_config_object (user_gtk2_conf_t))
 
 (type user_data_t)
 (call usersubject_data_object (user_data_t))
 
 (type user_home_t)
 (call usersubject_home_object (user_home_t))
+
+(type user_mozilla_home_t)
+(call usersubject_home_object (user_mozilla_home_t))
 
 (type user_bin_t)
 (call usersubject_home_object (user_bin_t))
@@ -95,6 +104,9 @@
 (call usersubject_generic_home_template (is_common_login_user_subject))
 (call usersubject_generic_cache_template (is_common_login_user_subject))
 (call usersubject_font_cache_template (is_common_login_user_subject))
+(call usersubject_gstreamer_cache_template (is_common_login_user_subject))
+(call usersubject_mozilla_template (is_common_login_user_subject))
+(call usersubject_gtk2_config_template (is_common_login_user_subject))
 (call usersubject_generic_config_template (is_common_login_user_subject))
 (call usersubject_generic_data_template (is_common_login_user_subject))
 (call usersubject_generic_bin_template (is_common_login_user_subject))
@@ -117,7 +129,7 @@
 (call files_list_etc (is_common_login_user_subject))
 (call files_read_generic_etc_files (is_common_login_user_subject))
 (call files_read_generic_usr_files (is_common_login_user_subject))
-(call files_search_mnt (is_common_login_user_subject))
+(call files_list_mnt (is_common_login_user_subject))
 
 (call files_dontaudit_read_all_files (is_common_login_user_subject)) ; catchall 
 (call files_dontaudit_read_all_lnk_files (is_common_login_user_subject)) ; catchall 
@@ -399,17 +411,9 @@
     (call usersubject_manage_font_cache_dirs (ARG1))
     (call usersubject_manage_font_cache_files (ARG1))
     (call usersubject_manage_font_cache_lnk_files (ARG1))
-    (call usersubject_manage_font_cache_fifo_files (ARG1))
-    (call usersubject_manage_font_cache_sock_files (ARG1))
-    (call usersubject_manage_font_cache_blk_files (ARG1))
-    (call usersubject_manage_font_cache_chr_files (ARG1))
     (call usersubject_relabel_font_cache_dirs (ARG1))
     (call usersubject_relabel_font_cache_files (ARG1))
     (call usersubject_relabel_font_cache_lnk_files (ARG1))
-    (call usersubject_relabel_font_cache_fifo_files (ARG1))
-    (call usersubject_relabel_font_cache_sock_files (ARG1))
-    (call usersubject_relabel_font_cache_blk_files (ARG1))
-    (call usersubject_relabel_font_cache_chr_files (ARG1))
     (call usersubject_cache_filetrans_user_font_cache_dir (ARG1)))
 
 (macro usersubject_cache_filetrans_user_font_cache_dir ((type ARG1))
@@ -427,22 +431,6 @@
     (call usersubject_search_generic_cache (ARG1))
     (call manage_lnk_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
 
-(macro usersubject_manage_font_cache_fifo_files ((type ARG1))
-    (call usersubject_search_generic_cache (ARG1))
-    (call manage_fifo_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
-
-(macro usersubject_manage_font_cache_sock_files ((type ARG1))
-    (call usersubject_search_generic_cache (ARG1))
-    (call manage_sock_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
-
-(macro usersubject_manage_font_cache_blk_files ((type ARG1))
-    (call usersubject_search_generic_cache (ARG1))
-    (call manage_blk_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
-
-(macro usersubject_manage_font_cache_chr_files ((type ARG1))
-    (call usersubject_search_generic_cache (ARG1))
-    (call manage_chr_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
-
 (macro usersubject_relabel_font_cache_dirs ((type ARG1))
     (call usersubject_search_generic_cache (ARG1))
     (call relabel_dirs_pattern (ARG1 user_font_cache_t user_font_cache_t)))
@@ -455,21 +443,41 @@
     (call usersubject_search_generic_cache (ARG1))
     (call relabel_lnk_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
 
-(macro usersubject_relabel_font_cache_fifo_files ((type ARG1))
-    (call usersubject_search_generic_cache (ARG1))
-    (call relabel_fifo_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
+(macro usersubject_gstreamer_cache_template ((type ARG1))
+    (call usersubject_manage_gstreamer_cache_dirs (ARG1))
+    (call usersubject_manage_gstreamer_cache_files (ARG1))
+    (call usersubject_manage_gstreamer_cache_lnk_files (ARG1))
+    (call usersubject_relabel_gstreamer_cache_dirs (ARG1))
+    (call usersubject_relabel_gstreamer_cache_files (ARG1))
+    (call usersubject_relabel_gstreamer_cache_lnk_files (ARG1))
+    (call usersubject_cache_filetrans_user_gstreamer_cache_dir (ARG1)))
 
-(macro usersubject_relabel_font_cache_sock_files ((type ARG1))
-    (call usersubject_search_generic_cache (ARG1))
-    (call relabel_sock_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
+(macro usersubject_cache_filetrans_user_gstreamer_cache_dir ((type ARG1))
+    (call usersubject_cache_filetrans (ARG1 user_gstreamer_cache_t dir "gstreamer-1.0")))
 
-(macro usersubject_relabel_font_cache_blk_files ((type ARG1))
+(macro usersubject_manage_gstreamer_cache_dirs ((type ARG1))
     (call usersubject_search_generic_cache (ARG1))
-    (call relabel_blk_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
+    (call manage_dirs_pattern (ARG1 user_gstreamer_cache_t user_gstreamer_cache_t)))
 
-(macro usersubject_relabel_font_cache_chr_files ((type ARG1))
+(macro usersubject_manage_gstreamer_cache_files ((type ARG1))
     (call usersubject_search_generic_cache (ARG1))
-    (call relabel_chr_files_pattern (ARG1 user_font_cache_t user_font_cache_t)))
+    (call manage_files_pattern (ARG1 user_gstreamer_cache_t user_gstreamer_cache_t)))
+
+(macro usersubject_manage_gstreamer_cache_lnk_files ((type ARG1))
+    (call usersubject_search_generic_cache (ARG1))
+    (call manage_lnk_files_pattern (ARG1 user_gstreamer_cache_t user_gstreamer_cache_t)))
+
+(macro usersubject_relabel_gstreamer_cache_dirs ((type ARG1))
+    (call usersubject_search_generic_cache (ARG1))
+    (call relabel_dirs_pattern (ARG1 user_gstreamer_cache_t user_gstreamer_cache_t)))
+
+(macro usersubject_relabel_gstreamer_cache_files ((type ARG1))
+    (call usersubject_search_generic_cache (ARG1))
+    (call relabel_files_pattern (ARG1 user_gstreamer_cache_t user_gstreamer_cache_t)))
+
+(macro usersubject_relabel_gstreamer_cache_lnk_files ((type ARG1))
+    (call usersubject_search_generic_cache (ARG1))
+    (call relabel_lnk_files_pattern (ARG1 user_gstreamer_cache_t user_gstreamer_cache_t)))
 
 (macro usersubject_config_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
     (call usersubject_search_home_dir (ARG1))
@@ -551,6 +559,42 @@
 (macro usersubject_relabel_generic_config_chr_files ((type ARG1))
     (call usersubject_search_generic_config (ARG1))
     (call relabel_chr_files_pattern (ARG1 user_conf_t user_conf_t)))
+
+(macro usersubject_gtk2_config_template ((type ARG1))
+    (call usersubject_manage_gtk2_config_dirs (ARG1))
+    (call usersubject_manage_gtk2_config_files (ARG1))
+    (call usersubject_manage_gtk2_config_lnk_files (ARG1))
+    (call usersubject_relabel_gtk2_config_dirs (ARG1))
+    (call usersubject_relabel_gtk2_config_files (ARG1))
+    (call usersubject_relabel_gtk2_config_lnk_files (ARG1))
+    (call usersubject_config_filetrans_user_gtk2_config_dir (ARG1)))
+
+(macro usersubject_config_filetrans_user_gtk2_config_dir ((type ARG1))
+    (call usersubject_config_filetrans (ARG1 user_gtk2_conf_t dir "gtk-2.0")))
+
+(macro usersubject_manage_gtk2_config_dirs ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call manage_dirs_pattern (ARG1 user_gtk2_conf_t user_gtk2_conf_t)))
+
+(macro usersubject_manage_gtk2_config_files ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call manage_files_pattern (ARG1 user_gtk2_conf_t user_gtk2_conf_t)))
+
+(macro usersubject_manage_gtk2_config_lnk_files ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call manage_lnk_files_pattern (ARG1 user_gtk2_conf_t user_gtk2_conf_t)))
+
+(macro usersubject_relabel_gtk2_config_dirs ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call relabel_dirs_pattern (ARG1 user_gtk2_conf_t user_gtk2_conf_t)))
+
+(macro usersubject_relabel_gtk2_config_files ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call relabel_files_pattern (ARG1 user_gtk2_conf_t user_gtk2_conf_t)))
+
+(macro usersubject_relabel_gtk2_config_lnk_files ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call relabel_lnk_files_pattern (ARG1 user_gtk2_conf_t user_gtk2_conf_t)))
 
 (macro usersubject_data_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
     (call usersubject_search_home_dir (ARG1))
@@ -805,6 +849,87 @@
 (macro usersubject_relabel_generic_cert_chr_files ((type ARG1))
     (call usersubject_search_home_dir (ARG1))
     (call relabel_chr_files_pattern (ARG1 user_cert_t user_cert_t)))
+
+(macro usersubject_mozilla_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call usersubject_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 user_mozilla_home_t ARG2 ARG3 ARG4)))
+
+(macro usersubject_mozilla_template ((type ARG1))
+    (call usersubject_manage_mozilla_dirs (ARG1))
+    (call usersubject_manage_mozilla_files (ARG1))
+    (call usersubject_manage_mozilla_lnk_files (ARG1))
+    (call usersubject_manage_mozilla_fifo_files (ARG1))
+    (call usersubject_manage_mozilla_sock_files (ARG1))
+    (call usersubject_manage_mozilla_blk_files (ARG1))
+    (call usersubject_manage_mozilla_chr_files (ARG1))
+    (call usersubject_relabel_mozilla_dirs (ARG1))
+    (call usersubject_relabel_mozilla_files (ARG1))
+    (call usersubject_relabel_mozilla_lnk_files (ARG1))
+    (call usersubject_relabel_mozilla_fifo_files (ARG1))
+    (call usersubject_relabel_mozilla_sock_files (ARG1))
+    (call usersubject_relabel_mozilla_blk_files (ARG1))
+    (call usersubject_relabel_mozilla_chr_files (ARG1))
+    (call usersubject_home_dir_filetrans_user_mozilla_dir (ARG1)))
+
+(macro usersubject_home_dir_filetrans_user_mozilla_dir ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 user_home_dir_t user_mozilla_home_t dir ".mozilla")))
+
+(macro usersubject_manage_mozilla_dirs ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_manage_mozilla_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call manage_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_manage_mozilla_lnk_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call manage_lnk_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_manage_mozilla_fifo_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call manage_fifo_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_manage_mozilla_sock_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call manage_sock_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_manage_mozilla_blk_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call manage_blk_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_manage_mozilla_chr_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call manage_chr_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_relabel_mozilla_dirs ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call relabel_dirs_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_relabel_mozilla_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call relabel_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_relabel_mozilla_lnk_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call relabel_lnk_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_relabel_mozilla_fifo_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call relabel_fifo_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_relabel_mozilla_sock_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call relabel_sock_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_relabel_mozilla_blk_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call relabel_blk_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
+
+(macro usersubject_relabel_mozilla_chr_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call relabel_chr_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
 
 (macro usersubject_run_user_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
@@ -1180,6 +1305,9 @@
     (allow ARG1 is_user_file_object relabel_blk_file_perms)
     (allow ARG1 is_user_file_object relabel_chr_file_perms))
 
+(macro usersubject_dontaudit_read_all_inherited_user_files ((type ARG1))
+    (dontaudit ARG1 is_user_file_object read_inherited_file_perms))
+
 (macro usersubject_cache_object ((type ARG1))
     (call usersubject_home_object (ARG1))
     (typeattributeset is_user_cache_file_object ARG1))
@@ -1289,12 +1417,20 @@
     (call usersubject_search_home_dir (ARG1))
     (allow ARG1 user_conf_t (dirs (search))))
 
+(macro usersubject_list_generic_config ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (allow ARG1 user_conf_t (dirs (list))))
+
 (macro usersubject_dontaudit_search_generic_data ((type ARG1))
     (dontaudit ARG1 user_data_t (dirs (search))))
 
 (macro usersubject_search_generic_data ((type ARG1))
     (call usersubject_search_home_dir (ARG1))
     (allow ARG1 user_data_t (dirs (search))))
+
+(macro usersubject_list_generic_data ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (allow ARG1 user_data_t (dirs (list))))
 
 (macro usersubject_manage_run_user_dir ((type ARG1))
     (call files_rw_run_user_root_dirs (ARG1))

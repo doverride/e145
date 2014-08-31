@@ -629,6 +629,9 @@
 (macro files_search_mnt ((type ARG1))
     (allow ARG1 mnt_t (dirs (search))))
 
+(macro files_list_mnt ((type ARG1))
+    (allow ARG1 mnt_t (dirs (list))))
+
 (macro files_audit_access_all_mnt_dirs ((type ARG1))
     (dontaudit ARG1 is_mnt_file_object (dir (audit_access))))
 
