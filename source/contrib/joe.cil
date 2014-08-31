@@ -128,7 +128,7 @@
 
 (optional joe_optional_joe_xserver
     (type joe_xinit_t)
-    (call xserver_role_template_xinit (joe_r joe_t joe_xinit_t))
+    (call xserver_role_template_xinit (joe_r joe_t joe_xinit_t user_x_home_t))
 
     (type joe_xauth_t)
     (call xserver_role_template_xauth (joe_r joe_t joe_xauth_t user_xauth_home_t))
@@ -144,17 +144,10 @@
 
     (type joe_xorg_t)
     (call xserver_role_template_xorg (joe_r joe_xorg_wrap_t joe_xorg_t
-    user_x_tmp_t user_xorg_home_t))
+    user_x_tmp_t))
 
     (allow joe_t joe_xorg_t (process (signal sigstop signull sigkill)))
     (call ps_subject_pattern (joe_t joe_xorg_t))
-
-    (context file_joe_user_xorg_home (joe_u object_r user_xorg_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.xserverrc" file file_joe_user_xorg_home)
-
-    (allow joe_t user_xorg_home_t manage_file_perms)
-    (allow joe_t user_xorg_home_t relabel_file_perms)
-    (call usersubject_home_dir_filetrans (joe_t user_xorg_home_t file ".xserverrc"))
 
     (type joe_xorg_wrap_t)
     (call xserver_role_template_xorg_wrap (joe_r joe_xinit_t joe_xorg_wrap_t))
@@ -168,6 +161,13 @@
 
     (call usersubject_home_dir_filetrans_user_bin (joe_t file ".xinitrc"))
     (filecon "/home/joe/\.xinitrc" file file_joe_user_bin)
+
+    (context file_joe_user_x_home (joe_u object_r user_x_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.xserverrc" file file_joe_user_x_home)
+
+    (allow joe_t user_x_home_t manage_file_perms)
+    (allow joe_t user_x_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_x_home_t file ".xserverrc"))
 
     (allow joe_xinit_t user_xauth_home_t read_file_perms)
 

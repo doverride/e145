@@ -90,7 +90,15 @@
 (call commands_execute_bin_files (is_xinit_subject))
 (call commands_execute_shell_files (is_xinit_subject))
 
+(call files_search_tmp (is_xinit_subject))
+
+(call xserver_tcp_connect_xserver_port (is_xinit_subject))
+
+(optional xinit_optional_auth
+    (call auth_nsswitch_client_subject (is_xinit_subject)))
+
 (optional xinit_optional_miscfiles
+    (call miscfiles_read_network_config_files (is_xinit_subject))
     (call miscfiles_read_localization_files (is_xinit_subject)))
 
 (allow is_xorg_subject self (capability (dac_override setgid setuid sys_admin sys_rawio ipc_owner)))
@@ -145,8 +153,8 @@
 (optional xinit_optional_usersubject
     (type user_x_tmp_t)
     (call usersubject_tmp_object (user_x_tmp_t))
-    (type user_xorg_home_t)
-    (call usersubject_home_object (user_xorg_home_t)))
+    (type user_x_home_t)
+    (call usersubject_home_object (user_x_home_t)))
 
 (allow is_xterm_subject self (process (signal)))
 (allow is_xterm_subject self rw_fifo_file_perms)
@@ -207,24 +215,24 @@
 (macro xserver_admin ((type ARG1))
     (typeattributeset is_xserver_admin_subject ARG1))
 
-(macro xserver_role_template_xinit ((role ARG1)(type ARG2)(type ARG3))
+(macro xserver_role_template_xinit ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_xserver_role ARG1)
     (typeattributeset is_xinit_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xinit_exec_t ARG3))
     (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
     (call ps_subject_pattern (ARG2 ARG3))
-    (allow ARG2 ARG3 (fd (use))))
+    (allow ARG2 ARG3 (fd (use)))
+    (allow ARG3 ARG4 read_file_perms))
 
 (macro xserver_role_template_xorg ((role ARG1)(type ARG2)(type ARG3)
-    (type ARG4)(type ARG5))
+    (type ARG4))
     (roleattributeset is_xserver_role ARG1)
     (typeattributeset is_xorg_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xorg_exec_t ARG3))
     (allow ARG3 ARG4 manage_file_perms)
-    (allow ARG3 ARG4 manage_sock_file_perms)
-    (allow ARG3 ARG5 read_file_perms))
+    (allow ARG3 ARG4 manage_sock_file_perms))
 
 (macro xserver_role_template_xorg_wrap ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_xserver_role ARG1)
@@ -307,6 +315,10 @@
 (macro xserver_read_state_all_xorg ((type ARG1))
     (allow ARG1 is_xorg_subject (dirs (list)))
     (allow ARG1 is_xorg_subject read_file_perms))
+
+(macro xserver_tcp_connect_xserver_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
+    (allow ARG1 port_xserver_t (tcp_socket (name_connect))))
 
 (macro xserver_tcp_bind_xserver_port ((type ARG1))
     (allow ARG1 self (capability (net_bind_service)))
