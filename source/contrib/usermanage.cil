@@ -148,7 +148,6 @@
     (call usersubject_manage_mail_spool_files (useradd_t))
     (call usersubject_delete_all_user_home_file_objects (useradd_t))
     (call usersubject_manage_generic_home_content_files (useradd_t))
-    (call usersubject_manage_mozilla_files (useradd_t))
     (call usersubject_use_inherited_terminals (is_useradd_or_groupadd_subject)))
 
 (allow is_passwd_subject self (capability (setuid dac_override)))

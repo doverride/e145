@@ -27,6 +27,7 @@
     (call usersubject_cache_object (user_mozilla_cache_t)))
 
 (allow is_firefox_subject self (process (setsched getsched execmem)))
+(allow is_firefox_subject self create_unix_dgram_socket_perms)
 (allow is_firefox_subject self rw_fifo_file_perms)
 
 (call system_read_sysctl_crypto_files (is_firefox_subject))
@@ -43,6 +44,8 @@
 (call files_list_etc (is_firefox_subject)) ; /etc/xdg
 (call files_read_generic_etc_files (is_firefox_subject)) ; /etc/drirc
 (call files_list_mnt (is_firefox_subject)) ; /media/sandisk/joe
+
+(call network_dontaudit_tcp_connect_all_ports (is_firefox_subject)) ; catchall
 
 (call selinux_getattr_filesystems (is_firefox_subject))
 
