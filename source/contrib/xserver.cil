@@ -144,7 +144,9 @@
 
 (optional xinit_optional_usersubject
     (type user_x_tmp_t)
-    (call usersubject_tmp_object (user_x_tmp_t)))
+    (call usersubject_tmp_object (user_x_tmp_t))
+    (type user_xorg_home_t)
+    (call usersubject_home_object (user_xorg_home_t)))
 
 (allow is_xterm_subject self (process (signal)))
 (allow is_xterm_subject self rw_fifo_file_perms)
@@ -214,13 +216,15 @@
     (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG2 ARG3 (fd (use))))
 
-(macro xserver_role_template_xorg ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+(macro xserver_role_template_xorg ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4)(type ARG5))
     (roleattributeset is_xserver_role ARG1)
     (typeattributeset is_xorg_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xorg_exec_t ARG3))
     (allow ARG3 ARG4 manage_file_perms)
-    (allow ARG3 ARG4 manage_sock_file_perms))
+    (allow ARG3 ARG4 manage_sock_file_perms)
+    (allow ARG3 ARG5 read_file_perms))
 
 (macro xserver_role_template_xorg_wrap ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_xserver_role ARG1)
