@@ -16,6 +16,12 @@
 (filecon "/etc/xpdf(/.*)?" any file_xpdf_conf)
 (filecon "/etc/xpdfrc" file file_xpdf_conf)
 
+(allow is_xpdf_subject self rw_fifo_file_perms)
+
+(call commands_execute_bin_files (is_xpdf_subject)) ; /usr/bin/firefox
+(call commands_execute_shell_files (is_xpdf_subject))
+
+(call files_dontaudit_list_all (is_xpdf_subject)) ; catchall
 (call files_read_generic_etc_files (is_xpdf_subject)) ; /etc/papersize
 
 (call xpdf_read_config (is_xpdf_subject))
@@ -24,18 +30,18 @@
 
 (optional xpdf_optional_usersubject
     (type user_xpdf_home_t)
-    (call usersubject_home_object (user_xpdf_home_t)))
+    (call usersubject_home_object (user_xpdf_home_t))
+    (type user_xpdf_tmp_t)
+    (call usersubject_tmp_object (user_xpdf_tmp_t)))
 
-(macro xpdf_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+(macro xpdf_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
     (roleattributeset is_xpdf_role ARG1)
     (typeattributeset is_xpdf_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xpdf_exec_t ARG3))
-    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (ARG2 ARG3))
-    (allow ARG2 ARG4 manage_file_perms)
-    (allow ARG2 ARG4 relabel_file_perms)
-    (allow ARG3 ARG4 read_file_perms))
+    (allow ARG3 ARG4 read_file_perms)
+    (allow ARG3 ARG5 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 file "*")))
 
 (macro xpdf_read_config ((type ARG1))
     (call files_search_etc (ARG1))

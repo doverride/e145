@@ -10,6 +10,7 @@
 (typeattribute is_xloadimg_subject)
 (typeattribute is_xorg_subject)
 (typeattribute is_xorg_wrap_subject)
+(typeattribute is_xrdb_subject)
 
 (typeattribute is_xserver_admin_subject)
 
@@ -31,6 +32,12 @@
 
 (context file_xauth_exec (system_u object_r xauth_exec_t ((s0)(s0))))
 (filecon "/usr/bin/xauth" file file_xauth_exec)
+
+(type xrdb_exec_t)
+(call application_subject_entry (is_xrdb_subject xrdb_exec_t))
+
+(context file_xrdb_exec (system_u object_r xrdb_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xrdb" file file_xrdb_exec)
 
 (type xterm_exec_t)
 (call application_subject_entry (is_xterm_subject xterm_exec_t))
@@ -208,6 +215,15 @@
     (call miscfiles_read_fonts_cache_files (is_xserver_client_subject))
     (call miscfiles_read_localization_files (is_xserver_client_subject)))
 
+(allow is_xrdb_subject self rw_fifo_file_perms)
+
+(call commands_execute_bin_files (is_xrdb_subject)) ; mcpp
+(call commands_execute_shell_files (is_xrdb_subject)) ; mcpp
+
+(optional xrdb_optional_usersubject
+    (type user_xrdb_home_t)
+    (call usersubject_home_object (user_xrdb_home_t)))
+
 (allow is_xorg_subject is_xserver_tmpfs_file (file (read write)))
 
 (call admin_pattern (is_xserver_admin_subject is_xserver_file_object))
@@ -239,6 +255,17 @@
     (typeattributeset is_xorg_wrap_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xorg_wrap_exec_t ARG3)))
+
+(macro xserver_role_template_xrdb ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_xserver_role ARG1)
+    (typeattributeset is_xrdb_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xrdb_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG3 ARG4 read_file_perms))
 
 (macro xserver_role_template_xauth ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_xserver_role ARG1)

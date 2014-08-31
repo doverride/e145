@@ -130,6 +130,9 @@
     (type joe_xinit_t)
     (call xserver_role_template_xinit (joe_r joe_t joe_xinit_t user_x_home_t))
 
+    (type joe_xrdb_t)
+    (call xserver_role_template_xrdb (joe_r joe_t joe_xrdb_t user_xrdb_home_t))
+
     (type joe_xauth_t)
     (call xserver_role_template_xauth (joe_r joe_t joe_xauth_t user_xauth_home_t))
 
@@ -164,6 +167,9 @@
 
     (context file_joe_user_x_home (joe_u object_r user_x_home_t ((s0)(s0))))
     (filecon "/home/joe/\.xserverrc" file file_joe_user_x_home)
+
+    (context file_joe_user_xrdb_home (joe_u object_r user_xrdb_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.Xresources" file file_joe_user_xrdb_home)
 
     (allow joe_t user_x_home_t manage_file_perms)
     (allow joe_t user_x_home_t relabel_file_perms)
@@ -237,6 +243,12 @@
 
     (call xserver_common_client_subject (joe_xloadimg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
+    (call usersubject_application_subject (joe_xrdb_t))
+
+    (call usersubject_home_dir_filetrans (joe_t user_xrdb_home_t file ".Xresources"))
+
+    (call xserver_common_client_subject (joe_xrdb_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
     (optional joe_xserver_optional_joe_mozilla
         (type joe_firefox_t)
         (call mozilla_role_template_firefox (joe_r joe_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
@@ -245,6 +257,24 @@
         (context file_joe_user_mozilla_cache (joe_u object_r user_mozilla_cache_t ((s0)(s0))))
         (filecon "/home/joe/\.cache/mozilla(/.*)?" any file_joe_user_mozilla_cache)
 
+        (allow joe_t joe_firefox_t (process (signal signull sigstop sigkill)))
+        (call ps_subject_pattern (joe_t joe_firefox_t))
+
+        (allow joe_t user_firefox_home_t manage_file_perms)
+        (allow joe_t user_firefox_home_t relabel_dir_perms)
+        (allow joe_t user_firefox_home_t manage_file_perms)
+        (allow joe_t user_firefox_home_t relabel_file_perms)
+        (allow joe_t user_firefox_home_t manage_lnk_file_perms)
+        (allow joe_t user_firefox_home_t relabel_lnk_file_perms)
+        (allow joe_t user_mozilla_cache_t manage_dir_perms)
+        (allow joe_t user_mozilla_cache_t relabel_dir_perms)
+        (allow joe_t user_mozilla_cache_t manage_file_perms)
+        (allow joe_t user_mozilla_cache_t relabel_file_perms)
+        (allow joe_t user_firefox_tmp_t manage_file_perms)
+        (allow joe_t user_firefox_tmp_t relabel_file_perms)
+        (allow joe_t user_firefox_tmpfs_t manage_file_perms)
+        (allow joe_t user_firefox_tmpfs_t relabel_file_perms)
+ 
         (allow joe_firefox_t joe_plugs_t (unix_stream_socket (read write)))
         (allow joe_firefox_t joe_plugs_t (fd (use)))
 
@@ -283,7 +313,8 @@
 
         (call usersubject_dontaudit_read_all_inherited_user_files (joe_firefox_t))
 
-        (call usersubject_list_generic_data (joe_firefox_t))
+        (call usersubject_manage_generic_data_files (joe_firefox_t)) ; ~/.local/share/.recently-used.xbel.*
+
         (call usersubject_read_cert_files (joe_firefox_t))
 
         (call xserver_common_client_subject (joe_firefox_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
@@ -293,7 +324,7 @@
         (allow joe_xorg_t joe_firefox_t (fd (use)))
 
         (optional joe_firefox_optional_joe_xpdf
-            (call xpdf_role_template (joe_r joe_firefox_t joe_xpdf_t user_xpdf_home_t)))
+            (call xpdf_role_template (joe_r joe_firefox_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t)))
 
         (optional joe_firefox_optional_joe_pa
             (call pa_client_subject (joe_r joe_firefox_t joe_pa_t user_pa_home_t
@@ -318,14 +349,19 @@
         (call usersubject_manage_font_cache_files (joe_plugs_t))
         (call usersubject_cache_filetrans_user_font_cache_dir (joe_plugs_t))
 
-        (type joe_xremotec_t)
-        (call mozilla_role_template_xremotec (joe_r joe_t joe_xremotec_t))
-
         (call usersubject_application_subject (joe_plugs_t))
-        (call usersubject_application_subject (joe_xremotec_t))
 
         (call xserver_common_client_subject (joe_plugs_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
         (call xserver_client_subject_tmpfs_template (joe_plugs_t user_plugs_tmpfs_t))
+
+        (type joe_xremotec_t)
+        (call mozilla_role_template_xremotec (joe_r joe_t joe_xremotec_t))
+
+        (allow joe_t joe_xremotec_t (process (signal signull sigstop sigkill)))
+        (call ps_subject_pattern (joe_t joe_xremotec_t))
+
+        (call usersubject_application_subject (joe_xremotec_t))
+        (call usersubject_read_generic_home_content_files (joe_xremotec_t))
 
         (call xserver_common_client_subject (joe_xremotec_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
@@ -348,19 +384,36 @@
 
     (optional joe_xserver_optional_joe_xpdf
         (type joe_xpdf_t)
-        (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t))
+        (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t))
 
         (context file_joe_user_xpdf_home (joe_u object_r user_xpdf_home_t ((s0)(s0))))
         (filecon "/home/joe/\.xpdfrc" file file_joe_user_xpdf_home)
 
+        (allow joe_t joe_xpdf_t (process (signal signull sigstop sigkill)))
+        (call ps_subject_pattern (joe_t joe_xpdf_t))
+ 
+        (allow joe_t user_xpdf_home_t manage_file_perms)
+        (allow joe_t user_xpdf_home_t relabel_file_perms)
+
+        (allow joe_t user_xpdf_tmp_t manage_file_perms)
+        (allow joe_t user_xpdf_tmp_t relabel_file_perms)
+ 
         (call usersubject_home_dir_filetrans (joe_t user_xpdf_home_t file ".xpdfrc"))
+
+        (call usersubject_dontaudit_read_all_inherited_user_files (joe_xpdf_t))
 
         (call usersubject_application_subject (joe_xpdf_t))
 
         (call usersubject_manage_generic_home_content_files (joe_xpdf_t))
         (call usersubject_home_dir_filetrans_user_home (joe_xpdf_t file "*"))
 
-        (call xserver_common_client_subject (joe_xpdf_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+        (call xserver_common_client_subject (joe_xpdf_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+        (optional joe_xpdf_optional_joe_mozilla
+            (call mozilla_role_template_firefox (joe_r joe_xpdf_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
+                user_firefox_tmp_t user_firefox_tmpfs_t))
+
+            (call mozilla_role_template_xremotec (joe_r joe_xpdf_t joe_xremotec_t))))
 
     (optional joe_xserver_optional_joe_mplayer
         (type joe_mplayer_t)
@@ -591,7 +644,7 @@
 
     (call usersubject_home_bin_auto_subject_type_transition (joe_emacs_t joe_t))
 
-    (call usersubject_dontaudit_getattr_all_home_content_files (joe_emacs_t))
+    (call usersubject_dontaudit_read_all_inherited_user_files (joe_emacs_t))
     (call usersubject_getattr_mail_spool_files (joe_emacs_t))
 
     (call git_role_template (joe_r joe_emacs_t joe_git_t user_git_home_t
