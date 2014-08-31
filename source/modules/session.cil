@@ -102,6 +102,13 @@
     (s0))))
 (filecon "/run/user/0/.*" any file_session_run)
 
+(type session_orc_run_t)
+(call session_run_object (session_orc_run_t))
+
+(context file_session_orc_run (session_u object_r session_orc_run_t ((s0)
+    (s0))))
+(filecon "/run/user/0/\.orc(/.*)?*" any file_session_orc_run)
+
 (type session_tmp_t)
 (call session_tmp_object (session_tmp_t))
 
@@ -156,6 +163,8 @@
 (call session_run_user_dir_filetrans_session_run (session_t sock_file "*"))
 (call session_run_user_dir_filetrans_session_run (session_t blk_file "*"))
 (call session_run_user_dir_filetrans_session_run (session_t chr_file "*"))
+
+(call session_run_user_dir_filetrans_orc_run_dir (session_t))
 
 (call files_tmp_filetrans (session_t session_tmp_t dir "*"))
 (call files_tmp_filetrans (session_t session_tmp_t file "*"))
@@ -1165,7 +1174,11 @@
     (call filesystem_tmpfs_filetrans (session_pa_t session_pa_tmpfs_t file "*"))
 
     (call session_search_generic_config (session_pa_t))
-    (call session_search_run_user_dir (session_pa_t))
+
+    (call session_manage_orc_run_dirs (session_pa_t))
+    (call session_manage_orc_run_files (session_pa_t))
+    (call session_mmap_orc_run_files (session_pa_t))
+    (call session_run_user_dir_filetrans_orc_run_dir (session_pa_t))
 
     (type session_pactl_t)
     (call pa_role_template_pactl (session_r session_t session_pactl_t session_pa_run_t
@@ -1507,6 +1520,22 @@
     (name ARG4))
     (call session_search_run_user_dir (ARG1))
     (call filetrans_pattern (ARG1 session_run_user_dir_t ARG2 ARG3 ARG4)))
+
+(macro session_run_user_dir_filetrans_orc_run_dir ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call session_run_user_dir_filetrans (ARG1 session_orc_run_t dir ".orc")))
+
+(macro session_manage_orc_run_dirs ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 session_orc_run_t session_orc_run_t)))
+
+(macro session_manage_orc_run_files ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call manage_files_pattern (ARG1 session_orc_run_t session_orc_run_t)))
+
+(macro session_mmap_orc_run_files ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call mmap_files_pattern (ARG1 session_orc_run_t session_orc_run_t)))
 
 (macro session_run_user_dir_filetrans_session_run ((type ARG1)
     (class ARG2)(name ARG3))

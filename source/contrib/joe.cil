@@ -77,6 +77,10 @@
     (s0))))
 (filecon "/run/user/1000/.*" any file_joe_user_run)
 
+(context file_joe_user_orc_run (joe_u object_r user_orc_run_t ((s0)
+    (s0))))
+(filecon "/run/user/1000/\.orc(/.*)?" any file_joe_user_orc_run)
+
 (context file_joe_user_mail_spool (joe_u object_r user_mail_spool_t ((s0)
     mls_systemhigh)))
 (filecon "/var/spool/mail/joe" file file_joe_user_mail_spool)
@@ -974,8 +978,12 @@
 
     (call usersubject_run_user_dir_filetrans (joe_t user_pa_run_t dir "pulse")) 
 
+    (call usersubject_manage_orc_run_dirs (joe_pa_t))
+    (call usersubject_manage_orc_run_files (joe_pa_t))
+    (call usersubject_mmap_orc_run_files (joe_pa_t))
+    (call usersubject_run_user_dir_filetrans_orc_run_dir (joe_pa_t))
+
     (call usersubject_search_generic_config (joe_pa_t))
-    (call usersubject_search_run_user_dir (joe_pa_t))
 
     (optional joe_pa_optional_joe_xserver
         (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))

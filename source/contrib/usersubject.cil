@@ -59,6 +59,9 @@
 (type user_run_t)
 (call usersubject_run_object (user_run_t))
 
+(type user_orc_run_t)
+(call usersubject_run_object (user_orc_run_t))
+
 (type user_tmp_t)
 (call usersubject_tmp_object (user_tmp_t))
 
@@ -112,6 +115,7 @@
 (call usersubject_generic_bin_template (is_common_login_user_subject))
 (call usersubject_generic_cert_template (is_common_login_user_subject))
 (call usersubject_generic_run_template (is_common_login_user_subject))
+(call usersubject_orc_run_template (is_common_login_user_subject))
 (call usersubject_generic_tmp_template (is_common_login_user_subject))
 (call usersubject_generic_tmpfs_template (is_common_login_user_subject))
 
@@ -860,15 +864,11 @@
     (call usersubject_manage_mozilla_lnk_files (ARG1))
     (call usersubject_manage_mozilla_fifo_files (ARG1))
     (call usersubject_manage_mozilla_sock_files (ARG1))
-    (call usersubject_manage_mozilla_blk_files (ARG1))
-    (call usersubject_manage_mozilla_chr_files (ARG1))
     (call usersubject_relabel_mozilla_dirs (ARG1))
     (call usersubject_relabel_mozilla_files (ARG1))
     (call usersubject_relabel_mozilla_lnk_files (ARG1))
     (call usersubject_relabel_mozilla_fifo_files (ARG1))
     (call usersubject_relabel_mozilla_sock_files (ARG1))
-    (call usersubject_relabel_mozilla_blk_files (ARG1))
-    (call usersubject_relabel_mozilla_chr_files (ARG1))
     (call usersubject_home_dir_filetrans_user_mozilla_dir (ARG1)))
 
 (macro usersubject_home_dir_filetrans_user_mozilla_dir ((type ARG1))
@@ -895,14 +895,6 @@
     (call usersubject_search_home_dir (ARG1))
     (call manage_sock_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
 
-(macro usersubject_manage_mozilla_blk_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call manage_blk_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
-
-(macro usersubject_manage_mozilla_chr_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call manage_chr_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
-
 (macro usersubject_relabel_mozilla_dirs ((type ARG1))
     (call usersubject_search_home_dir (ARG1))
     (call relabel_dirs_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
@@ -922,14 +914,6 @@
 (macro usersubject_relabel_mozilla_sock_files ((type ARG1))
     (call usersubject_search_home_dir (ARG1))
     (call relabel_sock_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
-
-(macro usersubject_relabel_mozilla_blk_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call relabel_blk_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
-
-(macro usersubject_relabel_mozilla_chr_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call relabel_chr_files_pattern (ARG1 user_mozilla_home_t user_mozilla_home_t)))
 
 (macro usersubject_run_user_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
@@ -1022,6 +1006,47 @@
 (macro usersubject_relabel_generic_run_content_chr_files ((type ARG1))
     (call usersubject_search_run_user_dir (ARG1))
     (call relabel_chr_files_pattern (ARG1 user_run_t user_run_t)))
+
+(macro usersubject_orc_run_template ((type ARG1))
+    (call usersubject_manage_orc_run_dirs (ARG1))
+    (call usersubject_manage_orc_run_files (ARG1))
+    (call usersubject_manage_orc_run_lnk_files (ARG1))
+    (call usersubject_relabel_orc_run_dirs (ARG1))
+    (call usersubject_relabel_orc_run_files (ARG1))
+    (call usersubject_relabel_orc_run_lnk_files (ARG1))
+    (call usersubject_run_user_dir_filetrans_orc_run_dir (ARG1)))
+
+(macro usersubject_run_user_dir_filetrans_orc_run_dir ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call usersubject_run_user_dir_filetrans (ARG1 user_orc_run_t dir ".orc")))
+
+(macro usersubject_manage_orc_run_dirs ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 user_orc_run_t user_orc_run_t)))
+
+(macro usersubject_manage_orc_run_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call manage_files_pattern (ARG1 user_orc_run_t user_orc_run_t)))
+
+(macro usersubject_mmap_orc_run_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call mmap_files_pattern (ARG1 user_orc_run_t user_orc_run_t)))
+
+(macro usersubject_manage_orc_run_lnk_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call manage_lnk_files_pattern (ARG1 user_orc_run_t user_orc_run_t)))
+
+(macro usersubject_relabel_orc_run_dirs ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call relabel_dirs_pattern (ARG1 user_orc_run_t user_orc_run_t)))
+
+(macro usersubject_relabel_orc_run_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call relabel_files_pattern (ARG1 user_orc_run_t user_orc_run_t)))
+
+(macro usersubject_relabel_orc_run_lnk_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call relabel_lnk_files_pattern (ARG1 user_orc_run_t user_orc_run_t)))
 
 (macro usersubject_generic_tmp_template ((type ARG1))
     (call usersubject_manage_generic_tmp_content_dirs (ARG1))
