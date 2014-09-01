@@ -587,8 +587,3 @@
 
 (filecon "/proc/.*" any ())
 (filecon "/proc" dir ())
-
-; others
-
-(optional system_optional_session
-    (call session_setsched (system_t))) ; rtkit-daemon
