@@ -27,6 +27,17 @@
 
 (roleallow system_r session_r)
 
+; miscfiles
+(type session_terminfo_home_t)
+(call session_home_object (session_terminfo_home_t))
+
+(context file_session_terminfo_home (session_u object_r session_terminfo_home_t ((s0)(s0))))
+(filecon "/root\.terminfo" file file_session_terminfo_home)
+
+(allow session_t session_terminfo_home_t manage_file_perms)
+(allow session_t session_terminfo_home_t relabel_file_perms)
+(call session_home_dir_filetrans (session_t session_terminfo_home_t file ".terminfo"))
+
 (type session_cache_t)
 (call session_cache_object (session_cache_t))
 
@@ -669,6 +680,8 @@
     (call session_home_dir_filetrans (session_t session_rtorrent_home_t dir ".rtorrent")) 
     (call session_read_generic_home_content_files (session_rtorrent_t))
 
+    (allow session_rtorrent_t session_terminfo_home_t read_file_perms)
+
     (call session_application_subject (session_rtorrent_t)))
 
 (optional session_optional_session_elinks
@@ -695,6 +708,8 @@
 
     (call session_home_dir_filetrans (session_t session_elinks_home_t file ".lynxrc")) 
     (call session_home_dir_filetrans (session_elinks_t session_elinks_t file ".lynxrc"))
+
+    (allow session_elinks_t session_terminfo_home_t read_file_perms)
 
     (call files_tmp_filetrans (session_elinks_t session_elinks_tmp_t file "*"))
 
@@ -734,6 +749,8 @@
     (call session_tmp_filetrans_generic_tmp (session_emacs_t dir "*"))
     (call session_tmp_filetrans_generic_tmp (session_emacs_t file "*"))
     (call session_tmp_filetrans_generic_tmp (session_emacs_t lnk_file "*"))
+
+    (allow session_emacs_t session_terminfo_home_t read_file_perms)
 
     (call session_tmp_filetrans (session_emacs_t session_emacs_tmp_t sock_file "server"))
 
@@ -799,6 +816,8 @@
 
     (call session_home_filetrans (session_git_t session_git_home_t dir ".git"))
 
+    (allow session_git_t session_terminfo_home_t read_file_perms)
+
     (type session_git_tmp_t)
     (call session_tmp_object (session_git_tmp_t))
 
@@ -855,6 +874,8 @@
     (call session_home_dir_filetrans (session_t session_tig_home_t file ".tigrc"))
 
     (call getattr_files_pattern (session_tig_t session_git_home_t session_git_home_t))
+
+    (allow session_tig_t session_terminfo_home_t read_file_perms)
 
     (call git_role_template (session_r session_tig_t session_git_t session_git_home_t session_git_conf_t
         session_git_tmp_t))
@@ -963,6 +984,8 @@
         (call stream_connect_pattern (session_pincurses_t session_gpg_home_t session_gpgagent_home_t
             session_gpgagent_t))
 
+        (allow session_pincurses_t session_terminfo_home_t read_file_perms)
+
         (call session_application_subject (session_pincurses_t))
         (call session_use_terminals (session_pincurses_t)))
 
@@ -1016,6 +1039,8 @@
     (call session_home_dir_filetrans (session_mutt_t session_mutt_home_t file ".mutt_cache"))
     (call session_home_dir_filetrans (session_mutt_t session_mutt_home_t file ".mutt_certificates"))
 
+    (allow session_mutt_t session_terminfo_home_t read_file_perms)
+
     (call session_manage_generic_home_content_files (session_mutt_t))
     (call session_home_dir_filetrans_session_home (session_mutt_t file "*"))
 
@@ -1056,6 +1081,8 @@
     (call session_home_dir_filetrans (session_irssi_t session_irssi_home_t dir ".irssi"))
     (call session_home_dir_filetrans (session_t session_irssi_home_t dir ".irssi"))
 
+    (allow session_irssi_t session_terminfo_home_t read_file_perms)
+
     (call session_application_subject (session_irssi_t))
     (call session_read_cert_files (session_irssi_t)))
     
@@ -1076,6 +1103,8 @@
 
     (call session_home_dir_filetrans (session_t session_newsb_home_t dir ".newsbeuter"))
     (call session_home_dir_filetrans (session_newsb_t session_newsb_home_t dir ".newsbeuter"))
+
+    (allow session_newsb_t session_terminfo_home_t read_file_perms)
 
     (call session_application_subject (session_newsb_t))
     (call session_use_terminals (session_newsb_t))
@@ -1104,6 +1133,8 @@
 
     (call session_home_dir_filetrans (session_t session_screen_home_t file ".screenrc")) 
 
+    (allow session_screen_t session_terminfo_home_t read_file_perms)
+
     (type session_screen_tmp_t)
     (call session_tmp_object (session_screen_tmp_t))
 
@@ -1126,6 +1157,8 @@
 
     (call session_manage_generic_home_content_files (session_ssh_t))
     (call session_home_dir_filetrans_session_home (session_ssh_t file "*"))
+
+    (allow session_ssh_t session_terminfo_home_t read_file_perms)
 
     (call session_manage_generic_tmp_files (session_ssh_t))
     (call session_tmp_filetrans_generic_tmp (session_ssh_t file "*"))
@@ -1230,6 +1263,8 @@
 
     (call session_home_dir_filetrans (session_t session_moc_home_t dir ".moc")) 
     (call session_home_dir_filetrans (session_moc_t session_moc_home_t dir ".moc")) 
+
+    (allow session_moc_t session_terminfo_home_t read_file_perms)
 
     (optional session_moc_optional_session_pa
         (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t

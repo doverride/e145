@@ -4,6 +4,13 @@
 (call usersubject_base_common_login_user_template (joe_u joe_r joe_t (s0) (s0) systemhigh))
 
 ; miscfiles
+(context file_joe_user_terminfo_home (joe_u object_r user_terminfo_home_t ((s0)(s0))))
+(filecon "/home/joe/\.terminfo" file file_joe_user_terminfo_home)
+
+(allow joe_t user_terminfo_home_t manage_file_perms)
+(allow joe_t user_terminfo_home_t relabel_file_perms)
+(call usersubject_home_dir_filetrans (joe_t user_terminfo_home_t file ".terminfo"))
+
 (context file_joe_user_pass_home (joe_u object_r user_pass_home_t ((s0)(s0))))
 (filecon "/home/joe/\.password-store(/.*)?" any file_joe_user_pass_home)
 
@@ -591,6 +598,8 @@
     (call usersubject_home_dir_filetrans (joe_t user_rtorrent_home_t dir ".rtorrent")) 
     (call usersubject_read_generic_home_content_files (joe_rtorrent_t))
 
+    (allow joe_rtorrent_t user_terminfo_home_t read_file_perms)
+
     (call usersubject_application_subject (joe_rtorrent_t)))
 
 (optional joe_optional_joe_elinks
@@ -624,6 +633,8 @@
 
     (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t file ".lynxrc")) 
     (call usersubject_home_dir_filetrans (joe_elinks_t user_elinks_home_t file ".lynxrc")) 
+
+    (allow joe_elinks_t user_terminfo_home_t read_file_perms)
 
     (call files_tmp_filetrans (joe_elinks_t user_elinks_tmp_t file "*"))
 
@@ -660,6 +671,8 @@
     (call usersubject_manage_generic_tmp_content_files (joe_emacs_t))
     (call usersubject_manage_generic_tmp_content_lnk_files (joe_emacs_t))
     (call usersubject_manage_generic_tmp_content_sock_files (joe_emacs_t))
+
+    (allow joe_emacs_t user_terminfo_home_t read_file_perms)
 
     (call usersubject_tmp_filetrans_generic_user_tmp (joe_emacs_t dir "*"))
     (call usersubject_tmp_filetrans_generic_user_tmp (joe_emacs_t file "*"))
@@ -732,6 +745,8 @@
     (call usersubject_application_subject (joe_git_t))
     (call usersubject_home_filetrans (joe_git_t user_git_home_t dir ".git"))
 
+    (allow joe_git_t user_terminfo_home_t read_file_perms)
+
     (call subtrans_pattern (joe_git_t user_git_home_t joe_t))
     (call commands_bin_auto_subject_type_transition (joe_git_t joe_t))
     (call commands_shell_auto_subject_type_transition (joe_git_t joe_t))
@@ -759,6 +774,8 @@
     (call usersubject_home_dir_filetrans (joe_t user_tig_home_t file ".tigrc"))
 
     (call getattr_files_pattern (joe_tig_t user_git_home_t user_git_home_t))
+
+    (allow joe_tig_t user_terminfo_home_t read_file_perms)
 
     (call git_role_template (joe_r joe_tig_t joe_git_t user_git_home_t user_git_conf_t
         user_git_tmp_t))
@@ -857,6 +874,9 @@
         (call stream_connect_pattern (joe_pincurses_t user_gpg_home_t user_gpgagent_home_t
             joe_gpgagent_t))
 
+        (allow joe_pincurses_t user_terminfo_home_t read_file_perms)
+
+
         (call usersubject_application_subject (joe_pincurses_t))
         (call usersubject_use_terminals (joe_pincurses_t))
 
@@ -869,6 +889,8 @@
 
             (call stream_connect_pattern (joe_pinentry_t user_gpg_home_t user_gpgagent_home_t
                 joe_gpgagent_t))
+
+            (allow joe_pinentry_t user_terminfo_home_t read_file_perms)
 
             (call usersubject_application_subject (joe_pinentry_t))
             (call usersubject_use_terminals (joe_pinentry_t))))
@@ -932,6 +954,8 @@
     (call usersubject_home_dir_filetrans (joe_mutt_t user_mutt_home_t file ".mutt_cache"))
     (call usersubject_home_dir_filetrans (joe_mutt_t user_mutt_home_t file ".mutt_certificates"))
 
+    (allow joe_mutt_t user_terminfo_home_t read_file_perms)
+
     (call usersubject_manage_generic_home_content_files (joe_mutt_t))
     (call usersubject_home_dir_filetrans_user_home (joe_mutt_t file "*"))
 
@@ -966,6 +990,8 @@
     (call usersubject_home_dir_filetrans (joe_t user_irssi_home_t dir ".irssi"))
     (call usersubject_home_dir_filetrans (joe_irssi_t user_irssi_home_t dir ".irssi"))
 
+    (allow joe_irssi_t user_terminfo_home_t read_file_perms)
+
     (call usersubject_application_subject (joe_irssi_t))
     (call usersubject_read_cert_files (joe_irssi_t))
 
@@ -990,6 +1016,8 @@
 
     (call usersubject_home_dir_filetrans (joe_newsb_t user_newsb_home_t dir ".newsbeuter"))
 
+    (allow joe_newsb_t user_terminfo_home_t read_file_perms)
+
     (call usersubject_application_subject (joe_newsb_t))
     (call usersubject_use_terminals (joe_newsb_t))
     (call usersubject_read_cert_files (joe_newsb_t))
@@ -1013,6 +1041,8 @@
     (filecon "/home/joe/\.screenrc" file file_joe_user_screen_home)
 
     (call usersubject_home_dir_filetrans (joe_t user_screen_home_t file ".screenrc")) 
+
+    (allow joe_screen_t user_terminfo_home_t read_file_perms)
 
     (call usersubject_application_subject (joe_screen_t))
     (call usersubject_use_terminals (joe_screen_t))
@@ -1044,6 +1074,8 @@
  
     (call usersubject_manage_generic_home_content_files (joe_ssh_t))
     (call usersubject_home_dir_filetrans_user_home (joe_ssh_t file "*"))
+
+    (allow joe_ssh_t user_terminfo_home_t read_file_perms)
 
     (call usersubject_manage_generic_tmp_content_files (joe_ssh_t))
     (call usersubject_tmp_filetrans_generic_user_tmp (joe_ssh_t file "*"))
@@ -1122,6 +1154,8 @@
 
     (call usersubject_home_dir_filetrans (joe_t user_moc_home_t dir ".moc")) 
     (call usersubject_home_dir_filetrans (joe_moc_t user_moc_home_t dir ".moc")) 
+
+    (allow joe_moc_t user_terminfo_home_t read_file_perms)
 
     (optional joe_moc_optional_joe_xserver
         (call xserver_client_subject (joe_moc_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))

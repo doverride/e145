@@ -78,6 +78,9 @@
 (call terminal_tty_object (device_user_pts_t))
 
 ; miscfiles
+(type user_terminfo_home_t)
+(call usersubject_home_object (user_terminfo_home_t))
+
 (type user_pass_home_t)
 (call usersubject_home_object (user_pass_home_t))
 
