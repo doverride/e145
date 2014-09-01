@@ -113,7 +113,7 @@
 (allow bluetoothctl_t self (capability (net_raw)))
 (allow bluetoothctl_t self create_socket_perms)
 
-; (call files_dontaudit_search_all (bluetoothctl_t)) ; catchall: cwd
+(call files_dontaudit_search_all (bluetoothctl_t)) ; catchall: cwd
 (call files_read_generic_etc_files (bluetoothctl_t)) ; /etc/inputrc
 
 (call bluetooth_dbus_chat_bluetoothd (bluetoothctl_t))
