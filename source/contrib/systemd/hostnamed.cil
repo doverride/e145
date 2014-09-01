@@ -106,5 +106,9 @@
     (call files_search_etc (ARG1))
     (allow ARG1 hostnamed_conf_t read_file_perms))
 
+(macro hostnamed_dbus_chat ((type ARG1))
+    (allow ARG1 hostnamed_t (dbus (send_msg)))
+    (allow hostnamed_t ARG1 (dbus (send_msg))))
+
 (macro hostnamed_admin ((type ARG1))
     (typeattributeset is_hostnamed_admin_subject ARG1))

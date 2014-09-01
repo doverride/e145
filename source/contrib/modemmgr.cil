@@ -43,6 +43,35 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*ModemManager.*" file file_modemmgr_unit)
 
+(allow modemmgr_t self (capability (sys_admin)))
+(allow modemmgr_t self create_netlink_kobject_uevent_socket_perms)
+
+(call system_read_generic_proc_files (modemmgr_t))
+
+(call devices_list_sysfs (modemmgr_t))
+(call devices_read_sysfs_files (modemmgr_t))
+(call devices_rw_modem (modemmgr_t))
+
+(call selinux_getattr_filesystems (modemmgr_t))
+
+(call terminal_use_unallocated_tty_nodes (modemmgr_t))
+
+(call dbus_acquire_service_system (modemmgr_t))
+(call dbus_system_client_subject (modemmgr_t))
+
+(optional modemmgr_optional_journald
+    (call journald_client_subject (modemmgr_t)))
+
+(optional modemmgr_optional_miscfiles
+    (call miscfiles_read_localization_files (modemmgr_t)))
+
+(optional modemmgr_optional_networkmgr
+    (call networkmgr_dbus_chat (modemmgr_t)))
+
+(optional modemmgr_optional_udevd
+    (call udevd_read_config_files (modemmgr_t))
+    (call udevd_read_run_files (modemmgr_t)))
+
 (allow is_modemmgr_admin_subject is_modemmgr_subject signal_perms)
 (allow is_modemmgr_admin_subject is_modemmgr_subject (process (ptrace)))
 (call ps_subject_pattern (is_modemmgr_admin_subject is_modemmgr_subject))

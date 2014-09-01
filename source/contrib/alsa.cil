@@ -53,6 +53,7 @@
 (filecon "/usr/lib/systemd/system/[^/]*alsa-restore.*" file file_alsa_unit)
 (filecon "/usr/lib/systemd/system/[^/]*alsa-store.*" file file_alsa_unit)
 
+(allow alsactl_t self (capability (sys_tty_config)))
 (allow alsactl_t self (process (getsched setsched signal)))
 
 (allow alsactl_t alsactl_run_t manage_file_perms)
@@ -60,6 +61,8 @@
 
 (allow alsactl_t alsactl_lock_t manage_file_perms)
 (call files_run_lock_filetrans (alsactl_t alsactl_lock_t file "*"))
+
+(call system_use_fd (alsactl_t))
 
 (call devices_rw_sound (alsactl_t))
 (call devices_read_sysfs_files (alsactl_t))

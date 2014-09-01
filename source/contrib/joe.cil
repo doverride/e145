@@ -54,7 +54,7 @@
 
 (context file_joe_user_mozilla_home (joe_u object_r user_mozilla_home_t ((s0)
     (s0))))
-(filecon "/home/joe/\.mozilla(/.*)?*" any file_joe_user_mozilla_home)
+(filecon "/home/joe/\.mozilla(/.*)?" any file_joe_user_mozilla_home)
 
 (context file_joe_user_bin (joe_u object_r user_bin_t ((s0)
     (s0))))

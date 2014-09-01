@@ -107,7 +107,7 @@
 
 (context file_session_orc_run (session_u object_r session_orc_run_t ((s0)
     (s0))))
-(filecon "/run/user/0/\.orc(/.*)?*" any file_session_orc_run)
+(filecon "/run/user/0/\.orc(/.*)?" any file_session_orc_run)
 
 (type session_tmp_t)
 (call session_tmp_object (session_tmp_t))

@@ -63,9 +63,50 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*bluetooth.*" file file_bluetoothd_unit)
 
+(type bluetoothd_tmp_t)
+(call files_tmp_object (bluetoothd_tmp_t))
+
+(allow bluetoothd_t self (capability (net_admin)))
+(allow bluetoothd_t self create_netlink_kobject_uevent_socket_perms)
+
+; BUG:
+(allow bluetoothd_t self (capability (net_bind_service)))
+(allow bluetoothd_t self create_socket_perms)
+(allow bluetoothd_t self (socket (listen accept)))
+
+(allow bluetoothd_t bluetoothd_tmp_t manage_fifo_file_perms)
+(call files_tmp_filetrans (bluetoothd_t bluetoothd_tmp_t fifo_file "*"))
+
 (allow bluetoothd_t bluetoothd_var_lib_t manage_dir_perms)
 (allow bluetoothd_t bluetoothd_var_lib_t manage_file_perms)
 (call files_var_lib_filetrans (bluetoothd_t bluetoothd_var_lib_t dir "*"))
+
+(call system_request_load_module (bluetoothd_t))
+
+(call devices_read_urandom (bluetoothd_t))
+(call devices_rw_wireless (bluetoothd_t))
+(call devices_read_sysfs_files (bluetoothd_t))
+
+(call dbus_acquire_service_system (bluetoothd_t))
+(call dbus_system_client_subject (bluetoothd_t))
+
+(call systemd_stream_connect (bluetoothd_t))
+
+(optional bluetoothd_optional_hostnamed
+    (call hostnamed_dbus_chat (bluetoothd_t)))
+
+(optional bluetoothd_optional_journald
+    (call journald_client_subject (bluetoothd_t)))
+
+(optional bluetoothd_optional_miscfiles
+    (call miscfiles_read_localization_files (bluetoothd_t)))
+
+(optional bluetoothd_optional_networkmgr
+    (call networkmgr_dbus_chat (bluetoothd_t)))
+
+(optional bluetoothd_optional_udevd
+    (call udevd_read_config_files (bluetoothd_t))
+    (call udevd_read_run_files (bluetoothd_t)))
 
 (allow is_bluetooth_admin_subject is_bluetooth_subject signal_perms)
 (allow is_bluetooth_admin_subject is_bluetooth_subject (process (ptrace)))
