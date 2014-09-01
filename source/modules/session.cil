@@ -765,6 +765,8 @@
     (call session_application_subject (session_emacsclient_t))
     (call session_use_terminals (session_emacsclient_t))
 
+    (allow session_emacsclient_t session_emacs_t (process (signal)))
+
     (call stream_connect_pattern (session_emacsclient_t session_tmp_t session_emacs_tmp_t
         session_emacs_t)))
 

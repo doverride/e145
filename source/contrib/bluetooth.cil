@@ -87,8 +87,10 @@
 (call devices_rw_wireless (bluetoothd_t))
 (call devices_read_sysfs_files (bluetoothd_t))
 
+(call filesystem_getattr_filesystems (bluetoothd_t))
+
 (call dbus_acquire_service_system (bluetoothd_t))
-(call dbus_system_client_subject (bluetoothd_t))
+(call dbus_system_client_subject (is_bluetooth_subject))
 
 (call systemd_stream_connect (bluetoothd_t))
 
@@ -99,7 +101,7 @@
     (call journald_client_subject (bluetoothd_t)))
 
 (optional bluetoothd_optional_miscfiles
-    (call miscfiles_read_localization_files (bluetoothd_t)))
+    (call miscfiles_read_localization_files (is_bluetooth_subject)))
 
 (optional bluetoothd_optional_networkmgr
     (call networkmgr_dbus_chat (bluetoothd_t)))
@@ -107,6 +109,23 @@
 (optional bluetoothd_optional_udevd
     (call udevd_read_config_files (bluetoothd_t))
     (call udevd_read_run_files (bluetoothd_t)))
+
+(allow bluetoothctl_t self (capability (net_raw)))
+(allow bluetoothctl_t self create_socket_perms)
+
+; (call files_dontaudit_search_all (bluetoothctl_t)) ; catchall: cwd
+(call files_read_generic_etc_files (bluetoothctl_t)) ; /etc/inputrc
+
+(call bluetooth_dbus_chat_bluetoothd (bluetoothctl_t))
+
+(optional bluetoothctl_optional_miscfiles
+    (call miscfiles_read_terminfo_files (bluetoothctl_t)))
+
+(optional bluetoothctl_optional_usersubject
+    (call usersubject_use_inherited_terminals (bluetoothctl_t)))
+
+(optional bluetoothctl_optional_session
+    (call session_use_inherited_terminals (bluetoothctl_t)))
 
 (allow is_bluetooth_admin_subject is_bluetooth_subject signal_perms)
 (allow is_bluetooth_admin_subject is_bluetooth_subject (process (ptrace)))
@@ -125,6 +144,10 @@
 (macro bluetooth_run_bluetoothctl ((type ARG1)(role ARG2))
     (call bluetooth_subtrans_bluetoothctl (ARG1))
     (roleattributeset is_bluetoothctl_role ARG2))
+
+(macro bluetooth_dbus_chat_bluetoothd ((type ARG1))
+    (allow ARG1 bluetoothd_t (dbus (send_msg)))
+    (allow bluetoothd_t ARG1 (dbus (send_msg))))
 
 (macro bluetooth_read_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))

@@ -335,7 +335,7 @@
             (call usersubject_run_user_dir_filetrans (joe_firefox_t user_pa_run_t dir "pulse")))
 
         (type joe_plugs_t)
-        (call mozilla_role_template_plugs (joe_r joe_firefox_t joe_plugs_t user_plugs_tmpfs_t))
+        (call mozilla_role_template_plugs (joe_r joe_firefox_t joe_plugs_t user_plugs_tmpfs_t user_firefox_home_t))
 
         (allow joe_plugs_t joe_firefox_t (unix_stream_socket (read write)))
 
@@ -692,6 +692,8 @@
 
     (call usersubject_application_subject (joe_emacsclient_t))
     (call usersubject_use_terminals (joe_emacsclient_t))
+
+    (allow joe_emacsclient_t joe_emacs_t (process (signal)))
 
     (call stream_connect_pattern (joe_emacsclient_t user_tmp_t user_emacs_tmp_t
         joe_emacs_t)))
