@@ -250,6 +250,10 @@
 (optional session_optional_bootchart
     (call bootchart_run (session_t session_r)))
 
+(optional session_optional_bluetooth
+    (call bluetooth_admin (session_t))
+    (call bluetooth_run_bluetoothctl (session_t session_r)))
+
 (optional session_optional_bootloader
     (call bootloader_admin (session_t))
     (call bootloader_run_grub (session_t session_r))
@@ -345,6 +349,10 @@
 (optional session_optional_machined
     (call machined_admin (session_t))
     (call machined_run_machinectl (session_t session_r)))
+
+(optional session_optional_modemmgr
+    (call modemmgr_admin (session_t))
+    (call modemmgr_run_mmcli (session_t session_r)))
 
 (optional session_optional_modules
     (call modules_admin (session_t)))

@@ -1,0 +1,65 @@
+(typepermissive modemmgr_t)
+
+(roleattribute is_mmcli_role)
+
+(typeattribute is_modemmgr_admin_subject)
+
+(typeattribute is_modemmgr_subject)
+(typeattributeset is_modemmgr_subject (mmcli_t modemmgr_t))
+
+(typeattribute is_modemmgr_file_object)
+(typeattributeset is_modemmgr_file_object (modemmgr_dbus_conf_t
+    modemmgr_unit_t))
+
+(type mmcli_t)
+(type mmcli_exec_t)
+(call application_subject_entry (mmcli_t mmcli_exec_t))
+(roletype is_mmcli_role mmcli_t)
+
+(context file_mmcli_exec (system_u object_r mmcli_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/mmcli" file file_mmcli_exec)
+
+(type modemmgr_t)
+(type modemmgr_exec_t)
+(call systemd_daemon_subject_entry (modemmgr_t modemmgr_exec_t))
+
+(context file_modemmgr_exec (system_u object_r modemmgr_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/ModemManager" file file_modemmgr_exec)
+
+(type modemmgr_dbus_conf_t)
+(call dbus_etc_object (modemmgr_dbus_conf_t))
+
+(context file_modemmgr_dbus_conf (system_u object_r modemmgr_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.ModemManager1\.conf" file
+    file_modemmgr_dbus_conf)
+
+(type modemmgr_unit_t)
+(call systemd_unit_object (modemmgr_unit_t))
+
+(context file_modemmgr_unit (system_u object_r modemmgr_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*ModemManager.*" file file_modemmgr_unit)
+
+(allow is_modemmgr_admin_subject is_modemmgr_subject signal_perms)
+(allow is_modemmgr_admin_subject is_modemmgr_subject (process (ptrace)))
+(call ps_subject_pattern (is_modemmgr_admin_subject is_modemmgr_subject))
+
+(allow is_modemmgr_admin_subject modemmgr_unit_t (service (all)))
+
+(call admin_pattern (is_modemmgr_admin_subject is_modemmgr_file_object))
+
+(macro modemmgr_exec_mmcli ((type ARG1))
+    (call can_exec (ARG1 mmcli_exec_t)))
+
+(macro modemmgr_subtrans_mmcli ((type ARG1))
+    (call subtrans_pattern (ARG1 mmcli_exec_t mmcli_t)))
+
+(macro modemmgr_run_mmcli ((type ARG1)(role ARG2))
+    (call modemmgr_subtrans_mmcli (ARG1))
+    (roleattributeset is_mmcli_role ARG2))
+
+(macro modemmgr_admin ((type ARG1))
+    (typeattributeset is_modemmgr_admin_subject ARG1))

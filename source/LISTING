@@ -13,6 +13,7 @@ contrib/alsa.cil
 contrib/application.cil
 contrib/audit.cil
 contrib/auth.cil
+contrib/bluetooth.cil
 contrib/bootloader.cil
 contrib/bt.cil
 contrib/bti.cil
@@ -45,6 +46,7 @@ contrib/lvm.cil
 contrib/mail.cil
 contrib/miscfiles.cil
 contrib/moc.cil
+contrib/modemmgr.cil
 contrib/mount.cil
 contrib/mozilla.cil
 contrib/mplayer.cil
