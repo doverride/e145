@@ -716,7 +716,7 @@
 (optional session_optional_session_emacs
     (type session_emacs_t)
     (call emacs_role_template (session_r session_t session_emacs_t
-        session_emacs_home_t))
+        session_emacs_home_t session_emacs_tmp_t))
 
     (type session_emacs_home_t)
     (call session_home_object (session_emacs_home_t))
@@ -725,12 +725,17 @@
     (filecon "/root/\.emacs" file file_session_emacs_home)
     (filecon "/root/\.emacs\.d(/.*)?" any file_session_emacs_home)
 
+    (type session_emacs_tmp_t)
+    (call session_tmp_object (session_emacs_tmp_t))
+
     (call session_home_dir_filetrans (session_t session_emacs_home_t file ".emacs")) 
     (call session_home_dir_filetrans (session_t session_emacs_home_t dir ".emacs.d")) 
 
     (call session_tmp_filetrans_generic_tmp (session_emacs_t dir "*"))
     (call session_tmp_filetrans_generic_tmp (session_emacs_t file "*"))
     (call session_tmp_filetrans_generic_tmp (session_emacs_t lnk_file "*"))
+
+    (call session_tmp_filetrans (session_emacs_t session_emacs_tmp_t sock_file "server"))
 
     (call session_application_subject (session_emacs_t))
     (call session_use_terminals (session_emacs_t))
@@ -760,7 +765,7 @@
     (call session_application_subject (session_emacsclient_t))
     (call session_use_terminals (session_emacsclient_t))
 
-    (call stream_connect_pattern (session_emacsclient_t session_tmp_t session_tmp_t
+    (call stream_connect_pattern (session_emacsclient_t session_tmp_t session_emacs_tmp_t
         session_emacs_t)))
 
 (optional session_optional_session_git
@@ -1413,6 +1418,10 @@
 
 (macro session_tmp_filetrans_generic_tmp ((type ARG1)(class ARG2)(name ARG3))
     (call files_tmp_filetrans (ARG1 session_tmp_t ARG2 ARG3)))
+
+(macro session_tmp_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call files_search_tmp (ARG1))
+    (call filetrans_pattern (ARG1 session_tmp_t ARG2 ARG3 ARG4))) 
 
 (macro session_search_cert ((type ARG1))
     (call session_search_home_dir (ARG1))

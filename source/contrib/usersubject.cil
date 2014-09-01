@@ -1074,6 +1074,10 @@
 (macro usersubject_tmp_filetrans_generic_user_tmp ((type ARG1)(class ARG2)(name ARG3))
     (call files_tmp_filetrans (ARG1 user_tmp_t ARG2 ARG3)))
 
+(macro usersubject_user_tmp_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call files_search_tmp (ARG1))
+    (call filetrans_pattern (ARG1 user_tmp_t ARG2 ARG3 ARG4)))
+
 (macro usersubject_manage_generic_tmp_content_dirs ((type ARG1))
     (call files_search_tmp (ARG1))
     (call manage_dirs_pattern (ARG1 user_tmp_t user_tmp_t)))

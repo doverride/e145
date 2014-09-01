@@ -645,7 +645,7 @@
 (optional joe_optional_joe_emacs
     (type joe_emacs_t)
     (call emacs_role_template (joe_r joe_t joe_emacs_t
-        user_emacs_home_t))
+        user_emacs_home_t user_emacs_tmp_t))
 
     (context file_joe_user_emacs_home (joe_u object_r user_emacs_home_t ((s0)(s0))))
     (filecon "/home/joe/\.emacs" file file_joe_user_emacs_home)
@@ -653,6 +653,8 @@
 
     (call usersubject_home_dir_filetrans (joe_t user_emacs_home_t file ".emacs")) 
     (call usersubject_home_dir_filetrans (joe_t user_emacs_home_t dir ".emacs.d")) 
+
+    (call usersubject_user_tmp_filetrans (joe_emacs_t user_emacs_tmp_t sock_file "server"))
 
     (call usersubject_manage_generic_tmp_content_dirs (joe_emacs_t))
     (call usersubject_manage_generic_tmp_content_files (joe_emacs_t))
@@ -691,7 +693,7 @@
     (call usersubject_application_subject (joe_emacsclient_t))
     (call usersubject_use_terminals (joe_emacsclient_t))
 
-    (call stream_connect_pattern (joe_emacsclient_t user_tmp_t user_tmp_t
+    (call stream_connect_pattern (joe_emacsclient_t user_tmp_t user_emacs_tmp_t
         joe_emacs_t)))
 
 (optional joe_optional_joe_git
