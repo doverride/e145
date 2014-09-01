@@ -382,6 +382,41 @@
 
         (call xserver_common_client_subject (joe_xlock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
+    (optional joe_xserver_optional_joe_qiv
+        (type joe_qiv_t)
+        (call qiv_role_template (joe_r joe_t joe_qiv_t user_qiv_home_t user_qiv_tmpfs_t))
+
+        (context file_joe_user_qiv_home (joe_u object_r user_qiv_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.qiv-trash" dir file_joe_user_qiv_home)
+
+        (allow joe_t joe_qiv_t (process (signal signull sigstop sigkill)))
+        (call ps_subject_pattern (joe_t joe_qiv_t))
+
+        (allow joe_t user_qiv_home_t manage_dir_perms)
+        (allow joe_t user_qiv_home_t relabel_dir_perms)
+        (allow joe_t user_qiv_tmpfs_t manage_file_perms)
+        (allow joe_t user_qiv_tmpfs_t relabel_file_perms)
+
+        (call filetrans_pattern (joe_t user_qiv_home_t user_home_t file "*"))
+        (call filetrans_pattern (joe_qiv_t user_qiv_home_t user_home_t file "*"))
+
+        (call usersubject_home_dir_filetrans (joe_t user_qiv_home_t dir ".qiv-trash"))
+        (call usersubject_home_dir_filetrans (joe_qiv_t user_qiv_home_t dir ".qiv-trash"))
+
+        (call usersubject_dontaudit_read_all_inherited_user_files (joe_qiv_t))
+
+        (call usersubject_manage_font_cache_dirs (joe_qiv_t))
+        (call usersubject_manage_font_cache_files (joe_qiv_t))
+        (call usersubject_cache_filetrans_user_font_cache_dir (joe_qiv_t))
+
+        (call usersubject_application_subject (joe_qiv_t))
+
+        (call usersubject_manage_generic_home_content_files (joe_qiv_t))
+        (call usersubject_home_dir_filetrans_user_home (joe_qiv_t file "*"))
+
+        (call xserver_common_client_subject (joe_qiv_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_client_subject_tmpfs_template (joe_qiv_t user_qiv_tmpfs_t)))
+
     (optional joe_xserver_optional_joe_xpdf
         (type joe_xpdf_t)
         (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t))

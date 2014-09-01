@@ -323,7 +323,8 @@
 
 (macro xserver_client_subject_tmpfs_template ((type ARG1)(type ARG2))
     (typeattributeset is_xserver_client_subject_tmpfs ARG1)
-    (typeattributeset is_xserver_tmpfs_file ARG2))
+    (typeattributeset is_xserver_tmpfs_file ARG2)
+    (call filesystem_tmpfs_filetrans (ARG1 ARG2 file "*")))
 
 (macro xserver_signal_all_client_subjects ((type ARG1))
     (allow ARG1 is_xserver_client_subject (process (signal))))

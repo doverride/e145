@@ -61,6 +61,7 @@ contrib/pinentry.cil
 contrib/plymouth.cil
 contrib/polkit.cil
 contrib/ppp.cil
+contrib/qiv.cil
 contrib/ratpoison.cil
 contrib/rpm.cil
 contrib/rtkit.cil
