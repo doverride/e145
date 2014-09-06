@@ -962,6 +962,10 @@
     (call usersubject_search_run_user_dir (ARG1))
     (call manage_files_pattern (ARG1 user_run_t user_run_t)))
 
+(macro usersubject_mmap_generic_run_content_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call mmap_files_pattern (ARG1 user_run_t user_run_t)))
+
 (macro usersubject_manage_generic_run_content_lnk_files ((type ARG1))
     (call usersubject_search_run_user_dir (ARG1))
     (call manage_lnk_files_pattern (ARG1 user_run_t user_run_t)))

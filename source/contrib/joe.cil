@@ -1109,6 +1109,9 @@
 
     (call usersubject_run_user_dir_filetrans (joe_t user_pa_run_t dir "pulse")) 
 
+    (call usersubject_manage_generic_run_content_files (joe_pa_t))
+    (call usersubject_mmap_generic_run_content_files (joe_pa_t))
+ 
     (call usersubject_manage_orc_run_dirs (joe_pa_t))
     (call usersubject_manage_orc_run_files (joe_pa_t))
     (call usersubject_mmap_orc_run_files (joe_pa_t))

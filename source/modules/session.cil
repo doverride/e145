@@ -1223,6 +1223,9 @@
 
     (call session_search_generic_config (session_pa_t))
 
+    (call session_manage_generic_run_content_files (session_pa_t))
+    (call session_mmap_generic_run_content_files (session_pa_t))
+ 
     (call session_manage_orc_run_dirs (session_pa_t))
     (call session_manage_orc_run_files (session_pa_t))
     (call session_mmap_orc_run_files (session_pa_t))
@@ -1590,6 +1593,14 @@
 (macro session_mmap_orc_run_files ((type ARG1))
     (call session_search_run_user_dir (ARG1))
     (call mmap_files_pattern (ARG1 session_orc_run_t session_orc_run_t)))
+
+(macro session_manage_generic_run_content_files ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call manage_files_pattern (ARG1 session_run_t session_run_t)))
+
+(macro session_mmap_generic_run_content_files ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call mmap_files_pattern (ARG1 session_run_t session_run_t)))
 
 (macro session_run_user_dir_filetrans_session_run ((type ARG1)
     (class ARG2)(name ARG3))
