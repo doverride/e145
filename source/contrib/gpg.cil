@@ -91,6 +91,8 @@
 
 (call devices_list (is_gpgagent_subject))
 
+(call files_search_tmp (is_gpgagent_subject))
+
 (optional gpgagent_optional_miscfiles
     (call miscfiles_read_localization_files (is_gpgagent_subject)))
 
