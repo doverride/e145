@@ -25,12 +25,14 @@
 (context file_irssi_conf (system_u object_r irssi_conf_t ((s0)(s0))))
 (filecon "/etc/irssi\.conf" file file_irssi_conf)
 
+(allow is_irssi_subject self (process (signal)))
 (allow is_irssi_subject self rw_fifo_file_perms)
 
 (call can_exec (is_irssi_subject irssi_exec_t))
 
 (call system_read_sysctl_crypto_files (is_irssi_subject))
 
+(call devices_read_random (is_irssi_subject))
 (call devices_read_urandom (is_irssi_subject))
 
 (call files_read_generic_etc_files (is_irssi_subject)) ; openssl.conf
