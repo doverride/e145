@@ -2,6 +2,7 @@
 (roleattribute is_xterm_role)
 (roleattribute is_xclock_role)
 (roleattribute is_xloadimg_role)
+(roleattribute is_xsel_role)
 
 (typeattribute is_xinit_subject)
 (typeattribute is_xauth_subject)
@@ -11,6 +12,7 @@
 (typeattribute is_xorg_subject)
 (typeattribute is_xorg_wrap_subject)
 (typeattribute is_xrdb_subject)
+(typeattribute is_xsel_subject)
 
 (typeattribute is_xserver_admin_subject)
 
@@ -50,6 +52,12 @@
 
 (context file_xclock_exec (system_u object_r xclock_exec_t ((s0)(s0))))
 (filecon "/usr/bin/xclock" file file_xclock_exec)
+
+(type xsel_exec_t)
+(call application_subject_entry (is_xsel_subject xsel_exec_t))
+
+(context file_xsel_exec (system_u object_r xsel_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xsel" file file_xsel_exec)
 
 (type xloadimg_exec_t)
 (call application_subject_entry (is_xloadimg_subject xloadimg_exec_t))
@@ -200,6 +208,8 @@
     (type user_xloadimg_conf_t)
     (call usersubject_home_object (user_xloadimg_conf_t)))
 
+(call files_search_etc (is_xsel_subject)) ; /etc/ld.so.preload, /etc/suid-debug
+
 (allow is_xserver_client_subject_tmpfs self create_shm_perms)
 (allow is_xorg_subject is_xserver_client_subject_tmpfs rw_shm_perms)
 
@@ -292,6 +302,14 @@
     (typeattributeset is_xclock_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xclock_exec_t ARG3))
+    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call ps_subject_pattern (ARG2 ARG3)))
+
+(macro xserver_role_template_xsel ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_xsel_role ARG1)
+    (typeattributeset is_xsel_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xsel_exec_t ARG3))
     (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
     (call ps_subject_pattern (ARG2 ARG3)))
 

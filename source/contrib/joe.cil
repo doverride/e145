@@ -149,6 +149,9 @@
     (type joe_xclock_t)
     (call xserver_role_template_xclock (joe_r joe_t joe_xclock_t))
 
+    (type joe_xsel_t)
+    (call xserver_role_template_xsel (joe_r joe_t joe_xsel_t))
+
     (type joe_xloadimg_t)
     (call xserver_role_template_xloadimg (joe_r joe_t joe_xloadimg_t user_xloadimg_conf_t))
 
@@ -255,6 +258,10 @@
     (call usersubject_home_dir_filetrans (joe_t user_xrdb_home_t file ".Xresources"))
 
     (call xserver_common_client_subject (joe_xrdb_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call usersubject_application_subject (joe_xsel_t))
+
+    (call xserver_client_subject (joe_xsel_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
     (optional joe_xserver_optional_joe_mozilla
         (type joe_firefox_t)
