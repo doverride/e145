@@ -26,7 +26,7 @@
     (type user_mozilla_cache_t)
     (call usersubject_cache_object (user_mozilla_cache_t)))
 
-(allow is_firefox_subject self (process (setsched getsched execmem)))
+(allow is_firefox_subject self (process (setsched getsched execmem signal)))
 (allow is_firefox_subject self create_unix_dgram_socket_perms)
 (allow is_firefox_subject self rw_fifo_file_perms)
 
