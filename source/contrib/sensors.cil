@@ -100,6 +100,12 @@
 (optional sensors_optional_miscfiles
     (call miscfiles_read_localization_files (sensors_t)))
 
+(optional sensors_optional_session
+    (call session_use_inherited_terminals (sensors_t)))
+
+(optional sensors_optional_usersubject
+    (call usersubject_use_inherited_terminals (sensors_t)))
+
 (allow is_sensors_admin_subject is_sensors_subject signal_perms)
 (allow is_sensors_admin_subject is_sensors_subject (process (ptrace)))
 (call ps_subject_pattern (is_sensors_admin_subject is_sensors_subject))
