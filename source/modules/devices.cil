@@ -175,7 +175,7 @@
 (call devices_object (device_mei_t))
 
 (context device_mei (system_u object_r device_mei_t ((s0) (s0))))
-(filecon "/dev/mei" char device_mei)
+(filecon "/dev/mei.*" char device_mei)
 
 (type device_memory_t)
 (call devices_object (device_memory_t))
