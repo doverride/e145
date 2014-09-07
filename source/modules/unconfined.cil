@@ -77,7 +77,7 @@
 
 (booleanif unconfined_ptrace
     (true
-        (allow is_unconfined_subject self (process (ptrace)))))
+        (call subject_ptrace_all_subjects (is_unconfined_subject))))
 
 (optional unconfined_subject_optional_storage
     (call storage_unconfined (is_unconfined_subject)))

@@ -214,6 +214,9 @@
 (macro subject_getpgid_all_subjects ((type ARG1))
     (allow ARG1 is_subject (process (getpgid))))
 
+(macro subject_ptrace_all_subjects ((type ARG1))
+    (allow ARG1 is_subject (process (ptrace))))
+
 (macro subject_dontaudit_read_all_subjects_state ((type ARG1))
     (dontaudit ARG1 is_subject (dirs (list)))
     (dontaudit ARG1 is_subject read_file_perms))
