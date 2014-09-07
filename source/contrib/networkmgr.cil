@@ -258,7 +258,10 @@
 (optional networkmgr_disp_optional_ntp
     (call ntp_subtrans (networkmgr_disp_t))) ; chronyc
 
+(allow networkmgrcli_t self create_netlink_kobject_uevent_socket_perms)
+
 (call devices_read_urandom (networkmgrcli_t))
+(call devices_read_sysfs_files (networkmgrcli_t))
 
 (call files_list_tmp (networkmgrcli_t))
 
@@ -278,6 +281,10 @@
 (optional networkmgrcli_optional_miscfiles
     (call miscfiles_read_terminfo_files (networkmgrcli_t))
     (call miscfiles_read_localization_files (networkmgrcli_t)))
+
+(optional networkmgrcli_optional_udevd
+    (call udevd_read_config_files (networkmgrcli_t))
+    (call udevd_read_run_files (networkmgrcli_t)))
 
 (optional networkmgrcli_optional_usersubject
     (call usersubject_use_inherited_terminals (networkmgrcli_t)))
