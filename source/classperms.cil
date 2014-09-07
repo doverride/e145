@@ -763,6 +763,6 @@
     (process (not (transition dyntransition setcurrent ptrace setsched
     execmem execstack execheap))))
 
-(classpermission all_security_perms_except_load_policy_setenforce_and_setbool)
-(classpermissionset all_security_perms_except_load_policy_setenforce_and_setbool
-    (security (not (load_policy setenforce setbool))))
+(classpermission all_security_perms_except_load_policy_and_setenforce)
+(classpermissionset all_security_perms_except_load_policy_and_setenforce
+    (security (not (load_policy setenforce))))
