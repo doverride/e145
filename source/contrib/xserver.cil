@@ -185,6 +185,10 @@
 (optional xterm_optional_miscfiles
     (call miscfiles_read_terminfo_files (is_xterm_subject)))
 
+(allow is_xauth_subject self create_unix_dgram_socket_perms)
+
+(call system_read_proc_net_files (is_xauth_subject))
+
 (call devices_read_sysfs_files (is_xauth_subject))
 
 (call filesystem_getattr_filesystems (is_xauth_subject))
