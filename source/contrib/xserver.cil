@@ -208,7 +208,20 @@
     (type user_xloadimg_conf_t)
     (call usersubject_home_object (user_xloadimg_conf_t)))
 
+(allow is_xrdb_subject self rw_fifo_file_perms)
+
+(call commands_execute_bin_files (is_xrdb_subject)) ; mcpp
+(call commands_execute_shell_files (is_xrdb_subject)) ; mcpp
+
+(optional xrdb_optional_usersubject
+    (type user_xrdb_home_t)
+    (call usersubject_home_object (user_xrdb_home_t)))
+
 (call files_search_etc (is_xsel_subject)) ; /etc/ld.so.preload, /etc/suid-debug
+
+(optional xsel_optional_usersubject
+    (type user_xsel_log_t)
+    (call usersubject_home_object (user_xsel_log_t)))
 
 (allow is_xserver_client_subject_tmpfs self create_shm_perms)
 (allow is_xorg_subject is_xserver_client_subject_tmpfs rw_shm_perms)
@@ -224,15 +237,6 @@
     (call miscfiles_read_fonts_files (is_xserver_client_subject))
     (call miscfiles_read_fonts_cache_files (is_xserver_client_subject))
     (call miscfiles_read_localization_files (is_xserver_client_subject)))
-
-(allow is_xrdb_subject self rw_fifo_file_perms)
-
-(call commands_execute_bin_files (is_xrdb_subject)) ; mcpp
-(call commands_execute_shell_files (is_xrdb_subject)) ; mcpp
-
-(optional xrdb_optional_usersubject
-    (type user_xrdb_home_t)
-    (call usersubject_home_object (user_xrdb_home_t)))
 
 (allow is_xorg_subject is_xserver_tmpfs_file (file (read write)))
 
@@ -305,13 +309,16 @@
     (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
     (call ps_subject_pattern (ARG2 ARG3)))
 
-(macro xserver_role_template_xsel ((role ARG1)(type ARG2)(type ARG3))
+(macro xserver_role_template_xsel ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_xsel_role ARG1)
     (typeattributeset is_xsel_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xsel_exec_t ARG3))
     (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (ARG2 ARG3)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG3 ARG4 manage_file_perms))
 
 (macro xserver_role_template_xterm ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_xterm_role ARG1)

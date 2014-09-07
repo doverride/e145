@@ -150,7 +150,7 @@
     (call xserver_role_template_xclock (joe_r joe_t joe_xclock_t))
 
     (type joe_xsel_t)
-    (call xserver_role_template_xsel (joe_r joe_t joe_xsel_t))
+    (call xserver_role_template_xsel (joe_r joe_t joe_xsel_t user_xsel_log_t))
 
     (type joe_xloadimg_t)
     (call xserver_role_template_xloadimg (joe_r joe_t joe_xloadimg_t user_xloadimg_conf_t))
@@ -180,6 +180,9 @@
 
     (context file_joe_user_xrdb_home (joe_u object_r user_xrdb_home_t ((s0)(s0))))
     (filecon "/home/joe/\.Xresources" file file_joe_user_xrdb_home)
+
+    (context file_joe_user_xsel_log (joe_u object_r user_xsel_log_t ((s0)(s0))))
+    (filecon "/home/joe/\.xsel.log.*" file file_joe_user_xsel_log)
 
     (allow joe_t user_x_home_t manage_file_perms)
     (allow joe_t user_x_home_t relabel_file_perms)
@@ -262,6 +265,8 @@
     (call usersubject_application_subject (joe_xsel_t))
 
     (call xserver_client_subject (joe_xsel_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call usersubject_home_dir_filetrans (joe_t user_xsel_log_t file ".xsel.log"))
 
     (optional joe_xserver_optional_joe_mozilla
         (type joe_firefox_t)
