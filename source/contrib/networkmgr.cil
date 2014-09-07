@@ -243,6 +243,7 @@
     (call dhcp_subtrans_dhclient (networkmgr_disp_t))) ; /etc/NetworkManager/dispatcher.d/11-dhclient
 
 (optional networkmgr_disp_optional_ip
+    (call ip_read_config (networkmgr_disp_t))
     (call ip_exec (networkmgr_disp_t)))
 
 (optional networkmgr_disp_optional_journald
