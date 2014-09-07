@@ -59,6 +59,9 @@
 
 (call system_read_generic_proc_files (is_udevd_subject))
 
+(call devices_list_sysfs (is_udevd_subject))
+(call devices_rw_sysfs_files (is_udevd_subject))
+
 (call selinux_get_filesystems_mount (is_udevd_subject))
 
 (call udevd_list_config (is_udevd_subject))
@@ -110,7 +113,7 @@
 (call devices_setattr_all_nodes (udevd_t))
 (call devices_update_timestamp_all_nodes (udevd_t))
 (call devices_write_kmsg (udevd_t))
-(call devices_manage_sysfs_files (udevd_t))
+(call devices_rw_sysfs_dirs (udevd_t)) ; write is for power dir, its looking for control (i suspect bug)
 
 (call files_list_etc (udevd_t))
 
@@ -169,8 +172,6 @@
     (call storage_read_scsi_generic_nodes (udevd_t)))
 
 (call devices_read_urandom (udevadm_t))
-(call devices_list_sysfs (udevadm_t))
-(call devices_rw_sysfs_files (udevadm_t))
 
 (call udevd_manage_config_files (udevadm_t))
 (call udevd_manage_run_files (udevadm_t))

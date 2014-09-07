@@ -725,8 +725,8 @@
     (allow ARG1 sysfs_t (dirs (search)))
     (allow ARG1 sysfs_t read_file_perms))
 
-(macro devices_manage_sysfs_files ((type ARG1))
-    (call manage_files_pattern (ARG1 sysfs_t sysfs_t)))
+(macro devices_rw_sysfs_dirs ((type ARG1))
+    (allow ARG1 sysfs_t rw_dir_perms)) 
 
 (macro devices_audit_access_sysfs_dirs ((type ARG1))
     (dontaudit ARG1 sysfs_t (dir (audit_access))))
