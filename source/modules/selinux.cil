@@ -1,4 +1,4 @@
-(boolean secure_mode_policyload false)
+(boolean secure_mode_policyload true)
 
 (typeattribute is_bool_file_object)
 
@@ -9,6 +9,10 @@
 (typeattribute can_setenforce)
 (typeattribute
     not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setenforce)
+
+(typeattribute can_setbool)
+(typeattribute
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setbool)
 
 (typeattribute can_setsecparam)
 (typeattribute
@@ -58,6 +62,14 @@
         security_t (security (setenforce)))
 
 (typeattributeset
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setbool
+    (not (has_unconfined_access_to_selinux_assets can_setbool)))
+
+(neverallow
+    not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setbool
+        security_t (security (setbool)))
+
+(typeattributeset
     not_associated_with_has_unconfined_access_to_selinux_assets_or_can_setsecparam
         (not (has_unconfined_access_to_selinux_assets can_setsecparam)))
 
@@ -68,7 +80,7 @@
 (booleanif (not secure_mode_policyload)
     (true
         (allow has_unconfined_access_to_selinux_assets security_t
-            (security (load_policy setenforce)))
+            (security (load_policy setenforce setbool)))
         (allow has_unconfined_access_to_selinux_assets
             secure_mode_policyload_t write_file_perms)))
 
@@ -90,7 +102,7 @@
         write_file_perms)
 
 (allow has_unconfined_access_to_selinux_assets security_t
-    all_security_perms_except_load_policy_and_setenforce)
+    all_security_perms_except_load_policy_setenforce_and_setbool)
 
 (macro selinux_boolean_object ((type ARG1))
     (typeattributeset is_bool_file_object ARG1))
@@ -162,6 +174,7 @@
         rw_file_perms)
     (call read_files_pattern (ARG1 security_t secure_mode_policyload_t))
     (allow ARG1 security_t (security (setbool)))
+    (typeattributeset can_setbool ARG1)
     (booleanif (not secure_mode_policyload)
         (true
             (allow ARG1 secure_mode_policyload_t
