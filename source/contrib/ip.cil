@@ -15,14 +15,23 @@
 (filecon "/usr/sbin/iwpriv" file file_ip_exec)
 (filecon "/usr/sbin/tc" file file_ip_exec)
 
+(type ip_conf_t)
+(call files_etc_object (ip_conf_t))
+
+(context file_ip_conf (system_u object_r ip_conf_t ((s0) (s0))))
+(filecon "/etc/iproute2(/.*)?" any file_ip_conf)
+
 (allow ip_t self (capability (net_admin)))
 (allow ip_t self create_udp_socket_perms)
+(allow ip_t self r_netlink_route_socket_perms)
 (allow ip_t self create_unix_dgram_socket_perms)
 
 (call system_read_sysctl_net_files (ip_t))
 (call system_read_proc_net_files (ip_t))
 
 (call terminal_use_inherited_unallocated_tty_nodes (ip_t))
+
+(call ip_read_config (ip_t))
 
 (optional ip_optional_miscfiles
     (call miscfiles_read_localization_files (ip_t)))
@@ -42,3 +51,8 @@
 (macro ip_run ((type ARG1)(role ARG2))
     (call ip_subtrans (ARG1))
     (roleattributeset is_ip_role (ARG2)))
+
+(macro ip_read_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 ip_conf_t (dirs (list)))
+    (allow ARG1 ip_conf_t read_file_perms))
