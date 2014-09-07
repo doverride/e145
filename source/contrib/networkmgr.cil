@@ -152,8 +152,7 @@
 
 (call dbus_acquire_service_system (networkmgr_t))
 
-(call networkmgr_list_config (networkmgr_t))
-(call networkmgr_read_config_files (networkmgr_t))
+(call networkmgr_manage_config_files (networkmgr_t))
 
 (call polkit_dbus_chat_polkitd (networkmgr_t))
 
@@ -192,7 +191,8 @@
     (call machined_read_run_files (networkmgr_t)))
 
 (optional networkmgr_optional_miscfiles
-    (call miscfiles_read_network_config_files (networkmgr_t))
+    (call miscfiles_manage_network_config_files (networkmgr_t))
+    (call miscfiles_etc_filetrans_net_conf_files (networkmgr_t "*"))
     (call miscfiles_read_network_environ_files (networkmgr_t))
     (call miscfiles_read_localization_files (networkmgr_t)))
 
@@ -325,6 +325,10 @@
 (macro networkmgr_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 networkmgr_conf_t networkmgr_conf_t)))
+
+(macro networkmgr_manage_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call manage_files_pattern (ARG1 networkmgr_conf_t networkmgr_conf_t)))
 
 (macro networkmgr_list_run ((type ARG1))
     (call files_search_run (ARG1))

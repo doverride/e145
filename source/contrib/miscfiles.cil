@@ -176,6 +176,13 @@
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 net_conf_t net_conf_t)))
 
+(macro miscfiles_manage_network_config_files ((type ARG1))
+    (call files_rw_etc_dirs (ARG1))
+    (allow ARG1 net_conf_t manage_file_perms))
+
+(macro miscfiles_etc_filetrans_net_conf_files ((type ARG1)(name ARG2))
+    (call files_etc_filetrans (ARG1 net_conf_t file ARG2)))
+
 (macro miscfiles_read_network_environ_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 net_env_t read_file_perms))
