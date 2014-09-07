@@ -9,9 +9,17 @@
 (context file_hostname_exec (system_u object_r hostname_exec_t ((s0) (s0))))
 (filecon "/usr/bin/hostname" file file_hostname_exec)
 
-(call files_search_etc (hostname_t))
+(allow hostname_t self create_unix_dgram_socket_perms)
+
+(call system_read_proc_net_files (hostname_t))
 
 (call terminal_use_inherited_unallocated_tty_nodes (hostname_t))
+
+(optional hostname_optional_hostnamed
+    (call hostnamed_read_config_files (hostname_t)))
+
+(optional hostname_optional_misfiles
+    (call miscfiles_read_network_config_files (hostname_t)))
 
 (optional hostname_optional_session
     (call session_use_inherited_terminals (hostname_t)))

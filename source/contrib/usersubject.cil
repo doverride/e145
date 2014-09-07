@@ -91,6 +91,7 @@
 (call usersubject_search_all_home (is_user_application_subject))
 
 (allow is_common_login_user_subject self (process (setpgid signal sigkill sigstop signull getattr getsched)))
+(allow is_common_login_user_subject self create_unix_dgram_socket_perms)
 (allow is_common_login_user_subject self rw_fifo_file_perms)
 
 (allow is_common_login_user_subject self (dirs (list)))
@@ -126,6 +127,7 @@
 
 (call system_list_proc (is_common_login_user_subject))
 (call system_read_generic_proc_files (is_common_login_user_subject))
+(call system_read_proc_net_files (is_common_login_user_subject))
 (call system_read_sysctl_kernel_files (is_common_login_user_subject))
 
 (call system_dontaudit_list_all_proc_dirs (is_common_login_user_subject))
