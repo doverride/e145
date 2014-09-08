@@ -1,5 +1,4 @@
 cover these systemd oneshots (are currently running in systemd_daemon_t):
-    /usr/lib/dracut/dracut-initramfs-restore
     /usr/bin/systemd-notify
 
 setbool: make setbool security av permission conditional for callers
