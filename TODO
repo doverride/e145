@@ -1,3 +1,20 @@
+setbool: make setbool security av permission conditional for callers
+    of unconfined_subject() because else they can go around the other
+    conditionals (ptrace, execmem etc)
+
+xhost; add support for xhost and /etc/Xn.hosts
+
+systemd_daemon: consider making it an unconditional "unconfined" subject
+    like rpm but not as permissive
+
+orc: orc patches to make orc more selinux friendly were removed
+    currently i am forced to allow callers of liborc to manage and mmap
+    generic run content files
+
+    if the selinux friendly functionality gets upstreamed i should remove
+    the policy that allows libord callers to manage/mmap generic run user content
+    (currently pa is the only liborc caller that is covered in my policy)
+
 net_admin
     requests for this capability need to be reviewed system-wide
 

@@ -18,6 +18,7 @@ contrib/bootloader.cil
 contrib/bt.cil
 contrib/bti.cil
 contrib/consoletype.cil
+contrib/cron.cil
 contrib/dbus.cil
 contrib/dhcp.cil
 contrib/dm.cil
