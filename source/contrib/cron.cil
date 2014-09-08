@@ -216,6 +216,10 @@
 
 (call commands_shell_files_entry_subject (system_cronjob_t))
 
+(call devices_read_sysfs_files (system_cronjob_t))
+
+(call files_search_var_spool (system_cronjob_t))
+
 (call cron_list_system_spool (system_cronjob_t))
 (call cron_execute_system_spool_files (system_cronjob_t))
 (call cron_read_crond_environ_files (system_cronjob_t))
