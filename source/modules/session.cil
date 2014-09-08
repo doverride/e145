@@ -1263,6 +1263,7 @@
 
     (call session_manage_generic_run_content_files (session_pa_t))
     (call session_mmap_generic_run_content_files (session_pa_t))
+    (call session_run_user_dir_filetrans_session_run (session_pa_t file "*"))
  
     (call session_manage_orc_run_dirs (session_pa_t))
     (call session_manage_orc_run_files (session_pa_t))
