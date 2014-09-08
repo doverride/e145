@@ -140,6 +140,7 @@
 
 (call files_read_generic_etc_files (crond_t)) ; /etc/login.defs
 
+(call selinux_list (crond_t))
 (call selinux_getattr_filesystems (crond_t))
 (call selinux_compute_user_contexts (crond_t))
 (call selinux_compute_access_vector (crond_t))

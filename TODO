@@ -1,3 +1,9 @@
+cover these systemd oneshots (are currently running in systemd_daemon_t):
+    /usr/libexec/lm_sensors/lm_sensors-modprobe-r-wrapper
+    /usr/libexec/lm_sensors/lm_sensors-modprobe-wrapper
+    /usr/lib/dracut/dracut-initramfs-restore
+    /usr/bin/systemd-notify
+
 setbool: make setbool security av permission conditional for callers
     of unconfined_subject() because else they can go around the other
     conditionals (ptrace, execmem etc)
