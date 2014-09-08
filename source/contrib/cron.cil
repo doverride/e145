@@ -1,3 +1,5 @@
+(typepermissive system_cronjob_t)
+
 (roleattribute is_crontab_role)
 
 (typeattribute is_cron_admin_subject)
@@ -40,6 +42,9 @@
 
 (context file_anacron_exec (system_u object_r anacron_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/anacron" file file_anacron_exec)
+
+(type system_cronjob_tmp_t)
+(call files_tmp_object (system_cronjob_tmp_t))
 
 (type crond_conf_t)
 (call files_etc_object (crond_conf_t))
@@ -192,10 +197,18 @@
     (allow crond_t session_cron_spool_t read_file_perms)
     (call session_list_home_dir (crond_t)))
 
-(call commands_shell_files_entry_subject (system_cronjob_t))
+(allow system_cronjob_t system_cronjob_tmp_t manage_dir_perms)
+(allow system_cronjob_t system_cronjob_tmp_t manage_file_perms)
+(allow system_cronjob_t system_cronjob_tmp_t manage_lnk_file_perms)
+(allow system_cronjob_t system_cronjob_tmp_t manage_fifo_file_perms)
+(allow system_cronjob_t system_cronjob_tmp_t manage_sock_file_perms)
+(call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t dir "*"))
+(call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t file "*"))
+(call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t lnk_file "*"))
+(call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t fifo_file "*"))
+(call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t sock_file "*"))
 
-(optional system_cronjob_optional_unconfined
-    (call unconfined_subject (system_cronjob_t)))
+(call commands_shell_files_entry_subject (system_cronjob_t))
 
 (allow is_crontab_subject self (capability (chown setuid setgid dac_override)))
 (allow is_crontab_subject self rw_fifo_file_perms)
