@@ -570,6 +570,27 @@
     (call usersubject_use_inherited_terminals (session_passwd_t))
     (call session_application_subject (session_passwd_t)))
 
+(optional session_optional_session_crontab
+    (type session_crontab_t)
+    (call cron_role_template_crontab (session_r session_t session_crontab_t session_cron_spool_t session_crontab_tmp_t))
+
+    (allow session_t session_crontab_t (process (signal signull sigkill sigstop))) 
+
+    (call cron_spool_filetrans (session_t session_cron_spool_t file "*"))
+    (call cron_spool_filetrans (session_crontab_t session_cron_spool_t file "*"))
+
+    (call session_list_home_dir (session_crontab_t))
+    (call session_application_subject (session_crontab_t))
+
+    (dontaudit crond_t session_t (process (noatsecure siginh rlimitinh)))
+    (allow crond_t session_t (key (search link)))
+    (allow crond_t session_t (process (transition)))
+    (allow crond_t session_t (fd (use)))
+    (allow session_t crond_t (fd (use)))
+
+    (call cron_send_sigchld_crond (session_t))
+    (call cron_rw_inherited_fifo_files_crond (session_t)))
+
 (optional session_optional_session_bti
     (type session_bti_t)
     (call bti_role_template (session_r session_t session_bti_t

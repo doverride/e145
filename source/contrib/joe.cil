@@ -116,6 +116,33 @@
 
     (call usersubject_application_subject (joe_passwd_t)))
 
+(optional joe_optional_joe_crontab
+    (type joe_crontab_t)
+    (call cron_role_template_crontab (joe_r joe_t joe_crontab_t user_cron_spool_t user_crontab_tmp_t))
+ 
+    (allow joe_t joe_crontab_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (joe_t joe_crontab_t))
+
+    (allow joe_t user_cron_spool_t manage_file_perms)
+    (allow joe_t user_cron_spool_t relabel_file_perms)
+
+    (call cron_spool_filetrans (joe_t user_cron_spool_t file "*"))
+    (call cron_spool_filetrans (joe_crontab_t user_cron_spool_t file "*"))
+
+    (allow joe_t user_crontab_tmp_t manage_file_perms)
+    (allow joe_t user_crontab_tmp_t relabel_file_perms)
+
+    (call usersubject_application_subject (joe_crontab_t))
+
+    (dontaudit crond_t joe_t (process (noatsecure siginh rlimitinh)))
+    (allow crond_t joe_t (key (search link)))
+    (allow crond_t joe_t (process (transition)))
+    (allow crond_t joe_t (fd (use)))
+    (allow joe_t crond_t (fd (use)))
+
+    (call cron_send_sigchld_crond (joe_t))
+    (call cron_rw_inherited_fifo_files_crond (joe_t)))
+
 (optional joe_optional_joe_bti
     (type joe_bti_t)
     (call bti_role_template (joe_r joe_t joe_bti_t

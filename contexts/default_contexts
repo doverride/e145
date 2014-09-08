@@ -1,2 +1,3 @@
 system_r:login_t   session_r:session_t
 system_r:sulogin_t   session_r:session_t
+system_r:crond_t    session_r:session_t system_r:system_cronjob_t

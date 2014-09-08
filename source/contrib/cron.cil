@@ -1,0 +1,268 @@
+(roleattribute is_crontab_role)
+
+(typeattribute is_cron_admin_subject)
+
+(typeattribute is_crontab_subject)
+
+(typeattribute is_cron_subject)
+(typeattributeset is_cron_subject (crond_t system_cronjob_t))
+
+(typeattribute is_cron_file_object)
+(typeattributeset is_cron_file_object (crond_conf_t
+    crond_pam_conf_t crond_env_t crond_unit_t cron_spool_t
+    cron_system_spool_t crond_run_t))
+
+(type crontab_exec_t)
+(call application_subject_entry (is_crontab_subject crontab_exec_t))
+
+(context file_crontab_exec (system_u object_r crontab_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/crontab" file file_crontab_exec)
+
+(type crond_t)
+(type crond_exec_t)
+(call systemd_daemon_subject_entry (crond_t crond_exec_t))
+
+(context file_crond_exec (system_u object_r crond_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/crond" file file_crond_exec)
+
+(type system_cronjob_t)
+(call subject_common_subject (system_cronjob_t))
+(call subject_entry (system_cronjob_t cron_system_spool_t))
+
+(type anacron_exec_t)
+(call subject_entry (system_cronjob_t anacron_exec_t))
+(roletype system_r system_cronjob_t)
+
+(context file_anacron_exec (system_u object_r anacron_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/anacron" file file_anacron_exec)
+
+(type crond_conf_t)
+(call files_etc_object (crond_conf_t))
+
+(context file_crond_conf (system_u object_r crond_conf_t ((s0)
+    (s0))))
+(filecon "/etc/cron\.(allow|deny)" file file_crond_conf)
+
+(type crond_pam_conf_t)
+(call auth_pam_etc_object (crond_pam_conf_t))
+
+(context file_crond_pam_conf (system_u object_r crond_pam_conf_t ((s0)
+    (s0))))
+(filecon "/etc/pam\.d/crond" file file_crond_pam_conf)
+
+(type crond_env_t)
+(call files_env_object (crond_env_t))
+
+(context file_crond_env (system_u object_r crond_env_t ((s0)
+    (s0))))
+(filecon "/etc/sysconfig/crond" file file_crond_env)
+(filecon "/etc/sysconfig/run-parts" file file_crond_env)
+
+(type cron_spool_t)
+(call files_var_spool_object (cron_spool_t))
+
+(context file_cron_spool (system_u object_r cron_spool_t ((s0)
+    (s0))))
+(filecon "/var/spool/cron" dir file_cron_spool)
+(filecon "/var/spool/cron/.*" file ())
+
+(type cron_system_spool_t)
+(call files_var_spool_object (cron_system_spool_t))
+
+(context file_cron_system_spool (system_u object_r cron_system_spool_t ((s0)
+    (s0))))
+(filecon "/etc/cron\.d(/.*)?" any file_cron_system_spool)
+(filecon "/etc/cron\.daily(/.*)?" any file_cron_system_spool)
+(filecon "/etc/cron\.hourly(/.*)?" any file_cron_system_spool)
+(filecon "/etc/cron\.monthly(/.*)?" any file_cron_system_spool)
+(filecon "/etc/cron\.weekly(/.*)?" any file_cron_system_spool)
+(filecon "/etc/crontab" file file_cron_system_spool)
+(filecon "/etc/anacrontab" file file_cron_system_spool)
+(filecon "/var/spool/anacron(/.*)?" any file_cron_system_spool)
+
+(type crond_run_t)
+(call files_run_object (crond_run_t))
+
+(context file_crond_run (system_u object_r crond_run_t ((s0)
+    (s0))))
+(filecon "/run/crond\.pid" file file_crond_run)
+(filecon "/run/cron\.reboot" file file_crond_run)
+
+(type crond_unit_t)
+(call systemd_unit_object (crond_unit_t))
+
+(context file_crond_unit (system_u object_r crond_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*crond.*" file file_crond_unit)
+
+(allow crond_t self (capability (setuid setgid net_admin dac_override)))
+(allow crond_t self (process (setexec setsched)))
+(allow crond_t self (key (search write)))
+(allow crond_t self rw_fifo_file_perms)
+
+(allow crond_t crond_run_t manage_file_perms)
+(call files_run_filetrans (crond_t crond_run_t file "*"))
+
+(call subtrans_pattern (crond_t anacron_exec_t system_cronjob_t))
+
+(call system_read_sysctl_kernel_files (crond_t))
+(call system_link_keyring (crond_t))
+
+(call commands_mmap_shell_files (crond_t))
+
+(call devices_read_urandom (crond_t))
+
+(call files_read_generic_etc_files (crond_t)) ; /etc/login.defs
+
+(call selinux_getattr_filesystems (crond_t))
+(call selinux_compute_user_contexts (crond_t))
+(call selinux_compute_access_vector (crond_t))
+(call selinux_validate_context (crond_t))
+
+(call subject_subj_id_change_exemption (crond_t))
+(call subject_role_change_exemption (crond_t))
+
+(call auth_list_pam_config (crond_t))
+(call auth_read_authconfig_pam_config_files (crond_t))
+(call auth_read_generic_pam_config_files (crond_t))
+(call auth_subtrans_chkpwd (crond_t))
+(call auth_nsswitch_client_subject (crond_t))
+
+(call cron_list_spool (crond_t))
+(call cron_read_system_spool_files (crond_t))
+(call cron_read_crond_pam_config_files (crond_t))
+
+(optional crond_optional_audit
+    (call audit_client_subject (crond_t)))
+
+(optional crond_optional_dbus
+    (call dbus_system_client_subject (crond_t)))
+
+(optional crond_optional_journald
+    (call journald_client_subject (crond_t)))
+
+(optional crond_optional_logind
+    (call logind_dbus_chat (crond_t))
+    (call logind_use_fd (crond_t))
+    (call logind_write_inherited_run_fifo_files (crond_t)))
+
+(optional crond_optional_miscfiles
+    (call miscfiles_read_localization_files (crond_t)))
+
+(optional crond_optional_seutil
+    (call seutil_read_default_context_files (crond_t))
+    (call seutil_read_config_files (crond_t)))
+
+(optional crond_optional_usersubject
+    (allow crond_t user_cron_spool_t read_file_perms)
+    (call usersubject_list_home_dir (crond_t)))
+
+(optional crond_optional_session
+    (allow crond_t session_cron_spool_t read_file_perms)
+    (call session_list_home_dir (crond_t)))
+
+(call commands_shell_files_entry_subject (system_cronjob_t))
+
+(optional system_cronjob_optional_unconfined
+    (call unconfined_subject (system_cronjob_t)))
+
+(allow is_crontab_subject self (capability (chown setuid setgid dac_override)))
+(allow is_crontab_subject self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (is_crontab_subject))
+
+(call commands_execute_bin_files (is_crontab_subject))
+(call commands_execute_shell_files (is_crontab_subject))
+
+(call files_read_generic_etc_files (is_crontab_subject)) ; /etc/login.defs
+
+(call selinux_getattr_filesystems (is_crontab_subject))
+(call selinux_get_enforce_mode (is_crontab_subject))
+
+(call auth_list_pam_config (is_crontab_subject))
+(call auth_read_authconfig_pam_config_files (is_crontab_subject))
+(call auth_read_generic_pam_config_files (is_crontab_subject))
+(call auth_run_chkpwd (is_crontab_subject is_crontab_role))
+(call auth_nsswitch_client_subject (is_crontab_subject))
+
+(call cron_read_crond_config_files (is_crontab_subject))
+(call cron_read_crond_pam_config_files (is_crontab_subject))
+
+(optional crontab_optional_audit
+    (call audit_client_subject (is_crontab_subject))
+    (call audit_set_loginuid (is_crontab_subject)))
+
+(optional crontab_optional_journald
+    (call journald_client_subject (is_crontab_subject)))
+
+(optional crontab_optional_miscfiles
+    (call miscfiles_read_localization_files (is_crontab_subject))
+    (call miscfiles_read_terminfo_files (is_crontab_subject)))
+
+(optional crontab_optional_usersubject
+    (type user_cron_spool_t)
+    (call files_var_spool_object (user_cron_spool_t))
+    (type user_crontab_tmp_t)
+    (call usersubject_tmp_object (user_crontab_tmp_t))
+    (call usersubject_list_home_dir (is_crontab_subject))
+    (call usersubject_use_inherited_terminals (is_crontab_subject)))
+
+(optional crontab_optional_session
+    (type session_cron_spool_t)
+    (call files_var_spool_object (session_cron_spool_t))
+    (type session_crontab_tmp_t)
+    (call session_tmp_object (session_crontab_tmp_t)))
+
+(allow is_cron_admin_subject is_cron_subject signal_perms)
+(allow is_cron_admin_subject is_cron_subject (process (ptrace)))
+(call ps_subject_pattern (is_cron_admin_subject is_cron_subject))
+
+(allow is_cron_admin_subject crond_unit_t (service (all)))
+
+(call admin_pattern (is_cron_admin_subject is_cron_file_object))
+
+(macro cron_role_template_crontab ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
+    (roleattributeset is_crontab_role ARG1)
+    (typeattributeset is_crontab_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 crontab_exec_t ARG3))
+    (allow ARG2 ARG4 (file (entrypoint)))
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG5 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 file "*")))
+
+(macro cron_list_spool ((type ARG1))
+    (call files_search_var_spool (ARG1))
+    (allow ARG1 cron_spool_t (dirs (list))))
+
+(macro cron_spool_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call files_search_var_spool (ARG1))
+    (call filetrans_pattern (ARG1 cron_spool_t ARG2 ARG3 ARG4)))    
+
+(macro cron_read_crond_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 crond_conf_t read_file_perms))
+
+(macro cron_read_system_spool_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 cron_system_spool_t (dirs (list)))
+    (allow ARG1 cron_system_spool_t read_file_perms))
+
+(macro cron_read_crond_pam_config_files ((type ARG1))
+    (call auth_search_pam_config (ARG1))
+    (allow ARG1 crond_pam_conf_t read_file_perms))
+
+(macro cron_send_sigchld_crond ((type ARG1))
+    (allow ARG1 crond_t (process (sigchld))))
+
+(macro cron_rw_inherited_fifo_files_crond ((type ARG1))
+    (allow ARG1 crond_t rw_inherited_fifo_file_perms))
+
+(macro cron_read_crond_state ((type ARG1))
+    (allow ARG1 crond_t (dirs (list)))
+    (allow ARG1 crond_t read_file_perms))
+
+(macro cron_admin ((type ARG1))
+    (typeattributeset is_cron_admin_subject ARG1))

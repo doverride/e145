@@ -124,6 +124,9 @@
     (call auth_read_all_login_program_subjects_state (logind_t))
     (call auth_nsswitch_client_subject (logind_t)))
 
+(optional logind_optional_cron
+    (call cron_read_crond_state (logind_t)))
+
 (optional logind_optional_getty
     (call getty_start_service (logind_t)))
 

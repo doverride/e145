@@ -1,2 +1,3 @@
 joe_r:joe_t joe_r:joe_t
-system_r:login_t   joe_r:joe_t
+system_r:login_t    joe_r:joe_t
+system_r:crond_t    joe_r:joe_t
