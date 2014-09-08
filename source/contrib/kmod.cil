@@ -79,6 +79,9 @@
 (optional kmod_optional_miscfiles
     (call miscfiles_read_module_files (kmod_t)))
 
+(macro kmod_exec ((type ARG1))
+    (call can_exec (ARG1 kmod_exec_t)))
+
 (macro kmod_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 kmod_exec_t kmod_t)))
 

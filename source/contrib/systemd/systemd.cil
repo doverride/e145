@@ -28,7 +28,8 @@
 (typeattribute is_systemd_file_object)
 (typeattributeset is_systemd_file_object (systemd_conf_t systemd_var_lib_t
     systemd_run_t systemd_unit_t systemd_pam_conf_t systemd_dbus_conf_t
-    systemd_polkit_conf_t systemd_power_unit_t systemd_kexec_unit_t))
+    systemd_polkit_conf_t systemd_power_unit_t systemd_kexec_unit_t
+    systemd_daemon_tmp_t))
 
 (typeattribute has_unconfined_access_to_systemd_assets)
 
@@ -62,6 +63,9 @@
 (call subject_common_subject (systemd_daemon_t))
 (typeattributeset is_systemd_daemon_subject (systemd_daemon_t))
 (roletype system_r systemd_daemon_t)
+
+(type systemd_daemon_tmp_t)
+(call files_tmp_object (systemd_daemon_tmp_t))
 
 (type systemd_dbus_conf_t)
 (call dbus_etc_object (systemd_dbus_conf_t))
@@ -176,6 +180,20 @@
 
 (auditallow systemd_t systemd_daemon_t (process (transition)))
 
+(allow systemd_daemon_t systemd_daemon_tmp_t manage_dir_perms)
+(allow systemd_daemon_t systemd_daemon_tmp_t manage_file_perms)
+(allow systemd_daemon_t systemd_daemon_tmp_t manage_lnk_file_perms)
+(allow systemd_daemon_t systemd_daemon_tmp_t manage_fifo_file_perms)
+(allow systemd_daemon_t systemd_daemon_tmp_t manage_sock_file_perms)
+(call files_tmp_filetrans (systemd_daemon_t systemd_daemon_tmp_t dir "*"))
+(call files_tmp_filetrans (systemd_daemon_t systemd_daemon_tmp_t file "*"))
+(call files_tmp_filetrans (systemd_daemon_t systemd_daemon_tmp_t lnk_file "*"))
+(call files_tmp_filetrans (systemd_daemon_t systemd_daemon_tmp_t fifo_file "*"))
+(call files_tmp_filetrans (systemd_daemon_t systemd_daemon_tmp_t sock_file "*"))
+
+(call commands_execute_bin_files (systemd_daemon_t))
+(call commands_execute_shell_files (systemd_daemon_t))
+
 (call commands_bin_files_entry_subject (systemd_daemon_t))
 (call commands_shell_files_entry_subject (systemd_daemon_t))
 
@@ -184,8 +202,8 @@
 (call commands_shell_auto_subject_type_transition (systemd_t
     systemd_daemon_t))
 
-(optional systemd_daemon_optional_unconfined
-    (call unconfined_subject (systemd_daemon_t)))
+(optional systemd_daemon_optional_kmod
+    (call kmod_exec (systemd_daemon_t))) ; for lm_sensors
 
 (allow systemd_t self (process (getcap setfscreate setsockcreate
     signull setrlimit setsched setcap sigkill getsched)))
