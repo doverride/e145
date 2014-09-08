@@ -208,6 +208,8 @@
 (call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t fifo_file "*"))
 (call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t sock_file "*"))
 
+(call can_exec (system_cronjob_t anacron_exec_t))
+
 (call system_read_generic_proc_files (system_cronjob_t))
 
 (call commands_execute_bin_files (system_cronjob_t)) ; /usr/bin/run-parts
@@ -223,6 +225,12 @@
 
 (optional system_cronjob_optional_miscfiles
     (call miscfiles_read_localization_files (system_cronjob_t)))
+
+(optional system_cronjob_optional_session
+    (call session_dontaudit_search_home_dir (system_cronjob_t)))
+
+(optional system_cronjob_optional_usersubject
+    (call usersubject_dontaudit_search_home_dir (system_cronjob_t)))
 
 (allow is_crontab_subject self (capability (chown setuid setgid dac_override)))
 (allow is_crontab_subject self rw_fifo_file_perms)
