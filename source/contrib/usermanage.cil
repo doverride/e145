@@ -103,7 +103,7 @@
 (call selinux_getattr_filesystems (is_useradd_or_groupadd_subject))
 (call selinux_validate_context (is_useradd_or_groupadd_subject))
 
-(call subject_obj_id_change_exemption (useradd_t)) ; setfscreate related
+(call subject_obj_id_change_exemption (is_useradd_or_groupadd_subject)) ; setfscreate related
 (call subject_read_all_subjects_state (useradd_t)) ; userdel
  
 (call auth_rw_lastlog_log_files (useradd_t))
@@ -122,6 +122,7 @@
 
 (optional useradd_optional_rpm
     (call rpm_append_inherited_tmp_files (is_useradd_or_groupadd_subject))
+    (call rpm_read_inherited_tmp_files (is_useradd_or_groupadd_subject))
     (call rpm_read_inherited_fifo_files (is_useradd_or_groupadd_subject))
     (call rpm_read_inherited_fifo_files (is_useradd_or_groupadd_subject))
     (call rpm_use_fd (is_useradd_or_groupadd_subject)))

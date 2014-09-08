@@ -61,6 +61,7 @@
 (call devices_read_random (is_gpg_subject))
 
 (call files_dontaudit_list_all (is_gpg_subject)) ; catchall
+(call files_audit_access_generic_tmp_dirs (is_gpg_subject))
 (call files_read_generic_etc_files (is_gpg_subject)) ; FIXME: /etc/openldap/ldap.conf (for keyserver)
 (call files_list_tmp (is_gpg_subject))
 
