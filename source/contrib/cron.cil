@@ -2,6 +2,7 @@
 
 (typeattribute is_cron_admin_subject)
 
+(typeattribute is_cron_system_cronjob_subject)
 (typeattribute is_crontab_subject)
 
 (typeattribute is_cron_subject)
@@ -10,13 +11,14 @@
 (typeattribute is_cron_file_object)
 (typeattributeset is_cron_file_object (crond_conf_t
     crond_pam_conf_t crond_env_t crond_unit_t cron_spool_t
-    cron_system_spool_t crond_run_t))
+    cron_system_spool_t crond_run_t cron_spool_log_t))
 
 (type crontab_exec_t)
 (call application_subject_entry (is_crontab_subject crontab_exec_t))
 
 (context file_crontab_exec (system_u object_r crontab_exec_t ((s0)
     (s0))))
+(filecon "/usr/bin/at" file file_crontab_exec)
 (filecon "/usr/bin/crontab" file file_crontab_exec)
 
 (type crond_t)
@@ -25,6 +27,7 @@
 
 (context file_crond_exec (system_u object_r crond_exec_t ((s0)
     (s0))))
+(filecon "/usr/sbin/atd" file file_crond_exec)
 (filecon "/usr/sbin/crond" file file_crond_exec)
 
 (type system_cronjob_t)
@@ -44,12 +47,14 @@
 (context file_crond_conf (system_u object_r crond_conf_t ((s0)
     (s0))))
 (filecon "/etc/cron\.(allow|deny)" file file_crond_conf)
+(filecon "/etc/at\.(allow|deny)" file file_crond_conf)
 
 (type crond_pam_conf_t)
 (call auth_pam_etc_object (crond_pam_conf_t))
 
 (context file_crond_pam_conf (system_u object_r crond_pam_conf_t ((s0)
     (s0))))
+(filecon "/etc/pam\.d/atd" file file_crond_pam_conf)
 (filecon "/etc/pam\.d/crond" file file_crond_pam_conf)
 
 (type crond_env_t)
@@ -57,6 +62,7 @@
 
 (context file_crond_env (system_u object_r crond_env_t ((s0)
     (s0))))
+(filecon "/etc/sysconfig/atd" file file_crond_env)
 (filecon "/etc/sysconfig/crond" file file_crond_env)
 (filecon "/etc/sysconfig/run-parts" file file_crond_env)
 
@@ -65,8 +71,18 @@
 
 (context file_cron_spool (system_u object_r cron_spool_t ((s0)
     (s0))))
+(filecon "/var/spool/at" dir file_cron_spool)
+(filecon "/var/spool/at/.*" file ())
 (filecon "/var/spool/cron" dir file_cron_spool)
 (filecon "/var/spool/cron/.*" file ())
+
+(type cron_spool_log_t)
+(call files_var_spool_object (cron_spool_log_t))
+
+(context file_cron_spool_log (system_u object_r cron_spool_log_t ((s0)
+    (s0))))
+(filecon "/var/spool/at/\.SEQ" file file_cron_spool_log)
+(filecon "/var/spool/at/spool(/.*)?" any file_cron_spool_log)
 
 (type cron_system_spool_t)
 (call files_var_spool_object (cron_system_spool_t))
@@ -87,6 +103,7 @@
 
 (context file_crond_run (system_u object_r crond_run_t ((s0)
     (s0))))
+(filecon "/run/atd\.pid" file file_crond_run)
 (filecon "/run/crond\.pid" file file_crond_run)
 (filecon "/run/cron\.reboot" file file_crond_run)
 
@@ -95,15 +112,22 @@
 
 (context file_crond_unit (system_u object_r crond_unit_t ((s0)
     (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*atd.*" file file_crond_unit)
 (filecon "/usr/lib/systemd/system/[^/]*crond.*" file file_crond_unit)
 
-(allow crond_t self (capability (setuid setgid net_admin dac_override)))
+(call subject_common_subject
+    (is_cron_system_cronjob_subject))
+
+(allow crond_t self (capability (setuid setgid net_admin dac_override chown)))
 (allow crond_t self (process (setexec setsched)))
 (allow crond_t self (key (search write)))
 (allow crond_t self rw_fifo_file_perms)
 
 (allow crond_t crond_run_t manage_file_perms)
 (call files_run_filetrans (crond_t crond_run_t file "*"))
+
+(call cron_spool_filetrans (crond_t cron_spool_log_t file ".SEQ"))
+(call cron_spool_filetrans (crond_t cron_spool_log_t dir "spool"))
 
 (call subtrans_pattern (crond_t anacron_exec_t system_cronjob_t))
 
@@ -133,6 +157,7 @@
 (call cron_list_spool (crond_t))
 (call cron_read_system_spool_files (crond_t))
 (call cron_read_crond_pam_config_files (crond_t))
+(call cron_manage_spool_log_files (crond_t))
 
 (optional crond_optional_audit
     (call audit_client_subject (crond_t)))
@@ -154,6 +179,9 @@
 (optional crond_optional_seutil
     (call seutil_read_default_context_files (crond_t))
     (call seutil_read_config_files (crond_t)))
+
+(optional crond_optional_utmp
+    (call utmp_read_run_files (crond_t)))
 
 (optional crond_optional_usersubject
     (allow crond_t user_cron_spool_t read_file_perms)
@@ -187,8 +215,11 @@
 (call auth_run_chkpwd (is_crontab_subject is_crontab_role))
 (call auth_nsswitch_client_subject (is_crontab_subject))
 
+(call cron_send_signal_crontab (is_crontab_subject))
 (call cron_read_crond_config_files (is_crontab_subject))
 (call cron_read_crond_pam_config_files (is_crontab_subject))
+(call cron_read_pid_files (is_crontab_subject))
+(call cron_rw_spool_log_files (is_crontab_subject))
 
 (optional crontab_optional_audit
     (call audit_client_subject (is_crontab_subject))
@@ -233,6 +264,13 @@
     (allow ARG3 ARG5 manage_file_perms)
     (call files_tmp_filetrans (ARG3 ARG5 file "*")))
 
+(macro cron_system_cronjob_subject_entry ((type ARG1)(type ARG2))
+    (call subject_entry (ARG1 ARG2))
+    (typeattributeset is_cron_system_cronjob_subject ARG1)
+    (call subtrans_pattern (crond_t ARG2 ARG1))
+    (call subtrans_pattern (system_cronjob_t ARG2 ARG1))
+    (roletype system_r ARG1))
+
 (macro cron_list_spool ((type ARG1))
     (call files_search_var_spool (ARG1))
     (allow ARG1 cron_spool_t (dirs (list))))
@@ -249,6 +287,25 @@
     (call files_search_etc (ARG1))
     (allow ARG1 cron_system_spool_t (dirs (list)))
     (allow ARG1 cron_system_spool_t read_file_perms))
+
+(macro cron_search_spool ((type ARG1))
+    (call files_search_var_spool (ARG1))
+    (allow ARG1 cron_spool_t (dirs (search))))
+
+(macro cron_read_pid_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (allow ARG1 crond_run_t read_file_perms))
+
+(macro cron_rw_spool_log_files ((type ARG1))
+    (call cron_search_spool (ARG1))
+    (call rw_files_pattern (ARG1 cron_spool_log_t cron_spool_log_t)))
+
+(macro cron_manage_spool_log_files ((type ARG1))
+    (call cron_search_spool (ARG1))
+    (call manage_files_pattern (ARG1 cron_spool_log_t cron_spool_log_t)))
+
+(macro cron_send_signal_crontab ((type ARG1))
+    (allow ARG1 crond_t (process (signal))))
 
 (macro cron_read_crond_pam_config_files ((type ARG1))
     (call auth_search_pam_config (ARG1))

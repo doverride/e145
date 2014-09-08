@@ -277,6 +277,9 @@
 (optional session_optional_consoletype
     (call consoletype_run (session_t session_r)))
 
+(optional session_optional_cron
+    (call cron_admin (session_t)))
+
 (optional session_optional_cryptsetup
     (call cryptsetup_admin (session_t)))
 
@@ -360,6 +363,9 @@
 (optional session_optional_machined
     (call machined_admin (session_t))
     (call machined_run_machinectl (session_t session_r)))
+
+(optional session_optional_mandb
+    (call mandb_admin (session_t)))
 
 (optional session_optional_modemmgr
     (call modemmgr_admin (session_t))
@@ -587,6 +593,11 @@
     (allow crond_t session_t (process (transition)))
     (allow crond_t session_t (fd (use)))
     (allow session_t crond_t (fd (use)))
+
+    (allow crond_t session_cron_spool_t write_inherited_file_perms)
+    (allow crond_t session_cron_spool_t (file (link unlink)))
+
+    (allow session_t cron_spool_log_t (file (write)))
 
     (call cron_send_sigchld_crond (session_t))
     (call cron_rw_inherited_fifo_files_crond (session_t)))

@@ -52,12 +52,6 @@
 (context file_man (system_u object_r man_t ((s0) (s0))))
 (filecon "/usr/share/man(/.*)?" any file_man)
 
-(type man_cache_t)
-(call files_var_cache_object (man_cache_t))
-
-(context file_man_cache (system_u object_r man_cache_t ((s0) (s0))))
-(filecon "/var/cache/man(/.*)?" any file_man_cache)
-
 (type module_t)
 (call files_usr_object (module_t))
 

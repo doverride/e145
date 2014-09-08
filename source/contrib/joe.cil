@@ -140,6 +140,11 @@
     (allow crond_t joe_t (fd (use)))
     (allow joe_t crond_t (fd (use)))
 
+    (allow joe_t cron_spool_log_t (file (write)))
+
+    (allow crond_t user_cron_spool_t write_inherited_file_perms)
+    (allow crond_t user_cron_spool_t (file (link unlink)))
+
     (call cron_send_sigchld_crond (joe_t))
     (call cron_rw_inherited_fifo_files_crond (joe_t)))
 

@@ -1,0 +1,76 @@
+(typepermissive mandb_t)
+
+(typeattribute is_mandb_admin_subject)
+
+(typeattribute is_mandb_file_object)
+(typeattributeset is_mandb_file_object (mandb_conf_t mandb_env_t
+    mandb_cache_t))
+
+(type mandb_t)
+(type mandb_exec_t)
+(call cron_system_cronjob_subject_entry (mandb_t mandb_exec_t))
+
+(context file_mandb_exec (system_u object_r mandb_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/mandb" file file_mandb_exec)
+
+(type mandb_conf_t)
+(call files_etc_object (mandb_conf_t))
+
+(context file_mandb_conf (system_u object_r mandb_conf_t ((s0)
+    (s0))))
+(filecon "/etc/man_db\.conf" file file_mandb_conf)
+
+(type mandb_env_t)
+(call files_env_object (mandb_env_t))
+
+(context file_mandb_env (system_u object_r mandb_env_t ((s0)
+    (s0))))
+(filecon "/etc/sysconfig/man-db" file file_mandb_env)
+
+(type mandb_cache_t)
+(call files_var_cache_object (mandb_cache_t))
+
+(context file_mandb_cache (system_u object_r mandb_cache_t ((s0)
+    (s0))))
+(filecon "/var/cache/man(/.*)?" any file_mandb_cache)
+
+(allow mandb_t self (capability (fsetid)))
+(allow mandb_t self rw_fifo_file_perms)
+
+(call files_read_generic_etc_files (mandb_t)) ; /etc/alternatives/emacs.etags.man
+
+(call mandb_read_config_files (mandb_t))
+(call mandb_manage_cache (mandb_t))
+
+(optional mandb_optional_miscfiles
+    (call miscfiles_read_man_files (mandb_t))
+    (call miscfiles_read_localization_files (mandb_t)))
+
+(allow is_mandb_admin_subject mandb_t signal_perms)
+(allow is_mandb_admin_subject mandb_t (process (ptrace)))
+(call ps_subject_pattern (is_mandb_admin_subject mandb_t))
+
+(call admin_pattern (is_mandb_admin_subject is_mandb_file_object))
+
+(macro mandb_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 mandb_conf_t read_file_perms))
+
+(macro mandb_read_environ_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 mandb_env_t read_file_perms))
+
+(macro mandb_read_cache ((type ARG1))
+    (call files_search_var_cache (ARG1))
+    (allow ARG1 mandb_cache_t (dirs (list)))
+    (allow ARG1 mandb_cache_t read_file_perms))
+
+(macro mandb_manage_cache ((type ARG1))
+    (call files_search_var_cache (ARG1))
+    (allow ARG1 mandb_cache_t manage_dir_perms)
+    (allow ARG1 mandb_cache_t manage_lnk_file_perms)
+    (allow ARG1 mandb_cache_t manage_file_perms))
+
+(macro mandb_admin ((type ARG1))
+    (typeattributeset is_mandb_admin_subject ARG1))
