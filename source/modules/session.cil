@@ -388,6 +388,9 @@
     (call networkmgr_admin (session_t))
     (call networkmgr_run_networkmgrcli (session_t session_r)))
 
+(optional session_optional_notify
+    (call notify_run (session_t session_r)))
+
 (optional session_optional_ntp
     (call ntp_admin (session_t))
     (call ntp_run (session_t session_r)))

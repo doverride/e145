@@ -1,0 +1,23 @@
+(typepermissive notify_t)
+
+(roleattribute is_notify_role)
+
+(type notify_t)
+(type notify_exec_t)
+(call systemd_oneshot_subject_entry (notify_t notify_exec_t))
+(roletype is_notify_role notify_t)
+
+(context file_notify_exec (system_u object_r notify_exec_t ((s0) (s0))))
+(filecon "/usr/bin/systemd-notify" file file_notify_exec)
+
+(optional notify_optional_application
+    (call application_subject (notify_t))
+    (call application_executable_object (notify_exec_t)))
+
+(macro notify_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 notify_exec_t notify_t)))
+
+(macro notify_run ((type ARG1)(role ARG2))
+    (call notify_subtrans (ARG1))
+    (roleattributeset is_notify_role (ARG2)))
+
