@@ -1,5 +1,3 @@
-(typepermissive mandb_t)
-
 (typeattribute is_mandb_admin_subject)
 
 (typeattribute is_mandb_file_object)

@@ -1,5 +1,3 @@
-(typepermissive system_cronjob_t)
-
 (roleattribute is_crontab_role)
 
 (typeattribute is_cron_admin_subject)
@@ -197,6 +195,8 @@
     (allow crond_t session_cron_spool_t read_file_perms)
     (call session_list_home_dir (crond_t)))
 
+(allow system_cronjob_t self rw_fifo_file_perms)
+
 (allow system_cronjob_t system_cronjob_tmp_t manage_dir_perms)
 (allow system_cronjob_t system_cronjob_tmp_t manage_file_perms)
 (allow system_cronjob_t system_cronjob_tmp_t manage_lnk_file_perms)
@@ -208,7 +208,21 @@
 (call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t fifo_file "*"))
 (call files_tmp_filetrans (system_cronjob_t system_cronjob_tmp_t sock_file "*"))
 
+(call system_read_generic_proc_files (system_cronjob_t))
+
+(call commands_execute_bin_files (system_cronjob_t)) ; /usr/bin/run-parts
+
 (call commands_shell_files_entry_subject (system_cronjob_t))
+
+(call cron_list_system_spool (system_cronjob_t))
+(call cron_execute_system_spool_files (system_cronjob_t))
+(call cron_read_crond_environ_files (system_cronjob_t))
+
+(optional system_cronjob_optional_journald
+    (call journald_client_subject (system_cronjob_t)))
+
+(optional system_cronjob_optional_miscfiles
+    (call miscfiles_read_localization_files (system_cronjob_t)))
 
 (allow is_crontab_subject self (capability (chown setuid setgid dac_override)))
 (allow is_crontab_subject self rw_fifo_file_perms)
@@ -297,10 +311,22 @@
     (call files_search_etc (ARG1))
     (allow ARG1 crond_conf_t read_file_perms))
 
+(macro cron_read_crond_environ_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 crond_env_t read_file_perms))
+
+(macro cron_list_system_spool ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 cron_system_spool_t (dirs (list))))
+
 (macro cron_read_system_spool_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 cron_system_spool_t (dirs (list)))
     (allow ARG1 cron_system_spool_t read_file_perms))
+
+(macro cron_execute_system_spool_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call exec_files_pattern (ARG1 cron_system_spool_t cron_system_spool_t)))
 
 (macro cron_search_spool ((type ARG1))
     (call files_search_var_spool (ARG1))

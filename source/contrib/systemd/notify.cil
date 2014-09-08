@@ -1,5 +1,3 @@
-(typepermissive notify_t)
-
 (roleattribute is_notify_role)
 
 (type notify_t)
@@ -10,9 +8,17 @@
 (context file_notify_exec (system_u object_r notify_exec_t ((s0) (s0))))
 (filecon "/usr/bin/systemd-notify" file file_notify_exec)
 
+(call system_read_generic_proc_files (notify_t))
+
 (optional notify_optional_application
     (call application_subject (notify_t))
     (call application_executable_object (notify_exec_t)))
+
+(optional notify_optional_readahead
+    (call readahead_manage_run_files (notify_t)))
+
+(macro notify_exec ((type ARG1))
+    (call can_exec (ARG1 notify_exec_t)))
 
 (macro notify_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 notify_exec_t notify_t)))

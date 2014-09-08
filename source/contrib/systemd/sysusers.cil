@@ -1,5 +1,3 @@
-(typepermissive sysusers_t)
-
 (typeattribute is_sysusers_admin_subject)
 
 (type sysusers_t)

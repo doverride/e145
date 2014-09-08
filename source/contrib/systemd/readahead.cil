@@ -87,5 +87,9 @@
 (macro readahead_readable_object_exception ((type ARG1))
     (call files_spec_all_non_auth_files_exception (is_readahead_readable_file_object_exception ARG1)))
 
+(macro readahead_manage_run_files ((type ARG1))
+    (call systemd_search_run (ARG1))
+    (call manage_files_pattern (ARG1 readahead_run_t readahead_run_t)))
+
 (macro readahead_admin ((type ARG1))
     (typeattributeset is_readahead_admin_subject ARG1))

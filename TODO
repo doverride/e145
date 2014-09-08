@@ -1,6 +1,3 @@
-cover these systemd oneshots (are currently running in systemd_daemon_t):
-    /usr/bin/systemd-notify
-
 setbool: make setbool security av permission conditional for callers
     of unconfined_subject() because else they can go around the other
     conditionals (ptrace, execmem etc)

@@ -178,6 +178,7 @@
 (allow systemd_t is_systemd_relabelable_file_object relabel_blk_file_perms)
 (allow systemd_t is_systemd_relabelable_file_object relabel_chr_file_perms)
 
+(allow systemd_daemon_t self rw_fifo_file_perms)
 (auditallow systemd_t systemd_daemon_t (process (transition)))
 
 (allow systemd_daemon_t systemd_daemon_tmp_t manage_dir_perms)
@@ -191,6 +192,8 @@
 (call files_tmp_filetrans (systemd_daemon_t systemd_daemon_tmp_t fifo_file "*"))
 (call files_tmp_filetrans (systemd_daemon_t systemd_daemon_tmp_t sock_file "*"))
 
+(call system_read_generic_proc_files (systemd_daemon_t))
+
 (call commands_execute_bin_files (systemd_daemon_t))
 (call commands_execute_shell_files (systemd_daemon_t))
 
@@ -202,8 +205,12 @@
 (call commands_shell_auto_subject_type_transition (systemd_t
     systemd_daemon_t))
 
-(optional systemd_daemon_optional_kmod
-    (call kmod_exec (systemd_daemon_t))) ; for lm_sensors
+(call auth_nsswitch_client_subject (systemd_daemon_t))
+
+(call systemd_send_signal (systemd_daemon_t))
+
+(optional systemd_daemon_optional_miscfiles
+    (call miscfiles_read_localization_files (systemd_daemon_t)))
 
 (allow systemd_t self (process (getcap setfscreate setsockcreate
     signull setrlimit setsched setcap sigkill getsched)))

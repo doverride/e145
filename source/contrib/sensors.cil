@@ -5,7 +5,8 @@
 (typeattribute is_sensors_admin_subject)
 
 (typeattribute is_sensors_subject)
-(typeattributeset is_tune_subject (sensors_t fancontrol_t sensors_detect_t))
+(typeattributeset is_sensors_subject (sensors_t fancontrol_t sensors_detect_t
+    sensors_wrapper_t))
 
 (typeattribute is_sensors_file_object)
 (typeattributeset is_sensors_file_object (sensors_conf_t fancontrol_conf_t
@@ -23,6 +24,15 @@
 (context file_sensors_exec (system_u object_r sensors_exec_t ((s0)
     (s0))))
 (filecon "/usr/bin/sensors" file file_sensors_exec)
+
+(type sensors_wrapper_t)
+(type sensors_wrapper_exec_t)
+(call systemd_oneshot_subject_entry (sensors_wrapper_t sensors_wrapper_exec_t))
+
+(context file_sensors_wrapper_exec (system_u object_r sensors_wrapper_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/lm_sensors/lm_sensors-modprobe-wrapper" file file_sensors_wrapper_exec)
+(filecon "/usr/libexec/lm_sensors/lm_sensors-modprobe-r-wrapper" file file_sensors_wrapper_exec)
 
 (type sensors_detect_t)
 (type sensors_detect_exec_t)
@@ -105,6 +115,19 @@
 
 (optional sensors_optional_usersubject
     (call usersubject_use_inherited_terminals (sensors_t)))
+
+(call system_read_generic_proc_files (sensors_wrapper_t))
+
+(call commands_mprot_read_shell_files (sensors_wrapper_t))
+
+(optional sensors_wrapper_optional_auth
+    (call auth_nsswitch_client_subject (sensors_wrapper_t)))
+
+(optional sensors_wrapper_optional_kmod
+    (call kmod_subtrans (sensors_wrapper_t)))
+
+(optional sensors_wrapper_optional_miscfiles
+    (call miscfiles_read_localization_files (sensors_wrapper_t)))
 
 (allow is_sensors_admin_subject is_sensors_subject signal_perms)
 (allow is_sensors_admin_subject is_sensors_subject (process (ptrace)))
