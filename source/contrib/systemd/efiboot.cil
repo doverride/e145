@@ -11,6 +11,7 @@
     file_efiboot_generator_exec)
 
 (call files_list_boot (efiboot_generator_t))
+(call files_search_etc (efiboot_generator_t))
 
 (call filesystem_search_efivarfs (efiboot_generator_t))
 

@@ -205,6 +205,8 @@
 (call commands_shell_auto_subject_type_transition (systemd_t
     systemd_daemon_t))
 
+(call selinux_get_enforce_mode (systemd_daemon_t)) ; fedora-readonly
+
 (call auth_nsswitch_client_subject (systemd_daemon_t))
 
 (call systemd_send_signal (systemd_daemon_t))
