@@ -88,12 +88,18 @@
 (allow is_plugs_subject self create_unix_dgram_socket_perms)
 
 (call system_list_proc (is_plugs_subject))
+(call system_dontaudit_getattr_all_proc_files (is_plugs_subject))
+(call system_getattr_core_if (is_plugs_subject))
+(call system_dontaudit_list_all_sysctl_dirs (is_plugs_subject))
+(call system_dontaudit_getattr_all_sysctl_files (is_plugs_subject))
 
 (call filesystem_getattr_filesystems (is_plugs_subject))
 
 (call network_tcp_connect_all_ephemeral_ports (is_plugs_subject))
 
 (call selinux_getattr_filesystems (is_plugs_subject))
+
+(call subject_dontaudit_read_all_subjects_state (is_plugs_subject))
 
 (call files_read_generic_etc_files (is_xremotec_subject))
 
