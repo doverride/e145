@@ -419,6 +419,46 @@
 
         (call xserver_common_client_subject (joe_xremotec_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
+        (optional joe_firefox_optional_googletalk
+            (type joe_googletalk_t)
+            (call googletalk_role_template (joe_r joe_plugs_t joe_googletalk_t user_googletalk_config_t
+                user_googletalk_tmp_t user_googletalk_tmpfs_t))
+
+            (context file_joe_user_googletalk_config (joe_u object_r user_googletalk_config_t ((s0)(s0))))
+            (filecon "/home/joe/\.config/google-googletalkplugin(/.*)?" any file_joe_user_googletalk_config)
+
+            (allow joe_t joe_googletalk_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_googletalk_t))
+
+            (allow joe_t user_googletalk_config_t manage_dir_perms)
+            (allow joe_t user_googletalk_config_t relabel_dir_perms)
+            (allow joe_t user_googletalk_config_t manage_file_perms)
+            (allow joe_t user_googletalk_config_t relabel_file_perms)
+            (call usersubject_config_filetrans (joe_t user_googletalk_config_t dir "google-googletalkplugin"))
+
+            (allow joe_t user_googletalk_tmp_t manage_file_perms)
+            (allow joe_t user_googletalk_tmp_t relabel_file_perms)
+
+            (allow joe_t user_googletalk_tmpfs_t manage_file_perms)
+            (allow joe_t user_googletalk_tmpfs_t relabel_file_perms)
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
+
+            (call usersubject_application_subject (joe_googletalk_t))
+ 
+            (call xserver_common_client_subject (joe_googletalk_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+            (call xserver_client_subject_tmpfs_template (joe_googletalk_t user_googletalk_tmpfs_t))
+
+            (call usersubject_config_filetrans (joe_plugs_t user_googletalk_config_t dir "google-googletalkplugin"))
+
+            (optional joe_googletalk_optional_joe_pa
+                (call pa_client_subject (joe_r joe_googletalk_t joe_pa_t user_pa_home_t
+                    user_pa_run_t user_googletalk_tmpfs_t))
+
+                (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
+                (call usersubject_config_filetrans (joe_googletalk_t user_pa_home_t dir "pulse"))
+                (call usersubject_run_user_dir_filetrans (joe_googletalk_t user_pa_run_t dir "pulse"))))
+
         (optional joe_plugs_optional_joe_pa
             (call pa_client_subject (joe_r joe_plugs_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_plugs_tmpfs_t))

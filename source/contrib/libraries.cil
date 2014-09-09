@@ -52,6 +52,8 @@
 
 (filecon "/usr/libexec/sudo/.*" any file_lib)
 
+(filecon "/opt/google/talkplugin/.*\.so.*" file file_lib)
+
 (type textrel_shlib_t)
 (call files_usr_object (textrel_shlib_t))
 

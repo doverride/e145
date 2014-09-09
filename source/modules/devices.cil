@@ -707,6 +707,9 @@
 (macro devices_rw_zero ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_zero_t)))
 
+(macro devices_rw_v4l ((type ARG1))
+    (call rw_chr_files_pattern (ARG1 device_t device_v4l_t)))
+
 (macro devices_rw_xserver_misc ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_xserver_misc_t)))
 

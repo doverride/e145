@@ -32,6 +32,7 @@ contrib/fprint.cil
 contrib/fstools.cil
 contrib/getty.cil
 contrib/git.cil
+contrib/googletalk.cil
 contrib/gpg.cil
 contrib/hostname.cil
 contrib/http.cil

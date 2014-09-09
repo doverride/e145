@@ -423,6 +423,11 @@
     (call read_files_pattern (ARG1 is_lock_file_object
     is_lock_file_object)))
 
+(macro files_manage_generic_lock_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call manage_files_pattern (ARG1 run_lock_t
+    run_lock_t)))
+
 (macro files_list_run_lock ((type ARG1))
     (call list_dirs_pattern (ARG1 run_t run_lock_t)))
 

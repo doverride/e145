@@ -85,8 +85,11 @@
     (call usersubject_tmpfs_object (user_plugs_tmpfs_t)))
 
 (allow is_plugs_subject self (process (setsched execmem)))
+(allow is_plugs_subject self create_unix_dgram_socket_perms)
 
 (call filesystem_getattr_filesystems (is_plugs_subject))
+
+(call network_tcp_connect_all_ephemeral_ports (is_plugs_subject))
 
 (call selinux_getattr_filesystems (is_plugs_subject))
 
