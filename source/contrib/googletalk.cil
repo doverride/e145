@@ -23,6 +23,7 @@
 (call commands_execute_shell_files (is_googletalk_subject))
 
 (call devices_rw_v4l (is_googletalk_subject))
+(call devices_rw_sound (is_googletalk_subject))
 
 (call network_tcp_bind_generic_node (is_googletalk_subject))
 (call network_udp_bind_generic_node (is_googletalk_subject))

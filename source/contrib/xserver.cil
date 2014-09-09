@@ -239,6 +239,7 @@
 (optional xserver_client_subject_optional_miscfiles
     (call miscfiles_read_fonts_config (is_xserver_client_subject))
     (call miscfiles_read_fonts_files (is_xserver_client_subject))
+    (call miscfiles_setattr_fonts_cache_dirs (is_xserver_client_subject))
     (call miscfiles_read_fonts_cache_files (is_xserver_client_subject))
     (call miscfiles_read_localization_files (is_xserver_client_subject)))
 

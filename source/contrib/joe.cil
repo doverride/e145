@@ -442,6 +442,10 @@
             (allow joe_t user_googletalk_tmpfs_t manage_file_perms)
             (allow joe_t user_googletalk_tmpfs_t relabel_file_perms)
 
+            (call usersubject_manage_font_cache_dirs (joe_googletalk_t))
+            (call usersubject_manage_font_cache_files (joe_googletalk_t))
+            (call usersubject_cache_filetrans_user_font_cache_dir (joe_googletalk_t))
+
             (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
 
             (call usersubject_application_subject (joe_googletalk_t))
