@@ -34,10 +34,12 @@
 (type system_cronjob_t)
 (call subject_common_subject (system_cronjob_t))
 (call subject_entry (system_cronjob_t cron_system_spool_t))
+(typeattributeset is_cron_system_cronjob_subject system_cronjob_t)
 
 (type anacron_exec_t)
 (call subject_entry (system_cronjob_t anacron_exec_t))
-(roletype system_r system_cronjob_t)
+(roleattributeset is_system_cronjob_role system_r)
+(roletype is_system_cronjob_role system_cronjob_t)
 
 (context file_anacron_exec (system_u object_r anacron_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/anacron" file file_anacron_exec)
@@ -244,12 +246,6 @@
 (optional system_cronjob_optional_miscfiles
     (call miscfiles_read_localization_files (system_cronjob_t)))
 
-(optional system_cronjob_optional_session
-    (call session_list_home_dir (system_cronjob_t)))
-
-(optional system_cronjob_optional_usersubject
-    (call usersubject_list_home_dir (system_cronjob_t)))
-
 (allow is_crontab_subject self (capability (chown setuid setgid dac_override)))
 (allow is_crontab_subject self rw_fifo_file_perms)
 
@@ -300,6 +296,19 @@
     (call session_list_home_dir (is_crontab_subject))
     (type session_crontab_tmp_t)
     (call session_tmp_object (session_crontab_tmp_t)))
+
+(allow is_cron_system_cronjob_subject self (capability (dac_override)))
+
+(optional cron_system_cronjob_subject_optional_application
+    (call application_subject (is_cron_system_cronjob_subject)))
+
+(optional cron_system_cronjob_subject_optional_session
+    (call session_list_home_dir (is_cron_system_cronjob_subject))
+    (call session_use_inherited_terminals (is_cron_system_cronjob_subject)))
+
+(optional cron_system_cronjob_subject_optional_usersubject
+    (call usersubject_list_home_dir (is_cron_system_cronjob_subject))
+    (call usersubject_use_inherited_terminals (is_cron_system_cronjob_subject)))
 
 (allow is_cron_admin_subject is_cron_subject signal_perms)
 (allow is_cron_admin_subject is_cron_subject (process (ptrace)))
