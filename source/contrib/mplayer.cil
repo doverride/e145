@@ -14,6 +14,10 @@
 (context file_mplayer_conf (system_u object_r mplayer_conf_t ((s0)(s0))))
 (filecon "/etc/mplayer(/.*)?" any file_mplayer_conf)
 
+(call system_read_sysctl_vm_overcommit_files (is_mplayer_subject))
+
+(call devices_rw_dri (is_mplayer_subject))
+
 (call files_read_generic_etc_files (is_mplayer_subject))
 (call files_search_mnt (is_mplayer_subject))
 
@@ -21,14 +25,20 @@
 
 (call mplayer_read_config_files (is_mplayer_subject))
 
+(optional mplayer_subject_optional_udevd
+    (call udevd_read_config_files (is_mplayer_subject))
+    (call udevd_read_run_files (is_mplayer_subject)))
+
 (optional mplayer_optional_usersubject
     (type user_mplayer_home_t)
     (call usersubject_home_object (user_mplayer_home_t))
+    (type user_mplayer_tmp_t)
+    (call usersubject_tmp_object (user_mplayer_tmp_t))
     (type user_mplayer_tmpfs_t)
     (call usersubject_tmpfs_object (user_mplayer_tmpfs_t)))
 
 (macro mplayer_role_template ((role ARG1)(type ARG2)(type ARG3)
-    (type ARG4)(type ARG5))
+    (type ARG4)(type ARG5)(type ARG6))
     (roleattributeset is_mplayer_role ARG1)
     (typeattributeset is_mplayer_subject ARG3)
     (roletype ARG1 ARG3)
@@ -44,7 +54,11 @@
     (allow ARG3 ARG5 manage_file_perms)
     (allow ARG2 ARG5 manage_file_perms)
     (allow ARG2 ARG5 relabel_file_perms)
-    (call filesystem_tmpfs_filetrans (ARG3 ARG5 file "*")))
+    (call filesystem_tmpfs_filetrans (ARG3 ARG5 file "*"))
+    (allow ARG2 ARG6 manage_file_perms)
+    (allow ARG2 ARG6 relabel_file_perms)
+    (allow ARG3 ARG6 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG6 file "*")))
 
 (macro mplayer_read_config_files ((type ARG1))
     (allow ARG1 mplayer_conf_t (dirs (list)))

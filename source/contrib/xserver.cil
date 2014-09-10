@@ -346,6 +346,7 @@
 
 (macro xserver_common_client_subject ((type ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
     (typeattributeset is_xserver_client_subject ARG1)
+    (allow ARG1 ARG3 (fd (use)))
     (call xserver_client_subject (ARG1 ARG2 ARG3 ARG4 ARG5))
     (call files_search_var_cache (ARG1))
         (optional xserver_client_subject_optional_ratpoison

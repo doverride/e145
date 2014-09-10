@@ -550,7 +550,8 @@
 
     (optional joe_xserver_optional_joe_mplayer
         (type joe_mplayer_t)
-        (call mplayer_role_template (joe_r joe_t joe_mplayer_t user_mplayer_home_t user_mplayer_tmpfs_t))
+        (call mplayer_role_template (joe_r joe_t joe_mplayer_t user_mplayer_home_t user_mplayer_tmpfs_t
+        user_mplayer_tmp_t))
 
         (context file_joe_user_mplayer_home (joe_u object_r user_mplayer_home_t ((s0)(s0))))
         (filecon "/home/joe/\.mplayer(/.*)?" any file_joe_user_mplayer_home)
@@ -570,6 +571,9 @@
         (call xserver_common_client_subject (joe_mplayer_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
         (call xserver_client_subject_tmpfs_template (joe_mplayer_t user_mplayer_tmpfs_t))
  
+        (allow joe_xorg_t joe_mplayer_t (fd (use)))
+        (allow joe_xorg_t user_mplayer_tmp_t rw_inherited_file_perms)
+
         (optional joe_mplayer_optional_joe_pa
             (call pa_client_subject (joe_r joe_mplayer_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_mplayer_tmpfs_t))
