@@ -1,3 +1,8 @@
+target /usr/sbin/glibc_post_upgrade.*
+    i suspect this is what makes select exec fles end up with file_t type
+    by confining it i mabe be able to make it create those files with
+    the proper context
+
 setbool: make setbool security av permission conditional for callers
     of unconfined_subject() because else they can go around the other
     conditionals (ptrace, execmem etc)
