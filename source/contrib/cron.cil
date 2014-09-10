@@ -244,10 +244,10 @@
     (call miscfiles_read_localization_files (system_cronjob_t)))
 
 (optional system_cronjob_optional_session
-    (call session_dontaudit_search_home_dir (system_cronjob_t)))
+    (call session_list_home_dir (system_cronjob_t)))
 
 (optional system_cronjob_optional_usersubject
-    (call usersubject_dontaudit_search_home_dir (system_cronjob_t)))
+    (call usersubject_list_home_dir (system_cronjob_t)))
 
 (allow is_crontab_subject self (capability (chown setuid setgid dac_override)))
 (allow is_crontab_subject self rw_fifo_file_perms)
@@ -296,6 +296,7 @@
 (optional crontab_optional_session
     (type session_cron_spool_t)
     (call files_var_spool_object (session_cron_spool_t))
+    (call session_list_home_dir (is_crontab_subject))
     (type session_crontab_tmp_t)
     (call session_tmp_object (session_crontab_tmp_t)))
 
@@ -352,7 +353,7 @@
 (macro cron_write_system_spool_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 cron_system_spool_t (dirs (list)))
-    (allow ARG1 cron_system_spool_t read_file_perms))
+    (allow ARG1 cron_system_spool_t write_file_perms))
 
 (macro cron_setattr_system_spool_files ((type ARG1))
     (allow ARG1 cron_system_spool_t (file (setattr))))
