@@ -116,7 +116,7 @@
     (call miscfiles_read_network_config_files (is_xinit_subject))
     (call miscfiles_read_localization_files (is_xinit_subject)))
 
-(allow is_xorg_subject self (capability (dac_override setgid setuid sys_admin sys_rawio ipc_owner)))
+(allow is_xorg_subject self (capability (dac_override setgid setuid sys_admin sys_rawio ipc_owner sys_ptrace)))
 (allow is_xorg_subject self (process (signal)))
 (allow is_xorg_subject self (unix_stream_socket (accept listen)))
 (allow is_xorg_subject self r_netlink_route_socket_perms)

@@ -144,6 +144,7 @@
 (call selinux_get_filesystems_mount (auditd_t))
 
 (call audit_subtrans_audispd (auditd_t))
+(call audit_send_signal_audispd (auditd_t))
 
 (optional audit_optional_auth
     (call auth_nsswitch_client_subject (auditd_t)))
@@ -167,6 +168,8 @@
 
 (optional auditctl_optional_usersubject
     (call usersubject_use_inherited_terminals (auditctl_t)))
+
+(allow audispd_t self (process (signal)))
 
 (allow audispd_t auditd_t (unix_stream_socket (read write)))
 
@@ -196,6 +199,14 @@
 
 (optional ausearch_optional_usersubject
     (call usersubject_use_inherited_terminals (ausearch_t)))
+
+(allow audispd_t self (process (setsched)))
+(allow audispd_t self (capability (sys_nice)))
+(allow audispd_t self create_unix_stream_socket_perms)
+
+(call system_read_sysctl_vm_overcommit_files (audispd_t))
+
+(call commands_execute_shell_files (audispd_t))
 
 (allow is_audit_admin_subject is_audit_subject signal_perms)
 (allow is_audit_admin_subject is_audit_subject (process (ptrace)))
@@ -268,6 +279,12 @@
 (macro audit_list_log ((type ARG1))
     (call files_search_var_log (ARG1))
     (allow ARG1 auditd_log_t (dirs (list))))
+
+(macro audit_use_fd_auditd ((type ARG1))
+    (allow ARG1 auditd_t (fd (use))))
+
+(macro audit_send_signal_audispd ((type ARG1))
+    (allow ARG1 audispd_t (process (signal))))
 
 (macro audit_read_log_files ((type ARG1))
     (call files_search_var_log (ARG1))

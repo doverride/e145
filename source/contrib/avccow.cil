@@ -1,0 +1,47 @@
+(type avccow_t)
+(type avccow_exec_t)
+(call audit_dispatcher_subject_entry (avccow_t avccow_exec_t))
+
+(context file_avccow_exec (system_u object_r avccow_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/avccow" file file_avccow_exec)
+
+(type avccow_tmp_t)
+(call files_tmp_object (avccow_t))
+
+(type avccow_tmpfs_t)
+(call files_tmpfs_object (avccow_t))
+
+(allow avccow_t self rw_fifo_file_perms)
+
+(allow avccow_t avccow_tmpfs_t (file (read write)))
+
+(call system_read_generic_proc_files (avccow_t))
+
+(call commands_execute_bin_files (avccow_t))
+(call commands_mprot_read_shell_files (avccow_t))
+
+(call files_read_generic_usr_files (avccow_t))
+
+(call filesystem_getattr_filesystems (avccow_t))
+
+(call selinux_getattr_filesystems (avccow_t))
+
+(call audit_use_fd_auditd (avccow_t))
+
+(call xserver_common_client_subject (avccow_t is_xinit_subject is_xorg_subject avccow_tmp_t avccow_tmp_t))
+(call xserver_client_subject_tmpfs_template (avccow_t avccow_tmpfs_t))
+
+(optional avccow_optional_auth
+    (call auth_nsswitch_client_subject (avccow_t)))
+
+(optional avccow_optional_dbus
+    (call dbus_read_var_lib_files (avccow_t)))
+
+(optional avccow_optional_localization
+    (call miscfiles_read_localization_files (avccow_t)))
+
+(optional avccow_optional_session
+    (call session_search_generic_config (avccow_t)))
+
+(optional avccow_optional_usersubject
+    (call usersubject_search_generic_config (avccow_t)))
