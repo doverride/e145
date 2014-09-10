@@ -10,6 +10,8 @@
 
 (allow avccow_t self rw_fifo_file_perms)
 
+(allow avccow_t avccow_tmpfs_t (file (read write)))
+
 (call system_read_generic_proc_files (avccow_t))
 
 (call commands_execute_bin_files (avccow_t))
