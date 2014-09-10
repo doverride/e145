@@ -1,4 +1,5 @@
 (roleattribute is_crontab_role)
+(roleattribute is_system_cronjob_role)
 
 (typeattribute is_cron_admin_subject)
 
@@ -324,6 +325,20 @@
     (call subtrans_pattern (crond_t ARG2 ARG1))
     (call subtrans_pattern (system_cronjob_t ARG2 ARG1))
     (roletype system_r ARG1))
+
+(macro cron_system_spool_subtrans_system_cronjob ((type ARG1))
+    (call subtrans_pattern (ARG1 cron_system_spool_t system_cronjob_t)))
+
+(macro cron_system_spool_run_system_cronjob ((type ARG1)(role ARG2))
+    (call cron_system_spool_subtrans_system_cronjob (ARG1))
+    (roleattributeset is_system_cronjob_role (ARG2)))
+
+(macro cron_anacron_subtrans_system_cronjob ((type ARG1))
+    (call subtrans_pattern (ARG1 anacron_exec_t system_cronjob_t)))
+
+(macro cron_anacron_run_system_cronjob ((type ARG1)(role ARG2))
+    (call cron_anacron_subtrans_system_cronjob (ARG1))
+    (roleattributeset is_system_cronjob_role (ARG2)))
 
 (macro cron_list_spool ((type ARG1))
     (call files_search_var_spool (ARG1))

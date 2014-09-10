@@ -278,7 +278,9 @@
     (call consoletype_run (session_t session_r)))
 
 (optional session_optional_cron
-    (call cron_admin (session_t)))
+    (call cron_admin (session_t))
+    (call cron_system_spool_run_system_cronjob (session_t session_r))
+    (call cron_anacron_run_system_cronjob (session_t session_r)))
 
 (optional session_optional_cryptsetup
     (call cryptsetup_admin (session_t)))
