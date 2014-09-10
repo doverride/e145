@@ -5,15 +5,10 @@
 (context file_avccow_exec (system_u object_r avccow_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/avccow" file file_avccow_exec)
 
-(type avccow_tmp_t)
-(call files_tmp_object (avccow_t))
-
 (type avccow_tmpfs_t)
 (call files_tmpfs_object (avccow_t))
 
 (allow avccow_t self rw_fifo_file_perms)
-
-(allow avccow_t avccow_tmpfs_t (file (read write)))
 
 (call system_read_generic_proc_files (avccow_t))
 
@@ -28,7 +23,7 @@
 
 (call audit_use_fd_auditd (avccow_t))
 
-(call xserver_common_client_subject (avccow_t is_xinit_subject is_xorg_subject avccow_tmp_t avccow_tmp_t))
+(call xserver_common_client_subject (avccow_t is_xinit_subject is_xorg_subject avccow_tmpfs_t avccow_tmpfs_t))
 (call xserver_client_subject_tmpfs_template (avccow_t avccow_tmpfs_t))
 
 (optional avccow_optional_auth
