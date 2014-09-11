@@ -8,6 +8,8 @@
 (context file_qiv_exec (system_u object_r qiv_exec_t ((s0)(s0))))
 (filecon "/usr/bin/qiv" file file_qiv_exec)
 
+(call files_read_generic_etc_files (is_qiv_subject))
+
 (call selinux_getattr_filesystems (is_qiv_subject))
 
 (optional qiv_optional_usersubject
