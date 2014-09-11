@@ -169,6 +169,9 @@
     (type joe_xinit_t)
     (call xserver_role_template_xinit (joe_r joe_t joe_xinit_t user_x_home_t))
 
+    (type joe_xhost_t)
+    (call xserver_role_template_xhost (joe_r joe_t joe_xhost_t))
+
     (type joe_xrdb_t)
     (call xserver_role_template_xrdb (joe_r joe_t joe_xrdb_t user_xrdb_home_t))
 
@@ -250,6 +253,15 @@
     (call usersubject_use_tty_nodes (joe_xorg_t))
 
     (call usersubject_application_subject (joe_xorg_wrap_t))
+
+    (call usersubject_application_subject (joe_xhost_t))
+
+    (call xserver_client_subject (joe_xhost_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (allow joe_t joe_xhost_t (dirs (list)))
+    (allow joe_t joe_xhost_t read_file_perms)
+
+    (call ps_subject_pattern (joe_t joe_xhost_t))
 
     (allow joe_t user_xauth_home_t manage_file_perms)
     (allow joe_t user_xauth_home_t relabel_file_perms)

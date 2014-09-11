@@ -6,14 +6,12 @@ target /usr/sbin/glibc_post_upgrade.*
     by confining it i mabe be able to make it create those files with
     the proper context
 
+    rpm: for some reason files get installed labeled with type file_t
+        Update: role transition does not fix this issue
+
 setbool: make setbool security av permission conditional for callers
     of unconfined_subject() because else they can go around the other
     conditionals (ptrace, execmem etc)
-
-xhost; add support for xhost and /etc/Xn.hosts
-
-systemd_daemon: consider making it an unconditional "unconfined" subject
-    like rpm but not as permissive
 
 orc: orc patches to make orc more selinux friendly were removed
     currently i am forced to allow callers of liborc to manage and mmap
@@ -67,9 +65,6 @@ systemd: i added file transition rules for dirs that are not created but are
 investigate support debug-shell / systemd-debug-generator
 
 autorelabel: find a way to deal with fedora-autorelabel-mark.service
-
-rpm: for some reason files get installed labeled with type file_t
-    Update: role transition does not fix this issue
 
 systemd:
     on early boot systemd/tmpfiles.d create select object in /run with the wrong label

@@ -3,6 +3,7 @@
 (roleattribute is_xclock_role)
 (roleattribute is_xloadimg_role)
 (roleattribute is_xsel_role)
+(roleattribute is_xhost_role)
 
 (typeattribute is_xinit_subject)
 (typeattribute is_xauth_subject)
@@ -13,6 +14,7 @@
 (typeattribute is_xorg_wrap_subject)
 (typeattribute is_xrdb_subject)
 (typeattribute is_xsel_subject)
+(typeattribute is_xhost_subject)
 
 (typeattribute is_xserver_admin_subject)
 
@@ -28,6 +30,12 @@
 
 (context file_xinit_exec (system_u object_r xinit_exec_t ((s0)(s0))))
 (filecon "/usr/bin/xinit" file file_xinit_exec)
+
+(type xhost_exec_t)
+(call application_subject_entry (is_xhost_subject xhost_exec_t))
+
+(context file_xhost_exec (system_u object_r xhost_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xhost" file file_xhost_exec)
 
 (type xauth_exec_t)
 (call application_subject_entry (is_xauth_subject xauth_exec_t))
@@ -82,6 +90,7 @@
 
 (context file_xserver_conf (system_u object_r xserver_conf_t ((s0)(s0))))
 (filecon "/etc/X11(/.*)?" any file_xserver_conf)
+(filecon "/etc/X.*\.hosts" file file_xserver_conf)
 
 (type xserver_log_t)
 (call files_var_log_object (xserver_log_t))
@@ -115,6 +124,12 @@
 (optional xinit_optional_miscfiles
     (call miscfiles_read_network_config_files (is_xinit_subject))
     (call miscfiles_read_localization_files (is_xinit_subject)))
+
+(optional xhost_optional_auth
+    (call auth_nsswitch_client_subject (is_xhost_subject)))
+
+(optional xhost_optional_miscfiles
+    (call miscfiles_read_network_config_files (is_xhost_subject)))
 
 (allow is_xorg_subject self (capability (dac_override setgid setuid sys_admin sys_rawio ipc_owner sys_ptrace)))
 (allow is_xorg_subject self (process (signal)))
@@ -275,6 +290,12 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xorg_wrap_exec_t ARG3)))
 
+(macro xserver_role_template_xhost ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_xhost_role ARG1)
+    (typeattributeset is_xhost_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xhost_exec_t ARG3)))
+
 (macro xserver_role_template_xrdb ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_xserver_role ARG1)
     (typeattributeset is_xrdb_subject ARG3)
@@ -383,3 +404,14 @@
     (allow ARG1 self (capability (net_bind_service)))
     (call network_tcp_bind_subject (ARG1))
     (allow ARG1 port_xserver_t (tcp_socket (name_bind))))
+
+(macro xserver_manage_config_files ((type ARG1))
+    (call files_rw_etc_dirs (ARG1))
+    (allow ARG1 xserver_conf_t manage_dir_perms)
+    (allow ARG1 xserver_conf_t manage_file_perms))
+
+(macro xserver_etc_filetrans_xserver_conf ((type ARG1)(class ARG2)(name ARG3))
+    (call files_etc_filetrans (ARG1 xserver_conf_t ARG2 ARG3)))
+
+(macro xserver_exec_xhost ((type ARG1))
+    (call can_exec (ARG1 xhost_exec_t)))

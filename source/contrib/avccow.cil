@@ -27,6 +27,7 @@
 
 (call xserver_common_client_subject (avccow_t is_xinit_subject is_xorg_subject avccow_tmpfs_t avccow_tmpfs_t))
 (call xserver_client_subject_tmpfs_template (avccow_t avccow_tmpfs_t))
+(call xserver_exec_xhost (avccow_t))
 
 (optional avccow_optional_auth
     (call auth_nsswitch_client_subject (avccow_t)))
