@@ -1472,6 +1472,9 @@
 (macro session_dontaudit_read_all_home_content_files ((type ARG1))
     (dontaudit ARG1 is_session_home_file_object read_file_perms))
 
+(macro session_dontaudit_list_all_home_content_dirs ((type ARG1))
+    (dontaudit ARG1 is_session_home_file_object list_dir_perms))
+
 (macro session_dontaudit_read_generic_home_content_files ((type ARG1))
     (dontaudit ARG1 session_home_t read_file_perms))
 

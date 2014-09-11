@@ -71,10 +71,12 @@
     (call journald_client_subject (readahead_t)))
 
 (optional readahead_optional_session
-    (call session_dontaudit_read_all_home_content_files (readahead_t)))
+    (call session_dontaudit_read_all_home_content_files (readahead_t))
+    (call session_dontaudit_list_all_home_content_dirs (readahead_t)))
 
 (optional readahead_optional_usersubject
-    (call usersubject_dontaudit_read_all_home_content_files (readahead_t)))
+    (call usersubject_dontaudit_read_all_home_content_files (readahead_t))
+    (call usersubject_dontaudit_list_all_home_content_dirs (readahead_t)))
 
 (allow is_readahead_admin_subject readahead_t signal_perms)
 (allow is_readahead_admin_subject readahead_t (process (ptrace)))

@@ -1425,6 +1425,9 @@
 (macro usersubject_dontaudit_read_all_home_content_files ((type ARG1))
     (dontaudit ARG1 is_user_home_file_object read_file_perms))
 
+(macro usersubject_dontaudit_list_all_home_content_dirs ((type ARG1))
+    (dontaudit ARG1 is_user_home_file_object list_dir_perms))
+
 (macro usersubject_dontaudit_manage_all_home_content_files ((type ARG1))
     (dontaudit ARG1 is_user_home_file_object manage_file_perms))
 
