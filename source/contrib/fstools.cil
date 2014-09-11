@@ -84,6 +84,7 @@
     (call mount_read_run_files (fstools_t)))
 
 (optional fstools_optional_session
+    (call session_search_generic_config (fstools_t))
     (call session_use_inherited_terminals (fstools_t)))
 
 (optional fstools_optional_storage

@@ -80,6 +80,7 @@
 (call system_get_sysvipc_info (dmcrypt_t))
 (call system_read_generic_proc_files (dmcrypt_t))
 (call system_read_sysctl_crypto_files (dmcrypt_t))
+(call system_request_load_module (dmcrypt_t))
 
 (call devices_getattr_device_filesystems (dmcrypt_t))
 (call devices_read_lnk_files (dmcrypt_t))
