@@ -74,12 +74,14 @@
     (call miscfiles_read_localization_files (mount_t)))
 
 (optional mount_optional_session
+    (call session_search_all_home (mount_t))
     (call session_use_inherited_terminals (mount_t)))
 
 (optional mount_optional_storage
     (call storage_read_fixed_disk_nodes (mount_t)))
 
 (optional mount_optional_usersubject
+    (call usersubject_search_all_home (mount_t))
     (call usersubject_use_inherited_terminals (mount_t)))
 
 (macro mount_exec ((type ARG1))
