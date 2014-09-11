@@ -167,12 +167,16 @@
 (call xserver_tcp_bind_xserver_port (is_xorg_subject))
 (call xserver_read_config (is_xorg_subject))
 
+(optional xorg_optional_auth
+    (call auth_nsswitch_client_subject (is_xorg_subject)))
+
 (optional xorg_optional_logind
     (call devices_rw_inherited_event (is_xorg_subject))
     (call logind_use_fd (is_xorg_subject))
     (call logind_dbus_chat (is_xorg_subject)))
 
 (optional xorg_optional_miscfiles
+    (call miscfiles_read_network_config_files (is_xorg_subject))
     (call miscfiles_read_fonts_files (is_xorg_subject))
     (call miscfiles_read_localization_files (is_xorg_subject)))
 

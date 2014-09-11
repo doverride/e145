@@ -209,6 +209,7 @@
 
 (call auth_nsswitch_client_subject (systemd_daemon_t))
 
+(call systemd_send_signal_all_systemd_daemons (systemd_daemon_t))
 (call systemd_send_signal (systemd_daemon_t))
 
 (optional systemd_daemon_optional_miscfiles
@@ -741,6 +742,9 @@
 
 (macro systemd_pid_object ((type ARG1))
     (typeattributeset is_systemd_pid_file_object ARG1))
+
+(macro systemd_send_signal_all_systemd_daemons ((type ARG1))
+    (allow ARG1 is_systemd_daemon_subject (process (signal))))
 
 (macro systemd_relabelable_object_exception ((type ARG1))
     (call files_spec_all_non_auth_files_exception (is_systemd_relabelable_file_object_exception ARG1)))
