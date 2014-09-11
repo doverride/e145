@@ -2,11 +2,13 @@
 
 (typeattribute is_rpm_admin_subject)
 
+(typeattribute is_rpm_conf_object)
+
 (typeattribute is_rpm_subject)
 (typeattributeset is_rpm_subject (rpm_t rpm_script_t))
 
 (typeattribute is_rpm_file_object)
-(typeattributeset is_rpm_file_object (rpm_conf_t rpm_var_lib_t
+(typeattributeset is_rpm_file_object (is_rpm_conf_object rpm_var_lib_t
     rpm_var_cache_t rpm_log_t rpm_tmp_t rpm_tmpfs_t rpm_unit_t))
 
 (type rpm_t)
@@ -212,6 +214,14 @@
 (macro rpm_manage_tmp_files ((type ARG1))
     (call files_search_tmp (ARG1))
     (call manage_files_pattern (ARG1 rpm_tmp_t rpm_tmp_t)))
+
+(macro rpm_conf_object ((type ARG1))
+    (call files_etc_object (ARG1))
+    (typeattributeset is_rpm_conf_object ARG1))
+
+(macro rpm_config_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call files_search_etc (ARG1))
+    (call filetrans_pattern (ARG1 rpm_conf_t ARG2 ARG3 ARG4)))
 
 (macro rpm_admin ((type ARG1))
     (typeattributeset is_rpm_admin_subject ARG1))

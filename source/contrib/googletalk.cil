@@ -24,6 +24,15 @@
 (context file_googletalk_env (system_u object_r googletalk_env_t ((s0)(s0))))
 (filecon "/etc/default/google-talkplugin" file file_googletalk_env)
 
+(type googletalk_conf_t)
+(call files_etc_object (googletalk_conf_t))
+
+(optional googletalk_optional_rpm
+    (call rpm_conf_object (googletalk_conf_t)))
+
+(context file_googletalk_conf (system_u object_r googletalk_conf_t ((s0)(s0))))
+(filecon "/etc/yum\.repos\.d/google-talkplugin\.repo.*" file file_googletalk_conf)
+
 (allow is_googletalk_subject self (tcp_socket (accept listen)))
 (allow is_googletalk_subject self create_unix_dgram_socket_perms)
 
@@ -59,6 +68,8 @@
 (allow googletalk_cronjob_t self (process (setfscreate))) ; sed
 (allow googletalk_cronjob_t self rw_fifo_file_perms)
 
+(allow googletalk_cronjob_t googletalk_conf_t manage_file_perms)
+
 (call system_read_generic_proc_files (googletalk_cronjob_t))
 
 (call commands_execute_bin_files (googletalk_cronjob_t))
@@ -77,7 +88,7 @@
     (call miscfiles_read_localization_files (googletalk_cronjob_t)))
 
 (optional googletalk_cronjob_optional_rpm
-    (call rpm_read_config_files (googletalk_cronjob_t))) ; really just needs to stat googletalk.*.repo
+    (call rpm_config_filetrans (googletalk_cronjob_t googletalk_conf_t file "google-talkplugin.repo")))
 
 (macro googletalk_read_environ_files ((type ARG1))
     (call files_search_etc (ARG1))
