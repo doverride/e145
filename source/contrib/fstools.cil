@@ -56,12 +56,24 @@
 (filecon "/usr/sbin/swapon.*" file file_fstools_exec)
 (filecon "/usr/sbin/tune2fs" file file_fstools_exec)
 
+(type fstools_run_t)
+(call files_run_object (fstools_run_t))
+
+(context file_fstools_run (system_u object_r fstools_run_t ((s0)
+    (s0))))
+(filecon "/run/blkid(/.*)?" any file_fstools_run)
+ 
 (allow fstools_t self (capability (sys_admin)))
+
+(allow fstools_t fstools_run_t manage_dir_perms)
+(allow fstools_t fstools_run_t manage_file_perms)
+(call files_run_filetrans (fstools_t fstools_run_t dir "*"))
 
 (call can_exec (fstools_t fstools_exec_t))
 
 (call system_read_generic_proc_files (fstools_t))
 
+(call devices_list (fstools_t))
 (call devices_read_lnk_files (fstools_t))
 (call devices_list_sysfs (fstools_t))
 (call devices_read_sysfs_files (fstools_t))
