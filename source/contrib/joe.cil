@@ -1157,7 +1157,10 @@
     (call usersubject_use_terminals (joe_screen_t))
     (call usersubject_setattr_terminals (joe_screen_t))
     (call usersubject_create_pty_node (joe_screen_t))
-    (call usersubject_home_bin_auto_subject_type_transition (joe_screen_t joe_t)))
+    (call usersubject_home_bin_auto_subject_type_transition (joe_screen_t joe_t))
+
+    (optional joe_screen_optional_joe_xterm
+        (allow joe_screen_t joe_xterm_t (process (sigchld)))))
 
 (optional joe_optional_joe_ssh
     (type joe_ssh_t)
