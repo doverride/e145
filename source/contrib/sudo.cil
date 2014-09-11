@@ -158,5 +158,8 @@
 (macro sudo_send_sigchld_all_sudo ((type ARG1))
     (allow ARG1 is_sudo_subject (process (sigchld))))
 
+(macro sudo_search_all_keyrings ((type ARG1))
+    (allow ARG1 is_sudo_subject (key (search))))
+
 (macro sudo_rw_inherited_fifo_files_all_sudo ((type ARG1))
     (allow ARG1 is_sudo_subject rw_inherited_fifo_file_perms))

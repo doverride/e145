@@ -187,6 +187,9 @@
     (call seutil_read_default_context_files (crond_t))
     (call seutil_read_config_files (crond_t)))
 
+(optional crond_optional_sudo
+    (call sudo_search_all_keyrings (crond_t)))
+
 (optional crond_optional_utmp
     (call utmp_read_run_files (crond_t)))
 
