@@ -1017,6 +1017,8 @@
     (call session_application_subject (session_gpgagent_t))
     (call session_use_terminals (session_gpgagent_t))
 
+    (call stream_connect_pattern (session_gpgagent_t session_scd_tmp_t session_scd_tmp_t session_scd_t))
+
     (optional session_gpgagent_optional_session_pinentry_curses
         (type session_pincurses_t)
         (call pinentry_role_template_curses (session_r session_gpgagent_t session_pincurses_t))
