@@ -75,6 +75,9 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (grubby_t))
 
+(optional grubby_optional_fstools
+    (call fstools_read_run_files (grubby_t)))
+
 (optional grubby_optional_miscfiles
     (call miscfiles_read_localization_files (grubby_t)))
 
