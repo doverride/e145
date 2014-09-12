@@ -223,7 +223,8 @@
     (roletype system_r ARG1)
     (call subtrans_pattern (audispd_t ARG2 ARG1))
     (allow audispd_t ARG1 (process (sigkill sigstop signull signal)))
-    (allow ARG1 audispd_t rw_unix_stream_socket_perms))
+    (allow ARG1 audispd_t rw_unix_stream_socket_perms)
+    (call audit_use_fd_auditd (ARG1)))
 
 (macro audit_client_subject ((type ARG1))
     (typeattributeset is_audit_client_subject (ARG1)))

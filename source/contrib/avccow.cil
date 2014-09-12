@@ -25,8 +25,6 @@
 
 (call selinux_getattr_filesystems (avccow_t))
 
-(call audit_use_fd_auditd (avccow_t))
-
 (call xserver_common_client_subject (avccow_t is_xinit_subject is_xorg_subject avccow_tmpfs_t avccow_tmpfs_t))
 (call xserver_client_subject_tmpfs_template (avccow_t avccow_tmpfs_t))
 (call xserver_tcp_connect_xserver_port (avccow_t)) ; its looking for non-existent running xserver
