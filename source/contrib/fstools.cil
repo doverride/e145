@@ -63,7 +63,9 @@
     (s0))))
 (filecon "/run/blkid(/.*)?" any file_fstools_run)
  
-(allow fstools_t self (capability (sys_admin)))
+(allow fstools_t self (capability (sys_admin dac_read_search
+    sys_rawio dac_override)))
+(allow fstools_t self (process (setfscreate)))
 
 (allow fstools_t fstools_run_t manage_dir_perms)
 (allow fstools_t fstools_run_t manage_file_perms)
@@ -72,12 +74,15 @@
 (call can_exec (fstools_t fstools_exec_t))
 
 (call system_read_generic_proc_files (fstools_t))
+(call system_get_sysvipc_info (fstools_t))
 
 (call devices_list (fstools_t))
 (call devices_read_lnk_files (fstools_t))
 (call devices_list_sysfs (fstools_t))
 (call devices_read_sysfs_files (fstools_t))
 (call devices_read_urandom (fstools_t)) ; mkfs.ext4
+(call devices_read_random (fstools_t)) ; parted
+(call devices_rw_lvm_control (fstools_t))
 
 (call files_read_generic_etc_files (fstools_t)) ; /etc/fstab
 
@@ -90,22 +95,29 @@
     (call application_executable_object (fstools_exec_t)))
 
 (optional fstools_optional_miscfiles
+    (call miscfiles_read_terminfo_files (fstools_t))
     (call miscfiles_read_localization_files (fstools_t)))
 
 (optional fstools_optional_mount
     (call mount_read_run_files (fstools_t)))
 
 (optional fstools_optional_session
-    (call session_search_generic_config (fstools_t))
+    (call session_search_all_home (fstools_t))
     (call session_use_inherited_terminals (fstools_t)))
 
+(optional fstools_optional_seutil
+    (call seutil_read_config_files (fstools_t)))
+
 (optional fstools_optional_storage
-    (call storage_read_fixed_disk_nodes (fstools_t))
-    (call storage_write_fixed_disk_nodes (fstools_t))
-    (call storage_read_removable_nodes (fstools_t))
-    (call storage_write_removable_nodes (fstools_t)))
+    (call storage_manage_fixed_disk_nodes (fstools_t))
+    (call storage_manage_removable_nodes (fstools_t)))
+
+(optional fstools_optional_udevd
+    (call udevd_read_config_files (fstools_t))
+    (call udevd_read_run_files (fstools_t)))
 
 (optional fstools_optional_usersubject
+    (call usersubject_search_all_home (fstools_t))
     (call usersubject_use_inherited_terminals (fstools_t)))
 
 (macro fstools_subtrans ((type ARG1))

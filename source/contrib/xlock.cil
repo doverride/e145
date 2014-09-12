@@ -68,6 +68,8 @@
     (call udevd_read_run_files (is_xlock_subject)))
 
 (optional xlock_optional_usersubject
+    (type user_xlock_home_t)
+    (call usersubject_home_object (user_xlock_home_t)) 
     (call xserver_client_subject (xlock_t is_xinit_subject is_xorg_subject
     user_x_tmp_t user_xauth_home_t))
     (call usersubject_read_generic_home_content_files (xlock_t)))
@@ -83,13 +85,16 @@
 
 (call admin_pattern (is_xlock_admin_subject is_xlock_file_object))
 
-(macro xlock_role_template ((role ARG1)(type ARG2)(type ARG3))
+(macro xlock_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_xlock_role ARG1)
     (typeattributeset is_xlock_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xlock_exec_t ARG3))
     (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (ARG2 ARG3)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG3 ARG4 manage_file_perms))
 
 (macro xlock_read_pam_config_files ((type ARG1))
     (call auth_search_pam_config (ARG1))

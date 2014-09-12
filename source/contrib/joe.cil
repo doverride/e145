@@ -485,7 +485,14 @@
 
     (optional joe_xserver_optional_joe_xlock
         (type joe_xlock_t)
-        (call xlock_role_template (joe_r joe_t joe_xlock_t))
+        (call xlock_role_template (joe_r joe_t joe_xlock_t user_xlock_home_t))
+
+        (context file_joe_user_xlock_home (joe_u object_r user_xlock_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.xlockrc" file file_joe_user_xlock_home)
+
+
+        (call usersubject_home_dir_filetrans (joe_t user_xlock_home_t file ".xlockrc"))
+
 
         (call usersubject_application_subject (joe_xlock_t))
         (call usersubject_read_generic_home_content_files (joe_xlock_t)) ; ~/.signature
