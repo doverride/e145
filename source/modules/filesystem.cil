@@ -350,6 +350,9 @@
 (macro filesystem_getattr_all_filesystems ((type ARG1))
     (allow ARG1 is_filesystem_object (filesystem (getattr))))
 
+(macro filesystem_dontaudit_getattr_all_filesystems ((type ARG1))
+    (dontaudit ARG1 is_filesystem_object (filesystem (getattr))))
+
 (macro filesystem_getattr_tmpfs_filesystems ((type ARG1))
     (allow ARG1 tmpfs_t (filesystem (getattr))))
 
