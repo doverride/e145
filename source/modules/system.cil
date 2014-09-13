@@ -308,7 +308,7 @@
 ; might be able to narrow these down to "create" and "setattr"
 (call devices_manage_all_nodes (system_t))
 (call devices_manage_generic_blk_files (system_t))
-(call devices_manage_generic_chr_files (system_t))
+(call devices_manage_generic_chr_files (system_t)) 
 
 (call files_read_generic_usr_files (system_t)) ; plymouthd -> details.plymouth
 (call files_mounton_all_rootfs_mnt_dirs (system_t))
@@ -337,6 +337,11 @@
 
 (optional system_optional_shutdown
     (call shutdownd_sigchld_shutdown (system_t)))
+
+(optional system_optional_storage
+    (call storage_dev_filetrans_fixed_disk (system_t))
+    (call storage_dev_filetrans_scsi_generic (system_t))
+    (call storage_dev_filetrans_removable (system_t)))
 
 (optional system_optional_systemd
     (call systemd_dynamic_subject_type_transition (system_t))

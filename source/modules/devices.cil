@@ -755,6 +755,9 @@
 (macro devices_write_net_control ((type ARG1))
     (call write_chr_files_pattern (ARG1 device_t device_net_control_t)))
 
+(macro devices_dev_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+    (call filetrans_pattern (ARG1 device_t ARG2 ARG3 ARG4)))
+
 (macro devices_write_memory_raw ((type ARG1))
     (allow ARG1 self (capability (sys_rawio)))
     (call write_chr_files_pattern (ARG1 device_t device_memory_t))
