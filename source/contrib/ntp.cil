@@ -111,7 +111,7 @@
     (call application_subject (ntp_t))
     (call application_executable_object (ntp_exec_t)))
 
-(allow ntpd_t self (capability (sys_time setuid setgid)))
+(allow ntpd_t self (capability (sys_time setuid setgid fsetid)))
 (allow ntpd_t self (process (setcap)))
 (allow ntpd_t self rw_fifo_file_perms)
 
@@ -128,9 +128,13 @@
 
 (call commands_execute_shell_files (ntpd_t))
 
+(call devices_read_urandom (ntpd_t))
+
 (call files_search_var_lib (ntpd_t))
 (call files_search_var_log (ntpd_t))
 
+(call ntp_append_ntpd_config_files (ntpd_t))
+(call ntp_setattr_ntpd_config_files (ntpd_t))
 (call ntp_udp_bind_ntp_port (ntpd_t))
 (call ntp_udp_bind_ntp_cmdmon_port (ntpd_t))
 (call ntp_manage_ntpd_var_lib_files (ntpd_t))
@@ -174,6 +178,14 @@
 (macro ntp_read_ntpd_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 ntpd_conf_t ntpd_conf_t)))
+
+(macro ntp_append_ntpd_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call append_files_pattern (ARG1 ntpd_conf_t ntpd_conf_t)))
+
+(macro ntp_setattr_ntpd_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 ntpd_conf_t (file (setattr))))
 
 (macro ntp_list_ntpd_var_lib ((type ARG1))
     (call files_search_var_lib (ARG1))
