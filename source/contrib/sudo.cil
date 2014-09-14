@@ -39,7 +39,7 @@
 (filecon "/var/db/sudo(/.*)?" any file_sudo_var)
 
 (allow is_sudo_subject self (capability (setuid setgid sys_resource fowner dac_override kill)))
-(allow is_sudo_subject self (process (setsched setrlimit setexec signal signull)))
+(allow is_sudo_subject self (process (setsched setkeycreate setrlimit setexec signal signull)))
 (allow is_sudo_subject self rw_fifo_file_perms)
 (allow is_sudo_subject self (key (search)))
 
@@ -90,8 +90,14 @@
 (optional sudo_optional_journald
     (call journald_client_subject (is_sudo_subject)))
 
+(optional sudo_optional_session
+    (call session_relabel_terminals (is_sudo_subject)))
+
 (optional sudo_optional_systemd
     (call systemd_search_keyring (is_sudo_subject)))
+
+(optional sudo_optional_usersubject
+    (call usersubject_relabel_terminals (is_sudo_subject)))
 
 (optional sudo_optional_utmp
     (call utmp_read_run_files (is_sudo_subject)))
@@ -116,7 +122,7 @@
     (call subtrans_pattern (ARG2 sudo_exec_t ARG3))
     (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
     (call ps_subject_pattern (ARG2 ARG3))
-    (allow ARG3 ARG2 (key (search)))
+    (allow ARG3 ARG2 (key (search create)))
     (allow ARG3 ARG2 (process (signal)))
     (call commands_bin_auto_subject_type_transition (ARG3 ARG2))
     (call commands_shell_auto_subject_type_transition (ARG3 ARG2))

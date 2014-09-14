@@ -32,7 +32,7 @@
 (call session_home_object (session_terminfo_home_t))
 
 (context file_session_terminfo_home (session_u object_r session_terminfo_home_t ((s0)(s0))))
-(filecon "/root\.terminfo" file file_session_terminfo_home)
+(filecon "/root/\.terminfo" file file_session_terminfo_home)
 
 (allow session_t session_terminfo_home_t manage_file_perms)
 (allow session_t session_terminfo_home_t relabel_file_perms)
@@ -250,6 +250,7 @@
 (call subject_user_exemption_target (session_t))
 
 (call terminal_use_inherited_unallocated_tty_nodes (session_t)) ; emergency mode/sulogin
+(call terminal_getattr_generic_pty_nodes (session_t)) ; /dev/pts/ptmx
 
 (call session_execute_bin_files (session_t))
 (call session_use_terminals (session_t))
@@ -1361,7 +1362,8 @@
     (call session_application_subject (session_visudo_t))
 
     (optional session_sudo_optional_usersubject
-        (call usersubject_use_inherited_terminals (session_sudo_t))
+        (call usersubject_use_terminals (session_sudo_t))
+        (call usersubject_search_keyring_all_common_login_user_subjects (session_sudo_t))
 
         (optional session_optional_joe
             (allow session_t joe_sudo_t (process (signal)))
@@ -1775,6 +1777,10 @@
 (macro session_setattr_terminals ((type ARG1))
     (allow ARG1 device_session_pts_t (chr_file (setattr)))
     (allow ARG1 device_session_tty_t (chr_file (setattr))))
+
+(macro session_relabel_terminals ((type ARG1))
+    (allow ARG1 device_session_pts_t relabel_chr_file_perms)
+    (allow ARG1 device_session_tty_t relabel_chr_file_perms))
 
 (macro session_manage_session_home_dirs ((type ARG1))
     (call files_rw_home_root_dirs (ARG1))

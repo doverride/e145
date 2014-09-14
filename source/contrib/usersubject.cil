@@ -1550,10 +1550,6 @@
 (macro usersubject_create_pty_node ((type ARG1))
     (call terminal_create_pty_node (ARG1 device_user_pts_t)))
 
-(macro usersubject_relabel_terminals ((type ARG1))
-    (allow ARG1 device_user_tty_t relabel_chr_file_perms)
-    (allow ARG1 device_user_pts_t relabel_chr_file_perms))
-
 (macro usersubject_relabel_tty_nodes ((type ARG1))
     (allow ARG1 device_user_tty_t relabel_chr_file_perms))
 
@@ -1578,6 +1574,10 @@
 (macro usersubject_setattr_terminals ((type ARG1))
     (allow ARG1 device_user_pts_t (chr_file (setattr)))
     (allow ARG1 device_user_tty_t (chr_file (setattr))))
+
+(macro usersubject_relabel_terminals ((type ARG1))
+    (allow ARG1 device_user_pts_t relabel_chr_file_perms)
+    (allow ARG1 device_user_tty_t relabel_chr_file_perms))
 
 (macro usersubject_application_subject ((type ARG1))
     (typeattributeset is_user_application_subject (ARG1)))
