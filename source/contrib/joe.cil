@@ -63,6 +63,11 @@
     (s0))))
 (filecon "/home/joe/\.mozilla(/.*)?" any file_joe_user_mozilla_home)
 
+(context file_joe_user_systemd_home (joe_u object_r user_systemd_home_t ((s0)
+    (s0))))
+(filecon "/home/joe/\.config/systemd(/.*)?" any file_joe_user_systemd_home)
+(filecon "/home/joe/\.local/share/systemd(/.*)?" any file_joe_user_systemd_home)
+
 (context file_joe_user_bin (joe_u object_r user_bin_t ((s0)
     (s0))))
 (filecon "/home/joe/bin" symlink file_joe_user_bin)

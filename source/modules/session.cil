@@ -73,6 +73,14 @@
     (s0))))
 (filecon "/root/.*" any file_session_home)
 
+(type session_systemd_home_t)
+(call session_home_object (session_systemd_home_t))
+
+(context file_session_systemd_home (session_u object_r session_systemd_home_t ((s0)
+    (s0))))
+(filecon "/root/\.config/systemd(/.*)?" any file_session_systemd_home)
+(filecon "/root/\.local/share/systemd(/.*)?" any file_session_systemd_home)
+
 (type session_bin_t)
 (call session_home_object (session_bin_t))
 (call subject_entry (session_t session_bin_t))
@@ -173,6 +181,9 @@
 (call session_data_filetrans_session_bin_dir (session_t))
 
 (call session_cache_filetrans_session_font_cache_dir (session_t))
+
+(call session_config_filetrans_session_systemd_config_dir (session_t))
+(call session_data_filetrans_session_systemd_data_dir (session_t))
 
 (call session_run_user_dir_filetrans_session_run (session_t dir "*"))
 (call session_run_user_dir_filetrans_session_run (session_t file "*"))
@@ -513,7 +524,7 @@
     (call usermanage_run_useradd (session_t session_r)))
 
 (optional session_optional_usersubject
-    (call usersubject_use_inherited_terminals (session_t))
+    (call usersubject_use_terminals (session_t))
     (call usersubject_home_dir_filetrans_user_home (session_t dir "*"))
     (call usersubject_home_dir_filetrans_user_home (session_t file "*"))
     (call usersubject_home_dir_filetrans_user_home (session_t lnk_file "*"))
@@ -1570,6 +1581,27 @@
     (class ARG2)(name ARG3))
     (call session_search_home_dir (ARG1))
     (call filetrans_pattern (ARG1 session_home_dir_t session_home_t ARG2 ARG3)))
+
+(macro session_manage_systemd_dirs ((type ARG1))
+    (call session_search_generic_config (ARG1))
+    (call session_search_generic_data (ARG1))
+    (call manage_dirs_pattern (ARG1 session_systemd_home_t session_systemd_home_t)))
+
+(macro session_manage_systemd_files ((type ARG1))
+    (call session_search_generic_config (ARG1))
+    (call session_search_generic_data (ARG1))
+    (call manage_files_pattern (ARG1 session_systemd_home_t session_systemd_home_t)))
+
+(macro session_manage_systemd_lnk_files ((type ARG1))
+    (call session_search_generic_config (ARG1))
+    (call session_search_generic_data (ARG1))
+    (call manage_lnk_files_pattern (ARG1 session_systemd_home_t session_systemd_home_t)))
+
+(macro session_config_filetrans_session_systemd_config_dir ((type ARG1))
+    (call session_config_filetrans (ARG1 session_systemd_home_t dir "systemd")))
+
+(macro session_data_filetrans_session_systemd_data_dir ((type ARG1))
+    (call session_data_filetrans (ARG1 session_systemd_home_t dir "systemd")))
 
 (macro session_search_generic_cache ((type ARG1))
     (call session_search_home_dir (ARG1))

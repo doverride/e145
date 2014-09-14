@@ -382,8 +382,11 @@
     (call session_run_user_dir_filetrans_systemd_run_dir (systemd_t))
     (call session_manage_systemd_run_dirs (systemd_t))
     (call session_manage_systemd_run_sock_files (systemd_t))
-    (call session_search_generic_config (systemd_t)) ; temporary for ~/.config/systemd
-    (call session_search_generic_data (systemd_t)) ; temporary for ~/.local/share/systemd
+    (call session_manage_systemd_dirs (systemd_t))
+    (call session_manage_systemd_files (systemd_t))
+    (call session_manage_systemd_lnk_files (systemd_t))
+    (call session_config_filetrans_session_systemd_config_dir (systemd_t))
+    (call session_data_filetrans_session_systemd_data_dir (systemd_t))
     (call session_use_tty_nodes (systemd_t)))
 
 (optional systemd_optional_seutil
@@ -418,8 +421,11 @@
     (call usersubject_run_user_dir_filetrans_systemd_run_dir (systemd_t))
     (call usersubject_manage_systemd_run_dirs (systemd_t))
     (call usersubject_manage_systemd_run_sock_files (systemd_t))
-    (call usersubject_search_generic_config (systemd_t)) ; temporary for ~/.config/systemd
-    (call usersubject_search_generic_data (systemd_t)) ; temporary for ~/.local/share/systemd
+    (call usersubject_manage_systemd_dirs (systemd_t))
+    (call usersubject_manage_systemd_files (systemd_t))
+    (call usersubject_manage_systemd_lnk_files (systemd_t))
+    (call usersubject_config_filetrans_user_systemd_config_dir (systemd_t))
+    (call usersubject_data_filetrans_user_systemd_data_dir (systemd_t))
     (call usersubject_use_tty_nodes (systemd_t)))
 
 (allow systemctl_t self (capability (net_admin ipc_lock)))

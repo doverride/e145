@@ -50,6 +50,9 @@
 (optional usersubject_optional_miscfiles
     (call miscfiles_cert_object (user_cert_t)))
 
+(type user_systemd_home_t)
+(call usersubject_home_object (user_systemd_home_t))
+
 (type user_home_dir_t)
 (call files_object (user_home_dir_t))
 
@@ -116,6 +119,7 @@
 (call usersubject_font_cache_template (is_common_login_user_subject))
 (call usersubject_gstreamer_cache_template (is_common_login_user_subject))
 (call usersubject_mozilla_template (is_common_login_user_subject))
+(call usersubject_systemd_template (is_common_login_user_subject))
 (call usersubject_gtk2_config_template (is_common_login_user_subject))
 (call usersubject_generic_config_template (is_common_login_user_subject))
 (call usersubject_generic_data_template (is_common_login_user_subject))
@@ -559,6 +563,52 @@
 (macro usersubject_relabel_generic_config_chr_files ((type ARG1))
     (call usersubject_search_generic_config (ARG1))
     (call relabel_chr_files_pattern (ARG1 user_conf_t user_conf_t)))
+
+(macro usersubject_systemd_template ((type ARG1))
+    (call usersubject_manage_systemd_dirs (ARG1))
+    (call usersubject_manage_systemd_files (ARG1))
+    (call usersubject_manage_systemd_lnk_files (ARG1))
+    (call usersubject_relabel_systemd_dirs (ARG1))
+    (call usersubject_relabel_systemd_files (ARG1))
+    (call usersubject_relabel_systemd_lnk_files (ARG1))
+    (call usersubject_config_filetrans_user_systemd_config_dir (ARG1))
+    (call usersubject_data_filetrans_user_systemd_data_dir (ARG1)))
+
+(macro usersubject_config_filetrans_user_systemd_config_dir ((type ARG1))
+    (call usersubject_config_filetrans (ARG1 user_systemd_home_t dir "systemd")))
+
+(macro usersubject_data_filetrans_user_systemd_data_dir ((type ARG1))
+    (call usersubject_data_filetrans (ARG1 user_systemd_home_t dir "systemd")))
+
+(macro usersubject_manage_systemd_dirs ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call usersubject_search_generic_data (ARG1))
+    (call manage_dirs_pattern (ARG1 user_systemd_home_t user_systemd_home_t)))
+
+(macro usersubject_manage_systemd_files ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call usersubject_search_generic_data (ARG1))
+    (call manage_files_pattern (ARG1 user_systemd_home_t user_systemd_home_t)))
+
+(macro usersubject_manage_systemd_lnk_files ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call usersubject_search_generic_data (ARG1))
+    (call manage_lnk_files_pattern (ARG1 user_systemd_home_t user_systemd_home_t)))
+
+(macro usersubject_relabel_systemd_dirs ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call usersubject_search_generic_data (ARG1))
+    (call relabel_dirs_pattern (ARG1 user_systemd_home_t user_systemd_home_t)))
+
+(macro usersubject_relabel_systemd_files ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call usersubject_search_generic_data (ARG1))
+    (call relabel_files_pattern (ARG1 user_systemd_home_t user_systemd_home_t)))
+
+(macro usersubject_relabel_systemd_lnk_files ((type ARG1))
+    (call usersubject_search_generic_config (ARG1))
+    (call usersubject_search_generic_data (ARG1))
+    (call relabel_lnk_files_pattern (ARG1 user_systemd_home_t user_systemd_home_t)))
 
 (macro usersubject_gtk2_config_template ((type ARG1))
     (call usersubject_manage_gtk2_config_dirs (ARG1))
