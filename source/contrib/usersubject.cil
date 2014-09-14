@@ -1004,13 +1004,25 @@
     (call usersubject_search_run_user_dir (ARG1))
     (call manage_dirs_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
 
+(macro usersubject_manage_systemd_run_sock_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call manage_sock_files_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
+
 (macro usersubject_list_systemd_run_dirs ((type ARG1))
     (call usersubject_search_run_user_dir (ARG1))
     (allow ARG1 user_systemd_run_t (dirs (list))))
 
-(macro usersubject_manage_systemd_run_sock_files ((type ARG1))
+(macro usersubject_rw_run_user_dir ((type ARG1))
+    (call files_search_run_user_root (ARG1))
+    (allow ARG1 user_run_user_dir_t rw_dir_perms))
+
+(macro usersubject_delete_systemd_run_dirs ((type ARG1))
+    (call usersubject_rw_run_user_dir (ARG1))
+    (call delete_dirs_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
+
+(macro usersubject_delete_systemd_run_sock_files ((type ARG1))
     (call usersubject_search_run_user_dir (ARG1))
-    (call manage_sock_files_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
+    (call delete_sock_files_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
 
 (macro usersubject_relabel_systemd_run_dirs ((type ARG1))
     (call usersubject_search_run_user_dir (ARG1))

@@ -1660,6 +1660,18 @@
     (call session_search_run_user_dir (ARG1))
     (call session_run_user_dir_filetrans (ARG1 session_orc_run_t dir ".orc")))
 
+(macro session_rw_run_user_dir ((type ARG1))
+    (call files_search_run_user_root (ARG1))
+    (allow ARG1 session_run_user_dir_t rw_dir_perms))
+
+(macro session_delete_systemd_run_dirs ((type ARG1))
+    (call session_rw_run_user_dir (ARG1))
+    (call delete_dirs_pattern (ARG1 session_systemd_run_t session_systemd_run_t)))
+
+(macro session_delete_systemd_run_sock_files ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call delete_sock_files_pattern (ARG1 session_systemd_run_t session_systemd_run_t)))
+
 (macro session_manage_orc_run_dirs ((type ARG1))
     (call session_search_run_user_dir (ARG1))
     (call manage_dirs_pattern (ARG1 session_orc_run_t session_orc_run_t)))
