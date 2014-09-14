@@ -1,6 +1,8 @@
 target fstrim:
     because it requires cap sys_admin
 
+target fedora-readonly
+
 target /usr/sbin/glibc_post_upgrade.*
     i suspect this is what makes select exec fles end up with file_t type
     by confining it i mabe be able to make it create those files with
@@ -78,15 +80,6 @@ systemd:
     the workaround is to copy these to /etc/systemd/system, and /etc/tmpfiles.d
     respecitively and then s/'/var/run'/run there
 
-generators:
-    target them because else we have no way to make them generate the units with
-    their appropriate types
-
-    Update: looks like gpt generator writes (or checks for write xs) to /sys
-
-fedora-readonly:
-    target these oneshots
-
 session:
     review whether session actually runs busproxyd, and askpwd directly
 
@@ -112,14 +105,6 @@ auth.cil:
 
     miscfiles_read_network_config_files() would probably be associated with
     is_dns_resolve_client_subject which in turn is associated with is_auth_nsswitch_client_subject
-
-pulseaudio:
-    review what callers of pa_client_subject need and have in common
-
-    Example: there may be rules in moc.cil that apply to all callers of
-    pa_client_subject() instead of just is_moc_subject
-
-    I suppose one could compare the moc rules to rules of other pa_client_subject() callers 
 
 tmpfiles.cil:
     implement a tmpfiles_config_object(), and apply that to targeted subjects where possible
