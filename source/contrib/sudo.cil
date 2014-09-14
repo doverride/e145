@@ -39,7 +39,7 @@
 (filecon "/var/db/sudo(/.*)?" any file_sudo_var)
 
 (allow is_sudo_subject self (capability (setuid setgid sys_resource fowner dac_override kill)))
-(allow is_sudo_subject self (process (setsched setrlimit setexec signal)))
+(allow is_sudo_subject self (process (setsched setrlimit setexec signal signull)))
 (allow is_sudo_subject self rw_fifo_file_perms)
 (allow is_sudo_subject self (key (search)))
 
