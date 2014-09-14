@@ -62,6 +62,9 @@
 (type user_orc_run_t)
 (call usersubject_run_object (user_orc_run_t))
 
+(type user_systemd_run_t)
+(call usersubject_run_object (user_systemd_run_t))
+ 
 (type user_tmp_t)
 (call usersubject_tmp_object (user_tmp_t))
 
@@ -120,6 +123,7 @@
 (call usersubject_generic_cert_template (is_common_login_user_subject))
 (call usersubject_generic_run_template (is_common_login_user_subject))
 (call usersubject_orc_run_template (is_common_login_user_subject))
+(call usersubject_systemd_run_template (is_common_login_user_subject))
 (call usersubject_generic_tmp_template (is_common_login_user_subject))
 (call usersubject_generic_tmpfs_template (is_common_login_user_subject))
 
@@ -984,6 +988,37 @@
 (macro usersubject_relabel_generic_run_content_chr_files ((type ARG1))
     (call usersubject_search_run_user_dir (ARG1))
     (call relabel_chr_files_pattern (ARG1 user_run_t user_run_t)))
+
+(macro usersubject_systemd_run_template ((type ARG1))
+    (call usersubject_manage_systemd_run_dirs (ARG1))
+    (call usersubject_manage_systemd_run_sock_files (ARG1))
+    (call usersubject_relabel_systemd_run_dirs (ARG1))
+    (call usersubject_relabel_systemd_run_sock_files (ARG1))
+    (call usersubject_run_user_dir_filetrans_systemd_run_dir (ARG1)))
+
+(macro usersubject_run_user_dir_filetrans_systemd_run_dir ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call usersubject_run_user_dir_filetrans (ARG1 user_systemd_run_t dir "systemd")))
+
+(macro usersubject_manage_systemd_run_dirs ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
+
+(macro usersubject_list_systemd_run_dirs ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (allow ARG1 user_systemd_run_t (dirs (list))))
+
+(macro usersubject_manage_systemd_run_sock_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call manage_sock_files_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
+
+(macro usersubject_relabel_systemd_run_dirs ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call relabel_dirs_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
+
+(macro usersubject_relabel_systemd_run_sock_files ((type ARG1))
+    (call usersubject_search_run_user_dir (ARG1))
+    (call relabel_sock_files_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
 
 (macro usersubject_orc_run_template ((type ARG1))
     (call usersubject_manage_orc_run_dirs (ARG1))

@@ -120,6 +120,12 @@
     (s0))))
 (filecon "/run/user/0/\.orc(/.*)?" any file_session_orc_run)
 
+(type session_systemd_run_t)
+(call session_run_object (session_systemd_run_t))
+
+(context file_session_systemd_run (session_u object_r session_systemd_run_t ((s0) (s0))))
+(filecon "/run/user/0/systemd(/.*)?" any file_session_systemd_run) 
+
 (type session_tmp_t)
 (call session_tmp_object (session_tmp_t))
 
@@ -177,6 +183,8 @@
 (call session_run_user_dir_filetrans_session_run (session_t chr_file "*"))
 
 (call session_run_user_dir_filetrans_orc_run_dir (session_t))
+
+(call session_run_user_dir_filetrans_systemd_run_dir (session_t))
 
 (call files_tmp_filetrans (session_t session_tmp_t dir "*"))
 (call files_tmp_filetrans (session_t session_tmp_t file "*"))
@@ -1631,6 +1639,22 @@
     (name ARG4))
     (call session_search_run_user_dir (ARG1))
     (call filetrans_pattern (ARG1 session_run_user_dir_t ARG2 ARG3 ARG4)))
+
+(macro session_run_user_dir_filetrans_systemd_run_dir ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call session_run_user_dir_filetrans (ARG1 session_systemd_run_t dir "systemd")))
+
+(macro session_manage_systemd_run_dirs ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 session_systemd_run_t session_systemd_run_t)))
+
+(macro session_list_systemd_run_dirs ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (allow ARG1 session_systemd_run_t (dirs (list))))
+
+(macro session_manage_systemd_run_sock_files ((type ARG1))
+    (call session_search_run_user_dir (ARG1))
+    (call manage_sock_files_pattern (ARG1 session_systemd_run_t session_systemd_run_t)))
 
 (macro session_run_user_dir_filetrans_orc_run_dir ((type ARG1))
     (call session_search_run_user_dir (ARG1))
