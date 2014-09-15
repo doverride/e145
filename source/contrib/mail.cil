@@ -69,6 +69,9 @@
 (optional mutt_optional_auth
     (call auth_nsswitch_client_subject (is_mutt_subject)))
 
+(optional mutt_optional_dbus
+    (call dbus_read_var_lib_files (is_mutt_subject)))
+
 (optional mutt_optional_miscfiles
     (call miscfiles_read_network_environ_files (is_mutt_subject))
     (call miscfiles_read_network_config_files (is_mutt_subject))

@@ -1102,6 +1102,17 @@
 
     (call usersubject_application_subject (joe_mutt_gpg_t))
 
+    (optional joe_mutt_optional_joe_firefox
+            (call mozilla_role_template_firefox (joe_r joe_mutt_t joe_firefox_t user_firefox_home_t
+                user_mozilla_cache_t user_firefox_tmp_t user_firefox_tmpfs_t))
+
+            (allow joe_firefox_t user_mutt_tmp_t rw_file_perms))
+
+    (optional joe_mutt_optional_joe_xremotec
+            (call mozilla_role_template_xremotec (joe_r joe_mutt_t joe_xremotec_t))
+
+            (allow joe_xremotec_t user_mutt_tmp_t (file (read write))))
+
     (optional joe_mutt_optional_joe_elinks
         (allow joe_elinks_t joe_mutt_t read_fifo_file_perms)
         (allow joe_elinks_t user_mutt_tmp_t rw_file_perms)
