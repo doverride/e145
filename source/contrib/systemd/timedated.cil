@@ -47,6 +47,7 @@
 (context file_timedated_unit (system_u object_r timedated_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-timedated.*" file
     file_timedated_unit)
+(filecon "/usr/lib/systemd/system/[^/]*org\.freedesktop\.timedate1.*" file file_timedated_unit)
 
 (call polkit_dbus_chat_polkitd (timedated_t))
 

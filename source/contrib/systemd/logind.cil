@@ -61,6 +61,7 @@
 
 (context file_logind_unit (system_u object_r logind_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-logind.*" file file_logind_unit)
+(filecon "/usr/lib/systemd/system/[^/]*org\.freedesktop\.login1.*" file file_logind_unit)
 
 (allow logind_t self (capability (chown fowner sys_tty_config sys_admin dac_override)))
 (allow logind_t self (process (getcap setfscreate)))

@@ -51,6 +51,7 @@
 
 (context file_localed_unit (system_u object_r localed_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-localed.*" file file_localed_unit)
+(filecon "/usr/lib/systemd/system/[^/]*org\.freedesktop\.locale1.*" file file_localed_unit)
 
 (call polkit_dbus_chat_polkitd (localed_t))
 

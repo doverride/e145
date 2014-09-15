@@ -53,6 +53,7 @@
 (context file_hostnamed_unit (system_u object_r hostnamed_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-hostnamed.*" file
     file_hostnamed_unit)
+(filecon "/usr/lib/systemd/system/[^/]*org\.freedesktop\.hostname1.*" file file_hostnamed_unit)
 
 (call files_etc_filetrans (hostnamed_t hostnamed_conf_t file "hostname"))
 

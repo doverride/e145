@@ -50,7 +50,9 @@
 (call systemd_unit_object (machined_unit_t))
 
 (context file_machined_unit (system_u object_r machined_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*systemd-machined.*" file file_machined_unit)
 (filecon "/usr/lib/systemd/system/[^/]*machine.*" file file_machined_unit)
+(filecon "/usr/lib/systemd/system/[^/]*org\.freedesktop\.machine1.*" file file_machined_unit)
 
 (allow is_machined_admin_subject is_machined_subject signal_perms)
 (allow is_machined_admin_subject is_machined_subject (process (ptrace)))
