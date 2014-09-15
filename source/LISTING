@@ -31,6 +31,7 @@ contrib/ffmpeg.cil
 contrib/fop.cil
 contrib/fprint.cil
 contrib/fstools.cil
+contrib/fstrim.cil
 contrib/getty.cil
 contrib/git.cil
 contrib/googletalk.cil

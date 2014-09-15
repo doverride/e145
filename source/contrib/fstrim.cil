@@ -1,0 +1,64 @@
+(typepermissive fstrim_t)
+
+(roleattribute is_fstrim_role)
+
+(typeattribute is_fstrim_admin_subject)
+
+(typeattribute is_fstrim_file_object)
+(typeattributeset is_fstrim_file_object (fstrim_unit_t))
+
+(type fstrim_t)
+(type fstrim_exec_t)
+(call systemd_oneshot_subject_entry (fstrim_t fstrim_exec_t))
+(roletype is_fstrim_role fstrim_t)
+
+(context file_fstrim_exec (system_u object_r fstrim_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/fstrim.*" file file_fstrim_exec)
+
+(type fstrim_unit_t)
+(call systemd_unit_object (fstrim_unit_t))
+
+(context file_fstrim_unit (system_u object_r fstrim_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*fstrim.*" file file_fstrim_unit)
+
+(allow fstrim_t self (capability (sys_admin)))
+
+(call devices_list_sysfs (fstrim_t))
+(call devices_read_sysfs_files (fstrim_t))
+(call devices_read_lnk_files (fstrim_t))
+
+(call files_list_all_mnt_dirs (fstrim_t))
+
+(call selinux_getattr_filesystems (fstrim_t))
+
+(call storage_getattr_fixed_disk_nodes (fstrim_t))
+(call storage_getattr_scsi_generic_nodes (fstrim_t))
+
+(optional fstrim_optional_application
+    (call application_subject (fstrim_t))
+    (call application_executable_object (fstrim_t)))
+
+(optional fstrim_optional_miscfiles
+    (call miscfiles_read_localization_files (fstrim_t))) 
+
+(optional fstrim_optional_session
+    (call session_use_inherited_terminals (fstrim_t)))
+
+(optional fstrim_optional_usersubject
+    (call usersubject_use_inherited_terminals (fstrim_t)))
+
+(allow is_fstrim_admin_subject fstrim_t signal_perms)
+(allow is_fstrim_admin_subject fstrim_t (process (ptrace)))
+(call ps_subject_pattern (is_fstrim_admin_subject fstrim_t))
+
+(call admin_pattern (is_fstrim_admin_subject is_fstrim_file_object))
+
+(macro fstrim_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 fstrim_exec_t fstrim_t)))
+
+(macro fstrim_run ((type ARG1)(role ARG2))
+    (call fstrim_subtrans (ARG1))
+    (roleattributeset is_fstrim_role (ARG2)))
+
+(macro fstrim_admin ((type ARG1))
+    (typeattributeset is_fstrim_admin_subject ARG1))

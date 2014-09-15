@@ -338,6 +338,10 @@
 (optional session_optional_fstools
     (call fstools_run (session_t session_r)))
 
+(optional session_optional_fstrim
+    (call fstrim_admin (session_t))
+    (call fstrim_run (session_t session_r)))
+
 (optional session_optional_getty
     (call getty_admin (session_t)))
 
