@@ -1,20 +1,28 @@
+(boolean ssh_priv_user_login false)
+
 (roleattribute is_ssh_role)
 (roleattribute is_sshagent_role)
 
 (typeattribute is_ssh_subject)
 (typeattribute is_sshagent_subject)
 
-(typeattribute is_sshd_dynamic_subject)
-
 (typeattribute is_ssh_admin_subject)
 
 (typeattribute is_sshd_subject)
-(typeattributeset is_sshd_subject (is_sshd_dynamic_subject sshd_t sshd_keygen_t))
+(typeattributeset is_sshd_subject (sshd_t sshd_net_t sshd_keygen_t))
 
 (typeattribute is_ssh_file_object)
 (typeattributeset is_ssh_file_object (ssh_conf_t sshd_unit_t
     sshd_conf_t sshd_key_t sshd_pam_conf_t sshd_env_t sshd_run_t
     sshd_keygen_unit_t))
+
+(type ssh_priv_user_login_t)
+(call selinux_boolean_object (ssh_priv_user_login_t))
+
+(context ssh_priv_user_login (system_u object_r
+    ssh_priv_user_login_t ((s0) (s0))))
+(genfscon "selinuxfs" "/booleans/ssh_priv_user_login"
+    ssh_priv_user_login)
 
 (type sshd_t)
 (type sshd_exec_t)
@@ -78,7 +86,10 @@
 (filecon "/usr/lib/systemd/system/[^/]*sshd-keygen.*" file file_sshd_keygen_unit)
 
 (type sshd_net_t)
-(call ssh_dynamic_sshd_subject_entry (sshd_net_t))
+(call subject_common_subject (sshd_net_t))
+(allow sshd_t sshd_net_t (process (sigkill)))
+(call dynamic_subject_type_transition_pattern (sshd_t sshd_net_t))
+(roletype system_r sshd_net_t)
 
 (type ssh_exec_t)
 (call application_subject_entry (is_ssh_subject ssh_exec_t))
@@ -120,8 +131,6 @@
 (allow sshd_t self (capability (sys_resource net_admin)))
 (allow sshd_t self rw_fifo_file_perms)
 
-(call dynamic_subject_type_transition_pattern (sshd_t is_sshd_dynamic_subject))
-
 (allow sshd_t sshd_run_t manage_file_perms)
 (call files_run_filetrans (sshd_t sshd_run_t file "*"))
 
@@ -143,6 +152,8 @@
 
 (call network_tcp_bind_generic_node (sshd_t))
 
+(call subject_dynamic_type_transition_subject (sshd_t))
+
 (call auth_login_program_subject (sshd_t))
 
 (call ssh_read_sshd_config_files (sshd_t))
@@ -160,17 +171,26 @@
     (call session_append_ssh_files (sshd_t))
     (call session_create_ssh_files (sshd_t))
     (call session_read_ssh_files (sshd_t))
-    (call session_dontaudit_ioctl_pty_nodes (sshd_t))
-    (call session_relabel_pty_nodes (sshd_t))
-    (call session_setattr_pty_nodes (sshd_t))
-    (call session_shell_manual_subject_type_transition (sshd_t)) ; to compute login context
-    (call session_dynamic_subject_type_transition (sshd_t))) ; make this tunable
+    (call session_use_terminals (sshd_t))
+
+    (booleanif ssh_priv_user_login
+        (true
+            (call session_dontaudit_ioctl_pty_nodes (sshd_t))
+            (call session_relabel_pty_nodes (sshd_t))
+            (call session_setattr_pty_nodes (sshd_t))
+            (call session_dynamic_subject_type_transition (sshd_t))
+            (call session_shell_manual_subject_type_transition (sshd_t))) ; to compute login context
+        (false
+            (call session_dontaudit_dyntransition (sshd_t))
+            (call session_dontaudit_transition (sshd_t))
+            (call session_dontaudit_use_pty_nodes (sshd_t)))))
 
 (optional sshd_optional_usersubject
     (call usersubject_append_ssh_files (sshd_t))
     (call usersubject_create_ssh_files (sshd_t))
     (call usersubject_read_ssh_files (sshd_t))
     (call usersubject_dontaudit_ioctl_pty_nodes (sshd_t))
+    (call usersubject_use_terminals (sshd_t))
     (call usersubject_relabel_pty_nodes (sshd_t))
     (call usersubject_setattr_pty_nodes (sshd_t))
     (call usersubject_shell_manual_subject_type_transition_all_common_login_user_subjects (sshd_t)) ; to compute login context
@@ -268,12 +288,6 @@
 (macro ssh_etc_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
     (call files_search_etc (ARG1))
     (call filetrans_pattern (ARG1 sshd_conf_t ARG2 ARG3 ARG4)))
-
-(macro ssh_dynamic_sshd_subject_entry ((type ARG1))
-    (call subject_common_subject (ARG1))
-    (allow sshd_t ARG1 (process (sigkill)))
-    (typeattributeset is_sshd_dynamic_subject ARG1)
-    (roletype system_r ARG1))
 
 (macro ssh_read_sshd_config_files ((type ARG1))
     (call files_search_etc (ARG1))

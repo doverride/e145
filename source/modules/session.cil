@@ -1446,7 +1446,6 @@
     (allow ARG1 session_t (key (search))))
 
 (macro session_dynamic_subject_type_transition ((type ARG1))
-    (call subject_dynamic_type_transition_subject (ARG1))
     (call dynamic_subject_type_transition_pattern (ARG1
         session_t)))
 
@@ -1800,6 +1799,9 @@
 (macro session_dontaudit_use_tty_nodes ((type ARG1))
     (dontaudit ARG1 device_session_tty_t rw_term_perms))
 
+(macro session_dontaudit_use_pty_nodes ((type ARG1))
+    (dontaudit ARG1 device_session_pts_t rw_term_perms))
+
 (macro session_use_tty_nodes ((type ARG1))
     (allow ARG1 device_session_tty_t rw_term_perms))
 
@@ -1832,6 +1834,12 @@
     (allow ARG1 is_session_home_file_object delete_sock_file_perms)
     (allow ARG1 is_session_home_file_object delete_blk_file_perms)
     (allow ARG1 is_session_home_file_object delete_chr_file_perms))
+
+(macro session_dontaudit_dyntransition ((type ARG1))
+    (dontaudit ARG1 session_t (process (dyntransition))))
+
+(macro session_dontaudit_transition ((type ARG1))
+    (dontaudit ARG1 session_t (process (transition))))
 
 (macro session_role_allow ((role ARG1))
     (roleallow ARG1 session_r))
