@@ -1,3 +1,5 @@
+(typepermissive sshd_keygen_t)
+
 (boolean ssh_priv_user_login false)
 
 (roleattribute is_ssh_role)
