@@ -205,8 +205,6 @@
 (call commands_shell_auto_subject_type_transition (systemd_t
     systemd_daemon_t))
 
-(call selinux_get_enforce_mode (systemd_daemon_t)) ; fedora-readonly
-
 (call auth_nsswitch_client_subject (systemd_daemon_t))
 
 (call systemd_send_signal_all_systemd_daemons (systemd_daemon_t))
@@ -230,6 +228,7 @@
 (allow systemd_t self (key (search write)))
 
 (allow systemd_t systemd_var_lib_t manage_dir_perms)
+(allow systemd_t systemd_var_lib_t manage_file_perms) ; /var/lib/systemd/timers/stamp.*\.timer
 (call files_var_lib_filetrans (systemd_t systemd_var_lib_t dir "*"))
 
 (allow systemd_t systemd_run_t manage_dir_perms)

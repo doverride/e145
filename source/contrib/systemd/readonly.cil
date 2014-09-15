@@ -1,5 +1,3 @@
-(typepermissive readonly_t)
-
 (typeattribute is_readonly_admin_subject)
 
 (typeattribute is_readonly_file_object)
@@ -19,6 +17,26 @@
     ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*fedora-readonly.*" file
     file_readonly_unit)
+
+(allow readonly_t self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (readonly_t))
+
+(call commands_mprot_read_shell_files (readonly_t))
+(call commands_execute_bin_files (readonly_t))
+
+(call devices_read_lnk_files (readonly_t))
+
+(call files_read_generic_env_files (readonly_t))
+(call files_read_generic_etc_files (readonly_t))
+
+(call selinux_get_enforce_mode (readonly_t))
+
+(optional readonly_optional_auth
+    (call auth_nsswitch_client_subject (readonly_t)))
+
+(optional readonly_optional_miscfiles
+    (call miscfiles_read_localization_files (readonly_t)))
 
 (allow is_readonly_admin_subject readonly_t signal_perms)
 (allow is_readonly_admin_subject readonly_t (process (ptrace)))
