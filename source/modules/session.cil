@@ -493,6 +493,9 @@
 (optional session_optional_sessions
     (call sessions_admin (session_t)))
 
+(optional session_optional_ssh
+    (call ssh_admin (session_t)))
+
 (optional session_optional_shutdownd
     (call shutdownd_admin (session_t)))
 
