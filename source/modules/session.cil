@@ -1256,6 +1256,7 @@
             session_gpgagent_t)))
 
     (optional session_ssh_optional_usersubject
+        (call usersubject_use_inherited_pty_nodes (session_ssh_t))
         (call usersubject_search_home_dir (session_ssh_t))
         (call manage_files_pattern (session_ssh_t user_ssh_home_t user_ssh_home_t))
 

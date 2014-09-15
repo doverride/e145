@@ -1635,6 +1635,9 @@
 (macro usersubject_relabel_pty_nodes ((type ARG1))
     (allow ARG1 device_user_pts_t relabel_chr_file_perms))
 
+(macro usersubject_use_inherited_pty_nodes ((type ARG1))
+    (allow ARG1 device_user_pts_t rw_inherited_term_perms))
+
 (macro usersubject_setattr_tty_nodes ((type ARG1))
     (allow ARG1 device_user_tty_t (chr_file (setattr))))
 
