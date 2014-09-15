@@ -397,6 +397,9 @@
 (optional systemd_optional_shutdownd
     (call shutdownd_share_state_shutdown (systemd_t)))
 
+(optional systemd_optional_sshd
+    (call ssh_read_sshd_config_files (systemd_t)))
+
 (optional systemd_optional_storage
     (call storage_read_fixed_disk_nodes (systemd_t)))
 

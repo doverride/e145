@@ -73,6 +73,12 @@
     (s0))))
 (filecon "/root/.*" any file_session_home)
 
+(type session_ssh_home_t)
+(call session_home_object (session_ssh_home_t))
+
+(context file_session_ssh_home (session_u object_r session_ssh_home_t ((s0)(s0))))
+(filecon "/root/\.ssh(/.*)?" any file_session_ssh_home)
+
 (type session_systemd_home_t)
 (call session_home_object (session_systemd_home_t))
 
@@ -174,6 +180,8 @@
 (call session_home_dir_filetrans_session_cache_dir (session_t))
 (call session_home_dir_filetrans_session_config_dir (session_t))
 (call session_home_dir_filetrans_session_data_dir (session_t))
+
+(call session_home_dir_filetrans_session_ssh_dir (session_t))
 
 (call session_home_dir_filetrans_session_bin_dir (session_t))
 (call session_home_dir_filetrans_session_cert_dir (session_t))
@@ -1229,7 +1237,6 @@
 
     (allow session_t session_ssh_t (process (signal signull sigkill sigstop)))
 
-    (call session_home_dir_filetrans (session_t session_ssh_home_t dir ".ssh"))
     (call session_home_dir_filetrans (session_ssh_t session_ssh_home_t dir ".ssh"))
 
     (call session_manage_generic_home_content_files (session_ssh_t))
@@ -1240,11 +1247,9 @@
     (call session_manage_generic_tmp_files (session_ssh_t))
     (call session_tmp_filetrans_generic_tmp (session_ssh_t file "*"))
 
-    (type session_ssh_home_t)
-    (call session_home_object (session_ssh_home_t))
-
-    (context file_session_ssh_home (session_u object_r session_ssh_home_t ((s0)(s0))))
-    (filecon "/root/\.ssh(/.*)?" any file_session_ssh_home)
+    (call ssh_rw_inherited_sshd_tcp_sockets (session_t))
+    (call ssh_rw_inherited_sshd_unix_stream_sockets (session_t))
+    (call ssh_rw_inherited_sshd_unix_dgram_sockets (session_t))
 
     (optional session_ssh_optional_session_gpgagent
         (call stream_connect_pattern (session_ssh_t session_gpg_home_t session_gpgagent_home_t
@@ -1563,6 +1568,10 @@
 (macro session_dontaudit_getattr_all_home_content_files ((type ARG1))
     (dontaudit ARG1 is_session_home_file_object (file (getattr))))
 
+(macro session_home_dir_filetrans_session_ssh_dir ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t session_ssh_t dir ".ssh")))
+
 (macro session_home_dir_filetrans_session_bin_dir ((type ARG1))
     (call session_search_home_dir (ARG1))
     (call filetrans_pattern (ARG1 session_home_dir_t session_bin_t dir ".bin")))
@@ -1590,6 +1599,18 @@
     (class ARG2)(name ARG3))
     (call session_search_home_dir (ARG1))
     (call filetrans_pattern (ARG1 session_home_dir_t session_home_t ARG2 ARG3)))
+
+(macro session_create_ssh_files ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call create_files_pattern (ARG1 session_ssh_home_t session_ssh_home_t)))
+
+(macro session_append_ssh_files ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call append_files_pattern (ARG1 session_ssh_home_t session_ssh_home_t)))
+
+(macro session_read_ssh_files ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call read_files_pattern (ARG1 session_ssh_home_t session_ssh_home_t)))
 
 (macro session_manage_systemd_dirs ((type ARG1))
     (call session_search_generic_config (ARG1))
@@ -1765,6 +1786,15 @@
 
 (macro session_setattr_tty_nodes ((type ARG1))
     (allow ARG1 device_session_tty_t (chr_file (setattr))))
+
+(macro session_relabel_pty_nodes ((type ARG1))
+    (allow ARG1 device_session_pts_t relabel_chr_file_perms))
+
+(macro session_setattr_pty_nodes ((type ARG1))
+    (allow ARG1 device_session_pts_t (chr_file (setattr))))
+
+(macro session_dontaudit_ioctl_pty_nodes ((type ARG1))
+    (dontaudit ARG1 device_session_pts_t (chr_file (ioctl))))
 
 (macro session_dontaudit_use_tty_nodes ((type ARG1))
     (dontaudit ARG1 device_session_tty_t rw_term_perms))

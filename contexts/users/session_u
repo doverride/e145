@@ -1,4 +1,6 @@
 session_r:session_t session_r:session_t
+system_r:sshd_t   session_r:session_t
 system_r:login_t   session_r:session_t
 system_r:sulogin_t   session_r:session_t
+session_r:session_sudo_t    session_r:session_t
 system_r:crond_t    session_r:session_t

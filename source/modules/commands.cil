@@ -119,5 +119,8 @@
     (call files_search_usr (ARG1))
     (call mmap_files_pattern (ARG1 bin_t shell_t)))
 
+(macro commands_getattr_shell_files ((type ARG1))
+    (allow ARG1 shell_t (file (getattr))))
+
 (macro commands_mprot_read_shell_files ((type ARG1))
     (allow ARG1 shell_t (file (read))))
