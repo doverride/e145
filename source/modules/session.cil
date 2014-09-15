@@ -459,6 +459,9 @@
     (call readahead_readable_object_exception (is_session_tmpfs_file_object))
     (call readahead_readable_object_exception (is_session_run_file_object)))
 
+(optional session_optional_readonly
+    (call readonly_admin (session_t)))
+
 (optional session_optional_remountfs
     (call remountfs_admin (session_t)))
 

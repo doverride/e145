@@ -1,0 +1,32 @@
+(typepermissive readonly_t)
+
+(typeattribute is_readonly_admin_subject)
+
+(typeattribute is_readonly_file_object)
+(typeattributeset is_readonly_file_object (readonly_unit_t))
+
+(type readonly_t)
+(type readonly_exec_t)
+(call systemd_oneshot_subject_entry (readonly_t readonly_exec_t))
+
+(context file_readonly_exec (system_u object_r readonly_exec_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/fedora-readonly" file file_readonly_exec)
+
+(type readonly_unit_t)
+(call systemd_unit_object (readonly_unit_t))
+
+(context file_readonly_unit (system_u object_r readonly_unit_t
+    ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*fedora-readonly.*" file
+    file_readonly_unit)
+
+(allow is_readonly_admin_subject readonly_t signal_perms)
+(allow is_readonly_admin_subject readonly_t (process (ptrace)))
+(call ps_subject_pattern (is_readonly_admin_subject readonly_t))
+
+(allow is_readonly_admin_subject readonly_unit_t (service (all)))
+
+(call admin_pattern (is_readonly_admin_subject is_readonly_file_object))
+
+(macro readonly_admin ((type ARG1))
+    (typeattributeset is_readonly_admin_subject ARG1))

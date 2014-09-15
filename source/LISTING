@@ -104,6 +104,7 @@ contrib/systemd/notify.cil
 contrib/systemd/proxyd.cil
 contrib/systemd/random.cil
 contrib/systemd/readahead.cil
+contrib/systemd/readonly.cil
 contrib/systemd/remountfs.cil
 contrib/systemd/rfkill.cil
 contrib/systemd/sessions.cil
