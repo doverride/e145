@@ -126,6 +126,7 @@
 
 (optional journalctl_optional_usersubject
     (call usersubject_search_all_home (journalctl_t)) ; ~/.lesshst
+    (call usersubject_read_generic_home_content_files (journalctl_t)) ; ~/.lesshst
     (call usersubject_use_inherited_terminals (journalctl_t)))
 
 (allow journald_t self (capability (setgid setuid sys_admin sys_ptrace)))
