@@ -217,7 +217,7 @@
     signull setrlimit setsched setcap sigkill getsched)))
 (allow systemd_t self (capability (dac_override net_admin sys_time
     kill sys_tty_config sys_boot chown setgid setuid setpcap sys_resource
-        sys_admin)))
+        sys_admin fsetid fowner)))
 (allow systemd_t self (capability2 (block_suspend)))
 (allow systemd_t self (unix_dgram_socket (lock)))
 (allow systemd_t self (unix_stream_socket (listen accept)))

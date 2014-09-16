@@ -66,6 +66,10 @@
     (s0))))
 (filecon "/home/joe/\.mozilla(/.*)?" any file_joe_user_mozilla_home)
 
+(context file_joe_user_emacs_home (joe_u object_r user_emacs_home_t ((s0)(s0))))
+(filecon "/home/joe/\.emacs" file file_joe_user_emacs_home)
+(filecon "/home/joe/\.emacs\.d(/.*)?" any file_joe_user_emacs_home)
+
 (context file_joe_user_systemd_home (joe_u object_r user_systemd_home_t ((s0)
     (s0))))
 (filecon "/home/joe/\.config/systemd(/.*)?" any file_joe_user_systemd_home)
@@ -791,13 +795,6 @@
     (call emacs_role_template (joe_r joe_t joe_emacs_t
         user_emacs_home_t user_emacs_tmp_t))
 
-    (context file_joe_user_emacs_home (joe_u object_r user_emacs_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.emacs" file file_joe_user_emacs_home)
-    (filecon "/home/joe/\.emacs\.d(/.*)?" any file_joe_user_emacs_home)
-
-    (call usersubject_home_dir_filetrans (joe_t user_emacs_home_t file ".emacs")) 
-    (call usersubject_home_dir_filetrans (joe_t user_emacs_home_t dir ".emacs.d")) 
-
     (call usersubject_user_tmp_filetrans (joe_emacs_t user_emacs_tmp_t sock_file "server"))
 
     (call usersubject_manage_generic_tmp_content_dirs (joe_emacs_t))
@@ -1217,10 +1214,6 @@
 
     (call usersubject_manage_generic_tmp_content_files (joe_ssh_t))
     (call usersubject_tmp_filetrans_generic_user_tmp (joe_ssh_t file "*"))
-
-    (call ssh_rw_inherited_sshd_tcp_sockets (joe_t))
-    (call ssh_rw_inherited_sshd_unix_stream_sockets (joe_t)) 
-    (call ssh_rw_inherited_sshd_unix_dgram_sockets (joe_t)) 
 
     (optional joe_ssh_optional_joe_gpgagent
         (call stream_connect_pattern (joe_ssh_t user_gpg_home_t user_gpgagent_home_t

@@ -17,6 +17,7 @@
 (call system_read_sysctl_vm_overcommit_files (is_ffmpeg_subject))
 
 (call files_read_generic_usr_files (is_ffmpeg_subject)) ; /usr/share/alsa
+(call files_search_mnt (is_ffmpeg_subject))
 
 (call selinux_getattr_filesystems (is_ffmpeg_subject))
 

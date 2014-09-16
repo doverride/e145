@@ -79,6 +79,20 @@
 (context file_session_ssh_home (session_u object_r session_ssh_home_t ((s0)(s0))))
 (filecon "/root/\.ssh(/.*)?" any file_session_ssh_home)
 
+(type session_mozilla_home_t)
+(call session_home_object (session_mozilla_home_t))
+
+(context file_session_mozilla_home (session_u object_r session_mozilla_home_t ((s0)
+    (s0))))
+(filecon "/root/\.mozilla(/.*)?" any file_session_mozilla_home)
+
+(type session_emacs_home_t)
+(call session_home_object (session_emacs_home_t))
+
+(context file_session_emacs_home (session_u object_r session_emacs_home_t ((s0)(s0))))
+(filecon "/root/\.emacs" file file_session_emacs_home)
+(filecon "/root/\.emacs\.d(/.*)?" any file_session_emacs_home)
+
 (type session_systemd_home_t)
 (call session_home_object (session_systemd_home_t))
 
@@ -180,6 +194,11 @@
 (call session_home_dir_filetrans_session_cache_dir (session_t))
 (call session_home_dir_filetrans_session_config_dir (session_t))
 (call session_home_dir_filetrans_session_data_dir (session_t))
+
+(call session_home_dir_filetrans_session_mozilla_dir (session_t))
+
+(call session_home_dir_filetrans_session_emacs_dir (session_t))
+(call session_home_dir_filetrans_session_emacs_files (session_t))
 
 (call session_home_dir_filetrans_session_ssh_dir (session_t))
 
@@ -819,18 +838,8 @@
     (call emacs_role_template (session_r session_t session_emacs_t
         session_emacs_home_t session_emacs_tmp_t))
 
-    (type session_emacs_home_t)
-    (call session_home_object (session_emacs_home_t))
-
-    (context file_session_emacs_home (session_u object_r session_emacs_home_t ((s0)(s0))))
-    (filecon "/root/\.emacs" file file_session_emacs_home)
-    (filecon "/root/\.emacs\.d(/.*)?" any file_session_emacs_home)
-
     (type session_emacs_tmp_t)
     (call session_tmp_object (session_emacs_tmp_t))
-
-    (call session_home_dir_filetrans (session_t session_emacs_home_t file ".emacs")) 
-    (call session_home_dir_filetrans (session_t session_emacs_home_t dir ".emacs.d")) 
 
     (call session_tmp_filetrans_generic_tmp (session_emacs_t dir "*"))
     (call session_tmp_filetrans_generic_tmp (session_emacs_t file "*"))
@@ -1687,6 +1696,10 @@
     (call files_rw_var_spool_dirs (ARG1))
     (allow ARG1 session_mail_spool_t manage_file_perms))
 
+(macro session_var_spool_filetrans_mail_spool_files ((type ARG1)(name ARG2))
+    (call files_search_var (ARG1))
+    (call files_var_spool_filetrans (ARG1 session_mail_spool_t file ARG2)))
+
 (macro session_relabel_mail_spool_files ((type ARG1))
     (allow ARG1 session_mail_spool_t relabel_file_perms))
 
@@ -1829,6 +1842,9 @@
     (call files_rw_home_root_dirs (ARG1))
     (allow ARG1 session_home_dir_t manage_dir_perms))
 
+(macro session_list_all_home_content ((type ARG1))
+    (allow ARG1 is_session_home_file_object (dirs (list))))
+
 (macro session_delete_all_home_file_objects ((type ARG1))
     (allow ARG1 is_session_home_file_object delete_dir_perms)
     (allow ARG1 is_session_home_file_object delete_file_perms)
@@ -1837,6 +1853,30 @@
     (allow ARG1 is_session_home_file_object delete_sock_file_perms)
     (allow ARG1 is_session_home_file_object delete_blk_file_perms)
     (allow ARG1 is_session_home_file_object delete_chr_file_perms))
+
+(macro session_home_dir_filetrans_session_mozilla_dir ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t session_mozilla_home_t dir ".mozilla")))
+
+(macro session_manage_mozilla_dirs ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 session_mozilla_home_t session_mozilla_home_t)))
+
+(macro session_home_dir_filetrans_session_emacs_dir ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t session_emacs_home_t dir ".emacs.d")))
+
+(macro session_home_dir_filetrans_session_emacs_files ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call filetrans_pattern (ARG1 session_home_dir_t session_emacs_home_t file ".emacs")))
+
+(macro session_manage_emacs_files ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call manage_files_pattern (ARG1 session_emacs_home_t session_emacs_home_t)))
+
+(macro session_getattr_all_tmpfs_files ((type ARG1))
+    (call filesystem_search_tmpfs (ARG1))
+    (allow ARG1 is_session_tmpfs_file_object (file (getattr))))
 
 (macro session_dontaudit_dyntransition ((type ARG1))
     (dontaudit ARG1 session_t (process (dyntransition))))
