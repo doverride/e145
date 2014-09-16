@@ -1376,6 +1376,7 @@
 (optional session_optional_session_sudo
     (type session_sudo_t)
     (call sudo_role_template (session_r session_t session_sudo_t))
+    (call sudo_search_all_keyrings (session_sudo_t))
 
     (call session_application_subject (session_sudo_t))
 
