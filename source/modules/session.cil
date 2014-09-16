@@ -279,6 +279,8 @@
 (call terminal_use_inherited_unallocated_tty_nodes (session_t)) ; emergency mode/sulogin
 (call terminal_getattr_generic_pty_nodes (session_t)) ; /dev/pts/ptmx
 
+(call subject_subj_id_change_exemption (session_t))
+
 (call session_execute_bin_files (session_t))
 (call session_use_terminals (session_t))
 (call session_create_pty_node (session_t)) ; script/script replay

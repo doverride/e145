@@ -245,6 +245,7 @@
 
 (call seutil_read_config_files (setfiles_t))
 (call seutil_read_file_context_files (setfiles_t))
+(call seutil_relabel_policy_config_dirs (setfiles_t))
 (call seutil_relabel_policy_config_files (setfiles_t))
 
 (call systemd_use_fd (setfiles_t))
