@@ -1046,6 +1046,11 @@
     (call gpg_role_template_agent (session_r session_t session_gpgagent_t
         session_gpgagent_home_t))
 
+    (call gpg_role_template_agent (session_r session_gpg_t session_gpgagent_t
+        session_gpgagent_home_t))
+
+    (allow session_t session_gpgagent_t (process (signal signull sigkill sigstop)))
+
     (type session_gpgagent_home_t)
     (call session_home_object (session_gpgagent_home_t))
 

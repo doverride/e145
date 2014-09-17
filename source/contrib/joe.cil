@@ -973,6 +973,16 @@
     (type joe_gpgagent_t)
     (call gpg_role_template_agent (joe_r joe_t joe_gpgagent_t
         user_gpgagent_home_t))
+    (call gpg_role_template_agent (joe_r joe_gpg_t joe_gpgagent_t
+        user_gpgagent_home_t))
+
+    (allow joe_t joe_gpgagent_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (joe_t joe_gpgagent_t))
+
+    (allow joe_t user_gpgagent_home_t manage_file_perms)
+    (allow joe_t user_gpgagent_home_t relabel_file_perms)
+    (allow joe_t user_gpgagent_home_t manage_sock_file_perms)
+    (allow joe_t user_gpgagent_home_t relabel_sock_file_perms)
 
     (context file_joe_user_gpgagent_home (joe_u object_r user_gpgagent_home_t ((s0)(s0))))
     (filecon "/home/joe/\.gpg-agent-info" file file_joe_user_gpgagent_home)
@@ -1007,7 +1017,6 @@
             joe_gpgagent_t))
 
         (allow joe_pincurses_t user_terminfo_home_t read_file_perms)
-
 
         (call usersubject_application_subject (joe_pincurses_t))
         (call usersubject_use_terminals (joe_pincurses_t))

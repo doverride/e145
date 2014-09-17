@@ -251,6 +251,7 @@
 (call system_read_sysctl_net_files (systemd_t))
 (call system_read_sysctl_kernel_files (systemd_t))
 (call system_link_keyring (systemd_t))
+(call system_read_state_invalid (systemd_t))
 (call system_stream_connectto (systemd_t))
 (call system_use_fd (systemd_t))
 

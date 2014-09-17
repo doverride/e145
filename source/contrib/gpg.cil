@@ -63,6 +63,7 @@
 (call files_dontaudit_list_all (is_gpg_subject)) ; catchall
 (call files_audit_access_generic_tmp_dirs (is_gpg_subject))
 (call files_read_generic_etc_files (is_gpg_subject)) ; FIXME: /etc/openldap/ldap.conf (for keyserver)
+(call files_read_generic_usr_files (is_gpg_subject)) ; /usr/share/gnupg/gpg-conf.skel
 (call files_list_tmp (is_gpg_subject))
 
 (optional gpg_optional_auth
@@ -74,6 +75,7 @@
 (optional gpg_optional_miscfiles
     (call miscfiles_read_generic_cert_files (is_gpg_subject))
     (call miscfiles_read_network_config_files (is_gpg_subject))
+    (call miscfiles_read_terminfo_files (is_gpg_subject))
     (call miscfiles_read_localization_files (is_gpg_subject)))
 
 (optional gpg_optional_usersubject
@@ -90,6 +92,7 @@
 
 (call devices_list (is_gpgagent_subject))
 
+(call files_read_generic_usr_files (is_gpgagent_subject))
 (call files_search_tmp (is_gpgagent_subject))
 
 (optional gpgagent_optional_miscfiles
@@ -140,12 +143,6 @@
     (typeattributeset is_gpgagent_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gpgagent_exec_t ARG3))
-    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (ARG2 ARG3))
-    (allow ARG2 ARG4 manage_file_perms)
-    (allow ARG2 ARG4 relabel_file_perms)
-    (allow ARG2 ARG4 manage_sock_file_perms)
-    (allow ARG2 ARG4 relabel_sock_file_perms)
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG4 manage_sock_file_perms))
 
