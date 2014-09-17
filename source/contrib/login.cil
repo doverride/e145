@@ -112,7 +112,6 @@
 (call subject_subj_id_change_exemption (sulogin_t))
 (call subject_role_change_exemption (sulogin_t))
 
-(call selinux_getattr_filesystems (sulogin_t))
 (call selinux_compute_user_contexts (sulogin_t))
 (call selinux_validate_context (sulogin_t))
 

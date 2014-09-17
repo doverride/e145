@@ -38,8 +38,6 @@
 (call files_read_generic_etc_files (is_irssi_subject)) ; openssl.conf
 (call files_read_generic_usr_files (is_irssi_subject)) ; /usr/share/irssi
 
-(call selinux_getattr_filesystems (is_irssi_subject))
-
 (call irc_read_irssi_config_files (is_irssi_subject))
 (call irc_tcp_connect_irc_port (is_irssi_subject))
 

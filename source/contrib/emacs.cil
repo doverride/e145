@@ -34,8 +34,6 @@
 
 (call files_read_generic_usr_files (is_emacs_subject))
 
-(call selinux_getattr_filesystems (is_emacs_subject))
-
 (call terminal_use_inherited_ptmx_nodes (is_emacs_subject))
 
 (optional emacs_optional_miscfiles

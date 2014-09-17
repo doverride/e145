@@ -65,8 +65,6 @@
 (call files_read_generic_etc_files (is_gpg_subject)) ; FIXME: /etc/openldap/ldap.conf (for keyserver)
 (call files_list_tmp (is_gpg_subject))
 
-(call selinux_getattr_filesystems (is_gpg_subject))
-
 (optional gpg_optional_auth
     (call auth_nsswitch_client_subject (is_gpg_subject)))
 

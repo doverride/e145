@@ -93,7 +93,6 @@
 (call filesystem_getattr_filesystems (akmods_t))
 (call filesystem_getattr_tmpfs_filesystems (akmods_t)) ; kmodtool
 
-(call selinux_getattr_filesystems (akmods_t))
 (call selinux_compute_create_context (akmods_t))
 
 (call subject_obj_id_change_exemption (akmods_t))

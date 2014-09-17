@@ -97,7 +97,6 @@
 
 (allow is_lvm_subject self (process (setfscreate)))
 
-(call selinux_getattr_filesystems (is_lvm_subject))
 (call selinux_get_enforce_mode (is_lvm_subject))
 
 (optional lvm_optional_seutil

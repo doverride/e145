@@ -43,7 +43,6 @@
 (call terminal_write_inherited_generic_pty_nodes (autorelabel_t)) 
 
 (call selinux_set_enforce_mode (autorelabel_t))
-(call selinux_getattr_filesystems (autorelabel_t))
 
 (call autorelabel_manage_flag_files (autorelabel_t))
 

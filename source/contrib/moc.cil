@@ -21,8 +21,6 @@
 
 (call network_tcp_connect_icecast_port (is_moc_subject))
 
-(call selinux_getattr_filesystems (is_moc_subject))
-
 (optional moc_optional_auth
     (call auth_nsswitch_client_subject (is_moc_subject)))
 

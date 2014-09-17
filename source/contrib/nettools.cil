@@ -78,7 +78,6 @@
 (call devices_read_usbmon (nettools_t))
 (call devices_rw_usb (nettools_t))
 
-(call selinux_getattr_filesystems (nettools_t))
 (call selinux_get_enforce_mode (nettools_t))
 
 (call subject_getattr_all_subjects (nettools_t))
@@ -132,8 +131,6 @@
 (call files_read_generic_usr_files (traceroute_t))
 
 (call network_udp_bind_generic_node (traceroute_t))
-
-(call selinux_getattr_filesystems (traceroute_t))
 
 (call terminal_use_inherited_unallocated_tty_nodes (traceroute_t))
 

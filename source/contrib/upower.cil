@@ -55,8 +55,6 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/upower.*" file file_upowerd_unit)
 
-(call selinux_getattr_filesystems (is_upower_subject))
-
 (call terminal_use_inherited_unallocated_tty_nodes (upower_t))
 
 (call dbus_system_client_subject (is_upower_subject))

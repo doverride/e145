@@ -47,8 +47,6 @@
 (call files_search_mnt (is_screen_subject))
 (call files_search_run (is_screen_subject))
 
-(call selinux_getattr_filesystems (is_screen_subject))
-
 (call screen_read_config_files (is_screen_subject))
 (call screen_read_pam_config_files (is_screen_subject))
 

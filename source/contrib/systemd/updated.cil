@@ -46,8 +46,6 @@
 
 (call system_read_generic_proc_files (updated_t))
 
-(call selinux_getattr_filesystems (updated_t))
-
 (optional updated_optional_journald
     (call journald_client_subject (updated_t)))
 

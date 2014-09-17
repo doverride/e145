@@ -70,7 +70,6 @@
 (call files_read_generic_usr_files (dbusd_t))
 
 (call selinux_compute_access_vector (dbusd_t))
-(call selinux_getattr_filesystems (dbusd_t))
 (call selinux_list (dbusd_t))
 
 (call dbus_list_config (dbusd_t))

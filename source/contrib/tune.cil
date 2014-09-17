@@ -102,8 +102,6 @@
 (call devices_read_urandom (tuned_t))
 (call devices_write_net_control (tuned_t))
 
-(call selinux_getattr_filesystems (tuned_t))
-
 (call dbus_system_client_subject (tuned_t))
 (call dbus_acquire_service_system (tuned_t))
 

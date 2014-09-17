@@ -75,7 +75,6 @@
 (call devices_manage_all_nodes (tmpfiles_t))
 (call devices_relabel_all_nodes (tmpfiles_t))
 
-(call selinux_getattr_filesystems (tmpfiles_t))
 (call selinux_set_check_req_prot (tmpfiles_t))
 
 (optional tmpfiles_optional_journald

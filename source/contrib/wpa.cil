@@ -92,8 +92,6 @@
 
 (call files_read_generic_etc_files (wpa_t)) ; openssl.config
 
-(call selinux_getattr_filesystems (wpa_t))
-
 (call dbus_system_client_subject (wpa_t))
 (call dbus_acquire_service_system (wpa_t))
 

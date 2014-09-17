@@ -21,8 +21,6 @@
 (call files_audit_access_generic_tmp_dirs (is_newsb_subject))
 (call files_search_mnt (is_newsb_subject))
 
-(call selinux_getattr_filesystems (is_newsb_subject))
-
 (optional newsb_optional_auth
     (call auth_nsswitch_client_subject (is_newsb_subject)))
 

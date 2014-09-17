@@ -54,8 +54,6 @@
 (call devices_rw_usb (pcscd_t))
 (call devices_read_sysfs_files (pcscd_t))
 
-(call selinux_getattr_filesystems (pcscd_t))
-
 (call dbus_system_client_subject (pcscd_t))
 
 (call pcsc_list_config (pcscd_t))

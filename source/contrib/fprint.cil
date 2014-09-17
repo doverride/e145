@@ -65,8 +65,6 @@
 
 (call files_read_generic_etc_files (fprintd_t)) ; /etc/protocols
 
-(call selinux_getattr_filesystems (fprintd_t))
-
 (call dbus_acquire_service_system (fprintd_t))
 
 (call fprint_list_fprintd_var_lib (fprintd_t))

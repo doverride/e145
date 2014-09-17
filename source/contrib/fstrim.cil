@@ -29,8 +29,6 @@
 
 (call files_list_all_mnt_dirs (fstrim_t))
 
-(call selinux_getattr_filesystems (fstrim_t))
-
 (call storage_getattr_fixed_disk_nodes (fstrim_t))
 (call storage_getattr_scsi_generic_nodes (fstrim_t))
 

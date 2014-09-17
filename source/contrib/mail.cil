@@ -62,8 +62,6 @@
 (call mail_tcp_connect_imap_port (is_mutt_subject))
 (call mail_tcp_connect_smtp_port (is_mutt_subject))
 
-(call selinux_getattr_filesystems (is_mutt_subject))
-
 (call mail_read_mutt_config_files (is_mutt_subject))
 
 (optional mutt_optional_auth

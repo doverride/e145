@@ -51,8 +51,6 @@
 (call devices_read_sysfs_files (modemmgr_t))
 (call devices_rw_modem (modemmgr_t))
 
-(call selinux_getattr_filesystems (modemmgr_t))
-
 (call terminal_use_unallocated_tty_nodes (modemmgr_t))
 
 (call dbus_acquire_service_system (modemmgr_t))

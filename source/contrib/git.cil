@@ -54,8 +54,6 @@
 
 (call filesystem_getattr_tmpfs_filesystems (is_git_subject))
 
-(call selinux_getattr_filesystems (is_git_subject))
-
 (optional git_optional_auth
     (call auth_nsswitch_client_subject (is_git_subject)))
 
@@ -98,8 +96,6 @@
 
 (call files_read_generic_usr_files (is_gitemail_subject)) ; /usr/share/perl5/strict.pm
 (call files_read_generic_etc_files (is_gitemail_subject)) ; /etc/protocols
-
-(call selinux_getattr_filesystems (is_gitemail_subject))
 
 (optional gitemail_optional_auth
     (call auth_nsswitch_client_subject (is_gitemail_subject)))

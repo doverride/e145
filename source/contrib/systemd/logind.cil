@@ -97,7 +97,6 @@
 (call filesystem_mount_tmpfs_filesystems (logind_t))
 (call filesystem_unmount_tmpfs_filesystems (logind_t))
 
-(call selinux_getattr_filesystems (logind_t))
 (call selinux_get_enforce_mode (logind_t))
 
 (call terminal_use_unallocated_tty_nodes (logind_t))

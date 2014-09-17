@@ -58,8 +58,6 @@
 
 (call devices_rw_lvm_control (dmsetup_t))
 
-(call selinux_getattr_filesystems (dmsetup_t))
-
 (call dm_rw_dmcrypt_semaphores (dmsetup_t))
 
 (optional dmsetup_optional_lvm
@@ -88,8 +86,6 @@
 (call devices_read_sysfs_files (dmcrypt_t))
 (call devices_read_urandom (dmcrypt_t))
 (call devices_read_random (dmcrypt_t))
-
-(call selinux_getattr_filesystems (dmcrypt_t))
 
 (call terminal_use_inherited_unallocated_tty_nodes (dmcrypt_t))
 

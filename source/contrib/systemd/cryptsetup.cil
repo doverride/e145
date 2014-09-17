@@ -39,8 +39,6 @@
 (call devices_read_urandom (cryptsetup_t))
 (call devices_rw_lvm_control (cryptsetup_t))
 
-(call selinux_getattr_filesystems (cryptsetup_t))
-
 (optional cryptsetup_optional_journald
     (call journald_client_subject (cryptsetup_t)))
 

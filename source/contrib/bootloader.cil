@@ -71,8 +71,6 @@
 
 (call filesystem_manage_dosfs_files (grubby_t)) ; /boot/efi/EFI/fedora/grub.cfg
 
-(call selinux_getattr_filesystems (grubby_t))
-
 (call terminal_use_inherited_unallocated_tty_nodes (grubby_t))
 
 (optional grubby_optional_fstools

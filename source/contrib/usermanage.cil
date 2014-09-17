@@ -102,7 +102,6 @@
 (call files_read_generic_etc_files (is_useradd_or_groupadd_subject)) ; /etc/skell, /etc/login.defs
 (call files_rw_home_root_dirs (useradd_t))
 
-(call selinux_getattr_filesystems (is_useradd_or_groupadd_subject))
 (call selinux_validate_context (is_useradd_or_groupadd_subject))
 
 (call subject_obj_id_change_exemption (is_useradd_or_groupadd_subject)) ; setfscreate related
@@ -176,7 +175,6 @@
 (call files_read_generic_usr_files (is_passwd_subject)) ; /usr/share/cracklib/pw_dict.pwi
 
 (call selinux_list (is_passwd_subject))
-(call selinux_getattr_filesystems (is_passwd_subject))
 (call selinux_compute_access_vector (is_passwd_subject))
 
 (call subject_obj_id_change_exemption (is_passwd_subject)) ; setfscreate related

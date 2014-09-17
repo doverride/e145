@@ -147,7 +147,6 @@
 (call files_read_generic_etc_files (crond_t)) ; /etc/login.defs
 
 (call selinux_list (crond_t))
-(call selinux_getattr_filesystems (crond_t))
 (call selinux_compute_user_contexts (crond_t))
 (call selinux_compute_access_vector (crond_t))
 (call selinux_validate_context (crond_t))
@@ -229,8 +228,6 @@
 (call files_search_var_spool (system_cronjob_t))
 (call files_manage_generic_lock_files (system_cronjob_t))
 
-(call selinux_getattr_filesystems (system_cronjob_t))
-
 (call cron_list_system_spool (system_cronjob_t))
 (call cron_write_system_spool_files (system_cronjob_t))
 (call cron_setattr_system_spool_files (system_cronjob_t))
@@ -259,7 +256,6 @@
 
 (call files_read_generic_etc_files (is_crontab_subject)) ; /etc/login.defs
 
-(call selinux_getattr_filesystems (is_crontab_subject))
 (call selinux_get_enforce_mode (is_crontab_subject))
 
 (call auth_list_pam_config (is_crontab_subject))

@@ -56,7 +56,6 @@
 
 (call files_read_generic_etc_files (is_sudo_subject)) ; /etc/login.defs
 
-(call selinux_getattr_filesystems (is_sudo_subject))
 (call selinux_compute_relabel_context (is_sudo_subject))
 (call selinux_validate_context (is_sudo_subject))
  

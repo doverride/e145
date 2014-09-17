@@ -38,8 +38,6 @@
 (call files_read_generic_etc_files (is_xlock_subject)) ; /etc/drirc
 (call files_read_generic_usr_files (is_xlock_subject)) ; /etc/drirc
 
-(call selinux_getattr_filesystems (is_xlock_subject))
-
 (call auth_nsswitch_client_subject (is_xlock_subject))
 (call auth_run_chkpwd (is_xlock_subject is_xlock_role))
 (call auth_read_generic_pam_config_files (is_xlock_subject))

@@ -45,8 +45,6 @@
 (call network_udp_bind_generic_node (is_googletalk_subject))
 (call network_tcp_connect_all_ephemeral_ports (is_googletalk_subject))
 
-(call selinux_getattr_filesystems (is_googletalk_subject))
-
 (call dbus_system_client_subject (is_googletalk_subject))
 
 (optional googletalk_subject_optional_auth
@@ -75,7 +73,6 @@
 
 (call files_read_generic_etc_files (googletalk_cronjob_t)) ; /etc/fedora-release
 
-(call selinux_getattr_filesystems (googletalk_cronjob_t))
 (call selinux_get_enforce_mode (googletalk_cronjob_t))
 
 (call cron_list_system_spool (googletalk_cronjob_t))

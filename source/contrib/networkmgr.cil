@@ -216,8 +216,6 @@
 (call system_read_generic_proc_files (networkmgr_disp_t))
 (call system_read_proc_net_files (networkmgr_disp_t)) ; ip
 
-(call selinux_getattr_filesystems (networkmgr_disp_t))
-
 (call commands_execute_shell_files (networkmgr_disp_t))
 (call commands_execute_bin_files (networkmgr_disp_t)) ; 00-report -> lang.sh
 
@@ -265,8 +263,6 @@
 (call devices_read_sysfs_files (networkmgrcli_t))
 
 (call files_list_tmp (networkmgrcli_t))
-
-(call selinux_getattr_filesystems (networkmgrcli_t))
 
 (call terminal_use_inherited_unallocated_tty_nodes (networkmgrcli_t))
 

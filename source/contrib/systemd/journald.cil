@@ -155,7 +155,6 @@
 (call filesystem_getattr_tmpfs_filesystems (journald_t))
 (call filesystem_manage_generic_tmpfs_files (journald_t)) ; mislabeled /run/log
 
-(call selinux_getattr_filesystems (journald_t))
 (call selinux_get_enforce_mode (journald_t))
 
 (call subject_read_all_subjects_state (journald_t))

@@ -216,7 +216,6 @@
 
 (call system_read_generic_proc_files (is_login_program_subject))
 
-(call selinux_getattr_filesystems (is_login_program_subject))
 (call selinux_compute_user_contexts (is_login_program_subject))
 (call selinux_compute_relabel_context (is_login_program_subject))
 (call selinux_validate_context (is_login_program_subject))

@@ -23,8 +23,6 @@
 
 (call files_search_var_lib (is_fop_subject)) ; non-existent /var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType
 
-(call selinux_getattr_filesystems (is_fop_subject))
-
 (call fop_read_config_files (is_fop_subject))
 
 (optional fop_subject_optional_miscfiles

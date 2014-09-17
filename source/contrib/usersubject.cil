@@ -183,7 +183,6 @@
 (call network_dontaudit_tcp_bind_all_ports (is_common_login_user_subject))
 (call network_dontaudit_tcp_connect_all_ports (is_common_login_user_subject))
 
-(call selinux_getattr_filesystems (is_common_login_user_subject))
 (call selinux_get_enforce_mode (is_common_login_user_subject))
 
 (call subject_dontaudit_getattr_all_subjects (is_common_login_user_subject))

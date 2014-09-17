@@ -42,8 +42,6 @@
 (call files_list_tmp (is_elinks_subject))
 (call files_search_mnt (is_elinks_subject)) ; use removable devices
 
-(call selinux_getattr_filesystems (is_elinks_subject))
-
 (call terminal_dontaudit_use_unallocated_tty_nodes (is_elinks_subject))
 
 (call http_tcp_connect_http_port (is_elinks_subject))

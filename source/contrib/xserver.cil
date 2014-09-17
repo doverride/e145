@@ -158,8 +158,6 @@
 
 (call filesystem_rw_inherited_tmpfs_files (is_xorg_subject))
 
-(call selinux_getattr_filesystems (is_xorg_subject))
-
 (call network_tcp_bind_generic_node (is_xorg_subject))
 
 (call dbus_system_client_subject (is_xorg_subject))

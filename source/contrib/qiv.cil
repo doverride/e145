@@ -10,8 +10,6 @@
 
 (call files_read_generic_etc_files (is_qiv_subject))
 
-(call selinux_getattr_filesystems (is_qiv_subject))
-
 (optional qiv_optional_usersubject
     (type user_qiv_home_t)
     (call usersubject_home_object (user_qiv_home_t))
