@@ -1091,7 +1091,20 @@
         (allow session_pincurses_t session_terminfo_home_t read_file_perms)
 
         (call session_application_subject (session_pincurses_t))
-        (call session_use_terminals (session_pincurses_t)))
+        (call session_use_terminals (session_pincurses_t))
+
+        (type session_pinentry_t)
+        (call pinentry_role_template (session_r session_gpgagent_t session_pinentry_t))
+
+        (allow session_t session_pinentry_t (process (signal signull sigkill sigstop)))
+
+        (call stream_connect_pattern (session_pinentry_t session_gpg_home_t session_gpgagent_home_t
+            session_gpgagent_t))
+
+        (allow session_pinentry_t session_terminfo_home_t read_file_perms)
+
+        (call session_application_subject (session_pinentry_t))
+        (call session_use_terminals (session_pinentry_t)))
 
     (type session_scd_t)
     (call gpg_role_template_scd (session_r session_gpgagent_t session_scd_t session_scd_tmp_t
