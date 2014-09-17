@@ -134,4 +134,3 @@ modules/terminal.cil
 modules/unconfined.cil
 object.cil
 polcap.cil
-contrib/jane.cil
