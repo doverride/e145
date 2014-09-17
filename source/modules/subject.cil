@@ -86,6 +86,8 @@
 (call devices_rw_null (is_common_subject))
 (call devices_rw_zero (is_common_subject))
 
+(call selinux_getattr_filesystems (is_common_subject))
+
 (call terminal_use_controlling_terminal (is_common_subject))
 
 (optional subject_optional_libraries

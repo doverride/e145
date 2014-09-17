@@ -74,6 +74,7 @@
 (call sudo_list_config (is_sudo_subject))
 (call sudo_read_config_files (is_sudo_subject))
 (call sudo_read_pam_config_files (is_sudo_subject))
+(call sudo_manage_var_dirs (is_sudo_subject))
 (call sudo_manage_var_files (is_sudo_subject))
 
 (optional sudo_optional_auditd
@@ -154,6 +155,10 @@
     (call auth_search_pam_config (ARG1))
     (allow ARG1 sudo_pam_conf_t read_file_perms))
 
+(macro sudo_manage_var_dirs ((type ARG1))
+    (call files_search_var (ARG1))
+    (allow ARG1 sudo_var_t manage_dir_perms))
+
 (macro sudo_manage_var_files ((type ARG1))
     (call files_search_var (ARG1))
     (call manage_files_pattern (ARG1 sudo_var_t sudo_var_t)))
@@ -166,6 +171,13 @@
 
 (macro sudo_search_all_keyrings ((type ARG1))
     (allow ARG1 is_sudo_subject (key (search))))
+
+(macro sudo_role_change_template ((type ARG1)(type ARG2)(type ARG3))
+    (allow ARG2 ARG3 (key (create search link write)))
+    (allow ARG1 ARG3 (process (signal)))
+    (allow ARG2 ARG3 (process (signal)))
+    (allow ARG3 ARG2 (process (sigchld)))
+    (call commands_shell_manual_subject_type_transition (ARG2 ARG3)))
 
 (macro sudo_rw_inherited_fifo_files_all_sudo ((type ARG1))
     (allow ARG1 is_sudo_subject rw_inherited_fifo_file_perms))

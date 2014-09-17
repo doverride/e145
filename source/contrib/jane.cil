@@ -1,0 +1,125 @@
+(user jane_u)
+(role jane_r)
+(type jane_t)
+(call usersubject_base_common_login_user_template (jane_u jane_r jane_t (s0) (s0)
+    systemhigh))
+
+(role sshadm_r)
+(type sshadm_t)
+(call usersubject_base_user_template (sshadm_r sshadm_t))
+
+(userrole jane_u sshadm_r)
+(roleallow jane_r sshadm_r)
+
+(context file_jane_user_cache (jane_u object_r user_cache_t ((s0)
+    (s0))))
+(filecon "/home/jane/\.cache(/.*)?" any file_jane_user_cache)
+
+(context file_jane_user_font_cache (jane_u object_r user_font_cache_t ((s0)
+    (s0))))
+(filecon "/home/jane/\.cache/fontconfig(/.*)?" any file_jane_user_font_cache)
+
+(context file_jane_user_gstreamer_cache (jane_u object_r user_gstreamer_cache_t
+    ((s0)(s0))))
+(filecon "/home/jane/\.cache/gstreamer-1\.0(/.*)?" any
+    file_jane_user_gstreamer_cache)
+
+(context file_jane_user_conf (jane_u object_r user_conf_t ((s0)
+    (s0))))
+(filecon "/home/jane/\.config(/.*)?" any file_jane_user_conf)
+
+(context file_jane_user_gtk2_conf (jane_u object_r user_gtk2_conf_t ((s0)
+    (s0))))
+(filecon "/home/jane/\.config/gtk-2\.0(/.*)?" any file_jane_user_gtk2_conf)
+
+(context file_jane_user_data (jane_u object_r user_data_t ((s0)
+    (s0))))
+(filecon "/home/jane/\.local(/.*)?" any file_jane_user_data)
+
+(context file_jane_user_ssh_home (jane_u object_r user_ssh_home_t ((s0)(s0))))
+(filecon "/home/jane/\.ssh(/.*)?" any file_jane_user_ssh_home)
+
+(context file_jane_user_home (jane_u object_r user_home_t ((s0)
+    (s0))))
+(filecon "/home/jane/.*" any file_jane_user_home)
+
+(context file_jane_user_mozilla_home (jane_u object_r user_mozilla_home_t ((s0)
+    (s0))))
+(filecon "/home/jane/\.mozilla(/.*)?" any file_jane_user_mozilla_home)
+
+(context file_jane_user_systemd_home (jane_u object_r user_systemd_home_t ((s0)
+    (s0))))
+(filecon "/home/jane/\.config/systemd(/.*)?" any file_jane_user_systemd_home)
+(filecon "/home/jane/\.local/share/systemd(/.*)?" any file_jane_user_systemd_home)
+
+(context file_jane_user_bin (jane_u object_r user_bin_t ((s0)
+    (s0))))
+(filecon "/home/jane/bin" symlink file_jane_user_bin)
+(filecon "/home/jane/\.local/bin(/.*)?" any file_jane_user_bin)
+
+(context file_jane_user_cert (jane_u object_r user_cert_t ((s0)
+    (s0))))
+(filecon "/home/jane/\.pki(/.*)?" any file_jane_user_cert)
+
+(context file_jane_user_home_dir (jane_u object_r user_home_dir_t ((s0)
+    mls_systemhigh)))
+(filecon "/home/jane" dir file_jane_user_home_dir)
+
+(context file_jane_user_run_user_dir (jane_u object_r user_run_user_dir_t ((s0)
+    mls_systemhigh)))
+(filecon "/run/user/1001" dir file_jane_user_run_user_dir)
+
+(context file_jane_user_run (jane_u object_r user_run_t ((s0)
+    (s0))))
+(filecon "/run/user/1001/.*" any file_jane_user_run)
+
+(context file_jane_user_orc_run (jane_u object_r user_orc_run_t ((s0)
+    (s0))))
+(filecon "/run/user/1001/\.orc(/.*)?" any file_jane_user_orc_run)
+
+(context file_jane_user_systemd_run (jane_u object_r user_systemd_run_t ((s0)
+    (s0))))
+(filecon "/run/user/1001/systemd(/.*)?" any file_jane_user_systemd_run)
+
+(context file_jane_user_mail_spool (jane_u object_r user_mail_spool_t ((s0)
+    mls_systemhigh)))
+(filecon "/var/spool/mail/jane" file file_jane_user_mail_spool)
+
+(context file_jane_user_emacs_home (jane_u object_r user_emacs_home_t ((s0)(s0))))
+(filecon "/home/jane/\.emacs" file file_jane_user_emacs_home)
+(filecon "/home/jane/\.emacs\.d(/.*)?" any file_jane_user_emacs_home)
+
+(call usersubject_var_spool_filetrans_mail_spool_files (useradd_t "jane"))
+
+(optional jane_optional_logind
+    (call usersubject_run_user_root_filetrans_run_user_dir (logind_t "1001")))
+
+(optional jane_optional_jane_usermanage
+    (type jane_chfn_t)
+    (call usermanage_role_template_chfn (jane_r jane_t jane_chfn_t))
+
+    (call usersubject_application_subject (jane_chfn_t))
+
+    (type jane_passwd_t)
+    (call usermanage_role_template_passwd (jane_r jane_t jane_passwd_t))
+
+    (call usersubject_application_subject (jane_passwd_t)))
+
+(optional jane_optional_jane_sudo
+    (type jane_sudo_t)
+    (call sudo_role_template (jane_r jane_t jane_sudo_t))
+
+    (call usersubject_application_subject (jane_sudo_t))
+    (call usersubject_use_terminals (jane_sudo_t))
+    (call usersubject_relabel_terminals (jane_sudo_t))
+
+    (call sudo_role_change_template (jane_t jane_sudo_t sshadm_t)))
+
+(optional sshadm_optional_askpwd
+    (call askpwd_run_agent (sshadm_t sshadm_r)))
+
+(optional sshadm_optional_systemd
+    (call systemd_exec_systemctl (sshadm_t)))
+ 
+(optional sshadm_optional_ssh
+    (call ssh_admin (sshadm_t)))

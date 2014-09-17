@@ -1,0 +1,3 @@
+jane_r:jane_t jane_r:jane_t
+system_r:sshd_t jane_r:jane_t
+system_r:login_t jane_r:jane_t

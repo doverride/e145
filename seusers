@@ -1,3 +1,4 @@
 system_u:system_u
 root:session_u
 __default__:joe_u
+jane:jane_u

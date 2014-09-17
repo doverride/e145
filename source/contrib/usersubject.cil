@@ -1,3 +1,5 @@
+
+(typeattribute is_base_user_subject)
 (typeattribute is_login_user_subject)
 (typeattribute is_common_login_user_subject)
 
@@ -102,19 +104,29 @@
 (call usersubject_use_inherited_terminals (is_user_application_subject))
 (call usersubject_search_all_home (is_user_application_subject))
 
-(allow is_common_login_user_subject self (process (setpgid signal sigkill sigstop signull getattr getsched)))
+(allow is_base_user_subject self (process (signal)))
+
+(call commands_execute_bin_files (is_base_user_subject))
+(call commands_mprot_read_shell_files (is_base_user_subject))
+
+(call commands_bin_files_entry_subject (is_base_user_subject))
+(call commands_shell_files_entry_subject (is_base_user_subject))
+
+(call subject_user_exemption_target (is_base_user_subject))
+
+(call usersubject_use_inherited_terminals (is_base_user_subject))
+
+(optional usersubject_base_user_optional_miscfiles
+    (call miscfiles_read_localization_files (is_base_user_subject)))
+
+(allow is_common_login_user_subject self (process (setpgid sigkill sigstop signull getattr getsched)))
 (allow is_common_login_user_subject self create_unix_dgram_socket_perms)
 (allow is_common_login_user_subject self rw_fifo_file_perms)
 
 (allow is_common_login_user_subject self (dirs (list)))
 (allow is_common_login_user_subject self read_file_perms)
 
-(call commands_execute_bin_files (is_common_login_user_subject))
 (call commands_execute_shell_files (is_common_login_user_subject))
-(call commands_bin_files_entry_subject (is_common_login_user_subject))
-(call commands_shell_files_entry_subject (is_common_login_user_subject))
-
-(call subject_user_exemption_target (is_login_user_subject))
 
 (call usersubject_use_terminals (is_common_login_user_subject))
 (call terminal_user_pty_object (is_common_login_user_subject device_user_pts_t))
@@ -192,7 +204,6 @@
     (call hostname_exec (is_common_login_user_subject)))
 
 (optional usersubject_common_login_user_optional_miscfiles
-    (call miscfiles_read_localization_files (is_common_login_user_subject))
     (call miscfiles_read_man_files (is_common_login_user_subject))
     (call miscfiles_read_network_config_files (is_common_login_user_subject)) ; hostname
     (call miscfiles_read_terminfo_files (is_common_login_user_subject)))
@@ -237,23 +248,27 @@
 (optional usersubject_common_login_user_optional_utmp
     (call utmp_dontaudit_read_run_files (is_common_login_user_subject)))
 
+(macro usersubject_base_user_template ((role ARG1)(type ARG2))
+    (call subject_common_subject (ARG2))
+    (roletype ARG1 ARG2)
+    (typeattributeset is_base_user_subject ARG2))
+
 (macro usersubject_base_login_user_template ((user ARG1)(role ARG2)(type ARG3)
     (level ARG4)(level ARG5)(level ARG6))
+
+    (call usersubject_base_user_template (ARG2 ARG3))
+
     (call object_userrole (ARG1))
     (userrole ARG1 ARG2)
     (userlevel ARG1 ARG4)
     (userrange ARG1 (ARG5 ARG6))
 
     (typeattributeset is_login_user_subject ARG3)
-    (call subject_base_subject (ARG3))
-    (roletype ARG2 ARG3)
-
     (roleallow system_r ARG2))
 
 (macro usersubject_base_common_login_user_template ((user ARG1)(role ARG2)(type ARG3)
     (level ARG4)(level ARG5)(level ARG6))
     (call usersubject_base_login_user_template (ARG1 ARG2 ARG3 ARG4 ARG5 ARG6))
-    (call subject_common_subject (ARG3))
     (typeattributeset is_common_login_user_subject ARG3))
 
 (macro usersubject_mounton_user_home_dirs ((type ARG1))
