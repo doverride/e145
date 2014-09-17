@@ -104,29 +104,55 @@
 (call usersubject_use_inherited_terminals (is_user_application_subject))
 (call usersubject_search_all_home (is_user_application_subject))
 
-(allow is_base_user_subject self (process (signal)))
+(allow is_base_user_subject self (process (setpgid sigkill signal sigstop signull getattr getsched)))
+(allow is_base_user_subject self rw_fifo_file_perms)
+
+(allow is_base_user_subject self (dirs (list)))
+(allow is_base_user_subject self read_file_perms)
+
+(call system_list_proc (is_base_user_subject))
+(call system_read_generic_proc_files (is_base_user_subject))
+
+(call system_dontaudit_list_all_proc_dirs (is_base_user_subject))
+(call system_dontaudit_getattr_all_proc_files (is_base_user_subject))
+(call system_dontaudit_list_all_sysctl_dirs (is_base_user_subject))
+(call system_dontaudit_getattr_all_sysctl_files (is_base_user_subject))
 
 (call commands_execute_bin_files (is_base_user_subject))
-(call commands_mprot_read_shell_files (is_base_user_subject))
+(call commands_execute_shell_files (is_base_user_subject))
 
 (call commands_bin_files_entry_subject (is_base_user_subject))
 (call commands_shell_files_entry_subject (is_base_user_subject))
 
+(call files_search_var_spool (is_base_user_subject))
+
+(call files_dontaudit_read_all_files (is_base_user_subject)) ; catchall
+(call files_dontaudit_read_all_lnk_files (is_base_user_subject)) ; catchall
+(call files_dontaudit_list_all (is_base_user_subject)) ; catchall
+
+(call filesystem_dontaudit_getattr_all_filesystems (is_base_user_subject))
+(call filesystem_getattr_filesystems (is_base_user_subject))
+(call filesystem_dontaudit_list_cgroup (is_base_user_subject))
+
+(call network_dontaudit_udp_bind_all_ports (is_base_user_subject))
+(call network_dontaudit_tcp_bind_all_ports (is_base_user_subject))
+(call network_dontaudit_tcp_connect_all_ports (is_base_user_subject))
+
 (call subject_user_exemption_target (is_base_user_subject))
+
+(call subject_dontaudit_getattr_all_subjects (is_base_user_subject))
+(call subject_dontaudit_read_all_subjects_state (is_base_user_subject))
 
 (call usersubject_use_inherited_terminals (is_base_user_subject))
 
 (optional usersubject_base_user_optional_miscfiles
+    (call miscfiles_read_terminfo_files (is_base_user_subject))
     (call miscfiles_read_localization_files (is_base_user_subject)))
 
-(allow is_common_login_user_subject self (process (setpgid sigkill sigstop signull getattr getsched)))
+(optional usersubject_base_user_optional_utmp
+    (call utmp_read_run_files (is_base_user_subject)))
+
 (allow is_common_login_user_subject self create_unix_dgram_socket_perms)
-(allow is_common_login_user_subject self rw_fifo_file_perms)
-
-(allow is_common_login_user_subject self (dirs (list)))
-(allow is_common_login_user_subject self read_file_perms)
-
-(call commands_execute_shell_files (is_common_login_user_subject))
 
 (call usersubject_use_terminals (is_common_login_user_subject))
 (call terminal_user_pty_object (is_common_login_user_subject device_user_pts_t))
@@ -153,40 +179,18 @@
 
 (call usersubject_read_mail_spool_files (is_common_login_user_subject))
 
-(call system_list_proc (is_common_login_user_subject))
-(call system_read_generic_proc_files (is_common_login_user_subject))
 (call system_read_proc_net_files (is_common_login_user_subject))
 (call system_read_sysctl_kernel_files (is_common_login_user_subject))
-
-(call system_dontaudit_list_all_proc_dirs (is_common_login_user_subject))
-(call system_dontaudit_getattr_all_proc_files (is_common_login_user_subject))
-(call system_dontaudit_list_all_sysctl_dirs (is_common_login_user_subject))
-(call system_dontaudit_getattr_all_sysctl_files (is_common_login_user_subject))
 
 (call files_list_etc (is_common_login_user_subject))
 (call files_read_generic_etc_files (is_common_login_user_subject))
 (call files_read_generic_usr_files (is_common_login_user_subject))
 (call files_list_mnt (is_common_login_user_subject))
 
-(call files_dontaudit_read_all_files (is_common_login_user_subject)) ; catchall 
-(call files_dontaudit_read_all_lnk_files (is_common_login_user_subject)) ; catchall 
-(call files_dontaudit_list_all (is_common_login_user_subject)) ; catchall
-
-(call filesystem_dontaudit_getattr_all_filesystems (is_common_login_user_subject))
-(call filesystem_getattr_filesystems (is_common_login_user_subject))
-(call filesystem_dontaudit_list_cgroup (is_common_login_user_subject))
-
 (call devices_read_urandom (is_common_login_user_subject))
 (call devices_read_sysfs_files (is_common_login_user_subject))
 
-(call network_dontaudit_udp_bind_all_ports (is_common_login_user_subject))
-(call network_dontaudit_tcp_bind_all_ports (is_common_login_user_subject))
-(call network_dontaudit_tcp_connect_all_ports (is_common_login_user_subject))
-
 (call selinux_get_enforce_mode (is_common_login_user_subject))
-
-(call subject_dontaudit_getattr_all_subjects (is_common_login_user_subject))
-(call subject_dontaudit_read_all_subjects_state (is_common_login_user_subject))
 
 (call terminal_use_inherited_ptmx_nodes (is_common_login_user_subject)) ; for sshd logins
 
@@ -204,8 +208,7 @@
 
 (optional usersubject_common_login_user_optional_miscfiles
     (call miscfiles_read_man_files (is_common_login_user_subject))
-    (call miscfiles_read_network_config_files (is_common_login_user_subject)) ; hostname
-    (call miscfiles_read_terminfo_files (is_common_login_user_subject)))
+    (call miscfiles_read_network_config_files (is_common_login_user_subject))) ; hostname
 
 (optional usersubject_common_login_user_optional_pciutil
     (call pciutil_exec (is_common_login_user_subject)))
@@ -226,8 +229,6 @@
     (call ssh_rw_inherited_sshd_unix_dgram_sockets (is_common_login_user_subject)))
 
 (optional usersubject_common_login_user_optional_systemd
-    (call systemd_getattr (is_common_login_user_subject))
-    (call systemd_read_state (is_common_login_user_subject))
     (call systemd_relabelable_object_exception (is_user_home_file_object))
     (call systemd_relabelable_object_exception (is_user_mail_spool_file_object))
     (call systemd_relabelable_object_exception (is_user_tmp_file_object))
@@ -243,9 +244,6 @@
     (call tmpfiles_relabelable_object_exception (is_user_tmpfs_file_object))
     (call tmpfiles_manageable_object_exception (is_user_run_file_object))
     (call tmpfiles_relabelable_object_exception (is_user_run_file_object)))
-
-(optional usersubject_common_login_user_optional_utmp
-    (call utmp_dontaudit_read_run_files (is_common_login_user_subject)))
 
 (macro usersubject_base_user_template ((role ARG1)(type ARG2))
     (call subject_common_subject (ARG2))
