@@ -343,8 +343,10 @@
         (filecon "/home/joe/\.mozilla/firefox(/.*)?" any file_joe_user_firefox_home)
 
         (context file_joe_user_firefox_lib (joe_u object_r user_firefox_lib_t ((s0)(s0))))
-        (filecon "/home/joe/\.mozilla/firefox/.*/extensions/.*/lib(/.*)?" any file_joe_user_firefox_lib)
+        (filecon "/home/joe/\.mozilla/firefox/[^/]*/components(/.*)?" any file_joe_user_firefox_lib)
+        (filecon "/home/joe/\.mozilla/firefox/[^/]*/lib(/.*)?" any file_joe_user_firefox_lib)
 
+        (call filetrans_pattern (joe_t user_firefox_home_t user_firefox_lib_t dir "components"))
         (call filetrans_pattern (joe_t user_firefox_home_t user_firefox_lib_t dir "lib"))
 
         (allow joe_t joe_firefox_t (process (signal signull sigstop sigkill)))

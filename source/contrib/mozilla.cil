@@ -121,6 +121,7 @@
     (allow ARG3 ARG8 manage_dir_perms)
     (allow ARG3 ARG8 manage_file_perms)
     (allow ARG3 ARG8 mmap_file_perms)
+    (call filetrans_pattern (ARG3 ARG4 ARG8 dir "components"))
     (call filetrans_pattern (ARG3 ARG4 ARG8 dir "lib")))
 
 (macro mozilla_role_template_plugs ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
