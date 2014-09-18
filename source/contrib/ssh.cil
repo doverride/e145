@@ -7,6 +7,7 @@
 
 (typeattribute is_ssh_subject)
 (typeattribute is_sshagent_subject)
+(typeattribute is_sshkeygen_subject)
 
 (typeattribute is_ssh_admin_subject)
 
@@ -101,15 +102,21 @@
 (filecon "/usr/bin/sftp" file file_ssh_exec)
 (filecon "/usr/bin/slogin" file file_ssh_exec)
 (filecon "/usr/bin/ssh" file file_ssh_exec)
-(filecon "/usr/bin/ssh-add" file file_ssh_exec)
-(filecon "/usr/bin/ssh-copy-id" file file_ssh_exec)
-(filecon "/usr/bin/ssh-keyscan" file file_ssh_exec)
 
 (type sshagent_exec_t)
 (call application_subject_entry (is_sshagent_subject sshagent_exec_t))
 
 (context file_sshagent_exec (system_u object_r sshagent_exec_t ((s0)(s0))))
 (filecon "/usr/bin/ssh-agent" file file_sshagent_exec)
+(filecon "/usr/bin/ssh-add" file file_sshagent_exec)
+(filecon "/usr/bin/ssh-copy-id" file file_sshagent_exec)
+(filecon "/usr/bin/ssh-keyscan" file file_sshagent_exec)
+
+(type sshkeygen_exec_t)
+(call application_subject_entry (is_sshkeygen_subject sshkeygen_exec_t))
+
+(context file_sshkeygen_exec (system_u object_r sshkeygen_exec_t ((s0)(s0))))
+(filecon "/usr/bin/ssh-keygen" file file_sshkeygen_exec)
 
 (type ssh_helper_exec_t)
 (call commands_bin_object (ssh_helper_exec_t))
@@ -170,9 +177,6 @@
     (call miscfiles_read_generic_cert_files (sshd_t)))
 
 (optional sshd_optional_session
-    (call session_append_ssh_files (sshd_t))
-    (call session_create_ssh_files (sshd_t))
-    (call session_read_ssh_files (sshd_t))
     (call session_use_terminals (sshd_t))
 
     (booleanif ssh_priv_user_login
@@ -188,9 +192,6 @@
             (call session_dontaudit_use_pty_nodes (sshd_t)))))
 
 (optional sshd_optional_usersubject
-    (call usersubject_append_ssh_files (sshd_t))
-    (call usersubject_create_ssh_files (sshd_t))
-    (call usersubject_read_ssh_files (sshd_t))
     (call usersubject_dontaudit_ioctl_pty_nodes (sshd_t))
     (call usersubject_use_terminals (sshd_t))
     (call usersubject_relabel_pty_nodes (sshd_t))
@@ -238,6 +239,41 @@
     (call miscfiles_read_network_config_files (is_ssh_subject))
     (call miscfiles_read_generic_cert_files (is_ssh_subject)))
 
+(optional ssh_optional_session
+    (type session_ssh_home_t)
+    (call session_home_object (session_ssh_home_t)))
+
+(optional ssh_optional_usersubject
+    (type user_ssh_home_t)
+    (call usersubject_home_object (user_ssh_home_t)))
+
+(call devices_read_urandom (is_sshkeygen_subject))
+
+(optional sshkeygen_subject_optional_auth
+    (call auth_nsswitch_client_subject (is_sshkeygen_subject)))
+
+(optional sshkeygen_subject_optional_miscfiles
+    (call miscfiles_read_generic_cert_files (is_sshkeygen_subject)))
+
+(allow is_sshagent_subject self (process (setrlimit)))
+(allow is_sshagent_subject self (unix_stream_socket (listen accept connectto)))
+
+(call devices_read_urandom (is_sshagent_subject))
+
+(optional sshagent_subject_optional_auth
+    (call auth_nsswitch_client_subject (is_sshagent_subject)))
+
+(optional sshagent_subject_optional_miscfiles
+    (call miscfiles_read_generic_cert_files (is_sshagent_subject)))
+
+(optional sshagent_subject_optional_session
+    (type session_sshagent_tmp_t)
+    (call session_tmp_object (session_sshagent_tmp_t)))
+
+(optional sshagent_subject_optional_usersubject
+    (type user_sshagent_tmp_t)
+    (call usersubject_tmp_object (user_sshagent_tmp_t)))
+
 (allow is_ssh_admin_subject is_sshd_subject signal_perms)
 (allow is_ssh_admin_subject is_sshd_subject (process (ptrace)))
 (call ps_subject_pattern (is_ssh_admin_subject is_sshd_subject))
@@ -253,15 +289,31 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 ssh_exec_t ARG3))
     (allow ARG3 self (key (view read search write link)))
-    (allow ARG3 ARG4 list_dir_perms)
-    (allow ARG3 ARG4 read_file_perms)
-    (allow ARG3 ARG4 read_lnk_file_perms))
+    (allow ARG3 ARG4 (dirs (list)))
+    (allow ARG3 ARG4 create_file_perms)
+    (allow ARG3 ARG4 append_file_perms)
+    (allow ARG3 ARG4 read_file_perms))
 
-(macro ssh_role_template_agent ((role ARG1)(type ARG2)(type ARG3))
+(macro ssh_role_template_agent ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
+    (type ARG5))
     (roleattributeset is_sshagent_role ARG1)
     (typeattributeset is_sshagent_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 sshagent_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 sshagent_exec_t ARG3))
+    (allow ARG3 ARG4 (dirs (list)))
+    (allow ARG3 ARG4 read_file_perms)
+    (allow ARG3 ARG5 manage_dir_perms)
+    (allow ARG3 ARG5 manage_sock_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 dir "*"))
+    (call commands_shell_auto_subject_type_transition (ARG3 ARG2)))
+
+(macro ssh_role_template_keygen ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+    (roleattributeset is_ssh_role ARG1)
+    (typeattributeset is_sshkeygen_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 sshkeygen_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms))
 
 (macro ssh_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))

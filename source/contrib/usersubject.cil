@@ -43,9 +43,6 @@
 (type user_mozilla_home_t)
 (call usersubject_home_object (user_mozilla_home_t))
 
-(type user_ssh_home_t)
-(call usersubject_home_object (user_ssh_home_t))
-
 (type user_bin_t)
 (call usersubject_home_object (user_bin_t))
 
@@ -164,7 +161,6 @@
 (call usersubject_gstreamer_cache_template (is_common_login_user_subject))
 (call usersubject_mozilla_template (is_common_login_user_subject))
 (call usersubject_emacs_template (is_common_login_user_subject))
-(call usersubject_ssh_template (is_common_login_user_subject))
 (call usersubject_systemd_template (is_common_login_user_subject))
 (call usersubject_gtk2_config_template (is_common_login_user_subject))
 (call usersubject_generic_config_template (is_common_login_user_subject))
@@ -1042,79 +1038,6 @@
     (call usersubject_search_home_dir (ARG1))
     (call relabel_sock_files_pattern (ARG1 user_emacs_home_t user_emacs_home_t)))
 
-(macro usersubject_ssh_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
-    (call usersubject_search_home_dir (ARG1))
-    (call filetrans_pattern (ARG1 user_ssh_home_t ARG2 ARG3 ARG4)))
-
-(macro usersubject_ssh_template ((type ARG1))
-    (call usersubject_manage_ssh_dirs (ARG1))
-    (call usersubject_manage_ssh_files (ARG1))
-    (call usersubject_manage_ssh_lnk_files (ARG1))
-    (call usersubject_manage_ssh_fifo_files (ARG1))
-    (call usersubject_manage_ssh_sock_files (ARG1))
-    (call usersubject_relabel_ssh_dirs (ARG1))
-    (call usersubject_relabel_ssh_files (ARG1))
-    (call usersubject_relabel_ssh_lnk_files (ARG1))
-    (call usersubject_relabel_ssh_fifo_files (ARG1))
-    (call usersubject_relabel_ssh_sock_files (ARG1))
-    (call usersubject_home_dir_filetrans_user_ssh_dir (ARG1)))
-
-(macro usersubject_home_dir_filetrans_user_ssh_dir ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call filetrans_pattern (ARG1 user_home_dir_t user_ssh_home_t dir ".ssh")))
-
-(macro usersubject_manage_ssh_dirs ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call manage_dirs_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_create_ssh_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call create_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_append_ssh_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call append_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_read_ssh_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call read_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_manage_ssh_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call manage_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_manage_ssh_lnk_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call manage_lnk_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_manage_ssh_fifo_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call manage_fifo_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_manage_ssh_sock_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call manage_sock_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_relabel_ssh_dirs ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call relabel_dirs_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_relabel_ssh_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call relabel_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_relabel_ssh_lnk_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call relabel_lnk_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_relabel_ssh_fifo_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call relabel_fifo_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
-(macro usersubject_relabel_ssh_sock_files ((type ARG1))
-    (call usersubject_search_home_dir (ARG1))
-    (call relabel_sock_files_pattern (ARG1 user_ssh_home_t user_ssh_home_t)))
-
 (macro usersubject_run_user_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
     (name ARG4))
     (call usersubject_search_run_user_dir (ARG1))
@@ -1484,6 +1407,7 @@
 
 (macro usersubject_delete_all_user_home_file_objects ((type ARG1))
     (allow ARG1 is_user_home_file_object delete_dir_perms)
+    (allow ARG1 is_user_home_file_object del_entry_dir_perms)
     (allow ARG1 is_user_home_file_object delete_file_perms)
     (allow ARG1 is_user_home_file_object delete_lnk_file_perms)
     (allow ARG1 is_user_home_file_object delete_fifo_file_perms)

@@ -55,9 +55,6 @@
     (s0))))
 (filecon "/home/joe/\.local(/.*)?" any file_joe_user_data)
 
-(context file_joe_user_ssh_home (joe_u object_r user_ssh_home_t ((s0)(s0))))
-(filecon "/home/joe/\.ssh(/.*)?" any file_joe_user_ssh_home)
-
 (context file_joe_user_home (joe_u object_r user_home_t ((s0)
     (s0))))
 (filecon "/home/joe/.*" any file_joe_user_home)
@@ -1194,13 +1191,31 @@
     (type joe_ssh_t)
     (call ssh_role_template (joe_r joe_t joe_ssh_t user_ssh_home_t))
 
+    (context file_joe_user_ssh_home (joe_u object_r user_ssh_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.ssh(/.*)?" any file_joe_user_ssh_home)
+
     (call usersubject_application_subject (joe_ssh_t))
 
     (allow joe_t joe_ssh_t (process (sigkill sigstop signal signull)))
     (call ps_subject_pattern (joe_t joe_ssh_t))
  
+    (allow joe_t user_ssh_home_t manage_dir_perms)
+    (allow joe_t user_ssh_home_t relabel_dir_perms)
+    (allow joe_t user_ssh_home_t manage_file_perms)
+    (allow joe_t user_ssh_home_t relabel_file_perms)
+    (allow joe_t user_ssh_home_t manage_lnk_file_perms)
+    (allow joe_t user_ssh_home_t relabel_lnk_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_ssh_home_t dir ".ssh"))
+
     (call usersubject_home_dir_filetrans (joe_ssh_t user_ssh_home_t dir ".ssh")) 
  
+    (allow sshd_t user_ssh_home_t list_dir_perms)
+    (allow sshd_t user_ssh_home_t create_dir_perms)
+    (allow sshd_t user_ssh_home_t create_file_perms)
+    (allow sshd_t user_ssh_home_t append_file_perms)
+    (allow sshd_t user_ssh_home_t read_file_perms)
+    (call usersubject_home_dir_filetrans (sshd_t user_ssh_home_t dir ".ssh"))
+
     (call usersubject_manage_generic_home_content_files (joe_ssh_t))
     (call usersubject_home_dir_filetrans_user_home (joe_ssh_t file "*"))
 
@@ -1213,8 +1228,26 @@
         (call stream_connect_pattern (joe_ssh_t user_gpg_home_t user_gpgagent_home_t
             joe_gpgagent_t)))
 
+    (type joe_sshkeygen_t)
+    (call ssh_role_template_keygen (joe_r joe_t joe_sshkeygen_t user_ssh_home_t))
+
+    (allow joe_t joe_sshkeygen_t (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (joe_t joe_sshkeygen_t))
+
+    (call usersubject_home_dir_filetrans (joe_sshkeygen_t user_ssh_home_t dir ".ssh")) 
+
+    (call usersubject_application_subject (joe_sshkeygen_t))
+
     (type joe_sshagent_t)
-    (call ssh_role_template_agent (joe_r joe_t joe_sshagent_t))
+    (call ssh_role_template_agent (joe_r joe_t joe_sshagent_t user_ssh_home_t user_sshagent_tmp_t))
+
+    (allow joe_t user_sshagent_tmp_t manage_dir_perms)
+    (allow joe_t user_sshagent_tmp_t relabel_dir_perms)
+    (allow joe_t user_sshagent_tmp_t manage_sock_file_perms)
+    (allow joe_t user_sshagent_tmp_t relabel_sock_file_perms)
+
+    (allow joe_t joe_sshagent_t (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (joe_t joe_sshagent_t))
 
     (call usersubject_application_subject (joe_sshagent_t)))
 
