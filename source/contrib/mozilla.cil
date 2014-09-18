@@ -77,6 +77,8 @@
     (call usersubject_tmpfs_object (user_firefox_tmpfs_t))
     (type user_firefox_home_t)
     (call usersubject_home_object (user_firefox_home_t))
+    (type user_firefox_lib_t)
+    (call usersubject_home_object (user_firefox_lib_t))
     (type user_firefox_tmp_t)
     (call usersubject_tmp_object (user_firefox_tmp_t)))
 
@@ -101,7 +103,8 @@
 
 (call files_read_generic_etc_files (is_xremotec_subject))
 
-(macro mozilla_role_template_firefox ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5)(type ARG6)(type ARG7))
+(macro mozilla_role_template_firefox ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5)(type ARG6)
+    (type ARG7)(type ARG8))
     (roleattributeset is_mozilla_role ARG1)
     (typeattributeset is_firefox_subject ARG3)
     (roletype ARG1 ARG3)
@@ -114,7 +117,11 @@
     (allow ARG3 ARG6 manage_file_perms)
     (call files_tmp_filetrans (ARG3 ARG6 file "*"))
     (allow ARG3 ARG7 manage_file_perms)
-    (call filesystem_tmpfs_filetrans (ARG3 ARG7 file "*")))
+    (call filesystem_tmpfs_filetrans (ARG3 ARG7 file "*"))
+    (allow ARG3 ARG8 manage_dir_perms)
+    (allow ARG3 ARG8 manage_file_perms)
+    (allow ARG3 ARG8 mmap_file_perms)
+    (call filetrans_pattern (ARG3 ARG4 ARG8 dir "lib")))
 
 (macro mozilla_role_template_plugs ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
     (roleattributeset is_mozilla_role ARG1)

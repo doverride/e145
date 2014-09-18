@@ -334,13 +334,18 @@
     (optional joe_xserver_optional_joe_mozilla
         (type joe_firefox_t)
         (call mozilla_role_template_firefox (joe_r joe_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
-        user_firefox_tmp_t user_firefox_tmpfs_t))
+        user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
 
         (context file_joe_user_mozilla_cache (joe_u object_r user_mozilla_cache_t ((s0)(s0))))
         (filecon "/home/joe/\.cache/mozilla(/.*)?" any file_joe_user_mozilla_cache)
 
         (context file_joe_user_firefox_home (joe_u object_r user_firefox_home_t ((s0)(s0))))
         (filecon "/home/joe/\.mozilla/firefox(/.*)?" any file_joe_user_firefox_home)
+
+        (context file_joe_user_firefox_lib (joe_u object_r user_firefox_lib_t ((s0)(s0))))
+        (filecon "/home/joe/\.mozilla/firefox/.*/extensions/.*/lib(/.*)?" any file_joe_user_firefox_lib)
+
+        (call filetrans_pattern (joe_t user_firefox_home_t user_firefox_lib_t dir "lib"))
 
         (allow joe_t joe_firefox_t (process (signal signull sigstop sigkill)))
         (call ps_subject_pattern (joe_t joe_firefox_t))
@@ -351,6 +356,10 @@
         (allow joe_t user_firefox_home_t relabel_file_perms)
         (allow joe_t user_firefox_home_t manage_lnk_file_perms)
         (allow joe_t user_firefox_home_t relabel_lnk_file_perms)
+        (allow joe_t user_firefox_lib_t manage_dir_perms)
+        (allow joe_t user_firefox_lib_t relabel_dir_perms)
+        (allow joe_t user_firefox_lib_t manage_file_perms)
+        (allow joe_t user_firefox_lib_t relabel_file_perms)
         (allow joe_t user_mozilla_cache_t manage_dir_perms)
         (allow joe_t user_mozilla_cache_t relabel_dir_perms)
         (allow joe_t user_mozilla_cache_t manage_file_perms)
@@ -582,7 +591,7 @@
 
         (optional joe_xpdf_optional_joe_mozilla
             (call mozilla_role_template_firefox (joe_r joe_xpdf_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
-                user_firefox_tmp_t user_firefox_tmpfs_t))
+                user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
 
             (call mozilla_role_template_xremotec (joe_r joe_xpdf_t joe_xremotec_t))))
 
@@ -1092,7 +1101,7 @@
 
     (optional joe_mutt_optional_joe_firefox
             (call mozilla_role_template_firefox (joe_r joe_mutt_t joe_firefox_t user_firefox_home_t
-                user_mozilla_cache_t user_firefox_tmp_t user_firefox_tmpfs_t))
+                user_mozilla_cache_t user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
 
             (allow joe_firefox_t user_mutt_tmp_t rw_file_perms))
 
