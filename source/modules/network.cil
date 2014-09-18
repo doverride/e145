@@ -105,6 +105,15 @@
 (portcon "tcp" 8000 port_icecast)
 (portcon "udp" 8000 port_icecast)
 
+; move this to tor module
+(type port_tor_t)
+(call network_unreserved_port_object (port_tor_t))
+
+(context port_tor (system_u object_r port_tor_t ((s0)
+    (s0))))
+(portcon "tcp" 9050 port_tor)
+(portcon "udp" 9050 port_tor)
+
 (allow creates_dccp_sockets self create_dccp_socket_perms)
 (allow creates_dccp_stream_sockets self create_dccp_stream_socket_perms)
 
@@ -238,6 +247,10 @@
 (macro network_tcp_connect_icecast_port ((type ARG1))
     (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_icecast_t (tcp_socket (name_connect))))
+
+(macro network_tcp_connect_tor_port ((type ARG1))
+    (call network_tcp_connect_subject (ARG1))
+    (allow ARG1 port_tor_t (tcp_socket (name_connect))))
 
 (macro network_unconfined ((type ARG1))
     (typeattributeset has_unconfined_access_to_network_assets ARG1))

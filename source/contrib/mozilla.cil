@@ -30,6 +30,8 @@
 (allow is_firefox_subject self create_unix_dgram_socket_perms)
 (allow is_firefox_subject self rw_fifo_file_perms)
 
+(call can_exec (is_firefox_subject firefox_exec_t))
+
 (call system_read_sysctl_crypto_files (is_firefox_subject))
 
 (call commands_execute_bin_files (is_firefox_subject))
@@ -45,7 +47,7 @@
 (call files_read_generic_etc_files (is_firefox_subject)) ; /etc/drirc
 (call files_list_mnt (is_firefox_subject)) ; /media/sandisk/joe
 
-(call network_dontaudit_tcp_connect_all_ports (is_firefox_subject)) ; catchall
+(call network_tcp_connect_tor_port (is_firefox_subject))
 
 (call dbus_system_client_subject (is_firefox_subject))
 
