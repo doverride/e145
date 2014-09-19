@@ -194,8 +194,6 @@
 (call session_home_dir_filetrans_session_emacs_dir (session_t))
 (call session_home_dir_filetrans_session_emacs_files (session_t))
 
-(call session_home_dir_filetrans_session_ssh_dir (session_t))
-
 (call session_home_dir_filetrans_session_bin_dir (session_t))
 (call session_home_dir_filetrans_session_cert_dir (session_t))
 
@@ -1609,10 +1607,6 @@
 
 (macro session_dontaudit_getattr_all_home_content_files ((type ARG1))
     (dontaudit ARG1 is_session_home_file_object (file (getattr))))
-
-(macro session_home_dir_filetrans_session_ssh_dir ((type ARG1))
-    (call session_search_home_dir (ARG1))
-    (call filetrans_pattern (ARG1 session_home_dir_t session_ssh_t dir ".ssh")))
 
 (macro session_home_dir_filetrans_session_bin_dir ((type ARG1))
     (call session_search_home_dir (ARG1))
