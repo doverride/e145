@@ -224,6 +224,14 @@
 
 (call seutil_read_source_files (secilc_t))
 
+(optional secilc_optional_session
+    (call session_manage_generic_home_content_files (secilc_t))
+    (call session_home_dir_filetrans_session_home (secilc_t file "*")))
+
+(optional secilc_optional_usersubject
+    (call usersubject_manage_generic_home_content_files (secilc_t))
+    (call usersubject_home_dir_filetrans_user_home (secilc_t file "*")))
+
 (allow setfiles_t self (capability (dac_override fowner)))
 
 (call devices_relabel_all_nodes (setfiles_t))
