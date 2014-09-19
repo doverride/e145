@@ -461,6 +461,14 @@
 
         (call xserver_common_client_subject (joe_xremotec_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
+        (optional joe_plugs_optional_joe_pa
+            (call pa_client_subject (joe_r joe_plugs_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_plugs_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_plugs_t))
+            (call usersubject_config_filetrans (joe_plugs_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_plugs_t user_pa_run_t dir "pulse")))
+
         (optional joe_firefox_optional_googletalk
             (type joe_googletalk_t)
             (call googletalk_role_template (joe_r joe_plugs_t joe_googletalk_t user_googletalk_config_t
@@ -504,14 +512,6 @@
                 (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
                 (call usersubject_config_filetrans (joe_googletalk_t user_pa_home_t dir "pulse"))
                 (call usersubject_run_user_dir_filetrans (joe_googletalk_t user_pa_run_t dir "pulse"))))
-
-        (optional joe_plugs_optional_joe_pa
-            (call pa_client_subject (joe_r joe_plugs_t joe_pa_t user_pa_home_t
-                user_pa_run_t user_plugs_tmpfs_t))
-
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_plugs_t))
-            (call usersubject_config_filetrans (joe_plugs_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_plugs_t user_pa_run_t dir "pulse"))))
 
     (optional joe_xserver_optional_joe_xlock
         (type joe_xlock_t)
@@ -629,7 +629,7 @@
 
             (call usersubject_home_dir_filetrans_user_config_dir (joe_mplayer_t))
             (call usersubject_config_filetrans (joe_mplayer_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_mplayer_t user_pa_run_t dir "pulse"))))
+            (call usersubject_run_user_dir_filetrans (joe_mplayer_t user_pa_run_t dir "pulse")))
 
     (optional joe_xserver_optional_joe_ratpoison
         (type joe_rp_t)
@@ -666,23 +666,23 @@
 
         (call xserver_common_client_subject (joe_rpws_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
-        (call usersubject_application_subject (joe_rpws_t)))
+        (call usersubject_application_subject (joe_rpws_t))))
 
 (optional joe_optional_java
-    (context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.java(/.*)?" any file_joe_user_java_home)
-
     (allow joe_t user_java_home_t manage_dir_perms)
     (allow joe_t user_java_home_t relabel_dir_perms)
     (allow joe_t user_java_home_t manage_file_perms)
     (allow joe_t user_java_home_t relabel_file_perms)
 
-    (call usersubject_home_dir_filetrans (joe_t user_java_home_t dir ".java"))
-
     (allow joe_t user_java_tmp_t manage_dir_perms)
     (allow joe_t user_java_tmp_t relabel_dir_perms)
     (allow joe_t user_java_tmp_t manage_file_perms)
     (allow joe_t user_java_tmp_t relabel_file_perms)
+
+    (call usersubject_home_dir_filetrans (joe_t user_java_home_t dir ".java"))
+
+    (context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.java(/.*)?" any file_joe_user_java_home)
 
     (optional joe_optional_joe_fop
         (type joe_fop_t)
@@ -1115,7 +1115,7 @@
         (allow joe_elinks_t joe_mutt_t read_fifo_file_perms)
         (allow joe_elinks_t user_mutt_tmp_t rw_file_perms)
         (call http_role_template_elinks (joe_r joe_mutt_t joe_elinks_t
-            user_elinks_home_t user_elinks_tmp_t)))
+            user_elinks_home_t user_elinks_tmp_t))))
 
     (optional joe_mutt_gpg_optional_joe_gpg
         (call gpg_role_template (joe_r joe_mutt_t joe_gpg_t user_gpg_home_t))
