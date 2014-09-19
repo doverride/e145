@@ -631,7 +631,6 @@
             (call usersubject_config_filetrans (joe_mplayer_t user_pa_home_t dir "pulse"))
             (call usersubject_run_user_dir_filetrans (joe_mplayer_t user_pa_run_t dir "pulse"))))
 
-
     (optional joe_xserver_optional_joe_ratpoison
         (type joe_rp_t)
         (call ratpoison_role_template (joe_r joe_xinit_t joe_rp_t user_rp_home_t))
