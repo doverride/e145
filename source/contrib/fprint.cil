@@ -65,11 +65,14 @@
 
 (call files_read_generic_etc_files (fprintd_t)) ; /etc/protocols
 
+(call filesystem_getattr_filesystems (fprintd_t))
+
 (call dbus_acquire_service_system (fprintd_t))
 (call dbus_system_client_subject (fprintd_t))
 
 (call fprint_list_fprintd_var_lib (fprintd_t))
-(call fprint_read_fprintd_var_lib_files (fprintd_t))
+(call fprint_manage_fprintd_var_lib_dirs (fprintd_t))
+(call fprint_manage_fprintd_var_lib_files (fprintd_t))
 (call fprint_read_fprintd_config_files (fprintd_t))
 
 (optional fprint_optional_auth
@@ -84,6 +87,16 @@
 (optional fprint_optional_udevd
     (call udevd_read_config_files (fprintd_t))
     (call udevd_read_run_files (fprintd_t)))
+
+(call dbus_system_client_subject (fprintcli_t))
+
+(call fprint_dbus_chat_fprintd (fprintcli_t))
+
+(optional fprintcli_optional_session
+    (call session_use_inherited_terminals (fprintcli_t)))
+
+(optional fprintcli_optional_usersubject
+    (call usersubject_use_inherited_terminals (fprintcli_t)))
 
 (allow is_fprint_admin_subject is_fprint_subject signal_perms)
 (allow is_fprint_admin_subject is_fprint_subject (process (ptrace)))
@@ -111,6 +124,10 @@
 (macro fprint_list_fprintd_var_lib ((type ARG1))
     (call files_search_var_lib (ARG1))
     (allow ARG1 fprintd_var_lib_t (dirs (list))))
+
+(macro fprint_manage_fprintd_var_lib_dirs ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_dirs_pattern (ARG1 fprintd_var_lib_t fprintd_var_lib_t)))
 
 (macro fprint_manage_fprintd_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))
