@@ -103,16 +103,16 @@
 
 (call systemd_getattr_generic_unit_dirs (shutdown_t))
 
-(optional shutdown_optional_fstools
-    (call fstools_exec (shutdown_t)))
+(call fstools_exec (shutdown_t))
 
-(optional shutdown_optional_lvm
-    (call lvm_exec_lvm (shutdown_t)))
+(call lvm_exec_lvm (shutdown_t))
 
-(optional shutdown_optional_mount
-    (call mount_exec (shutdown_t))
-    (call mount_manage_run_files (shutdown_t))
-    (call mount_rw_run_files (shutdown_t))) ; this one includes xs to mislabeled /run/mount/utab
+(call mount_exec (shutdown_t))
+(call mount_manage_run_files (shutdown_t))
+(call mount_rw_run_files (shutdown_t)) ; this one includes xs to mislabeled /run/mount/utab
+
+(call storage_read_fixed_disk_nodes (shutdown_t))
+(call storage_write_fixed_disk_nodes (shutdown_t))
 
 (optional shutdown_optional_plymouth
     (call plymouth_getattr_plymouthd_exec_files (shutdown_t))
@@ -124,10 +124,6 @@
 
 (optional shutdown_optional_session
     (call session_use_inherited_terminals (shutdown_t)))
-
-(optional shutdown_optional_storage
-    (call storage_read_fixed_disk_nodes (shutdown_t))
-    (call storage_write_fixed_disk_nodes (shutdown_t)))
 
 (optional shutdown_optional_usersubject
     (call usersubject_use_inherited_terminals (shutdown_t)))

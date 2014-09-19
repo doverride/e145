@@ -12,7 +12,7 @@
 
 (context file_sleep_unit (system_u object_r sleep_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-hybrid-sleep.*" file
-    file_random_unit)
+    file_sleep_unit)
 
 (allow sleep_t self (capability (net_admin)))
 

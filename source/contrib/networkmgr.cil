@@ -152,6 +152,9 @@
 
 (call dbus_acquire_service_system (networkmgr_t))
 
+(call dns_etc_filetrans_resolv_conf_files (networkmgr_t))
+(call dns_manage_resolv_config_files (networkmgr_t))
+
 (call networkmgr_manage_config_files (networkmgr_t))
 
 (call polkit_dbus_chat_polkitd (networkmgr_t))
@@ -165,10 +168,6 @@
     (call dhcp_read_dhclient_var_lib_files (networkmgr_t))
     (call dhcp_send_signal_dhclient (networkmgr_t))
     (call dhcp_subtrans_dhclient (networkmgr_t)))
-
-(optional networkmgr_optional_dns
-    (call dns_etc_filetrans_resolv_conf_files (networkmgr_t))
-    (call dns_manage_resolv_config_files (networkmgr_t)))
 
 (optional networkmgr_optional_hostnamed
     (call hostnamed_read_config_files (networkmgr_t)))

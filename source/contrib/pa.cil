@@ -89,6 +89,9 @@
 
 (call dbus_system_client_subject (is_pa_session_subject))
 
+(call rtkit_client_subject (is_pa_session_subject))
+(call rtkit_dbus_chat_rtkitd (is_pa_session_subject))
+
 (optional pa_session_optional_bluetooth
     (call bluetooth_dbus_chat_bluetoothd (is_pa_session_subject)))
 
@@ -101,10 +104,6 @@
 
 (optional pa_session_optional_miscfiles
     (call miscfiles_read_localization_files (is_pa_session_subject)))
-
-(optional pa_session_optional_rtkitd
-    (call rtkit_client_subject (is_pa_session_subject))
-    (call rtkit_dbus_chat_rtkitd (is_pa_session_subject)))
 
 (optional pa_session_optional_udevd
     (call udevd_read_config_files (is_pa_session_subject))

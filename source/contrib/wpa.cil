@@ -12,7 +12,7 @@
 (type wpacli_t)
 (type wpacli_exec_t)
 (call application_subject_entry (wpacli_t wpacli_exec_t))
-(roletype is_wpacli_role ntp_t)
+(roletype is_wpacli_role wpacli_t)
 
 (context file_wpacli_exec (system_u object_r wpacli_exec_t ((s0)
     (s0))))
@@ -29,7 +29,7 @@
 (type wpa_run_t) ; is missing tmpfiles config in rawhide
 (call files_run_object (wpa_run_t))
 
-(context file_wpa_run (system_u object_r ntpd_run_t ((s0)
+(context file_wpa_run (system_u object_r wpa_run_t ((s0)
     (s0))))
 (filecon "/run/wpa_supplicant(/.*)?" any file_wpa_run)
 

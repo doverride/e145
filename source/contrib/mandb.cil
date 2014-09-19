@@ -43,9 +43,8 @@
 (call mandb_read_config_files (mandb_t))
 (call mandb_manage_cache (mandb_t))
 
-(optional mandb_optional_miscfiles
-    (call miscfiles_read_man_files (mandb_t))
-    (call miscfiles_read_localization_files (mandb_t)))
+(call miscfiles_read_man_files (mandb_t))
+(call miscfiles_read_localization_files (mandb_t))
 
 (allow is_mandb_admin_subject mandb_t signal_perms)
 (allow is_mandb_admin_subject mandb_t (process (ptrace)))

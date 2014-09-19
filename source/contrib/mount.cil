@@ -60,6 +60,8 @@
 
 (call selinux_get_filesystems_mount (mount_t))
 
+(call storage_read_fixed_disk_nodes (mount_t))
+
 (call terminal_use_inherited_unallocated_tty_nodes (mount_t))
 
 (call application_subject (mount_t))
@@ -76,9 +78,6 @@
 (optional mount_optional_session
     (call session_search_all_home (mount_t))
     (call session_use_inherited_terminals (mount_t)))
-
-(optional mount_optional_storage
-    (call storage_read_fixed_disk_nodes (mount_t)))
 
 (optional mount_optional_usersubject
     (call usersubject_search_all_home (mount_t))

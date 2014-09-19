@@ -15,8 +15,7 @@
 (context file_bootchart_conf (system_u object_r bootchart_conf_t ((s0) (s0))))
 (filecon "/etc/systemd/bootchart\.conf" file file_bootchart_conf)
 
-(optional bootchart_optional_systemd
-    (call systemd_dynamic_subject_type_transition (bootchart_t)))
+(call systemd_dynamic_subject_type_transition (bootchart_t))
 
 (macro bootchart_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 bootchart_exec_t bootchart_t)))

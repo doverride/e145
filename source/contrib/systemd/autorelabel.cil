@@ -49,6 +49,10 @@
 (call systemd_exec_systemctl (autorelabel_t))
 (call systemd_reboot_system (autorelabel_t))
 
+(call seutil_audit_access_load_policy_executable_files (autorelabel_t))
+(call seutil_read_config_files (autorelabel_t))
+(call seutil_subtrans_setfiles (autorelabel_t))
+
 (optional autorelabel_optional_auth
     (call auth_nsswitch_client_subject (autorelabel_t)))
 
@@ -60,11 +64,6 @@
 
 (optional autorelabel_optional_consoletype
     (call consoletype_exec (autorelabel_t)))
-
-(optional autorelabel_optional_seutil
-    (call seutil_audit_access_load_policy_executable_files (autorelabel_t))
-    (call seutil_read_config_files (autorelabel_t))
-    (call seutil_subtrans_setfiles (autorelabel_t)))
 
 (allow is_autorelabel_admin_subject autorelabel_t signal_perms)
 (allow is_autorelabel_admin_subject autorelabel_t (process (ptrace)))

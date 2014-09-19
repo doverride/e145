@@ -39,15 +39,14 @@
 (call devices_read_urandom (cryptsetup_t))
 (call devices_rw_lvm_control (cryptsetup_t))
 
+(call storage_read_fixed_disk_nodes (cryptsetup_t))
+(call storage_read_scsi_generic_nodes (cryptsetup_t))
+
 (optional cryptsetup_optional_journald
     (call journald_client_subject (cryptsetup_t)))
 
 (optional cryptsetup_optional_seutil
     (call seutil_search_config (cryptsetup_t)))
-
-(optional cryptsetup_optional_storage
-    (call storage_read_fixed_disk_nodes (cryptsetup_t))
-    (call storage_read_scsi_generic_nodes (cryptsetup_t)))
 
 (optional cryptsetop_optional_udevd
     (call udevd_read_config_files (cryptsetup_t))
