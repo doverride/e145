@@ -3,7 +3,7 @@
 (typeattribute is_fprint_admin_subject)
 
 (typeattribute is_fprint_subject)
-(typeattributeset is_networkmgr_subject (fprintd_t fprintcli_t))
+(typeattributeset is_fprint_subject (fprintd_t fprintcli_t))
 
 (typeattribute is_fprint_file_object)
 (typeattributeset is_fprint_file_object (fprintd_conf_t
