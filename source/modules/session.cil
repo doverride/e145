@@ -687,10 +687,14 @@
     (call session_application_subject (session_bti_t)))
 
 (optional session_optional_java
-    (context file_session_java_home (session_u object_r session_java_home_t ((s0)(s0))))
-    (filecon "/root/\.java(/.*)?" any file_session_java_home)
-
     (call session_home_dir_filetrans (session_t session_java_home_t dir ".java"))
+
+        ; BUG?
+
+        ;(context file_session_java_home (session_u object_r session_java_home_t ((s0)(s0))))
+        ;(filecon "/root/\.java(/.*)?" any file_session_java_home)
+
+        (filecon "/root/\.java(/.*)?" any (session_u object_r session_java_home_t ((s0)(s0))))
 
     (optional session_optional_session_fop
         (type session_fop_t)
@@ -794,6 +798,9 @@
 
     (call session_application_subject (session_elinks_t))
     (call session_use_terminals (session_elinks_t))
+
+    (optional session_elinks_optional_session_newsb
+        (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms))
 
     (optional session_elinks_optional_session_mutt
         (allow session_mutt_t session_elinks_tmp_t rw_file_perms)
@@ -1137,14 +1144,12 @@
     (call session_read_cert_files (session_newsb_t))
 
     (optional session_newsb_optional_session_moc
-        (allow session_moc_t session_newsb_home_t rw_inherited_file_perms)
         (call moc_role_template (session_r session_newsb_t session_moc_t
             session_moc_home_t)))
 
     (optional session_newsb_optional_session_elinks
         (call http_role_template_elinks (session_r session_newsb_t session_elinks_t
-            session_elinks_home_t session_elinks_tmp_t))
-        (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms)))
+            session_elinks_home_t session_elinks_tmp_t))))
 
 (optional session_optional_session_screen
     (type session_screen_t)
@@ -1301,6 +1306,9 @@
     (call session_home_dir_filetrans (session_moc_t session_moc_home_t dir ".moc")) 
 
     (allow session_moc_t session_terminfo_home_t read_file_perms)
+
+    (optional session_moc_optional_session_newsb
+        (allow session_moc_t session_newsb_home_t rw_inherited_file_perms))
 
     (optional session_moc_optional_session_pa
         (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
