@@ -105,10 +105,9 @@
 (call application_subject (sensors_t))
 (call application_executable_object (sensors_exec_t))
 
-(call sensors_read_sensors_config_files (sensors_t))
+(call miscfiles_read_localization_files (sensors_t))
 
-(optional sensors_optional_miscfiles
-    (call miscfiles_read_localization_files (sensors_t)))
+(call sensors_read_sensors_config_files (sensors_t))
 
 (optional sensors_optional_session
     (call session_use_inherited_terminals (sensors_t)))
@@ -120,14 +119,11 @@
 
 (call commands_mprot_read_shell_files (sensors_wrapper_t))
 
-(optional sensors_wrapper_optional_auth
-    (call auth_nsswitch_client_subject (sensors_wrapper_t)))
+(call auth_nsswitch_client_subject (sensors_wrapper_t))
 
-(optional sensors_wrapper_optional_kmod
-    (call kmod_subtrans (sensors_wrapper_t)))
+(call kmod_subtrans (sensors_wrapper_t))
 
-(optional sensors_wrapper_optional_miscfiles
-    (call miscfiles_read_localization_files (sensors_wrapper_t)))
+(call miscfiles_read_localization_files (sensors_wrapper_t))
 
 (allow is_sensors_admin_subject is_sensors_subject signal_perms)
 (allow is_sensors_admin_subject is_sensors_subject (process (ptrace)))

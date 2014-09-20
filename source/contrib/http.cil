@@ -49,11 +49,12 @@
 
 (call auth_nsswitch_client_subject (is_elinks_subject))
 
-(optional elinks_optional_misfiles
-    (call miscfiles_read_network_config_files (is_elinks_subject))
-    (call miscfiles_read_terminfo_files (is_elinks_subject))
-    (call miscfiles_read_generic_cert_files (is_elinks_subject))
-    (call miscfiles_read_localization_files (is_elinks_subject)))
+(call miscfiles_read_network_config_files (is_elinks_subject))
+(call miscfiles_read_terminfo_files (is_elinks_subject))
+(call miscfiles_read_generic_cert_files (is_elinks_subject))
+(call miscfiles_read_localization_files (is_elinks_subject))
+
+(call utmp_read_run_files (is_elinks_subject))
 
 (optional elinks_optional_bt
     (allow is_elinks_subject self (tcp_socket (listen accept)))
@@ -73,9 +74,6 @@
     (call usersubject_home_object (user_elinks_home_t))
     (type user_elinks_tmp_t)
     (call usersubject_tmp_object (user_elinks_tmp_t)))
-
-(optional elinks_optional_utmp
-    (call utmp_read_run_files (is_elinks_subject)))
 
 (macro http_role_template_elinks ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
     (type ARG5))

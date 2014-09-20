@@ -105,22 +105,21 @@
 
 (call fstools_exec (shutdown_t))
 
-(call lvm_exec_lvm (shutdown_t))
-
 (call mount_exec (shutdown_t))
 (call mount_manage_run_files (shutdown_t))
 (call mount_rw_run_files (shutdown_t)) ; this one includes xs to mislabeled /run/mount/utab
 
+(call plymouth_getattr_plymouthd_exec_files (shutdown_t))
+(call plymouth_use_fd_plymouthd (shutdown_t))
+
 (call storage_read_fixed_disk_nodes (shutdown_t))
 (call storage_write_fixed_disk_nodes (shutdown_t))
 
-(optional shutdown_optional_plymouth
-    (call plymouth_getattr_plymouthd_exec_files (shutdown_t))
-    (call plymouth_use_fd_plymouthd (shutdown_t)))
+(call udevd_list_config (shutdown_t))
+(call udevd_read_config_files (shutdown_t))
 
-(optional shutdown_optional_udevd
-    (call udevd_list_config (shutdown_t))
-    (call udevd_read_config_files (shutdown_t)))
+(optional shutdown_optional_lvm
+    (call lvm_exec_lvm (shutdown_t)))
 
 (optional shutdown_optional_session
     (call session_use_inherited_terminals (shutdown_t)))

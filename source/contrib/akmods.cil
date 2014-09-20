@@ -110,6 +110,8 @@
 
 (call consoletype_exec (akmods_t))
 
+(call journald_client_subject (akmods_t)) ; /usr/sbin/runuser
+
 (call kmod_manage_modules_dep_files (akmods_t))
 (call kmod_relabel_modules_dep_files (akmods_t))
 
@@ -121,9 +123,6 @@
 
 (call seutil_read_config_files (akmods_t))
 (call seutil_read_file_context_files (akmods_t))
-
-(optional akmods_optional_journald
-    (call journald_client_subject (akmods_t))) ; /usr/sbin/runuser
 
 (optional akmods_optional_session
     (call session_use_inherited_terminals (akmods_t))

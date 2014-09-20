@@ -128,21 +128,18 @@
 (call filesystem_list_tmpfs (lvm_t))
 (call filesystem_list_hugetlbfs (lvm_t))
 
+(call storage_manage_fixed_disk_nodes (lvm_t))
+
 (call terminal_getattr_generic_pty_nodes (lvm_t))
 
 (call lvm_read_config_files (lvm_t))
 (call lvm_manage_metadata_files (lvm_t))
 (call lvm_stream_connect_lvmetad (lvm_t))
 
-(optional lvm_optional_miscfiles
-    (call miscfiles_read_localization_files (lvm_t)))
+(call miscfiles_read_localization_files (lvm_t))
 
-(optional lvm_optional_storage
-    (call storage_manage_fixed_disk_nodes (lvm_t)))
-
-(optional lvm_optional_udevd
-    (call udevd_read_config_files (lvm_t))
-    (call udevd_read_run_files (lvm_t)))
+(call udevd_read_config_files (lvm_t))
+(call udevd_read_run_files (lvm_t))
 
 (allow lvmetad_t self create_unix_stream_stream_socket_perms)
 

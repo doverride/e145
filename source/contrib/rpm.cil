@@ -103,22 +103,22 @@
 (call filesystem_unconfined (is_rpm_subject))
 (call network_unconfined (is_rpm_subject))
 (call selinux_unconfined (is_rpm_subject))
+(call storage_unconfined (is_rpm_subject))
 (call subject_unconfined (is_rpm_subject))
 (call system_unconfined (is_rpm_subject))
 
-(optional rpm_subject_optional_auth
-    (call auth_unconfined (is_rpm_subject))
-    (call auth_manage_shadow_files (is_rpm_subject))
-    (call auth_relabel_shadow_files (is_rpm_subject)))
+(call auth_unconfined (is_rpm_subject))
+(call auth_manage_shadow_files (is_rpm_subject))
+(call auth_relabel_shadow_files (is_rpm_subject))
 
-(optional rpm_subject_optional_dbus
-    (call dbus_unconfined (is_rpm_subject)))
+(call dbus_unconfined (is_rpm_subject))
+
+(call libraries_etc_filetrans_ld_so_cache_files (is_rpm_subject))
+
+(call systemd_unconfined (is_rpm_subject))
 
 (optional rpm_subject_optional_dns
     (call dns_etc_filetrans_resolv_conf_files (is_rpm_subject)))
-
-(optional rpm_subject_optional_libraries
-    (call libraries_etc_filetrans_ld_so_cache_files (is_rpm_subject)))
 
 (optional rpm_subject_optional_seutil
     (call seutil_unconfined (is_rpm_subject))
@@ -127,22 +127,15 @@
     (call seutil_relabel_policy_config_dirs (is_rpm_subject))
     (call seutil_relabel_policy_config_files (is_rpm_subject)))
 
-(optional rpm_subject_optional_storage
-    (call storage_unconfined (is_rpm_subject)))
-
-(optional rpm_subject_optional_systemd
-    (call systemd_unconfined (is_rpm_subject)))
-
 (call commands_shell_manual_subject_type_transition (rpm_t rpm_script_t))
+
+(call libraries_run_ldconfig (rpm_script_t is_rpm_role))
 
 (optional rpm_script_optional_akmods
     (call akmods_run (rpm_script_t is_rpm_role)))
 
 (optional rpm_script_optional_bootloader
     (call bootloader_run_grubby (rpm_script_t is_rpm_role)))
-
-(optional rpm_script_optional_libraries
-    (call libraries_run_ldconfig (rpm_script_t is_rpm_role)))
 
 (optional rpm_script_optional_usermanage
     (call usermanage_run_groupadd (rpm_script_t is_rpm_role))

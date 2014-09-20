@@ -59,13 +59,11 @@
 
 (call dbus_system_client_subject (is_upower_subject))
 
-(optional upower_subject_optional_miscfiles
-    (call miscfiles_read_localization_files (is_upower_subject)))
+(call miscfiles_read_localization_files (is_upower_subject))
+
+(call journald_client_subject (upower_t))
 
 (call upower_dbus_chat_upowerd (upower_t))
-
-(optional upower_optional_journald
-    (call journald_client_subject (upower_t)))
 
 (optional upower_optional_session
     (call session_use_inherited_terminals (upower_t)))
@@ -86,18 +84,16 @@
 
 (call dbus_acquire_service_system (upowerd_t))
 
+(call polkit_dbus_chat_polkitd (upowerd_t))
+
+(call udevd_read_config_files (upowerd_t))
+(call udevd_read_run_files (upowerd_t))
+
 (call upower_read_config_files (upowerd_t))
 (call upower_manage_var_lib_files (upowerd_t))
 
 (optional upowerd_optional_logind
     (call logind_dbus_chat (upowerd_t)))
-
-(optional upowerd_optional_polkitd
-    (call polkit_dbus_chat_polkitd (upowerd_t)))
-
-(optional upowerd_optional_udevd
-    (call udevd_read_config_files (upowerd_t))
-    (call udevd_read_run_files (upowerd_t)))
 
 (allow is_upower_admin_subject is_upower_subject signal_perms)
 (allow is_upower_admin_subject is_upower_subject (process (ptrace)))

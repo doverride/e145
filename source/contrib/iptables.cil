@@ -95,27 +95,22 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (iptables_t))
 
+(call application_subject (iptables_t))
+(call application_executable_object (iptables_exec_t))
+
+(call auth_nsswitch_client_subject (iptables_t))
+
 (call iptables_read_env_files (iptables_t))
 
-(optional iptables_optional_application
-    (call application_subject (iptables_t))
-    (call application_executable_object (iptables_exec_t)))
+(call kmod_list_modules_config (iptables_t))
+(call kmod_read_modules_config_files (iptables_t))
+(call kmod_run (iptables_t is_iptables_role)) ; /usr/libexec/iptables6?.init
 
-(optional iptables_optional_auth
-    (call auth_nsswitch_client_subject (iptables_t)))
+(call miscfiles_read_network_config_files (iptables_t))
+(call miscfiles_read_network_environ_files (iptables_t))
+(call miscfiles_read_localization_files (iptables_t))
 
-(optional iptables_optional_miscfiles
-    (call miscfiles_read_network_config_files (iptables_t))
-    (call miscfiles_read_network_environ_files (iptables_t))
-    (call miscfiles_read_localization_files (iptables_t)))
-
-(optional iptables_optional_kmod
-    (call kmod_list_modules_config (iptables_t))
-    (call kmod_read_modules_config_files (iptables_t))
-    (call kmod_run (iptables_t is_iptables_role))) ; /usr/libexec/iptables6?.init
-
-(optional iptables_optional_plymouth
-    (call plymouth_subtrans (iptables_t)))
+(call plymouth_subtrans (iptables_t))
 
 (optional iptables_optional_session
     (call session_use_inherited_terminals (iptables_t)))

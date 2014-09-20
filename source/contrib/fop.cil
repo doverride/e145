@@ -25,11 +25,10 @@
 
 (call fop_read_config_files (is_fop_subject))
 
-(optional fop_subject_optional_miscfiles
-    (call miscfiles_read_fonts_files (is_fop_subject))
-    (call miscfiles_read_fonts_cache_files (is_fop_subject))
-    (call miscfiles_read_network_config_files (is_fop_subject))
-    (call miscfiles_read_localization_files (is_fop_subject)))
+(call miscfiles_read_fonts_files (is_fop_subject))
+(call miscfiles_read_fonts_cache_files (is_fop_subject))
+(call miscfiles_read_network_config_files (is_fop_subject))
+(call miscfiles_read_localization_files (is_fop_subject))
 
 (optional fop_subject_optional_session
     (type session_fop_home_t)

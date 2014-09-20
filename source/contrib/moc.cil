@@ -21,13 +21,11 @@
 
 (call network_tcp_connect_icecast_port (is_moc_subject))
 
-(optional moc_optional_auth
-    (call auth_nsswitch_client_subject (is_moc_subject)))
+(call auth_nsswitch_client_subject (is_moc_subject))
 
-(optional moc_optional_miscfiles
-    (call miscfiles_read_network_config_files (is_moc_subject))
-    (call miscfiles_read_terminfo_files (is_moc_subject))
-    (call miscfiles_read_localization_files (is_moc_subject)))
+(call miscfiles_read_network_config_files (is_moc_subject))
+(call miscfiles_read_terminfo_files (is_moc_subject))
+(call miscfiles_read_localization_files (is_moc_subject))
 
 (optional moc_optional_http
     (call http_tcp_connect_http_port (is_moc_subject))) ; streaming from http server

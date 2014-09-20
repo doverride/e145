@@ -32,12 +32,10 @@
 (call storage_getattr_fixed_disk_nodes (fstrim_t))
 (call storage_getattr_scsi_generic_nodes (fstrim_t))
 
-(optional fstrim_optional_application
-    (call application_subject (fstrim_t))
-    (call application_executable_object (fstrim_t)))
+(call application_subject (fstrim_t))
+(call application_executable_object (fstrim_t))
 
-(optional fstrim_optional_miscfiles
-    (call miscfiles_read_localization_files (fstrim_t))) 
+(call miscfiles_read_localization_files (fstrim_t))
 
 (optional fstrim_optional_session
     (call session_use_inherited_terminals (fstrim_t)))

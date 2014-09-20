@@ -146,8 +146,7 @@
 (call audit_subtrans_audispd (auditd_t))
 (call audit_send_signal_audispd (auditd_t))
 
-(optional audit_optional_auth
-    (call auth_nsswitch_client_subject (auditd_t)))
+(call auth_nsswitch_client_subject (auditd_t))
 
 (allow auditctl_t self (netlink_audit_socket (nlmsg_readpriv)))
 
@@ -188,11 +187,9 @@
 (call audit_list_log (ausearch_t))
 (call audit_read_log_files (ausearch_t))
 
-(optional ausearch_optional_auth
-    (call auth_nsswitch_client_subject (ausearch_t)))
+(call auth_nsswitch_client_subject (ausearch_t))
 
-(optional ausearch_optional_miscfiles
-    (call miscfiles_read_localization_files (ausearch_t)))
+(call miscfiles_read_localization_files (ausearch_t))
 
 (optional ausearch_optional_session
     (call session_use_inherited_terminals (ausearch_t)))

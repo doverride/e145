@@ -38,16 +38,14 @@
 (call files_read_generic_etc_files (is_irssi_subject)) ; openssl.conf
 (call files_read_generic_usr_files (is_irssi_subject)) ; /usr/share/irssi
 
+(call auth_nsswitch_client_subject (is_irssi_subject))
+
 (call irc_read_irssi_config_files (is_irssi_subject))
 (call irc_tcp_connect_irc_port (is_irssi_subject))
 
-(optional irssi_optional_auth
-    (call auth_nsswitch_client_subject (is_irssi_subject)))
-
-(optional irssi_optional_miscfiles
-    (call miscfiles_read_terminfo_files (is_irssi_subject))
-    (call miscfiles_read_network_config_files (is_irssi_subject))
-    (call miscfiles_read_localization_files (is_irssi_subject)))
+(call miscfiles_read_terminfo_files (is_irssi_subject))
+(call miscfiles_read_network_config_files (is_irssi_subject))
+(call miscfiles_read_localization_files (is_irssi_subject))
 
 (optional irssi_optional_session
     (type session_irssi_home_t)

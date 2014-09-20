@@ -43,6 +43,17 @@
 (call auth_read_generic_pam_config_files (is_xlock_subject))
 (call auth_read_authconfig_pam_config_files (is_xlock_subject))
 
+(call dbus_system_client_subject (is_xlock_subject))
+
+(call journald_client_subject (is_xlock_subject))
+
+(call miscfiles_read_localization_files (is_xlock_subject))
+
+(call udevd_read_config_files (is_xlock_subject))
+(call udevd_read_run_files (is_xlock_subject))
+
+(call utmp_read_run_files (is_xlock_subject))
+
 (call xlock_read_pam_config_files (is_xlock_subject))
 
 (call xserver_use_fd_all_xorg (is_xlock_subject))
@@ -50,20 +61,8 @@
 (optional xlock_optional_audit
     (call audit_client_subject (is_xlock_subject)))
 
-(optional xlock_optional_dbus
-    (call dbus_system_client_subject (is_xlock_subject))
-    (optional xlock_optional_fprint
-        (call fprint_dbus_chat_fprintd (is_xlock_subject))))
-
-(optional xlock_optional_journald
-    (call journald_client_subject (is_xlock_subject)))
-
-(optional xlock_optional_miscfiles
-    (call miscfiles_read_localization_files (is_xlock_subject)))
-
-(optional xlock_optional_udevd
-    (call udevd_read_config_files (is_xlock_subject))
-    (call udevd_read_run_files (is_xlock_subject)))
+(optional xlock_optional_fprint
+    (call fprint_dbus_chat_fprintd (is_xlock_subject)))
 
 (optional xlock_optional_usersubject
     (type user_xlock_home_t)
@@ -71,9 +70,6 @@
     (call xserver_client_subject (xlock_t is_xinit_subject is_xorg_subject
     user_x_tmp_t user_xauth_home_t))
     (call usersubject_read_generic_home_content_files (xlock_t)))
-
-(optional xlock_optional_utmp
-    (call utmp_read_run_files (is_xlock_subject)))
 
 (allow is_xlock_admin_subject xlock_t signal_perms)
 (allow is_xlock_admin_subject xlock_t (process (ptrace)))

@@ -70,40 +70,35 @@
 (call auth_read_generic_pam_config_files (is_sudo_subject))
 (call auth_nsswitch_client_subject (is_sudo_subject))
 
+(call dbus_system_client_subject (is_sudo_subject)) ; pam_fingerprintd
+
+(call initctl_getattr_run_fifo_files (is_sudo_subject))
+
+(call journald_client_subject (is_sudo_subject))
+
+(call miscfiles_read_localization_files (is_sudo_subject))
+
 (call sudo_list_config (is_sudo_subject))
 (call sudo_read_config_files (is_sudo_subject))
 (call sudo_read_pam_config_files (is_sudo_subject))
 (call sudo_manage_var_dirs (is_sudo_subject))
 (call sudo_manage_var_files (is_sudo_subject))
 
+(call systemd_search_keyring (is_sudo_subject))
+
+(call utmp_read_run_files (is_sudo_subject))
+
 (optional sudo_optional_auditd
     (call audit_client_subject (is_sudo_subject)))
 
-(optional sudo_optional_dbus
-    (call dbus_system_client_subject (is_sudo_subject)) ; pam_fingerprintd
-    (optional sudo_optional_fprint
-        (call fprint_dbus_chat_fprintd (is_sudo_subject))))
-
-(optional sudo_optional_initctl
-    (call initctl_getattr_run_fifo_files (is_sudo_subject)))
-
-(optional sudo_optional_journald
-    (call journald_client_subject (is_sudo_subject)))
+(optional sudo_optional_fprint
+    (call fprint_dbus_chat_fprintd (is_sudo_subject)))
 
 (optional sudo_optional_session
     (call session_relabel_terminals (is_sudo_subject)))
 
-(optional sudo_optional_systemd
-    (call systemd_search_keyring (is_sudo_subject)))
-
 (optional sudo_optional_usersubject
     (call usersubject_relabel_terminals (is_sudo_subject)))
-
-(optional sudo_optional_utmp
-    (call utmp_read_run_files (is_sudo_subject)))
-
-(optional sudo_optional_miscfiles
-    (call miscfiles_read_localization_files (is_sudo_subject)))
 
 (allow is_visudo_subject self (capability (dac_override)))
 (allow is_visudo_subject self create_unix_stream_socket_perms)
@@ -126,8 +121,7 @@
     (allow ARG3 ARG2 (process (signal)))
     (call commands_bin_auto_subject_type_transition (ARG3 ARG2))
     (call commands_shell_auto_subject_type_transition (ARG3 ARG2))
-    (optional sudo_optional_chkpwd
-        (call auth_run_chkpwd (ARG3 ARG1))))
+    (call auth_run_chkpwd (ARG3 ARG1)))
 
 (macro sudo_visudo_role_template ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_sudo_role ARG1)

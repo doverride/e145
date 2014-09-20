@@ -47,33 +47,29 @@
 (call files_search_mnt (is_screen_subject))
 (call files_search_run (is_screen_subject))
 
-(call screen_read_config_files (is_screen_subject))
-(call screen_read_pam_config_files (is_screen_subject))
+(call terminal_dontaudit_use_unallocated_tty_nodes (is_screen_subject))
+
+(call dbus_system_client_subject (is_screen_subject))
 
 (call auth_read_generic_pam_config_files (is_screen_subject))
 (call auth_read_authconfig_pam_config_files (is_screen_subject))
 (call auth_nsswitch_client_subject (is_screen_subject))
 
+(call journald_client_subject (is_screen_subject))
+
+(call miscfiles_read_terminfo_files (is_screen_subject))
+(call miscfiles_read_localization_files (is_screen_subject))
+
+(call screen_read_config_files (is_screen_subject))
+(call screen_read_pam_config_files (is_screen_subject))
+
+(call utmp_read_run_files (is_screen_subject))
+
 (optional screen_optional_audit
     (call audit_client_subject (is_screen_subject)))
 
-(optional screen_optional_dbus
-    (call dbus_system_client_subject (is_screen_subject))
-    (optional screen_optional_fprint
-        (call fprint_dbus_chat_fprintd (is_screen_subject))))
-
-(optional screen_optional_journald
-    (call journald_client_subject (is_screen_subject)))
-
-(optional screen_optional_miscfiles
-    (call miscfiles_read_terminfo_files (is_screen_subject))
-    (call miscfiles_read_localization_files (is_screen_subject)))
-
-(optional screen_optional_terminal
-    (call terminal_dontaudit_use_unallocated_tty_nodes (is_screen_subject)))
-
-(optional screen_optional_utmp
-    (call utmp_read_run_files (is_screen_subject)))
+(optional screen_optional_fprint
+    (call fprint_dbus_chat_fprintd (is_screen_subject)))
 
 (optional screen_optional_session
     (type session_screen_home_t)
@@ -106,9 +102,8 @@
     (call files_tmp_filetrans (ARG3 ARG5 file "*"))
     (call commands_bin_auto_subject_type_transition (ARG3 ARG2))
     (call commands_shell_auto_subject_type_transition (ARG3 ARG2))
-    (optional screen_role_template_optional_auth
-        (call auth_run_chkpwd (ARG3 ARG1))
-        (call auth_run_utempter (ARG3 ARG1))))
+    (call auth_run_chkpwd (ARG3 ARG1))
+    (call auth_run_utempter (ARG3 ARG1)))
 
 (macro screen_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))

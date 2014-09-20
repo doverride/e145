@@ -14,8 +14,7 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (dmesg_t))
 
-(optional dmesg_optional_miscfiles
-    (call miscfiles_read_localization_files (dmesg_t)))
+(call miscfiles_read_localization_files (dmesg_t))
 
 (optional dmesg_optional_session
     (call session_search_generic_config (dmesg_t))

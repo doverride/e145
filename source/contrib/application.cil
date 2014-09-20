@@ -1,8 +1,7 @@
 (typeattribute is_application_subject)
 (typeattribute is_application_executable_file_object)
 
-(optional application_optional_auth
-	(call auth_use_login_program_subject_fd (is_application_subject)))
+(call auth_use_login_program_subject_fd (is_application_subject))
 
 (optional application_optional_elinks
     (call http_dontaudit_rw_all_elinks_unix_stream_sockets (is_application_subject))

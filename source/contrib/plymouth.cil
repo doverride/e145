@@ -101,8 +101,7 @@
 (call system_var_log_filetrans_boot_log_files (plymouthd_t))
 (call systemd_send_signal (plymouthd_t))
 
-(optional plymouthd_optional_auth
-    (call auth_nsswitch_client_subject (plymouthd_t)))
+(call auth_nsswitch_client_subject (plymouthd_t))
 
 (allow is_plymouth_admin_subject is_plymouth_subject signal_perms)
 (allow is_plymouth_admin_subject is_plymouth_subject (process (ptrace)))

@@ -62,17 +62,14 @@
 
 (call files_tmp_filetrans (rtkitd_t rtkitd_tmp_t dir "*"))
 
+(call auth_nsswitch_client_subject (rtkitd_t))
+
 (call dbus_system_client_subject (rtkitd_t))
 (call dbus_acquire_service_system (rtkitd_t))
 
-(optional rtkitd_optional_auth
-    (call auth_nsswitch_client_subject (rtkitd_t)))
+(call journald_client_subject (rtkitd_t))
 
-(optional rtkitd_optional_journald
-    (call journald_client_subject (rtkitd_t)))
-
-(optional rtkitd_optional_polit
-    (call polkit_dbus_chat_polkitd (rtkitd_t)))
+(call polkit_dbus_chat_polkitd (rtkitd_t))
 
 (allow is_rtkit_admin_subject is_rtkit_subject signal_perms)
 (allow is_rtkit_admin_subject is_rtkit_subject (process (ptrace)))

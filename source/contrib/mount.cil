@@ -67,13 +67,12 @@
 (call application_subject (mount_t))
 (call application_executable_object (mount_exec_t))
 
+(call miscfiles_read_localization_files (mount_t))
+
 (booleanif mount_any_file
     (true
         (call files_read_all_non_security_files (mount_t))
         (call files_mounton_all_non_security (mount_t))))
-
-(optional mount_optional_miscfiles
-    (call miscfiles_read_localization_files (mount_t)))
 
 (optional mount_optional_session
     (call session_search_all_home (mount_t))

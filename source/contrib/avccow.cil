@@ -23,20 +23,17 @@
 
 (call filesystem_getattr_filesystems (avccow_t))
 
+(call auth_nsswitch_client_subject (avccow_t))
+
+(call dbus_read_var_lib_files (avccow_t))
+
+(call miscfiles_read_localization_files (avccow_t))
+(call miscfiles_read_network_config_files (avccow_t))
+
 (call xserver_common_client_subject (avccow_t is_xinit_subject is_xorg_subject avccow_tmpfs_t avccow_tmpfs_t))
 (call xserver_client_subject_tmpfs_template (avccow_t avccow_tmpfs_t))
 (call xserver_tcp_connect_xserver_port (avccow_t)) ; its looking for non-existent running xserver
 (call xserver_exec_xhost (avccow_t))
-
-(optional avccow_optional_auth
-    (call auth_nsswitch_client_subject (avccow_t)))
-
-(optional avccow_optional_dbus
-    (call dbus_read_var_lib_files (avccow_t)))
-
-(optional avccow_optional_localization
-    (call miscfiles_read_localization_files (avccow_t))
-    (call miscfiles_read_network_config_files (avccow_t)))
 
 (optional avccow_optional_session
     (call session_search_generic_config (avccow_t)))

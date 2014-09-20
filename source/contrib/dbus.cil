@@ -72,25 +72,24 @@
 (call selinux_compute_access_vector (dbusd_t))
 (call selinux_list (dbusd_t))
 
+(call application_read_state_all_application_subjects (dbusd_t))
+
+(call auth_read_pam_console_run_files (dbusd_t))
+(call auth_nsswitch_client_subject (dbusd_t))
+
 (call dbus_list_config (dbusd_t))
 (call dbus_read_all_config_files (dbusd_t))
 (call dbus_read_state_all_system_client_subjects (dbusd_t))
 (call dbus_read_state_all_unconfined_subjects (dbusd_t))
 
-(call systemd_getattr_generic_unit_dirs (dbusd_t))
+(call journald_client_subject (dbusd_t))
 
-(optional dbus_optional_application
-    (call application_read_state_all_application_subjects (dbusd_t)))
+(call miscfiles_read_localization_files (dbusd_t))
+
+(call systemd_getattr_generic_unit_dirs (dbusd_t))
 
 (optional dbus_optional_audit
     (call audit_client_subject (dbusd_t)))
-
-(optional dbus_optional_auth
-    (call auth_read_pam_console_run_files (dbusd_t))
-    (call auth_nsswitch_client_subject (dbusd_t)))
-
-(optional dbus_optional_journald
-    (call journald_client_subject (dbusd_t)))
 
 (optional dbus_optional_logind
     (call logind_use_fd (dbusd_t))
@@ -98,9 +97,6 @@
     (call devices_rw_inherited_dri (dbusd_t))
     (call devices_rw_inherited_event (dbusd_t)) ; logind passes this to xorg via dbus
     (call logind_write_inherited_run_fifo_files (dbusd_t)))
-
-(optional dbus_optional_miscfiles
-    (call miscfiles_read_localization_files (dbusd_t)))
 
 (optional dbus_optional_seutil
     (call seutil_read_config_files (dbusd_t))

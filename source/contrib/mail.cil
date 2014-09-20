@@ -59,22 +59,18 @@
 (call files_read_generic_usr_files (is_mutt_subject)) ; xdg-mime related files
 (call files_read_generic_etc_files (is_mutt_subject)) ; gnutls.config
 
+(call auth_nsswitch_client_subject (is_mutt_subject))
+
+(call dbus_read_var_lib_files (is_mutt_subject))
+
 (call mail_tcp_connect_imap_port (is_mutt_subject))
 (call mail_tcp_connect_smtp_port (is_mutt_subject))
-
 (call mail_read_mutt_config_files (is_mutt_subject))
 
-(optional mutt_optional_auth
-    (call auth_nsswitch_client_subject (is_mutt_subject)))
-
-(optional mutt_optional_dbus
-    (call dbus_read_var_lib_files (is_mutt_subject)))
-
-(optional mutt_optional_miscfiles
-    (call miscfiles_read_network_environ_files (is_mutt_subject))
-    (call miscfiles_read_network_config_files (is_mutt_subject))
-    (call miscfiles_read_terminfo_files (is_mutt_subject))
-    (call miscfiles_read_localization_files (is_mutt_subject)))
+(call miscfiles_read_network_environ_files (is_mutt_subject))
+(call miscfiles_read_network_config_files (is_mutt_subject))
+(call miscfiles_read_terminfo_files (is_mutt_subject))
+(call miscfiles_read_localization_files (is_mutt_subject))
 
 (optional mutt_optional_session
     (type session_mutt_home_t)

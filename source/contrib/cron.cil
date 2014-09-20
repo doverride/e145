@@ -165,22 +165,21 @@
 (call cron_read_crond_pam_config_files (crond_t))
 (call cron_manage_spool_log_files (crond_t))
 
+(call dbus_system_client_subject (crond_t))
+
+(call journald_client_subject (crond_t))
+
+(call miscfiles_read_localization_files (crond_t))
+
+(call utmp_read_run_files (crond_t))
+
 (optional crond_optional_audit
     (call audit_client_subject (crond_t)))
-
-(optional crond_optional_dbus
-    (call dbus_system_client_subject (crond_t)))
-
-(optional crond_optional_journald
-    (call journald_client_subject (crond_t)))
 
 (optional crond_optional_logind
     (call logind_dbus_chat (crond_t))
     (call logind_use_fd (crond_t))
     (call logind_write_inherited_run_fifo_files (crond_t)))
-
-(optional crond_optional_miscfiles
-    (call miscfiles_read_localization_files (crond_t)))
 
 (optional crond_optional_seutil
     (call seutil_read_default_context_files (crond_t))
@@ -188,9 +187,6 @@
 
 (optional crond_optional_sudo
     (call sudo_search_all_keyrings (crond_t)))
-
-(optional crond_optional_utmp
-    (call utmp_read_run_files (crond_t)))
 
 (optional crond_optional_usersubject
     (allow crond_t user_cron_spool_t read_file_perms)
@@ -228,23 +224,20 @@
 (call files_search_var_spool (system_cronjob_t))
 (call files_manage_generic_lock_files (system_cronjob_t))
 
+(call auth_nsswitch_client_subject (system_cronjob_t))
+
 (call cron_list_system_spool (system_cronjob_t))
 (call cron_write_system_spool_files (system_cronjob_t))
 (call cron_setattr_system_spool_files (system_cronjob_t))
 (call cron_execute_system_spool_files (system_cronjob_t))
 (call cron_read_crond_environ_files (system_cronjob_t))
 
-(optional system_cronjob_optional_auth
-    (call auth_nsswitch_client_subject (system_cronjob_t)))
+(call journald_client_subject (system_cronjob_t))
 
-(optional system_cronjob_optional_journald
-    (call journald_client_subject (system_cronjob_t)))
+(call miscfiles_read_localization_files (system_cronjob_t))
 
 (optional system_cronjob_optional_mandb
     (call mandb_read_environ_files (system_cronjob_t)))
-
-(optional system_cronjob_optional_miscfiles
-    (call miscfiles_read_localization_files (system_cronjob_t)))
 
 (allow is_crontab_subject self (capability (chown setuid setgid dac_override)))
 (allow is_crontab_subject self rw_fifo_file_perms)
@@ -270,16 +263,14 @@
 (call cron_read_pid_files (is_crontab_subject))
 (call cron_rw_spool_log_files (is_crontab_subject))
 
+(call journald_client_subject (is_crontab_subject))
+
+(call miscfiles_read_localization_files (is_crontab_subject))
+(call miscfiles_read_terminfo_files (is_crontab_subject))
+
 (optional crontab_optional_audit
     (call audit_client_subject (is_crontab_subject))
     (call audit_set_loginuid (is_crontab_subject)))
-
-(optional crontab_optional_journald
-    (call journald_client_subject (is_crontab_subject)))
-
-(optional crontab_optional_miscfiles
-    (call miscfiles_read_localization_files (is_crontab_subject))
-    (call miscfiles_read_terminfo_files (is_crontab_subject)))
 
 (optional crontab_optional_usersubject
     (type user_cron_spool_t)
@@ -298,8 +289,7 @@
 
 (allow is_cron_system_cronjob_subject self (capability (dac_override)))
 
-(optional cron_system_cronjob_subject_optional_application
-    (call application_subject (is_cron_system_cronjob_subject)))
+(call application_subject (is_cron_system_cronjob_subject))
 
 (optional cron_system_cronjob_subject_optional_session
     (call session_list_home_dir (is_cron_system_cronjob_subject))

@@ -168,16 +168,14 @@
 
 (call subject_obj_id_change_exemption (chcon_t))
 
-(optional chcon_optional_miscfiles
-    (call miscfiles_read_localization_files (chcon_t)))
+(call miscfiles_read_localization_files (chcon_t))
 
 (call selinux_load_policy (load_policy_t))
 
 (call seutil_read_config_files (load_policy_t))
 (call seutil_read_policy_config_files (load_policy_t))
 
-(optional load_policy_optional_miscfiles
-    (call miscfiles_read_localization_files (load_policy_t)))
+(call miscfiles_read_localization_files (load_policy_t))
 
 (call files_getattr_all_dirs (matchpathcon_t))
 (call files_getattr_all_files (matchpathcon_t))
@@ -190,16 +188,13 @@
 (call selinux_list (setsebool_t))
 (call selinux_set_all_booleans (setsebool_t))
 
+(call auth_nsswitch_client_subject (setsebool_t))
+
 (call seutil_read_config_files (setsebool_t))
 
-(optional setsebool_optional_auth
-    (call auth_nsswitch_client_subject (setsebool_t)))
+(call journald_client_subject (setsebool_t))
 
-(optional setsebool_optional_journald
-    (call journald_client_subject (setsebool_t)))
-
-(optional setsebool_optional_miscfiles
-    (call miscfiles_read_localization_files (setsebool_t)))
+(call miscfiles_read_localization_files (setsebool_t))
 
 (call files_dontaudit_list_all (setools_t)) ; catchall
 
@@ -249,6 +244,8 @@
 
 (call terminal_use_inherited_console_nodes (setfiles_t))
 
+(call auth_relabel_shadow_files (setfiles_t))
+
 (call seutil_read_config_files (setfiles_t))
 (call seutil_read_file_context_files (setfiles_t))
 (call seutil_relabel_policy_config_dirs (setfiles_t))
@@ -258,9 +255,6 @@
 
 (optional setfiles_optional_audit
     (call audit_client_subject (setfiles_t)))
-
-(optional setfiles_optional_auth
-    (call auth_relabel_shadow_files (setfiles_t)))
 
 (allow is_seutil_admin_subject is_seutil_subject signal_perms)
 (allow is_seutil_admin_subject is_seutil_subject (process (ptrace)))

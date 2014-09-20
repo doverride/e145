@@ -36,28 +36,23 @@
 
 (call files_read_generic_etc_files (getty_t)) ; /etc/issue
 
+(call auth_nsswitch_client_subject (getty_t))
+(call auth_write_wtmp_log_files (getty_t))
+
+(call login_subtrans (getty_t))
+
+(call miscfiles_read_localization_files (getty_t))
+
+(call plymouth_subtrans (getty_t))
+
+(call utmp_rw_run_files (getty_t))
+
 (booleanif console_login
     (true
         (call terminal_setattr_console_nodes (getty_t))
         (call terminal_use_console_nodes (getty_t)))
     (false
         (call terminal_dontaudit_use_console_nodes (getty_t))))
-
-(optional getty_optional_auth
-    (call auth_nsswitch_client_subject (getty_t))
-    (call auth_write_wtmp_log_files (getty_t)))
-
-(optional getty_optional_login
-    (call login_subtrans (getty_t)))
-
-(optional getty_optional_miscfiles
-    (call miscfiles_read_localization_files (getty_t)))
-
-(optional getty_optional_plymouth
-    (call plymouth_subtrans (getty_t)))
-
-(optional getty_optional_utmp
-    (call utmp_rw_run_files (getty_t)))
 
 (allow getty_generator_t self (capability (dac_override)))
 

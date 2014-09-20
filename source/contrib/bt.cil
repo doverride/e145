@@ -24,9 +24,8 @@
 
 (call bt_tcp_bind_bt_port (is_rtorrent_subject))
 
-(optional rtorrent_optional_miscfiles
-    (call miscfiles_read_terminfo_files (is_rtorrent_subject))
-    (call miscfiles_read_localization_files (is_rtorrent_subject)))
+(call miscfiles_read_terminfo_files (is_rtorrent_subject))
+(call miscfiles_read_localization_files (is_rtorrent_subject))
 
 (optional bt_optional_session
     (type session_rtorrent_home_t)

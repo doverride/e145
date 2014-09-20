@@ -15,9 +15,8 @@
 
 (call commands_mprot_read_shell_files (is_pinentry_subject))
 
-(optional pinentry_optional_miscfiles
-    (call miscfiles_read_terminfo_files (is_pinentry_subject))
-    (call miscfiles_read_localization_files (is_pinentry_subject)))
+(call miscfiles_read_terminfo_files (is_pinentry_subject))
+(call miscfiles_read_localization_files (is_pinentry_subject))
 
 (macro pinentry_role_template ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_pinentry_role ARG1)

@@ -20,12 +20,11 @@
 (allow is_rp_subject is_rp_client_subject (process (getsession)))
 (allow is_rp_client_subject is_rp_subject (process (sigchld)))
 
+(call miscfiles_manage_fonts_cache (is_rp_subject))
+
 (optional rp_optional_usersubject
     (type user_rp_home_t)
     (call usersubject_home_object (user_rp_home_t)))
-
-(optional rp_optional_miscfiles
-    (call miscfiles_manage_fonts_cache (is_rp_subject)))
 
 (allow is_rpws_subject self rw_fifo_file_perms)
 

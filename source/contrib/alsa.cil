@@ -71,14 +71,11 @@
 (call alsa_read_config_files (alsactl_t))
 (call alsa_manage_var_lib_files (alsactl_t))
 
-(optional alsactl_optional_journald
-    (call journald_client_subject (alsactl_t)))
+(call journald_client_subject (alsactl_t))
 
-(optional alsactl_optional_miscfiles
-    (call miscfiles_read_localization_files (alsactl_t)))
+(call miscfiles_read_localization_files (alsactl_t))
 
-(optional alsactl_optional_udevd
-    (call udevd_rw_inherited_udp_socket (alsactl_t)))
+(call udevd_rw_inherited_udp_socket (alsactl_t))
 
 (allow is_alsa_admin_subject alsactl_t signal_perms)
 (allow is_alsa_admin_subject alsactl_t (process (ptrace)))

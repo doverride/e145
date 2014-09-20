@@ -36,20 +36,17 @@
 
 (call terminal_use_inherited_ptmx_nodes (is_emacs_subject))
 
-(optional emacs_optional_miscfiles
-    (call miscfiles_read_network_config_files (is_emacs_subject)) 
-    (call miscfiles_read_terminfo_files (is_emacs_subject)) 
-    (call miscfiles_read_localization_files (is_emacs_subject))) 
+(call auth_nsswitch_client_subject (is_emacs_or_emacsclient_subject))
+
+(call miscfiles_read_network_config_files (is_emacs_subject)) 
+(call miscfiles_read_terminfo_files (is_emacs_subject)) 
+(call miscfiles_read_localization_files (is_emacs_subject))
+
+(call utmp_read_run_files (is_emacs_subject))
 
 (optional emacs_optional_ssh
     (call ssh_getattr_ssh_executable_files (is_emacs_subject))
     (call ssh_audit_access_ssh_executable_files (is_emacs_subject)))
-
-(optional emacs_optional_utmp
-    (call utmp_read_run_files (is_emacs_subject)))
-
-(optional emacs_optional_auth
-    (call auth_nsswitch_client_subject (is_emacs_or_emacsclient_subject)))
 
 (optional emacs_optional_session
     (type session_emacs_tmp_t)

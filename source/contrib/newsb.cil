@@ -25,11 +25,10 @@
 
 (call http_tcp_connect_http_port (is_newsb_subject))
 
-(optional newsb_optional_miscfiles
-    (call miscfiles_read_generic_cert_files (is_newsb_subject))
-    (call miscfiles_read_network_config_files (is_newsb_subject))
-    (call miscfiles_read_terminfo_files (is_newsb_subject))
-    (call miscfiles_read_localization_files (is_newsb_subject)))
+(call miscfiles_read_generic_cert_files (is_newsb_subject))
+(call miscfiles_read_network_config_files (is_newsb_subject))
+(call miscfiles_read_terminfo_files (is_newsb_subject))
+(call miscfiles_read_localization_files (is_newsb_subject))
 
 (optional newsb_optional_session
     (type session_newsb_home_t)

@@ -67,6 +67,8 @@
 
 (call filesystem_getattr_filesystems (fprintd_t))
 
+(call auth_nsswitch_client_subject (fprintd_t))
+
 (call dbus_acquire_service_system (fprintd_t))
 (call dbus_system_client_subject (fprintd_t))
 
@@ -75,18 +77,12 @@
 (call fprint_manage_fprintd_var_lib_files (fprintd_t))
 (call fprint_read_fprintd_config_files (fprintd_t))
 
-(optional fprint_optional_auth
-    (call auth_nsswitch_client_subject (fprintd_t)))
+(call miscfiles_read_localization_files (fprintd_t))
 
-(optional fprint_optional_miscfiles
-    (call miscfiles_read_localization_files (fprintd_t)))
+(call polkit_dbus_chat_polkitd (fprintd_t))
 
-(optional fprint_optional_polkit
-    (call polkit_dbus_chat_polkitd (fprintd_t)))
-
-(optional fprint_optional_udevd
-    (call udevd_read_config_files (fprintd_t))
-    (call udevd_read_run_files (fprintd_t)))
+(call udevd_read_config_files (fprintd_t))
+(call udevd_read_run_files (fprintd_t))
 
 (call dbus_system_client_subject (fprintcli_t))
 

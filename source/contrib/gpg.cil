@@ -68,14 +68,13 @@
 
 (call auth_nsswitch_client_subject (is_gpg_subject))
 
+(call miscfiles_read_generic_cert_files (is_gpg_subject))
+(call miscfiles_read_network_config_files (is_gpg_subject))
+(call miscfiles_read_terminfo_files (is_gpg_subject))
+(call miscfiles_read_localization_files (is_gpg_subject))
+
 (optional gpg_optional_http
     (call http_tcp_connect_http_port (is_gpg_subject))) ; keyserver
-
-(optional gpg_optional_miscfiles
-    (call miscfiles_read_generic_cert_files (is_gpg_subject))
-    (call miscfiles_read_network_config_files (is_gpg_subject))
-    (call miscfiles_read_terminfo_files (is_gpg_subject))
-    (call miscfiles_read_localization_files (is_gpg_subject)))
 
 (optional gpg_optional_session
     (type session_gpg_home_t)
@@ -98,8 +97,7 @@
 (call files_read_generic_usr_files (is_gpgagent_subject))
 (call files_search_tmp (is_gpgagent_subject))
 
-(optional gpgagent_optional_miscfiles
-    (call miscfiles_read_localization_files (is_gpgagent_subject)))
+(call miscfiles_read_localization_files (is_gpgagent_subject))
 
 (optional gpgagent_optional_session
     (type session_gpgagent_home_t)
@@ -119,12 +117,10 @@
 (call devices_list_sysfs (is_scd_subject))
 (call devices_read_sysfs_files (is_scd_subject))
 
-(optional scd_optional_miscfiles
-    (call miscfiles_read_localization_files (is_scd_subject)))
+(call miscfiles_read_localization_files (is_scd_subject))
 
-(optional scd_optional_udevd
-    (call udevd_read_config_files (is_scd_subject))
-    (call udevd_read_run_files (is_scd_subject)))
+(call udevd_read_config_files (is_scd_subject))
+(call udevd_read_run_files (is_scd_subject))
 
 (optional scd_optional_session
     (type session_scd_tmp_t)
@@ -140,8 +136,7 @@
 
 (call files_search_etc (is_gpgpcsc_subject))
 
-(optional gpgpcsc_optional_pcsc
-    (call pcsc_stream_connect (is_gpgpcsc_subject)))
+(call pcsc_stream_connect (is_gpgpcsc_subject))
 
 (macro gpg_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gpg_role ARG1)

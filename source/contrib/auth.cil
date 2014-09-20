@@ -222,19 +222,20 @@
 
 (call auth_pam_client_subject (is_login_program_subject))
 
-(optional login_program_subject_optional_dbus
-    (call dbus_system_client_subject (is_login_program_subject))
-    (optional login_prorgram_subject
-        (call fprint_dbus_chat_fprintd (is_login_program_subject))))
+(call dbus_system_client_subject (is_login_program_subject))
+
+(call miscfiles_read_localization_files (is_login_program_subject))
+
+(call utmp_rw_run_files (is_login_program_subject))
+
+(optional login_program_subject
+    (call fprint_dbus_chat_fprintd (is_login_program_subject)))
 
 (optional login_program_subject_optional_logind
     (call logind_dbus_chat (is_login_program_subject))
     (call logind_read_run_files (is_login_program_subject))
     (call logind_use_fd (is_login_program_subject))
     (call logind_write_inherited_run_fifo_files (is_login_program_subject)))
-
-(optional login_program_subject_optional_miscfiles
-    (call miscfiles_read_localization_files (is_login_program_subject)))
 
 (optional login_program_subject_optional_seutil
     (call seutil_read_config_files (is_login_program_subject))
@@ -247,9 +248,6 @@
 (optional login_program_subject_optional_usersubject
     (call usersubject_create_keyring_all_common_login_user_subjects (is_login_program_subject))
     (call usersubject_send_signal_all_common_login_user_subjects (is_login_program_subject)))
-
-(optional login_program_subject_optional_utmp
-    (call utmp_rw_run_files (is_login_program_subject)))
 
 (allow is_nsswitch_client_subject self create_unix_stream_socket_perms)
 
@@ -284,11 +282,10 @@
 
 (call auth_nsswitch_client_subject (is_pam_client_subject))
 
+(call journald_client_subject (is_pam_client_subject))
+
 (optional auth_optional_audit
     (call audit_client_subject (is_pam_client_subject)))
-
-(optional auth_optional_journald
-    (call journald_client_subject (is_pam_client_subject)))
 
 (allow chkpwd_t self (capability (dac_override setuid)))
 
@@ -302,14 +299,12 @@
 (call auth_read_shadow_files (chkpwd_t))
 (call auth_nsswitch_client_subject (chkpwd_t))
 
+(call journald_client_subject (chkpwd_t))
+
+(call miscfiles_read_localization_files (chkpwd_t))
+
 (optional chkpwd_optional_audit
     (call audit_client_subject (chkpwd_t)))
-
-(optional chkpwd_optional_journald
-    (call journald_client_subject (chkpwd_t)))
-
-(optional chkpwd_optional_miscfiles
-    (call miscfiles_read_localization_files (chkpwd_t)))
 
 (optional chkpwd_optional_session
     (call session_use_inherited_terminals (chkpwd_t)))
@@ -325,15 +320,14 @@
 (call auth_nsswitch_client_subject (utempter_t))
 (call auth_write_wtmp_log_files (utempter_t))
 
+(call utmp_rw_run_files (utempter_t))
+
 (optional utempter_optional_screen
     (call screen_rw_all_inherited_unix_stream_socket (utempter_t))
     (call screen_read_all_inherited_home_files (utempter_t)))
 
 (optional utempter_optional_usersubject
     (call usersubject_write_inherited_generic_home_content_files (utempter_t)))
-
-(optional utempter_optional_utmp
-    (call utmp_rw_run_files (utempter_t)))
 
 (allow is_auth_admin_subject is_auth_subject signal_perms)
 (allow is_auth_admin_subject is_auth_subject (process (ptrace)))

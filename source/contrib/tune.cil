@@ -102,33 +102,26 @@
 (call devices_read_urandom (tuned_t))
 (call devices_write_net_control (tuned_t))
 
+(call storage_getattr_fixed_disk_nodes (tuned_t))
+(call storage_getattr_scsi_generic_nodes (tuned_t))
+
+(call auth_nsswitch_client_subject (tuned_t))
+
 (call dbus_system_client_subject (tuned_t))
 (call dbus_acquire_service_system (tuned_t))
 
+(call ip_exec (tuned_t))
+
+(call libraries_exec_ldconfig (tuned_t))
+
+(call miscfiles_read_localization_files (tuned_t))
+
+(call sysctl_exec_sctl (tuned_t))
+
 (call tune_rw_config_files (tuned_t))
 
-(optional tuned_optional_auth
-    (call auth_nsswitch_client_subject (tuned_t)))
-
-(optional tuned_optional_ip
-    (call ip_exec (tuned_t)))
-
-(optional tuned_optional_libraries
-    (call libraries_exec_ldconfig (tuned_t)))
-
-(optional tuned_optional_miscfiles
-    (call miscfiles_read_localization_files (tuned_t)))
-
-(optional tuned_optional_sysctl
-    (call sysctl_exec_sctl (tuned_t)))
-
-(optional tuned_optional_storage
-    (call storage_getattr_fixed_disk_nodes (tuned_t))
-    (call storage_getattr_scsi_generic_nodes (tuned_t)))
-
-(optional tuned_optional_udevd
-    (call udevd_read_run_files (tuned_t))
-    (call udevd_read_config_files (tuned_t)))
+(call udevd_read_run_files (tuned_t))
+(call udevd_read_config_files (tuned_t))
 
 (allow is_tune_admin_subject is_tune_subject signal_perms)
 (allow is_tune_admin_subject is_tune_subject (process (ptrace)))

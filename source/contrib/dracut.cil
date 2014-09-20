@@ -34,14 +34,11 @@
 (call filesystem_manage_generic_tmpfs_dirs (dracut_initramfs_restore_t))
 (call filesystem_manage_generic_tmpfs_chr_files (dracut_initramfs_restore_t))
 
-(optional dracut_initramfs_restore_optional_auth
-    (call auth_nsswitch_client_subject (dracut_initramfs_restore_t)))
+(call auth_nsswitch_client_subject (dracut_initramfs_restore_t))
 
-(optional dracut_initramfs_restore_optional_machined
-    (call machined_read_config_files (dracut_initramfs_restore_t)))
+(call machined_read_config_files (dracut_initramfs_restore_t))
 
-(optional dracut_initramfs_restore_optional_miscfiles
-    (call miscfiles_read_localization_files (dracut_initramfs_restore_t)))
+(call miscfiles_read_localization_files (dracut_initramfs_restore_t))
 
 (allow is_dracut_admin_subject is_dracut_subject signal_perms)
 (allow is_dracut_admin_subject is_dracut_subject (process (ptrace)))

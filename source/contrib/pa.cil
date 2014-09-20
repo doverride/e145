@@ -89,25 +89,22 @@
 
 (call dbus_system_client_subject (is_pa_session_subject))
 
+(call journald_client_subject (is_pa_session_subject))
+
+(call miscfiles_read_localization_files (is_pa_session_subject))
+
 (call rtkit_client_subject (is_pa_session_subject))
 (call rtkit_dbus_chat_rtkitd (is_pa_session_subject))
+
+(call udevd_read_config_files (is_pa_session_subject))
+(call udevd_read_run_files (is_pa_session_subject))
 
 (optional pa_session_optional_bluetooth
     (call bluetooth_dbus_chat_bluetoothd (is_pa_session_subject)))
 
-(optional pa_session_optional_journald
-    (call journald_client_subject (is_pa_session_subject)))
-
 (optional pa_session_optional_logind
     (call logind_list_run (is_pa_session_subject))
     (call logind_read_run_files (is_pa_session_subject)))
-
-(optional pa_session_optional_miscfiles
-    (call miscfiles_read_localization_files (is_pa_session_subject)))
-
-(optional pa_session_optional_udevd
-    (call udevd_read_config_files (is_pa_session_subject))
-    (call udevd_read_run_files (is_pa_session_subject)))
 
 (optional pa_optional_session
     (type session_pa_home_t)
@@ -138,13 +135,11 @@
 
 (call filesystem_getattr_tmpfs_filesystems (is_pa_session_or_pa_client_subject))
 
+(call alsa_read_config_files (is_pa_session_or_pa_client_subject))
+
 (call pa_read_config_files (is_pa_session_or_pa_client_subject))
 
-(optional pa_session_or_pa_client_subject_optional_alsa
-    (call alsa_read_config_files (is_pa_session_or_pa_client_subject)))
-
-(optional pa_session_or_pa_client_optional_machined
-    (call machined_read_config_files (is_pa_session_or_pa_client_subject)))
+(call machined_read_config_files (is_pa_session_or_pa_client_subject))
 
 (allow is_pa_client_subject self (process (getsched)))
 (allow is_pa_client_subject self rw_fifo_file_perms)

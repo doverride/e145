@@ -33,8 +33,7 @@
 
 (call ip_read_config (ip_t))
 
-(optional ip_optional_miscfiles
-    (call miscfiles_read_localization_files (ip_t)))
+(call miscfiles_read_localization_files (ip_t))
 
 (optional ip_optional_session
     (call session_use_inherited_terminals (ip_t)))

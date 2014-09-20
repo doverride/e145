@@ -16,11 +16,9 @@
 (call devices_list_sysfs (is_pciutil_subject))
 (call devices_read_sysfs_files (is_pciutil_subject))
 
-(optional pciutil_subject_optional_auth
-    (call auth_nsswitch_client_subject (is_pciutil_subject)))
+(call auth_nsswitch_client_subject (is_pciutil_subject))
 
-(optional pciutil_subject_optional_miscfiles
-    (call miscfiles_read_hwdata_files (is_pciutil_subject)))
+(call miscfiles_read_hwdata_files (is_pciutil_subject))
 
 (optional pciutil_subject_optional_session
     (type session_pciutil_home_t)

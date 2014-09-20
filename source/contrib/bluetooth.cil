@@ -90,23 +90,19 @@
 (call dbus_acquire_service_system (bluetoothd_t))
 (call dbus_system_client_subject (is_bluetooth_subject))
 
+(call hostnamed_dbus_chat (bluetoothd_t))
+
+(call journald_client_subject (bluetoothd_t))
+
+(call miscfiles_read_localization_files (is_bluetooth_subject))
+
 (call systemd_stream_connect (bluetoothd_t))
 
-(optional bluetoothd_optional_hostnamed
-    (call hostnamed_dbus_chat (bluetoothd_t)))
-
-(optional bluetoothd_optional_journald
-    (call journald_client_subject (bluetoothd_t)))
-
-(optional bluetoothd_optional_miscfiles
-    (call miscfiles_read_localization_files (is_bluetooth_subject)))
+(call udevd_read_config_files (bluetoothd_t))
+(call udevd_read_run_files (bluetoothd_t))
 
 (optional bluetoothd_optional_networkmgr
     (call networkmgr_dbus_chat (bluetoothd_t)))
-
-(optional bluetoothd_optional_udevd
-    (call udevd_read_config_files (bluetoothd_t))
-    (call udevd_read_run_files (bluetoothd_t)))
 
 (allow bluetoothctl_t self (capability (net_raw)))
 (allow bluetoothctl_t self create_socket_perms)
@@ -116,8 +112,7 @@
 
 (call bluetooth_dbus_chat_bluetoothd (bluetoothctl_t))
 
-(optional bluetoothctl_optional_miscfiles
-    (call miscfiles_read_terminfo_files (bluetoothctl_t)))
+(call miscfiles_read_terminfo_files (bluetoothctl_t))
 
 (optional bluetoothctl_optional_usersubject
     (call usersubject_use_inherited_terminals (bluetoothctl_t)))

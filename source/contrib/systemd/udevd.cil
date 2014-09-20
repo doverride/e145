@@ -129,11 +129,11 @@
 
 (call terminal_use_unallocated_tty_nodes (udevd_t))
 
+(call auth_nsswitch_client_subject (udevd_t))
+
 (call dm_subtrans_dmsetup (udevd_t))
 
 (call ip_exec (udevd_t))
-
-(call lvm_subtrans_lvm (udevd_t))
 
 (call kmod_list_modules_config (udevd_t))
 (call kmod_read_modules_config_files (udevd_t))
@@ -151,11 +151,11 @@
     (call alsa_read_config_files (udevd_t))
     (call alsa_subtrans_alsactl (udevd_t)))
 
-(optional udevd_optional_auth
-    (call auth_nsswitch_client_subject (udevd_t)))
-
 (optional udevd_optional_journald
     (call journald_client_subject (udevd_t)))
+
+(optional udevd_optional_lvm
+    (call lvm_subtrans_lvm (udevd_t)))
 
 (optional udevd_optional_logind
     (call logind_read_run_files (udevd_t)))

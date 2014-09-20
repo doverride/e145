@@ -64,26 +64,18 @@
 
 (call selinux_get_filesystems_mount (dhclient_t))
 
+(call auth_nsswitch_client_subject (dhclient_t))
+
 (call dhcp_list_config (dhclient_t))
 (call dhcp_read_config_files (dhclient_t))
 (call dhcp_udp_bind_dhcp_port (dhclient_t))
 
-(allow is_dhcp_admin_subject dhclient_t signal_perms)
-(call ps_subject_pattern (is_dhcp_admin_subject dhclient_t))
+(call journald_client_subject (dhclient_t))
 
-(call admin_pattern (is_dhcp_admin_subject is_dhcp_file_object))
-
-(optional dhclient_optional_auth
-    (call auth_nsswitch_client_subject (dhclient_t)))
-
-(optional dhclient_optional_journald
-   (call journald_client_subject (dhclient_t)))
-
-(optional dhclient_optional_miscfiles
-    (call miscfiles_read_generic_cert_files (dhclient_t))
-    (call miscfiles_read_localization_files (dhclient_t))
-    (call miscfiles_read_network_config_files (dhclient_t))
-    (call miscfiles_read_network_environ_files (dhclient_t)))
+(call miscfiles_read_generic_cert_files (dhclient_t))
+(call miscfiles_read_localization_files (dhclient_t))
+(call miscfiles_read_network_config_files (dhclient_t))
+(call miscfiles_read_network_environ_files (dhclient_t))
 
 (optional dhclient_optional_networkmgr
     (call networkmgr_execute_helper_files (dhclient_t))

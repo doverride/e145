@@ -20,16 +20,13 @@
 (call files_list_tmp (is_bti_subject))
 (call files_audit_access_generic_tmp_dirs (is_bti_subject))
 
-(optional bti_optional_auth
-    (call auth_nsswitch_client_subject (is_bti_subject)))
+(call auth_nsswitch_client_subject (is_bti_subject))
 
-(optional bti_optional_miscfiles
-    (call miscfiles_read_network_config_files (is_bti_subject))
-    (call miscfiles_read_generic_cert_files (is_bti_subject))
-    (call miscfiles_read_localization_files (is_bti_subject)))
+(call http_tcp_connect_http_port (is_bti_subject))
 
-(optional bti_optional_http
-    (call http_tcp_connect_http_port (is_bti_subject)))
+(call miscfiles_read_network_config_files (is_bti_subject))
+(call miscfiles_read_generic_cert_files (is_bti_subject))
+(call miscfiles_read_localization_files (is_bti_subject))
 
 (optional bti_optional_bti
     (type session_bti_home_t)

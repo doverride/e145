@@ -61,16 +61,11 @@
 
 (call polkit_dbus_chat_polkitd (pcscd_t))
 
+(call udevd_read_config_files (pcscd_t))
+(call udevd_read_run_files (pcscd_t))
+
 (optional pcscd_optional_gpgpcsc
     (call gpg_read_state_all_gpgpcsc (pcscd_t)))
-
-(optional pcscd_optional_session
-    (call session_getattr (pcscd_t))
-    (call session_read_state (pcscd_t)))
-
-(optional pcscd_optional_udevd
-    (call udevd_read_config_files (pcscd_t))
-    (call udevd_read_run_files (pcscd_t)))
 
 (allow is_pcsc_admin_subject pcscd_t signal_perms)
 (allow is_pcsc_admin_subject pcscd_t (process (ptrace)))

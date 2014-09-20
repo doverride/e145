@@ -85,12 +85,10 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (nettools_t))
 
-(optional nettools_optional_auth
-    (call auth_nsswitch_client_subject (nettools_t)))
+(call auth_nsswitch_client_subject (nettools_t))
 
-(optional nettools_optional_miscfiles
-    (call miscfiles_read_network_environ_files (nettools_t))
-    (call miscfiles_read_localization_files (nettools_t)))
+(call miscfiles_read_network_environ_files (nettools_t))
+(call miscfiles_read_localization_files (nettools_t))
 
 (optional nettools_optional_session
     (call session_use_inherited_terminals (nettools_t)))
@@ -104,12 +102,10 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (ping_t))
 
-(optional ping_optional_auth
-    (call auth_nsswitch_client_subject (ping_t)))
+(call auth_nsswitch_client_subject (ping_t))
 
-(optional ping_optional_miscfiles
-    (call miscfiles_read_network_config_files (ping_t))
-    (call miscfiles_read_localization_files (ping_t)))
+(call miscfiles_read_network_config_files (ping_t))
+(call miscfiles_read_localization_files (ping_t))
 
 (optional ping_optional_session
     (call session_use_inherited_terminals (ping_t)))
@@ -134,12 +130,10 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (traceroute_t))
 
-(optional traceroute_optional_auth
-    (call auth_nsswitch_client_subject (traceroute_t)))
+(call auth_nsswitch_client_subject (traceroute_t))
 
-(optional traceroute_optional_miscfiles
-    (call miscfiles_read_network_config_files (traceroute_t))
-    (call miscfiles_read_localization_files (traceroute_t)))
+(call miscfiles_read_network_config_files (traceroute_t))
+(call miscfiles_read_localization_files (traceroute_t))
 
 (optional traceroute_optional_session
     (call session_use_inherited_terminals (traceroute_t)))

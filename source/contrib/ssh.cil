@@ -165,16 +165,14 @@
 
 (call auth_login_program_subject (sshd_t))
 
+(call journald_client_subject (sshd_t)) ; not comfirmed, but it does create unix dgram sockets
+
+(call miscfiles_read_network_config_files (sshd_t))
+(call miscfiles_read_generic_cert_files (sshd_t))
+
 (call ssh_read_sshd_config_files (sshd_t))
 (call ssh_read_sshd_key_files (sshd_t))
 (call ssh_tcp_bind_ssh_port (sshd_t))
-
-(optional sshd_optional_journald
-    (call journald_client_subject (sshd_t))) ; not comfirmed, but it does create unix dgram sockets
-
-(optional sshd_optional_miscfiles
-    (call miscfiles_read_network_config_files (sshd_t))
-    (call miscfiles_read_generic_cert_files (sshd_t)))
 
 (optional sshd_optional_session
     (call session_use_terminals (sshd_t))
@@ -204,12 +202,11 @@
 
 (call files_search_var (sshd_net_t)) ; /var/empty/sshd
 
+(call miscfiles_read_localization_files (sshd_net_t))
+
 (call ssh_rw_inherited_sshd_fifo_files (sshd_net_t))
 (call ssh_rw_inherited_sshd_unix_stream_sockets (sshd_net_t))
 (call ssh_rw_inherited_sshd_tcp_sockets (sshd_net_t))
-
-(optional sshd_net_optional_miscfiles
-    (call miscfiles_read_localization_files (sshd_net_t)))
 
 (allow sshd_keygen_t sshd_key_t manage_file_perms)
 (call ssh_etc_filetrans (sshd_keygen_t sshd_key_t file "*"))
@@ -225,19 +222,17 @@
 (call files_dontaudit_list_all (is_ssh_subject)) ; catchall
 (call files_read_generic_etc_files (is_ssh_subject)) ; /etc/krb5.conf
 
+(call auth_nsswitch_client_subject (is_ssh_subject))
+
+(call miscfiles_read_network_environ_files (is_ssh_subject))
+(call miscfiles_read_localization_files (is_ssh_subject))
+(call miscfiles_read_terminfo_files (is_ssh_subject))
+(call miscfiles_read_network_config_files (is_ssh_subject))
+(call miscfiles_read_generic_cert_files (is_ssh_subject))
+
 (call ssh_exec (is_ssh_subject)) ; sftp calling ssh
 (call ssh_read_config_files (is_ssh_subject))
 (call ssh_tcp_connect_ssh_port (is_ssh_subject))
-
-(optional ssh_optional_auth
-    (call auth_nsswitch_client_subject (is_ssh_subject)))
-
-(optional ssh_optional_miscfiles
-    (call miscfiles_read_network_environ_files (is_ssh_subject))
-    (call miscfiles_read_localization_files (is_ssh_subject))
-    (call miscfiles_read_terminfo_files (is_ssh_subject))
-    (call miscfiles_read_network_config_files (is_ssh_subject))
-    (call miscfiles_read_generic_cert_files (is_ssh_subject)))
 
 (optional ssh_optional_session
     (type session_ssh_home_t)
@@ -249,22 +244,18 @@
 
 (call devices_read_urandom (is_sshkeygen_subject))
 
-(optional sshkeygen_subject_optional_auth
-    (call auth_nsswitch_client_subject (is_sshkeygen_subject)))
+(call auth_nsswitch_client_subject (is_sshkeygen_subject))
 
-(optional sshkeygen_subject_optional_miscfiles
-    (call miscfiles_read_generic_cert_files (is_sshkeygen_subject)))
+(call miscfiles_read_generic_cert_files (is_sshkeygen_subject))
 
 (allow is_sshagent_subject self (process (setrlimit)))
 (allow is_sshagent_subject self (unix_stream_socket (listen accept connectto)))
 
 (call devices_read_urandom (is_sshagent_subject))
 
-(optional sshagent_subject_optional_auth
-    (call auth_nsswitch_client_subject (is_sshagent_subject)))
+(call auth_nsswitch_client_subject (is_sshagent_subject))
 
-(optional sshagent_subject_optional_miscfiles
-    (call miscfiles_read_generic_cert_files (is_sshagent_subject)))
+(call miscfiles_read_generic_cert_files (is_sshagent_subject))
 
 (optional sshagent_subject_optional_session
     (type session_sshagent_tmp_t)

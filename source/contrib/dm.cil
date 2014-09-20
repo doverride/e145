@@ -60,13 +60,12 @@
 
 (call dm_rw_dmcrypt_semaphores (dmsetup_t))
 
+(call udevd_read_config_files (dmsetup_t))
+(call udevd_read_run_files (dmsetup_t))
+(call udevd_rw_inherited_udp_socket (dmsetup_t))
+
 (optional dmsetup_optional_lvm
     (call lvm_rw_lvm_semaphores (dmsetup_t)))
-
-(optional dmsetup_optional_udevd
-    (call udevd_read_config_files (dmsetup_t))
-    (call udevd_read_run_files (dmsetup_t))
-    (call udevd_rw_inherited_udp_socket (dmsetup_t)))
 
 (allow dmcrypt_t self (capability (ipc_lock sys_nice)))
 (allow dmcrypt_t self (process (setsched)))
@@ -87,23 +86,20 @@
 (call devices_read_urandom (dmcrypt_t))
 (call devices_read_random (dmcrypt_t))
 
+(call storage_read_fixed_disk_nodes (dmcrypt_t))
+(call storage_write_fixed_disk_nodes (dmcrypt_t))
+(call storage_read_removable_nodes (dmcrypt_t))
+(call storage_write_removable_nodes (dmcrypt_t))
+
 (call terminal_use_inherited_unallocated_tty_nodes (dmcrypt_t))
 
-(optional dmcrypt_optional_miscfiles
-    (call miscfiles_read_localization_files (dmcrypt_t)))
+(call miscfiles_read_localization_files (dmcrypt_t))
 
-(optional dmcrypt_optional_storage
-    (call storage_read_fixed_disk_nodes (dmcrypt_t))
-    (call storage_write_fixed_disk_nodes (dmcrypt_t))
-    (call storage_read_removable_nodes (dmcrypt_t))
-    (call storage_write_removable_nodes (dmcrypt_t)))
+(call udevd_read_config_files (dmcrypt_t))
+(call udevd_read_run_files (dmcrypt_t))
 
 (optional dmcrypt_optional_session
     (call session_use_inherited_terminals (dmcrypt_t)))
-
-(optional dmcrypt_optional_udevd
-    (call udevd_read_config_files (dmcrypt_t))
-    (call udevd_read_run_files (dmcrypt_t)))
 
 (optional dmcrypt_optional_usersubject
     (call usersubject_use_inherited_terminals (dmcrypt_t)))

@@ -47,30 +47,26 @@
 (call files_read_generic_etc_files (is_firefox_subject)) ; /etc/drirc
 (call files_list_mnt (is_firefox_subject)) ; /media/sandisk/joe
 
+(call storage_getattr_fixed_disk_nodes (is_firefox_subject))
+
 (call network_tcp_connect_tor_port (is_firefox_subject))
+
+(call auth_nsswitch_client_subject (is_firefox_subject))
 
 (call dbus_system_client_subject (is_firefox_subject))
 
 (call http_tcp_connect_http_port (is_firefox_subject))
 
+(call miscfiles_read_generic_cert_files (is_firefox_subject))
+(call miscfiles_read_network_config_files (is_firefox_subject))
+
+(call udevd_read_config_files (is_firefox_subject))
+(call udevd_read_run_files (is_firefox_subject))
+
 (call xserver_use_fd_all_xorg (is_firefox_subject))
-
-(optional firefox_optional_auth
-    (call auth_nsswitch_client_subject (is_firefox_subject)))
-
-(optional firefox_optional_miscfiles
-    (call miscfiles_read_generic_cert_files (is_firefox_subject))
-    (call miscfiles_read_network_config_files (is_firefox_subject)))
 
 (optional firefox_optional_networkmgr
     (call networkmgr_dbus_chat (is_firefox_subject)))
-
-(optional firefox_optional_storage
-    (call storage_getattr_fixed_disk_nodes (is_firefox_subject)))
-
-(optional firefox_optional_udevd
-    (call udevd_read_config_files (is_firefox_subject))
-    (call udevd_read_run_files (is_firefox_subject)))
 
 (optional firefox_optional_usersubject
     (type user_firefox_tmpfs_t)

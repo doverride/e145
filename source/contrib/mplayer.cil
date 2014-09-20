@@ -23,9 +23,8 @@
 
 (call mplayer_read_config_files (is_mplayer_subject))
 
-(optional mplayer_subject_optional_udevd
-    (call udevd_read_config_files (is_mplayer_subject))
-    (call udevd_read_run_files (is_mplayer_subject)))
+(call udevd_read_config_files (is_mplayer_subject))
+(call udevd_read_run_files (is_mplayer_subject))
 
 (optional mplayer_optional_usersubject
     (type user_mplayer_home_t)

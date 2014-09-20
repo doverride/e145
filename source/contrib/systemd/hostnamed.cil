@@ -74,13 +74,14 @@
 
 (call polkit_dbus_chat_polkitd (hostnamed_t))
 
-(call seutil_read_config_files (hostnamed_t))
-(call seutil_read_file_context_files (hostnamed_t))
-
 (call systemd_stream_connect (hostnamed_t))
 
 (optional hostnamed_optional_journald
     (call journald_client_subject (hostnamed_t)))
+
+(optional hostnamed_optional_seutil
+    (call seutil_read_config_files (hostnamed_t))
+    (call seutil_read_file_context_files (hostnamed_t)))
 
 (optional hostnamed_optional_machined
     (call machined_manage_config_files (hostnamed_t))

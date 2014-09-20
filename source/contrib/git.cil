@@ -56,14 +56,13 @@
 
 (call auth_nsswitch_client_subject (is_git_subject))
 
+(call miscfiles_read_generic_cert_files (is_git_subject))
+(call miscfiles_read_network_config_files (is_git_subject))
+(call miscfiles_read_terminfo_files (is_git_subject))
+(call miscfiles_read_localization_files (is_git_subject))
+
 (optional git_optional_http
     (call http_tcp_connect_http_port (is_git_subject)))
-
-(optional git_optional_miscfiles
-    (call miscfiles_read_generic_cert_files (is_git_subject))
-    (call miscfiles_read_network_config_files (is_git_subject))
-    (call miscfiles_read_terminfo_files (is_git_subject))
-    (call miscfiles_read_localization_files (is_git_subject)))
 
 (optional git_optional_session
     (type session_git_home_t)
@@ -87,9 +86,8 @@
 
 (call git_read_tig_config_files (is_tig_subject))
 
-(optional tig_optional_miscfiles
-    (call miscfiles_read_terminfo_files (is_tig_subject))
-    (call miscfiles_read_localization_files (is_tig_subject)))
+(call miscfiles_read_terminfo_files (is_tig_subject))
+(call miscfiles_read_localization_files (is_tig_subject))
 
 (optional tig_optional_session
     (type session_tig_home_t)
@@ -110,14 +108,12 @@
 
 (call auth_nsswitch_client_subject (is_gitemail_subject))
 
-(optional gitemail_optional_mail
-    (call mail_tcp_connect_smtp_port (is_gitemail_subject)))
+(call mail_tcp_connect_smtp_port (is_gitemail_subject))
 
-(optional gitemail_optional_miscfiles
-    (call miscfiles_list_generic_cert (is_gitemail_subject))
-    (call miscfiles_read_generic_cert_files (is_gitemail_subject))
-    (call miscfiles_read_network_config_files (is_gitemail_subject))
-    (call miscfiles_read_localization_files (is_gitemail_subject)))
+(call miscfiles_list_generic_cert (is_gitemail_subject))
+(call miscfiles_read_generic_cert_files (is_gitemail_subject))
+(call miscfiles_read_network_config_files (is_gitemail_subject))
+(call miscfiles_read_localization_files (is_gitemail_subject))
 
 (optional gitemail_optional_session
     (type session_gitemail_home_t)

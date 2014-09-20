@@ -56,18 +56,14 @@
 (call dbus_acquire_service_system (modemmgr_t))
 (call dbus_system_client_subject (modemmgr_t))
 
-(optional modemmgr_optional_journald
-    (call journald_client_subject (modemmgr_t)))
+(call journald_client_subject (modemmgr_t))
 
-(optional modemmgr_optional_miscfiles
-    (call miscfiles_read_localization_files (modemmgr_t)))
+(call miscfiles_read_localization_files (modemmgr_t))
 
-(optional modemmgr_optional_networkmgr
-    (call networkmgr_dbus_chat (modemmgr_t)))
+(call networkmgr_dbus_chat (modemmgr_t))
 
-(optional modemmgr_optional_udevd
-    (call udevd_read_config_files (modemmgr_t))
-    (call udevd_read_run_files (modemmgr_t)))
+(call udevd_read_config_files (modemmgr_t))
+(call udevd_read_run_files (modemmgr_t))
 
 (allow is_modemmgr_admin_subject is_modemmgr_subject signal_perms)
 (allow is_modemmgr_admin_subject is_modemmgr_subject (process (ptrace)))

@@ -71,13 +71,13 @@
 
 (call filesystem_manage_dosfs_files (grubby_t)) ; /boot/efi/EFI/fedora/grub.cfg
 
+(call storage_read_fixed_disk_nodes (grubby_t))
+
 (call terminal_use_inherited_unallocated_tty_nodes (grubby_t))
 
-(optional grubby_optional_fstools
-    (call fstools_read_run_files (grubby_t)))
+(call fstools_read_run_files (grubby_t))
 
-(optional grubby_optional_miscfiles
-    (call miscfiles_read_localization_files (grubby_t)))
+(call miscfiles_read_localization_files (grubby_t))
 
 (optional grubby_optional_rpm
     (call rpm_append_inherited_tmp_files (grubby_t))
@@ -87,9 +87,6 @@
 
 (optional grubby_optional_session
     (call session_use_inherited_terminals (grubby_t)))
-
-(optional grubby_optional_storage
-    (call storage_read_fixed_disk_nodes (grubby_t)))
 
 (optional grubby_optional_usersubject
     (call usersubject_use_inherited_terminals (grubby_t)))

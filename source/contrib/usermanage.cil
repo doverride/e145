@@ -118,10 +118,17 @@
 
 (call auth_nsswitch_client_subject (is_useradd_or_groupadd_subject))
 
+(call journald_client_subject (is_useradd_or_groupadd_subject))
+
+(call miscfiles_read_localization_files (is_useradd_or_groupadd_subject))
+
 (call seutil_read_config_files (is_useradd_or_groupadd_subject))
 (call seutil_read_file_context_files (is_useradd_or_groupadd_subject))
 
 (call usermanage_read_useradd_config_files (useradd_t))
+
+(optional useradd_optional_auditd
+    (call audit_client_subject (is_useradd_or_groupadd_subject)))
 
 (optional useradd_optional_rpm
     (call rpm_append_inherited_tmp_files (is_useradd_or_groupadd_subject))
@@ -130,15 +137,6 @@
     (call rpm_read_inherited_fifo_files (is_useradd_or_groupadd_subject))
     (call rpm_use_fd (is_useradd_or_groupadd_subject)))
  
-(optional useradd_optional_auditd
-    (call audit_client_subject (is_useradd_or_groupadd_subject)))
-
-(optional useradd_optional_journald
-    (call journald_client_subject (is_useradd_or_groupadd_subject)))
-
-(optional useradd_optional_miscfiles
-    (call miscfiles_read_localization_files (is_useradd_or_groupadd_subject)))
-
 (optional useradd_optional_session
     (call session_manage_session_home_dirs (useradd_t))
     (call session_manage_mozilla_dirs (useradd_t))
@@ -187,16 +185,14 @@
 (call auth_read_authconfig_pam_config_files (is_passwd_subject))
 (call auth_read_generic_pam_config_files (is_passwd_subject))
 
+(call journald_client_subject (is_passwd_subject))
+
+(call miscfiles_read_localization_files (is_passwd_subject))
+
 (call usermanage_read_pam_config_files (is_passwd_subject))
 
 (optional passwd_subject_optional_auditd
     (call audit_client_subject (is_passwd_subject)))
-
-(optional passwd_subject_optional_journald
-    (call journald_client_subject (is_passwd_subject)))
-
-(optional passwd_subject_optional_miscfiles
-    (call miscfiles_read_localization_files (is_passwd_subject)))
 
 (allow is_usermanage_admin_subject is_usermanage_subject signal_perms)
 (allow is_usermanage_admin_subject is_usermanage_subject (process (ptrace)))

@@ -65,8 +65,9 @@
 (call kmod_read_modules_config_files (kmod_t))
 (call kmod_read_modules_dep_files (kmod_t))
 
-(optional kmod_optional_tmpfiles
-    (call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*")))
+(call miscfiles_read_module_files (kmod_t))
+
+(call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*"))
 
 (allow is_kmod_admin_subject kmod_t signal_perms)
 (allow is_kmod_admin_subject kmod_t (process (ptrace)))
@@ -75,9 +76,6 @@
 (allow is_kmod_admin_subject kmod_unit_t (service (all)))
 
 (call admin_pattern (is_kmod_admin_subject is_kmod_file_object))
-
-(optional kmod_optional_miscfiles
-    (call miscfiles_read_module_files (kmod_t)))
 
 (macro kmod_exec ((type ARG1))
     (call can_exec (ARG1 kmod_exec_t)))
