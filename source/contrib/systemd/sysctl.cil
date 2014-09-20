@@ -67,8 +67,7 @@
 (call filesystem_list_binfmt_misc (sctl_t))
 (call filesystem_read_binfmt_misc_files (sctl_t))
 
-(optional sctl_optional_miscfiles
-    (call miscfiles_read_localization_files (sctl_t)))
+(call miscfiles_read_localization_files (sctl_t))
 
 (optional sctl_optional_session
     (call session_use_inherited_terminals (sctl_t)))

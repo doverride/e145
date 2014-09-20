@@ -23,10 +23,9 @@
 
 (call files_read_generic_etc_files (remountfs_t)) ; /etc/fstab
 
-(call mount_subtrans (remountfs_t))
+(call journald_client_subject (remountfs_t))
 
-(optional remountfs_optional_journald
-    (call journald_client_subject (remountfs_t)))
+(call mount_subtrans (remountfs_t))
 
 (allow is_remountfs_admin_subject remountfs_t signal_perms)
 (allow is_remountfs_admin_subject remountfs_t (process (ptrace)))

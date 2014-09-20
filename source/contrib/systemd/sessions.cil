@@ -35,8 +35,7 @@
 
 (call files_search_etc (sessions_t))
 
-(optional sessions_optional_journald
-    (call journald_client_subject (sessions_t)))
+(call journald_client_subject (sessions_t))
 
 (allow is_sessions_admin_subject sessions_t signal_perms)
 (allow is_sessions_admin_subject sessions_t (process (ptrace)))

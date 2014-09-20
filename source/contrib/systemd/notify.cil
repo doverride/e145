@@ -12,9 +12,8 @@
 
 (call files_read_generic_etc_files (notify_t)) ; /etc/initrd-release
 
-(optional notify_optional_application
-    (call application_subject (notify_t))
-    (call application_executable_object (notify_exec_t)))
+(call application_subject (notify_t))
+(call application_executable_object (notify_exec_t))
 
 (optional notify_optional_readahead
     (call readahead_manage_run_files (notify_t)))

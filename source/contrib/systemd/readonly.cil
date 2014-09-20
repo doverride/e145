@@ -32,11 +32,9 @@
 
 (call selinux_get_enforce_mode (readonly_t))
 
-(optional readonly_optional_auth
-    (call auth_nsswitch_client_subject (readonly_t)))
+(call auth_nsswitch_client_subject (readonly_t))
 
-(optional readonly_optional_miscfiles
-    (call miscfiles_read_localization_files (readonly_t)))
+(call miscfiles_read_localization_files (readonly_t))
 
 (allow is_readonly_admin_subject readonly_t signal_perms)
 (allow is_readonly_admin_subject readonly_t (process (ptrace)))

@@ -23,10 +23,9 @@
 (call devices_list_sysfs (sleep_t))
 (call devices_rw_sysfs_files (sleep_t))
 
-(call systemd_search_config (sleep_t))
+(call journald_client_subject (sleep_t))
 
-(optional sleep_optional_journald
-    (call journald_client_subject (sleep_t)))
+(call systemd_search_config (sleep_t))
 
 (allow is_sleep_admin_subject sleep_t signal_perms)
 (allow is_sleep_admin_subject sleep_t (process (ptrace)))

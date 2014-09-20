@@ -135,10 +135,16 @@
 
 (call ip_exec (udevd_t))
 
+(call journald_client_subject (udevd_t))
+
 (call kmod_list_modules_config (udevd_t))
 (call kmod_read_modules_config_files (udevd_t))
 (call kmod_read_modules_dep_files (udevd_t))
 (call kmod_subtrans (udevd_t))
+
+(call miscfiles_read_localization_files (udevd_t))
+(call miscfiles_read_module_files (udevd_t))
+(call miscfiles_read_network_config_files (udevd_t))
 
 (call sysctl_subtrans (udevd_t))
 
@@ -151,19 +157,11 @@
     (call alsa_read_config_files (udevd_t))
     (call alsa_subtrans_alsactl (udevd_t)))
 
-(optional udevd_optional_journald
-    (call journald_client_subject (udevd_t)))
-
 (optional udevd_optional_lvm
     (call lvm_subtrans_lvm (udevd_t)))
 
 (optional udevd_optional_logind
     (call logind_read_run_files (udevd_t)))
-
-(optional udevd_optional_miscfiles
-    (call miscfiles_read_localization_files (udevd_t))
-    (call miscfiles_read_module_files (udevd_t))
-    (call miscfiles_read_network_config_files (udevd_t)))
 
 (call devices_read_urandom (udevadm_t))
 

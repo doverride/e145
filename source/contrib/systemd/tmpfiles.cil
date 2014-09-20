@@ -77,12 +77,10 @@
 
 (call selinux_set_check_req_prot (tmpfiles_t))
 
-(optional tmpfiles_optional_journald
-    (call journald_client_subject (tmpfiles_t)))
+(call journald_client_subject (tmpfiles_t))
 
-(optional tmpfiles_optional_miscfiles
-    (call miscfiles_read_factory_files (tmpfiles_t))
-    (call miscfiles_read_localization_files (tmpfiles_t)))
+(call miscfiles_read_factory_files (tmpfiles_t))
+(call miscfiles_read_localization_files (tmpfiles_t))
 
 (allow is_tmpfiles_admin_subject tmpfiles_t signal_perms)
 (allow is_tmpfiles_admin_subject tmpfiles_t (process (ptrace)))

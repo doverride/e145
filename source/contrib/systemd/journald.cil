@@ -104,20 +104,17 @@
 
 (call filesystem_getattr_tmpfs_filesystems (journalctl_t))
 
-(call journald_manage_log_files (journalctl_t))
+(call application_subject (journalctl_t))
+(call application_executable_object (journalctl_exec_t))
 
+(call journald_manage_log_files (journalctl_t))
 (call journald_manage_var_lib_files (journalctl_t)) ; /var/lib/systemd/catalog
+
+(call miscfiles_read_terminfo_files (journalctl_t))
 
 (call terminal_use_inherited_unallocated_tty_nodes (journalctl_t))
 
 (call systemd_search_run (journalctl_t))
-
-(optional journalctl_optional_application
-    (call application_subject (journalctl_t))
-    (call application_executable_object (journalctl_exec_t)))
-
-(optional journalctl_optional_miscfiles
-    (call miscfiles_read_terminfo_files (journalctl_t)))
 
 (optional journalctl_optional_session
     (call session_execute_bin_files (journalctl_t)) ; it traverses ~/.local/bin
@@ -164,14 +161,12 @@
 
 (call journald_read_config_files (journald_t))
 
+(call plymouth_use_fd_plymouthd (journald_t))
+
 (call systemd_dgram_send (journald_t))
 
-(optional journal_optional_plymouthd
-    (call plymouth_use_fd_plymouthd (journald_t)))
-
-(optional journal_optional_udevd
-    (call udevd_read_config_files (journald_t))
-    (call udevd_read_run_files (journald_t)))
+(call udevd_read_config_files (journald_t))
+(call udevd_read_run_files (journald_t))
 
 (allow is_journald_admin_subject is_journald_subject signal_perms)
 (allow is_journald_admin_subject is_journald_subject (process (ptrace)))

@@ -37,12 +37,10 @@
 (call devices_list_sysfs (backlight_t))
 (call devices_rw_sysfs_files (backlight_t))
 
-(optional backlight_optional_journald
-    (call journald_client_subject (backlight_t)))
+(call journald_client_subject (backlight_t))
 
-(optional backlight_optional_udevd
-    (call udevd_read_run_files (backlight_t))
-    (call udevd_read_config_files (backlight_t)))
+(call udevd_read_run_files (backlight_t))
+(call udevd_read_config_files (backlight_t))
 
 (allow is_backlight_admin_subject backlight_t signal_perms)
 (allow is_backlight_admin_subject backlight_t (process (ptrace)))

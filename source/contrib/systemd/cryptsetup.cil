@@ -42,15 +42,13 @@
 (call storage_read_fixed_disk_nodes (cryptsetup_t))
 (call storage_read_scsi_generic_nodes (cryptsetup_t))
 
-(optional cryptsetup_optional_journald
-    (call journald_client_subject (cryptsetup_t)))
+(call journald_client_subject (cryptsetup_t))
+
+(call udevd_read_config_files (cryptsetup_t))
+(call udevd_read_run_files (cryptsetup_t))
 
 (optional cryptsetup_optional_seutil
     (call seutil_search_config (cryptsetup_t)))
-
-(optional cryptsetop_optional_udevd
-    (call udevd_read_config_files (cryptsetup_t))
-    (call udevd_read_run_files (cryptsetup_t)))
 
 (allow cryptsetup_generator_t self (process (setfscreate)))
 

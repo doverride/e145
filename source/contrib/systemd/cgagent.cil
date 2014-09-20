@@ -16,10 +16,9 @@
 
 (call files_search_etc (cgagent_t))
 
-(call systemd_stream_connect (cgagent_t))
+(call journald_client_subject (cgagent_t))
 
-(optional cgagent_optional_journald
-    (call journald_client_subject (cgagent_t)))
+(call systemd_stream_connect (cgagent_t))
 
 (macro cgagent_subtrans ((type ARG1))
     (call subtrans_pattern (ARG1 cgagent_exec_t cgagent_t)))

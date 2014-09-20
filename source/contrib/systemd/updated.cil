@@ -46,8 +46,7 @@
 
 (call system_read_generic_proc_files (updated_t))
 
-(optional updated_optional_journald
-    (call journald_client_subject (updated_t)))
+(call journald_client_subject (updated_t))
 
 (optional updated_optional_seutil
     (call seutil_read_config_files (updated_t))

@@ -101,8 +101,13 @@
 
 (call terminal_use_unallocated_tty_nodes (logind_t))
 
+(call auth_read_all_login_program_subjects_state (logind_t))
+(call auth_nsswitch_client_subject (logind_t))
+
 (call dbus_acquire_service_system (logind_t))
 (call dbus_system_client_subject (logind_t))
+
+(call journald_client_subject (logind_t))
 
 (call logind_read_config_files (logind_t))
 
@@ -120,18 +125,15 @@
 (call systemd_start_transient_system_service (logind_t))
 (call systemd_stream_connect (logind_t))
 
-(optional logind_optional_auth
-    (call auth_read_all_login_program_subjects_state (logind_t))
-    (call auth_nsswitch_client_subject (logind_t)))
+(call udevd_list_run (logind_t))
+(call udevd_read_config_files (logind_t))
+(call udevd_read_run_files (logind_t))
 
 (optional logind_optional_cron
     (call cron_read_crond_state (logind_t)))
 
 (optional logind_optional_getty
     (call getty_start_service (logind_t)))
-
-(optional logind_optional_journald
-    (call journald_client_subject (logind_t)))
 
 (optional logind_optional_networkmgr
     (call networkmgr_getattr (logind_t))
@@ -149,11 +151,6 @@
     (call session_run_user_root_filetrans_run_user_dir (logind_t "0"))
     (call session_getattr_all_tmpfs_files (logind_t))
     (call session_use_terminals (logind_t)))
-
-(optional logind_optional_udevd
-    (call udevd_list_run (logind_t))
-    (call udevd_read_config_files (logind_t))
-    (call udevd_read_run_files (logind_t)))
 
 (optional logind_optional_usersubject
     (call usersubject_delete_systemd_run_dirs (logind_t))

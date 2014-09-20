@@ -30,13 +30,11 @@
 
 (call terminal_use_unallocated_tty_nodes (vconsole_t))
 
+(call miscfiles_read_localization_files (vconsole_t))
+
+(call journald_client_subject (vconsole_t))
+
 (call vconsole_read_config_files (vconsole_t))
-
-(optional vconsole_optional_miscfiles
-    (call miscfiles_read_localization_files (vconsole_t)))
-
-(optional vconsole_optional_journald
-    (call journald_client_subject (vconsole_t)))
 
 (allow is_vconsole_admin_subject vconsole_t signal_perms)
 (allow is_vconsole_admin_subject vconsole_t (process (ptrace)))

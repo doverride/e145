@@ -134,16 +134,14 @@
 
 (allow shutdownd_t shutdown_run_t (dir (setattr)))
 
+(call journald_client_subject (shutdownd_t))
+
+(call miscfiles_read_localization_files (shutdownd_t))
+
 (call shutdownd_manage_run_files (shutdownd_t))
 
 (call systemd_dgram_send (shutdownd_t))
 (call systemd_subtrans_systemctl (shutdownd_t))
-
-(optional shutdownd_optional_journald
-    (call journald_client_subject (shutdownd_t)))
-
-(optional shutdownd_optional_miscfiles
-    (call miscfiles_read_localization_files (shutdownd_t)))
 
 (optional shutdownd_optional_session
     (call session_use_terminals (shutdownd_t)))

@@ -27,18 +27,14 @@
 (call storage_getattr_fixed_disk_nodes (fsck_t))
 (call storage_getattr_scsi_generic_nodes (fsck_t))
 
-(optional fsck_optional_fstools
-    (call fstools_subtrans (fsck_t)))
+(call fstools_subtrans (fsck_t))
 
-(optional fsck_optional_journald
-    (call journald_client_subject (fsck_t)))
+(call journald_client_subject (fsck_t))
 
-(optional fsck_optional_plymouth
-    (call plymouth_read_run_files (fsck_t)))
+(call plymouth_read_run_files (fsck_t))
 
-(optional fsck_optional_udevd
-    (call udevd_read_config_files (fsck_t))
-    (call udevd_read_run_files (fsck_t)))
+(call udevd_read_config_files (fsck_t))
+(call udevd_read_run_files (fsck_t))
 
 (allow is_fsck_admin_subject fsck_t signal_perms)
 (allow is_fsck_admin_subject fsck_t (process (ptrace)))

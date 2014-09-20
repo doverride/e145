@@ -58,8 +58,7 @@
 (call coredump_read_config_files (coredump_t))
 (call coredump_manage_var_lib_files (coredump_t))
 
-(optional coredump_optional_journald
-    (call journald_client_subject (coredump_t)))
+(call journald_client_subject (coredump_t))
 
 (allow coredumpctl_t self (capability (dac_override ipc_lock)))
 (allow coredumpctl_t self (process (signal)))
@@ -76,21 +75,17 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (coredumpctl_t))
 
+(call auth_nsswitch_client_subject (coredumpctl_t))
+
 (call coredump_read_var_lib_files (coredumpctl_t)) ; only search is confirmed
 
-(optional coredumpctl_optional_auth
-    (call auth_nsswitch_client_subject (coredumpctl_t)))
+(call journald_list_log (coredumpctl_t))
+(call journald_read_log_files (coredumpctl_t))
 
-(optional coredumpctl_optional_miscfiles
-    (call miscfiles_read_terminfo_files (coredumpctl_t))
-    (call miscfiles_read_localization_files (coredumpctl_t)))
+(call machined_read_config_files (coredumpctl_t))
 
-(optional coredumpctl_optional_journald
-    (call journald_list_log (coredumpctl_t))
-    (call journald_read_log_files (coredumpctl_t)))
-
-(optional coredumpctl_optional_machined
-    (call machined_read_config_files (coredumpctl_t)))
+(call miscfiles_read_terminfo_files (coredumpctl_t))
+(call miscfiles_read_localization_files (coredumpctl_t))
 
 (optional coredumpctl_optional_session
     (call session_read_generic_home_content_files (coredumpctl_t)) ; ~/.lesshst

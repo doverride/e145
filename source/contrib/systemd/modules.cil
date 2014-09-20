@@ -28,11 +28,10 @@
 
 (call devices_write_kmsg (modules_t))
 
+(call journald_client_subject (modules_t))
+
 (call modules_list_config (modules_t))
 (call modules_read_config_files (modules_t))
-
-(optional modules_optional_journald
-    (call journald_client_subject (modules_t)))
 
 (allow is_modules_admin_subject modules_t signal_perms)
 (allow is_modules_admin_subject modules_t (process (ptrace)))

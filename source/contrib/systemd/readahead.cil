@@ -65,10 +65,9 @@
 
 (call filesystem_getattr_filesystems (readahead_t))
 
-(call systemd_stream_connect (readahead_t))
+(call journald_client_subject (readahead_t))
 
-(optional readahead_optional_journald
-    (call journald_client_subject (readahead_t)))
+(call systemd_stream_connect (readahead_t))
 
 (optional readahead_optional_session
     (call session_dontaudit_read_all_home_content_files (readahead_t))

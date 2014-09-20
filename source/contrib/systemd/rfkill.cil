@@ -32,14 +32,12 @@
 (call devices_rw_sysfs_files (rfkill_t))
 (call devices_read_event (rfkill_t))
 
+(call journald_client_subject (rfkill_t))
+
 (call rfkill_manage_var_lib_files (rfkill_t))
 
-(optional rfkill_optional_journald
-    (call journald_client_subject (rfkill_t)))
-
-(optional rfkill_optional_udevd
-    (call udevd_read_config_files (rfkill_t))
-    (call udevd_read_run_files (rfkill_t)))
+(call udevd_read_config_files (rfkill_t))
+(call udevd_read_run_files (rfkill_t))
 
 (allow is_rfkill_admin_subject rfkill_t signal_perms)
 (allow is_rfkill_admin_subject rfkill_t (process (ptrace)))

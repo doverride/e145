@@ -311,6 +311,8 @@
 (call selinux_compute_create_context (systemd_t))
 (call selinux_list (systemd_t))
 
+(call storage_read_fixed_disk_nodes (systemd_t))
+
 (call subject_getattr_all_subjects (systemd_t))
 (call subject_read_all_subjects_state (systemd_t))
 (call subject_sigkill_all_subjects (systemd_t))
@@ -322,14 +324,48 @@
 (call terminal_search_devpts (systemd_t))
 (call terminal_create_controlling_terminal (systemd_t))
 
+(call askpwd_list_run (systemd_t))
+(call askpwd_read_run_files (systemd_t))
+
 (call auth_list_pam_config (systemd_t))
 (call auth_read_authconfig_pam_config_files (systemd_t))
 (call auth_read_generic_pam_config_files (systemd_t))
 (call auth_nsswitch_client_subject (systemd_t))
 (call auth_write_wtmp_log_files (systemd_t))
 
+(call binfmt_list_config (systemd_t))
+(call binfmt_read_config_files (systemd_t))
+
 (call dbus_system_client_subject (systemd_t))
 (call dbus_acquire_service_system (systemd_t))
+
+(call hwclock_read_adjtime_files (systemd_t))
+
+(call hostnamed_read_config_files (systemd_t))
+
+(call journald_list_log (systemd_t))
+(call journald_client_subject (systemd_t))
+(call journald_list_run (systemd_t))
+(call journald_read_run_files (systemd_t))
+
+(call machined_read_config_files (systemd_t))
+
+(call miscfiles_read_localization_files (systemd_t))
+(call miscfiles_read_module_files (systemd_t))
+
+(call modules_list_config (systemd_t))
+(call modules_read_config_files (systemd_t))
+
+(call mount_read_run_files (systemd_t))
+
+(call plymouth_list_run (systemd_t))
+(call plymouth_read_run_files (systemd_t))
+(call plymouth_stream_connect_plymouthd (systemd_t))
+(call plymouth_use_fd_plymouth (systemd_t))
+
+(call shutdownd_share_state_shutdown (systemd_t))
+
+(call sysctl_read_config_files (systemd_t))
 
 (call systemd_exec (systemd_t))
 (call systemd_exec_helper (systemd_t))
@@ -337,51 +373,20 @@
 (call systemd_read_all_unit_files (systemd_t))
 (call systemd_read_pam_config_files (systemd_t))
 
+(call tmpfiles_read_config_files (systemd_t))
+(call tmpfiles_list_run (systemd_t))
+(call tmpfiles_read_run_files (systemd_t))
+
+(call udevd_read_config_files (systemd_t))
+(call udevd_read_run_files (systemd_t))
+
+(call utmp_rw_run_files (systemd_t))
+
 (optional systemd_optional_alsa
     (call alsa_read_config_files (systemd_t)))
 
-(optional systemd_optional_askpwd
-    (call askpwd_list_run (systemd_t))
-    (call askpwd_read_run_files (systemd_t)))
-
 (optional systemd_optional_audit
     (call audit_client_subject (systemd_t)))
-
-(optional systemd_optional_binfmt
-    (call binfmt_list_config (systemd_t))
-    (call binfmt_read_config_files (systemd_t)))
-
-(optional systemd_optional_hwclock
-    (call hwclock_read_adjtime_files (systemd_t)))
-
-(optional systemd_optional_hostnamed
-    (call hostnamed_read_config_files (systemd_t)))
-
-(optional systemd_optional_journald
-    (call journald_list_log (systemd_t))
-    (call journald_client_subject (systemd_t))
-    (call journald_list_run (systemd_t))
-    (call journald_read_run_files (systemd_t)))
-
-(optional systemd_optional_machined
-    (call machined_read_config_files (systemd_t)))
-
-(optional systemd_optional_miscfiles
-    (call miscfiles_read_localization_files (systemd_t))
-    (call miscfiles_read_module_files (systemd_t)))
-
-(optional systemd_optional_modules
-    (call modules_list_config (systemd_t))
-    (call modules_read_config_files (systemd_t)))
-
-(optional systemd_optional_mount
-    (call mount_read_run_files (systemd_t)))
-
-(optional systemd_optional_plymouth
-    (call plymouth_list_run (systemd_t))
-    (call plymouth_read_run_files (systemd_t))
-    (call plymouth_stream_connect_plymouthd (systemd_t))
-    (call plymouth_use_fd_plymouth (systemd_t)))
 
 (optional systemd_optional_session
     (call session_mounton_home_dirs (systemd_t))
@@ -401,29 +406,8 @@
     (call seutil_read_default_context_files (systemd_t))
     (call seutil_read_file_context_files (systemd_t)))
 
-(optional systemd_optional_shutdownd
-    (call shutdownd_share_state_shutdown (systemd_t)))
-
 (optional systemd_optional_sshd
     (call ssh_read_sshd_config_files (systemd_t)))
-
-(optional systemd_optional_storage
-    (call storage_read_fixed_disk_nodes (systemd_t)))
-
-(optional systemd_optional_sysctl
-    (call sysctl_read_config_files (systemd_t)))
-
-(optional systemd_optional_tmpfiles
-    (call tmpfiles_read_config_files (systemd_t))
-    (call tmpfiles_list_run (systemd_t))
-    (call tmpfiles_read_run_files (systemd_t)))
-
-(optional systemd_optional_udevd
-    (call udevd_read_config_files (systemd_t))
-    (call udevd_read_run_files (systemd_t)))
-
-(optional systemd_optional_utmp
-    (call utmp_rw_run_files (systemd_t)))
 
 (optional systemd_optional_usersubject
     (call usersubject_mounton_user_home_dirs (systemd_t)) 
@@ -465,9 +449,27 @@
 (call terminal_write_inherited_generic_pty_nodes (is_systemd_subject))
 (call terminal_use_inherited_unallocated_tty_nodes (systemctl_t))
 
+(call application_subject (systemctl_t))
+(call application_executable_object (systemctl_exec_t))
+
+(call askpwd_run_agent (systemctl_t is_systemctl_role))
+(call askpwd_send_signal_agent (systemctl_t))
+
 (call dbus_system_client_subject (is_systemctl_client_subject))
 
+(call journald_list_log (is_systemctl_client_subject))
+(call journald_read_log_files (is_systemctl_client_subject))
+
+(call machined_read_config_files (is_systemctl_client_subject))
+
+(call miscfiles_read_terminfo_files (is_systemd_subject))
+(call miscfiles_read_localization_files (is_systemctl_client_subject))
+
+(call plymouth_use_fd_plymouthd (is_systemd_subject))
+
 (call polkit_dbus_chat_polkitd (is_systemd_subject))
+
+(call shutdownd_dgram_send_shutdownd (systemctl_t))
 
 (call systemd_dgram_send (is_systemctl_client_subject))
 (call systemd_list_run (is_systemctl_client_subject))
@@ -480,42 +482,16 @@
 (call systemd_use_fd (is_systemctl_client_subject))
 (call systemd_read_config_files (is_systemd_subject))
 
-(optional systemctl_optional_miscfiles
-    (call miscfiles_read_terminfo_files (is_systemd_subject))
-    (call miscfiles_read_localization_files (is_systemctl_client_subject)))
-
-(optional systemctl_optional_application
-    (call application_subject (systemctl_t))
-    (call application_executable_object (systemctl_exec_t)))
-
-(optional systemctl_optional_askpwdagent
-    (call askpwd_run_agent (systemctl_t is_systemctl_role))
-    (call askpwd_send_signal_agent (systemctl_t)))
+(call utmp_read_run_files (systemctl_t))
 
 (optional systemctl_optional_logind
     (call logind_dbus_chat (systemctl_t))
     (call logind_list_run (is_systemd_subject))
     (call logind_read_run_files (is_systemd_subject)))
 
-(optional systemctl_optional_machined
-    (call machined_read_config_files (is_systemctl_client_subject)))
-
-(optional systemctl_optional_plymouth
-    (call plymouth_use_fd_plymouthd (is_systemd_subject)))
-
-(optional systemctl_optional_journald
-    (call journald_list_log (is_systemctl_client_subject))
-    (call journald_read_log_files (is_systemctl_client_subject)))
-
-(optional systemctl_optional_utmp
-    (call utmp_read_run_files (systemctl_t)))
-
 (optional systemctl_optional_session
     (call session_read_generic_home_content_files (systemctl_t)) ; ~/.lesshst
     (call session_use_inherited_terminals (systemctl_t)))
-
-(optional systemctl_optional_shutdownd
-    (call shutdownd_dgram_send_shutdownd (systemctl_t)))
 
 (optional systemctl_optional_usersubject
     (call usersubject_use_inherited_terminals (systemctl_t)))

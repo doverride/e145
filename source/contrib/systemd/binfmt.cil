@@ -30,8 +30,7 @@
 
 (call binfmt_read_config_files (binfmt_t))
 
-(optional binfmt_optional_journald
-    (call journald_client_subject (binfmt_t)))
+(call journald_client_subject (binfmt_t))
 
 (allow is_binfmt_admin_subject binfmt_t signal_perms)
 (allow is_binfmt_admin_subject binfmt_t (process (ptrace)))

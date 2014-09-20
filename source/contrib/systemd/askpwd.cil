@@ -67,14 +67,13 @@
 (call terminal_use_console_nodes (askpwdagent_t))
 (call terminal_use_unallocated_tty_nodes (askpwdagent_t))
 
+(call application_subject (askpwdagent_t))
+(call application_executable_object (askpwdagent_exec_t))
+
 (call askpwd_list_run (askpwdagent_t))
 (call askpwd_read_run_files (askpwdagent_t))
 
 (call systemd_use_fd (askpwdagent_t))
-
-(optional askpwdagent_optional_application
-    (call application_subject (askpwdagent_t))
-    (call application_executable_object (askpwdagent_exec_t)))
 
 (optional askpwdagent_optional_session
     (call session_use_inherited_terminals (askpwdagent_t)))
