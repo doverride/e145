@@ -323,29 +323,22 @@
 (call storage_dev_filetrans_scsi_generic (system_t))
 (call storage_dev_filetrans_removable (system_t))
 
+(call bootchart_subtrans (system_t))
+
+(call cgagent_subtrans (system_t))
+(call coredump_subtrans (system_t))
+
+(call kmod_subtrans (system_t))
+
+(call plymouth_manage_var_lib_files (system_t))
+(call plymouth_manage_run_files (system_t))
+
+(call shutdownd_sigchld_shutdown (system_t))
+
 (call systemd_dynamic_subject_type_transition (system_t))
 (call systemd_getattr_exec_files (system_t))
 (call systemd_send_signal (system_t))
 (call systemd_send_sigchld (invalid_t))
-
-(optional system_optional_bootchart
-    (call bootchart_subtrans (system_t)))
-
-(optional system_optional_cgroupagent
-    (call cgagent_subtrans (system_t)))
-
-(optional system_optional_coredump
-    (call coredump_subtrans (system_t)))
-
-(optional system_optional_kmod
-    (call kmod_subtrans (system_t)))
-
-(optional system_optional_plymouth
-    (call plymouth_manage_var_lib_files (system_t))
-    (call plymouth_manage_run_files (system_t)))
-
-(optional system_optional_shutdown
-    (call shutdownd_sigchld_shutdown (system_t)))
 
 (booleanif (not secure_mode_insmod)
     (true
