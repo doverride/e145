@@ -130,15 +130,17 @@
 (call files_search_var_lib (ntpd_t))
 (call files_search_var_log (ntpd_t))
 
+(call terminal_use_inherited_unallocated_tty_nodes (ntp_t))
+
+(call journald_client_subject (ntpd_t))
+
 (call ntp_append_ntpd_config_files (ntpd_t))
 (call ntp_setattr_ntpd_config_files (ntpd_t))
 (call ntp_udp_bind_ntp_port (ntpd_t))
 (call ntp_udp_bind_ntp_cmdmon_port (ntpd_t))
 (call ntp_manage_ntpd_var_lib_files (ntpd_t))
 
-(call journald_client_subject (ntpd_t))
-
-(call terminal_use_inherited_unallocated_tty_nodes (ntp_t))
+(call miscfiles_read_network_config_files (ntpd_t))
 
 (call miscfiles_read_terminfo_files (is_ntp_client_subject))
 
