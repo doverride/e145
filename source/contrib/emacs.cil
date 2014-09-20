@@ -51,6 +51,10 @@
 (optional emacs_optional_auth
     (call auth_nsswitch_client_subject (is_emacs_or_emacsclient_subject)))
 
+(optional emacs_optional_session
+    (type session_emacs_tmp_t)
+    (call session_tmp_object (session_emacs_tmp_t)))
+
 (optional emacs_optional_usersubject
     (type user_emacs_tmp_t)
     (call usersubject_tmp_object (user_emacs_tmp_t)))

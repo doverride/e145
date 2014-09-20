@@ -22,6 +22,10 @@
 (optional pciutil_subject_optional_miscfiles
     (call miscfiles_read_hwdata_files (is_pciutil_subject)))
 
+(optional pciutil_subject_optional_session
+    (type session_pciutil_home_t)
+    (call session_home_object (session_pciutil_home_t)))
+
 (optional pciutil_subject_optional_usersubject
     (call usersubject_search_all_home (is_pciutil_subject))
     (call usersubject_use_inherited_terminals (is_pciutil_subject)))

@@ -76,6 +76,12 @@
     (call miscfiles_read_terminfo_files (is_mutt_subject))
     (call miscfiles_read_localization_files (is_mutt_subject)))
 
+(optional mutt_optional_session
+    (type session_mutt_home_t)
+    (call session_home_object (session_mutt_home_t))
+    (type session_mutt_tmp_t)
+    (call session_tmp_object (session_mutt_tmp_t)))
+
 (optional mutt_optional_usersubject
     (type user_mutt_home_t)
     (call usersubject_home_object (user_mutt_home_t))

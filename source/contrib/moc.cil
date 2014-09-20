@@ -32,6 +32,10 @@
 (optional moc_optional_http
     (call http_tcp_connect_http_port (is_moc_subject))) ; streaming from http server
 
+(optional moc_optional_session
+    (type session_moc_home_t)
+    (call session_home_object (session_moc_home_t)))
+
 (optional moc_optional_usersubject
     (type user_moc_home_t)
     (call usersubject_home_object (user_moc_home_t)))

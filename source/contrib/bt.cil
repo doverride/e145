@@ -28,6 +28,10 @@
     (call miscfiles_read_terminfo_files (is_rtorrent_subject))
     (call miscfiles_read_localization_files (is_rtorrent_subject)))
 
+(optional bt_optional_session
+    (type session_rtorrent_home_t)
+    (call session_home_object (session_rtorrent_home_t)))
+
 (optional bt_optional_usersubject
     (type user_rtorrent_home_t)
     (call usersubject_home_object (user_rtorrent_home_t)))

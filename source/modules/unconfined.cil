@@ -57,7 +57,15 @@
 (call network_unconfined (is_unconfined_subject))
 (call selinux_unconfined (is_unconfined_subject))
 (call subject_unconfined (is_unconfined_subject))
+(call storage_unconfined (is_unconfined_subject))
 (call system_unconfined (is_unconfined_subject))
+
+(call auth_unconfined (is_unconfined_subject))
+(call dns_etc_filetrans_resolv_conf_files (is_unconfined_subject))
+(call libraries_etc_filetrans_ld_so_cache_files (is_unconfined_subject))
+(call dbus_unconfined (is_unconfined_subject))
+(call seutil_unconfined (is_unconfined_subject))
+(call systemd_unconfined (is_unconfined_subject))
 
 (booleanif unconfined_execheap
     (true
@@ -79,29 +87,8 @@
     (true
         (call subject_ptrace_all_subjects (is_unconfined_subject))))
 
-(optional unconfined_subject_optional_storage
-    (call storage_unconfined (is_unconfined_subject)))
-
-(optional unconfined_subject_optional_auth
-    (call auth_unconfined (is_unconfined_subject)))
-
-(optional unconfined_subject_optional_autorelabel
+(optional unconfined_optional_autorelabel
     (call autorelabel_root_filetrans_autorelabel_flag_files (is_unconfined_subject)))
-
-(optional unconfined_subject_optional_dns
-    (call dns_etc_filetrans_resolv_conf_files (is_unconfined_subject)))
-
-(optional unconfined_subject_optional_libraries
-    (call libraries_etc_filetrans_ld_so_cache_files (is_unconfined_subject)))
-
-(optional unconfined_optional_dbus
-    (call dbus_unconfined (is_unconfined_subject)))
-
-(optional unconfined_optional_seutil
-    (call seutil_unconfined (is_unconfined_subject)))
-
-(optional unconfined_optional_systemd
-    (call systemd_unconfined (is_unconfined_subject)))
 
 (macro unconfined_subject ((type ARG1))
     (typeattributeset is_unconfined_subject ARG1))

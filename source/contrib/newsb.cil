@@ -33,6 +33,10 @@
 (optional newsb_optional_http
     (call http_tcp_connect_http_port (is_newsb_subject)))
 
+(optional newsb_optional_session
+    (type user_session_home_t)
+    (call session_home_object (session_newsb_home_t)))
+
 (optional newsb_optional_usersubject
     (type user_newsb_home_t)
     (call usersubject_home_object (user_newsb_home_t)))

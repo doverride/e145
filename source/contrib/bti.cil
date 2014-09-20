@@ -31,6 +31,10 @@
 (optional bti_optional_http
     (call http_tcp_connect_http_port (is_bti_subject)))
 
+(optional bti_optional_bti
+    (type session_bti_home_t)
+    (call session_home_object (session_bti_home_t)))
+
 (optional bti_optional_usersubject
     (type user_bti_home_t)
     (call usersubject_home_object (user_bti_home_t)))

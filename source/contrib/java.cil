@@ -30,8 +30,13 @@
 
 (call java_read_config (is_java_client_subject))
 
-(optional java_client_subject_optional_auth
-    (call auth_nsswitch_client_subject (is_java_client_subject)))
+(call auth_nsswitch_client_subject (is_java_client_subject))
+
+(optional java_client_subject_optional_session
+    (type session_java_home_t)
+    (call session_home_object (session_java_home_t))
+    (type session_java_tmp_t)
+    (call session_tmp_object (session_java_tmp_t)))
 
 (optional java_client_subject_optional_usersubject
     (type user_java_home_t)

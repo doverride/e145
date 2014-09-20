@@ -109,6 +109,16 @@
     (call udevd_read_config_files (is_pa_session_subject))
     (call udevd_read_run_files (is_pa_session_subject)))
 
+(optional pa_optional_session
+    (type session_pa_home_t)
+    (call session_home_object (session_pa_home_t))
+    (type session_pa_run_t)
+    (call session_run_object (session_pa_run_t))
+    (type session_pa_tmp_t)
+    (call session_tmp_object (session_pa_tmp_t))
+    (type session_pa_tmpfs_t)
+    (call session_tmpfs_object (session_pa_tmpfs_t)))
+
 (optional pa_optional_usersubject
     (type user_pa_home_t)
     (call usersubject_home_object (user_pa_home_t))

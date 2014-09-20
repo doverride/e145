@@ -31,6 +31,10 @@
     (call miscfiles_read_network_config_files (is_fop_subject))
     (call miscfiles_read_localization_files (is_fop_subject)))
 
+(optional fop_subject_optional_session
+    (type session_fop_home_t)
+    (call session_home_object (session_fop_home_t)))
+
 (optional fop_subject_optional_usersubject
     (type user_fop_home_t)
     (call usersubject_home_object (user_fop_home_t)))

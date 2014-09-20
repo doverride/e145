@@ -66,8 +66,7 @@
 (call files_read_generic_usr_files (is_gpg_subject)) ; /usr/share/gnupg/gpg-conf.skel
 (call files_list_tmp (is_gpg_subject))
 
-(optional gpg_optional_auth
-    (call auth_nsswitch_client_subject (is_gpg_subject)))
+(call auth_nsswitch_client_subject (is_gpg_subject))
 
 (optional gpg_optional_http
     (call http_tcp_connect_http_port (is_gpg_subject))) ; keyserver
@@ -77,6 +76,10 @@
     (call miscfiles_read_network_config_files (is_gpg_subject))
     (call miscfiles_read_terminfo_files (is_gpg_subject))
     (call miscfiles_read_localization_files (is_gpg_subject)))
+
+(optional gpg_optional_session
+    (type session_gpg_home_t)
+    (call session_home_object (session_gpg_home_t)))
 
 (optional gpg_optional_usersubject
     (type user_gpg_home_t)
@@ -98,6 +101,10 @@
 (optional gpgagent_optional_miscfiles
     (call miscfiles_read_localization_files (is_gpgagent_subject)))
 
+(optional gpgagent_optional_session
+    (type session_gpgagent_home_t)
+    (call session_home_object (session_gpgagent_home_t)))
+
 (optional gpgagent_optional_usersubject
     (type user_gpgagent_home_t)
     (call usersubject_home_object (user_gpgagent_home_t)))
@@ -118,6 +125,12 @@
 (optional scd_optional_udevd
     (call udevd_read_config_files (is_scd_subject))
     (call udevd_read_run_files (is_scd_subject)))
+
+(optional scd_optional_session
+    (type session_scd_tmp_t)
+    (call session_tmp_object (session_scd_tmp_t))
+    (type session_scd_home_t)
+    (call session_home_object (session_scd_home_t)))
 
 (optional scd_optional_usersubject
     (type user_scd_tmp_t)

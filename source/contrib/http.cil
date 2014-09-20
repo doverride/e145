@@ -47,8 +47,13 @@
 (call http_tcp_connect_http_port (is_elinks_subject))
 (call http_read_elinks_config_files (is_elinks_subject))
 
-(optional elinks_optional_auth
-    (call auth_nsswitch_client_subject (is_elinks_subject)))
+(call auth_nsswitch_client_subject (is_elinks_subject))
+
+(optional elinks_optional_misfiles
+    (call miscfiles_read_network_config_files (is_elinks_subject))
+    (call miscfiles_read_terminfo_files (is_elinks_subject))
+    (call miscfiles_read_generic_cert_files (is_elinks_subject))
+    (call miscfiles_read_localization_files (is_elinks_subject)))
 
 (optional elinks_optional_bt
     (allow is_elinks_subject self (tcp_socket (listen accept)))
@@ -57,11 +62,11 @@
     (call network_tcp_connect_all_ephemeral_ports (is_elinks_subject))
     (call network_tcp_connect_all_unreserved_ports (is_elinks_subject)))
 
-(optional elinks_optional_miscfiles
-    (call miscfiles_read_network_config_files (is_elinks_subject))
-    (call miscfiles_read_terminfo_files (is_elinks_subject))
-    (call miscfiles_read_generic_cert_files (is_elinks_subject))
-    (call miscfiles_read_localization_files (is_elinks_subject)))
+(optional elinks_optional_session
+    (type session_elinks_home_t)
+    (call session_home_object (session_elinks_home_t))
+    (type session_elinks_tmp_t)
+    (call session_tmp_object (session_elinks_tmp_t)))
 
 (optional elinks_optional_usersubject
     (type user_elinks_home_t)

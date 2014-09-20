@@ -723,11 +723,11 @@
 
     (optional joe_ffmpeg_optional_joe_pa
         (call pa_client_subject (joe_r joe_ffmpeg_t joe_pa_t user_pa_home_t
-            user_pa_run_t user_ffmpeg_tmpfs_t)))
+            user_pa_run_t user_ffmpeg_tmpfs_t))
  
         (call usersubject_home_dir_filetrans_user_config_dir (joe_ffmpeg_t))
         (call usersubject_config_filetrans (joe_ffmpeg_t user_pa_home_t dir "pulse"))
-        (call usersubject_run_user_dir_filetrans (joe_ffmpeg_t user_pa_run_t dir "pulse")))
+        (call usersubject_run_user_dir_filetrans (joe_ffmpeg_t user_pa_run_t dir "pulse"))))
 
 (optional joe_optional_joe_rtorrent
     (type joe_rtorrent_t)

@@ -54,8 +54,7 @@
 
 (call filesystem_getattr_tmpfs_filesystems (is_git_subject))
 
-(optional git_optional_auth
-    (call auth_nsswitch_client_subject (is_git_subject)))
+(call auth_nsswitch_client_subject (is_git_subject))
 
 (optional git_optional_http
     (call http_tcp_connect_http_port (is_git_subject)))
@@ -65,6 +64,14 @@
     (call miscfiles_read_network_config_files (is_git_subject))
     (call miscfiles_read_terminfo_files (is_git_subject))
     (call miscfiles_read_localization_files (is_git_subject)))
+
+(optional git_optional_session
+    (type session_git_home_t)
+    (call session_home_object (session_git_home_t))
+    (type session_git_conf_t)
+    (call session_home_object (session_git_conf_t))
+    (type session_git_tmp_t)
+    (call session_tmp_object (session_git_tmp_t)))
 
 (optional git_optional_usersubject
     (type user_git_home_t)
@@ -84,6 +91,10 @@
     (call miscfiles_read_terminfo_files (is_tig_subject))
     (call miscfiles_read_localization_files (is_tig_subject)))
 
+(optional tig_optional_session
+    (type session_tig_home_t)
+    (call session_home_object (session_tig_home_t)))
+
 (optional tig_optional_usersubject
     (type user_tig_home_t)
     (call usersubject_home_object (user_tig_home_t)))
@@ -97,8 +108,7 @@
 (call files_read_generic_usr_files (is_gitemail_subject)) ; /usr/share/perl5/strict.pm
 (call files_read_generic_etc_files (is_gitemail_subject)) ; /etc/protocols
 
-(optional gitemail_optional_auth
-    (call auth_nsswitch_client_subject (is_gitemail_subject)))
+(call auth_nsswitch_client_subject (is_gitemail_subject))
 
 (optional gitemail_optional_mail
     (call mail_tcp_connect_smtp_port (is_gitemail_subject)))
@@ -108,6 +118,10 @@
     (call miscfiles_read_generic_cert_files (is_gitemail_subject))
     (call miscfiles_read_network_config_files (is_gitemail_subject))
     (call miscfiles_read_localization_files (is_gitemail_subject)))
+
+(optional gitemail_optional_session
+    (type session_gitemail_home_t)
+    (call session_home_object (session_gitemail_home_t)))
 
 (optional gitemail_optional_usersubject
     (type user_gitemail_home_t)

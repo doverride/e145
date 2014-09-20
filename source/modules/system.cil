@@ -319,6 +319,15 @@
 (call selinux_get_filesystems_mount (system_t))
 (call selinux_list (system_t))
 
+(call storage_dev_filetrans_fixed_disk (system_t))
+(call storage_dev_filetrans_scsi_generic (system_t))
+(call storage_dev_filetrans_removable (system_t))
+
+(call systemd_dynamic_subject_type_transition (system_t))
+(call systemd_getattr_exec_files (system_t))
+(call systemd_send_signal (system_t))
+(call systemd_send_sigchld (invalid_t))
+
 (optional system_optional_bootchart
     (call bootchart_subtrans (system_t)))
 
@@ -337,17 +346,6 @@
 
 (optional system_optional_shutdown
     (call shutdownd_sigchld_shutdown (system_t)))
-
-(optional system_optional_storage
-    (call storage_dev_filetrans_fixed_disk (system_t))
-    (call storage_dev_filetrans_scsi_generic (system_t))
-    (call storage_dev_filetrans_removable (system_t)))
-
-(optional system_optional_systemd
-    (call systemd_dynamic_subject_type_transition (system_t))
-    (call systemd_getattr_exec_files (system_t))
-    (call systemd_send_signal (system_t))
-    (call systemd_send_sigchld (invalid_t)))
 
 (booleanif (not secure_mode_insmod)
     (true

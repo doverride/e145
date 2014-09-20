@@ -75,6 +75,12 @@
 (optional screen_optional_utmp
     (call utmp_read_run_files (is_screen_subject)))
 
+(optional screen_optional_session
+    (type session_screen_home_t)
+    (call session_home_object (session_screen_home_t))
+    (type session_screen_tmp_t)
+    (call session_tmp_object (session_screen_tmp_t)))
+
 (optional screen_optional_usersubject
     (type user_screen_home_t)
     (call usersubject_home_object (user_screen_home_t))
