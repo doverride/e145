@@ -1,3 +1,6 @@
+dependencies (optonals):
+    make auditd and login unconditional
+
 target /usr/sbin/glibc_post_upgrade.*
     i suspect this is what makes select exec fles end up with file_t type
     by confining it i mabe be able to make it create those files with
