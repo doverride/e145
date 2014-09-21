@@ -213,6 +213,10 @@
     (type joe_xorg_wrap_t)
     (call xserver_role_template_xorg_wrap (joe_r joe_xinit_t joe_xorg_wrap_t))
 
+    (optional joe_xserver_optional_joe_screen
+        (call screen_role_template (joe_r joe_xterm_t joe_screen_t
+            user_screen_home_t user_screen_tmp_t)))
+
     (optional joe_xserver_optional_joe_xlock
         (type joe_xlock_t)
         (call xlock_role_template (joe_r joe_t joe_xlock_t user_xlock_home_t))
@@ -1181,14 +1185,16 @@
     (call screen_role_template (joe_r joe_t joe_screen_t
         user_screen_home_t user_screen_tmp_t))
 
-    ; BUG?
-    ; moving the two below optional block out of here will make secilc segfault
+    (allow joe_t joe_screen_t (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (joe_t joe_screen_t))
 
-    (optional joe_screen_optional_joe_xterm
-        (allow joe_screen_t joe_xterm_t (process (sigchld))))
+    (allow joe_t user_screen_home_t manage_file_perms)
+    (allow joe_t user_screen_home_t relabel_file_perms)
+    (allow joe_t user_screen_tmp_t manage_file_perms)
+    (allow joe_t user_screen_tmp_t relabel_file_perms)
 
-    (optional joe_xterm_optional_joe_screen
-        (allow joe_xterm_t joe_screen_t (process (signal))))
+    (call commands_bin_auto_subject_type_transition (joe_screen_t joe_t))
+    (call commands_shell_auto_subject_type_transition (joe_screen_t joe_t))
 
     (context file_joe_user_screen_home (joe_u object_r user_screen_home_t ((s0)(s0))))
     (filecon "/home/joe/\.screenrc" file file_joe_user_screen_home)
