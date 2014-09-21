@@ -33,7 +33,7 @@
 (call storage_getattr_scsi_generic_nodes (fstrim_t))
 
 (call application_subject (fstrim_t))
-(call application_executable_object (fstrim_t))
+(call application_executable_object (fstrim_exec_t))
 
 (call miscfiles_read_localization_files (fstrim_t))
 
