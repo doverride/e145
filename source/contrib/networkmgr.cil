@@ -163,6 +163,12 @@
 
 (call journald_client_subject (networkmgr_t))
 
+(call logind_dbus_chat (networkmgr_t))
+(call logind_list_run (networkmgr_t))
+(call logind_read_run_files (networkmgr_t))
+(call logind_use_fd (networkmgr_t))
+(call logind_write_inherited_run_fifo_files (networkmgr_t))
+
 (call machined_list_run (networkmgr_t))
 (call machined_read_run_files (networkmgr_t))
 
@@ -188,13 +194,6 @@
     (call dhcp_read_dhclient_var_lib_files (networkmgr_t))
     (call dhcp_send_signal_dhclient (networkmgr_t))
     (call dhcp_subtrans_dhclient (networkmgr_t)))
-
-(optional networkmgr_optional_logind
-    (call logind_dbus_chat (networkmgr_t))
-    (call logind_list_run (networkmgr_t))
-    (call logind_read_run_files (networkmgr_t))
-    (call logind_use_fd (networkmgr_t))
-    (call logind_write_inherited_run_fifo_files (networkmgr_t)))
 
 (optional networkmgr_optional_session
     (call session_getattr (networkmgr_t))

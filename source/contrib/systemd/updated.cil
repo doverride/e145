@@ -48,9 +48,8 @@
 
 (call journald_client_subject (updated_t))
 
-(optional updated_optional_seutil
-    (call seutil_read_config_files (updated_t))
-    (call seutil_read_file_context_files (updated_t)))
+(call seutil_read_config_files (updated_t))
+(call seutil_read_file_context_files (updated_t))
 
 (call files_search_etc (updated_generator_t))
 

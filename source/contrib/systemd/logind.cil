@@ -107,11 +107,16 @@
 (call dbus_acquire_service_system (logind_t))
 (call dbus_system_client_subject (logind_t))
 
+(call getty_start_service (logind_t))
+
 (call journald_client_subject (logind_t))
 
 (call logind_read_config_files (logind_t))
 
 (call polkit_dbus_chat_polkitd (logind_t))
+
+(call seutil_read_config_files (logind_t))
+(call seutil_read_file_context_files (logind_t))
 
 (call systemd_dbus_chat (logind_t))
 (call systemd_get_status_generic_service (logind_t)) ; session-1.scope
@@ -132,16 +137,9 @@
 (optional logind_optional_cron
     (call cron_read_crond_state (logind_t)))
 
-(optional logind_optional_getty
-    (call getty_start_service (logind_t)))
-
 (optional logind_optional_networkmgr
     (call networkmgr_getattr (logind_t))
     (call networkmgr_read_state (logind_t)))
-
-(optional logind_optional_seutil
-    (call seutil_read_config_files (logind_t))
-    (call seutil_read_file_context_files (logind_t)))
 
 (optional logind_optional_session
     (call session_delete_systemd_run_dirs (logind_t))

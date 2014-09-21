@@ -79,11 +79,10 @@
 
 (call polkit_dbus_chat_polkitd (hostnamed_t))
 
-(call systemd_stream_connect (hostnamed_t))
+(call seutil_read_config_files (hostnamed_t))
+(call seutil_read_file_context_files (hostnamed_t))
 
-(optional hostnamed_optional_seutil
-    (call seutil_read_config_files (hostnamed_t))
-    (call seutil_read_file_context_files (hostnamed_t)))
+(call systemd_stream_connect (hostnamed_t))
 
 (allow is_hostnamed_admin_subject is_hostnamed_subject signal_perms)
 (allow is_hostnamed_admin_subject is_hostnamed_subject (process (ptrace)))

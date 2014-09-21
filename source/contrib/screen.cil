@@ -51,6 +51,8 @@
 
 (call dbus_system_client_subject (is_screen_subject))
 
+(call audit_client_subject (is_screen_subject))
+
 (call auth_read_generic_pam_config_files (is_screen_subject))
 (call auth_read_authconfig_pam_config_files (is_screen_subject))
 (call auth_nsswitch_client_subject (is_screen_subject))
@@ -64,9 +66,6 @@
 (call screen_read_pam_config_files (is_screen_subject))
 
 (call utmp_read_run_files (is_screen_subject))
-
-(optional screen_optional_audit
-    (call audit_client_subject (is_screen_subject)))
 
 (optional screen_optional_fprint
     (call fprint_dbus_chat_fprintd (is_screen_subject)))

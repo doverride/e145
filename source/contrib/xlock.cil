@@ -38,6 +38,8 @@
 (call files_read_generic_etc_files (is_xlock_subject)) ; /etc/drirc
 (call files_read_generic_usr_files (is_xlock_subject)) ; /etc/drirc
 
+(call audit_client_subject (is_xlock_subject))
+
 (call auth_nsswitch_client_subject (is_xlock_subject))
 (call auth_run_chkpwd (is_xlock_subject is_xlock_role))
 (call auth_read_generic_pam_config_files (is_xlock_subject))
@@ -57,9 +59,6 @@
 (call xlock_read_pam_config_files (is_xlock_subject))
 
 (call xserver_use_fd_all_xorg (is_xlock_subject))
-
-(optional xlock_optional_audit
-    (call audit_client_subject (is_xlock_subject)))
 
 (optional xlock_optional_fprint
     (call fprint_dbus_chat_fprintd (is_xlock_subject)))

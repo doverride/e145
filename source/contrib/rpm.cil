@@ -115,17 +115,16 @@
 
 (call libraries_etc_filetrans_ld_so_cache_files (is_rpm_subject))
 
+(call seutil_unconfined (is_rpm_subject))
+(call seutil_manage_policy_config_dirs (is_rpm_subject))
+(call seutil_manage_policy_config_files (is_rpm_subject))
+(call seutil_relabel_policy_config_dirs (is_rpm_subject))
+(call seutil_relabel_policy_config_files (is_rpm_subject))
+
 (call systemd_unconfined (is_rpm_subject))
 
 (optional rpm_subject_optional_dns
     (call dns_etc_filetrans_resolv_conf_files (is_rpm_subject)))
-
-(optional rpm_subject_optional_seutil
-    (call seutil_unconfined (is_rpm_subject))
-    (call seutil_manage_policy_config_dirs (is_rpm_subject))
-    (call seutil_manage_policy_config_files (is_rpm_subject))
-    (call seutil_relabel_policy_config_dirs (is_rpm_subject))
-    (call seutil_relabel_policy_config_files (is_rpm_subject)))
 
 (call commands_shell_manual_subject_type_transition (rpm_t rpm_script_t))
 

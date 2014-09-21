@@ -111,11 +111,11 @@
 
 (call auth_rw_lastlog_log_files (useradd_t))
 
-(call auth_manage_shadow_files (is_useradd_or_groupadd_subject)) ; unlink, rename
+(call audit_client_subject (is_useradd_or_groupadd_subject))
 
+(call auth_manage_shadow_files (is_useradd_or_groupadd_subject)) ; unlink, rename
 (call auth_manage_passwd_files (is_useradd_or_groupadd_subject))
 (call auth_etc_filetrans_passwd_files (is_useradd_or_groupadd_subject "*"))
-
 (call auth_nsswitch_client_subject (is_useradd_or_groupadd_subject))
 
 (call journald_client_subject (is_useradd_or_groupadd_subject))
@@ -126,9 +126,6 @@
 (call seutil_read_file_context_files (is_useradd_or_groupadd_subject))
 
 (call usermanage_read_useradd_config_files (useradd_t))
-
-(optional useradd_optional_auditd
-    (call audit_client_subject (is_useradd_or_groupadd_subject)))
 
 (optional useradd_optional_rpm
     (call rpm_append_inherited_tmp_files (is_useradd_or_groupadd_subject))

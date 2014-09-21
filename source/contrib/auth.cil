@@ -224,22 +224,20 @@
 
 (call dbus_system_client_subject (is_login_program_subject))
 
+(call logind_dbus_chat (is_login_program_subject))
+(call logind_read_run_files (is_login_program_subject))
+(call logind_use_fd (is_login_program_subject))
+(call logind_write_inherited_run_fifo_files (is_login_program_subject))
+
 (call miscfiles_read_localization_files (is_login_program_subject))
+
+(call seutil_read_config_files (is_login_program_subject))
+(call seutil_read_default_context_files (is_login_program_subject))
 
 (call utmp_rw_run_files (is_login_program_subject))
 
 (optional login_program_subject
     (call fprint_dbus_chat_fprintd (is_login_program_subject)))
-
-(optional login_program_subject_optional_logind
-    (call logind_dbus_chat (is_login_program_subject))
-    (call logind_read_run_files (is_login_program_subject))
-    (call logind_use_fd (is_login_program_subject))
-    (call logind_write_inherited_run_fifo_files (is_login_program_subject)))
-
-(optional login_program_subject_optional_seutil
-    (call seutil_read_config_files (is_login_program_subject))
-    (call seutil_read_default_context_files (is_login_program_subject)))
 
 (optional login_program_subject_optional_session
     (call session_create_keyring (is_login_program_subject))
@@ -259,6 +257,8 @@
 
 (optional auth_optional_dns
     (call dns_resolve_client_subject (is_nsswitch_client_subject)))
+
+(call audit_client_subject (is_pam_client_subject))
 
 (call auth_subtrans_chkpwd (is_pam_client_subject))
 (call auth_subtrans_updpwd (is_pam_client_subject))
@@ -284,9 +284,6 @@
 
 (call journald_client_subject (is_pam_client_subject))
 
-(optional auth_optional_audit
-    (call audit_client_subject (is_pam_client_subject)))
-
 (allow chkpwd_t self (capability (dac_override setuid)))
 
 (call system_read_sysctl_crypto_files (chkpwd_t))
@@ -296,15 +293,14 @@
 (call terminal_dontaudit_use_console_nodes (chkpwd_t))
 (call terminal_use_inherited_unallocated_tty_nodes (chkpwd_t))
 
+(call audit_client_subject (chkpwd_t))
+
 (call auth_read_shadow_files (chkpwd_t))
 (call auth_nsswitch_client_subject (chkpwd_t))
 
 (call journald_client_subject (chkpwd_t))
 
 (call miscfiles_read_localization_files (chkpwd_t))
-
-(optional chkpwd_optional_audit
-    (call audit_client_subject (chkpwd_t)))
 
 (optional chkpwd_optional_session
     (call session_use_inherited_terminals (chkpwd_t)))

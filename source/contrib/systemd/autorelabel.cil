@@ -48,6 +48,8 @@
 
 (call autorelabel_manage_flag_files (autorelabel_t))
 
+(call consoletype_exec (autorelabel_t))
+
 (call miscfiles_read_localization_files (autorelabel_t))
 
 (call plymouth_exec (autorelabel_t))
@@ -58,9 +60,6 @@
 (call seutil_audit_access_load_policy_executable_files (autorelabel_t))
 (call seutil_read_config_files (autorelabel_t))
 (call seutil_subtrans_setfiles (autorelabel_t))
-
-(optional autorelabel_optional_consoletype
-    (call consoletype_exec (autorelabel_t)))
 
 (allow is_autorelabel_admin_subject autorelabel_t signal_perms)
 (allow is_autorelabel_admin_subject autorelabel_t (process (ptrace)))

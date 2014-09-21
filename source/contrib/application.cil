@@ -3,6 +3,8 @@
 
 (call auth_use_login_program_subject_fd (is_application_subject))
 
+(call login_use_fd_sulogin (is_application_subject))
+
 (optional application_optional_elinks
     (call http_dontaudit_rw_all_elinks_unix_stream_sockets (is_application_subject))
     (call http_dontaudit_rw_all_elinks_tcp_sockets (is_application_subject))
@@ -23,18 +25,15 @@
     (call sudo_use_all_fd (is_application_subject))
     (call sudo_rw_inherited_fifo_files_all_sudo (is_application_subject))
 
-    (optional application_optional_joe
-        (call joe_rw_inherited_fifo_files (is_application_subject))
-    	(call joe_use_fd (is_application_subject))))
+    (optional application_optional_usersubject
+        (call usersubject_use_all_base_user_subjects_fd (is_application_subject))
+        (call usersubject_rw_inherited_fifo_files_all_base_user_subjects (is_application_subject))))
 
 (optional application_optional_screen
 	(call screen_use_all_fd (is_application_subject)))
 
 (optional application_optional_xterm
     (call xserver_use_fd_all_xterm (is_application_subject)))
-
-(optional application_optional_sulogin
-	(call login_use_fd_sulogin (is_application_subject)))
 
 (macro application_subject ((type ARG1))
     (typeattributeset is_application_subject ARG1)

@@ -66,6 +66,8 @@
 (call system_read_sysctl_kernel_files (dbusd_t))
 
 (call devices_read_urandom (dbusd_t))
+(call devices_rw_inherited_dri (dbusd_t)) ; logind passes this to xorg via dbus
+(call devices_rw_inherited_event (dbusd_t)) ; logind passes this to xorg via dbus
 
 (call files_read_generic_usr_files (dbusd_t))
 
@@ -73,6 +75,8 @@
 (call selinux_list (dbusd_t))
 
 (call application_read_state_all_application_subjects (dbusd_t))
+
+(call audit_client_subject (dbusd_t))
 
 (call auth_read_pam_console_run_files (dbusd_t))
 (call auth_nsswitch_client_subject (dbusd_t))
@@ -84,23 +88,16 @@
 
 (call journald_client_subject (dbusd_t))
 
+(call logind_use_fd (dbusd_t))
+(call logind_read_run_files (dbusd_t))
+(call logind_write_inherited_run_fifo_files (dbusd_t))
+
 (call miscfiles_read_localization_files (dbusd_t))
 
+(call seutil_read_config_files (dbusd_t))
+(call seutil_read_default_context_files (dbusd_t))
+
 (call systemd_getattr_generic_unit_dirs (dbusd_t))
-
-(optional dbus_optional_audit
-    (call audit_client_subject (dbusd_t)))
-
-(optional dbus_optional_logind
-    (call logind_use_fd (dbusd_t))
-    (call logind_read_run_files (dbusd_t))
-    (call devices_rw_inherited_dri (dbusd_t))
-    (call devices_rw_inherited_event (dbusd_t)) ; logind passes this to xorg via dbus
-    (call logind_write_inherited_run_fifo_files (dbusd_t)))
-
-(optional dbus_optional_seutil
-    (call seutil_read_config_files (dbusd_t))
-    (call seutil_read_default_context_files (dbusd_t)))
 
 (allow is_dbus_admin_subject dbusd_t signal_perms)
 (allow is_dbus_admin_subject dbusd_t (process (ptrace)))

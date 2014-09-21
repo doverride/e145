@@ -154,6 +154,8 @@
 (call subject_subj_id_change_exemption (crond_t))
 (call subject_role_change_exemption (crond_t))
 
+(call audit_client_subject (crond_t))
+
 (call auth_list_pam_config (crond_t))
 (call auth_read_authconfig_pam_config_files (crond_t))
 (call auth_read_generic_pam_config_files (crond_t))
@@ -169,21 +171,16 @@
 
 (call journald_client_subject (crond_t))
 
+(call logind_dbus_chat (crond_t))
+(call logind_use_fd (crond_t))
+(call logind_write_inherited_run_fifo_files (crond_t))
+
 (call miscfiles_read_localization_files (crond_t))
 
+(call seutil_read_default_context_files (crond_t))
+(call seutil_read_config_files (crond_t))
+
 (call utmp_read_run_files (crond_t))
-
-(optional crond_optional_audit
-    (call audit_client_subject (crond_t)))
-
-(optional crond_optional_logind
-    (call logind_dbus_chat (crond_t))
-    (call logind_use_fd (crond_t))
-    (call logind_write_inherited_run_fifo_files (crond_t)))
-
-(optional crond_optional_seutil
-    (call seutil_read_default_context_files (crond_t))
-    (call seutil_read_config_files (crond_t)))
 
 (optional crond_optional_sudo
     (call sudo_search_all_keyrings (crond_t)))
@@ -251,6 +248,9 @@
 
 (call selinux_get_enforce_mode (is_crontab_subject))
 
+(call audit_client_subject (is_crontab_subject))
+(call audit_set_loginuid (is_crontab_subject))
+
 (call auth_list_pam_config (is_crontab_subject))
 (call auth_read_authconfig_pam_config_files (is_crontab_subject))
 (call auth_read_generic_pam_config_files (is_crontab_subject))
@@ -267,10 +267,6 @@
 
 (call miscfiles_read_localization_files (is_crontab_subject))
 (call miscfiles_read_terminfo_files (is_crontab_subject))
-
-(optional crontab_optional_audit
-    (call audit_client_subject (is_crontab_subject))
-    (call audit_set_loginuid (is_crontab_subject)))
 
 (optional crontab_optional_usersubject
     (type user_cron_spool_t)

@@ -327,6 +327,8 @@
 (call askpwd_list_run (systemd_t))
 (call askpwd_read_run_files (systemd_t))
 
+(call audit_client_subject (systemd_t))
+
 (call auth_list_pam_config (systemd_t))
 (call auth_read_authconfig_pam_config_files (systemd_t))
 (call auth_read_generic_pam_config_files (systemd_t))
@@ -363,6 +365,10 @@
 (call plymouth_stream_connect_plymouthd (systemd_t))
 (call plymouth_use_fd_plymouth (systemd_t))
 
+(call seutil_read_config_files (systemd_t))
+(call seutil_read_default_context_files (systemd_t))
+(call seutil_read_file_context_files (systemd_t))
+
 (call shutdownd_share_state_shutdown (systemd_t))
 
 (call sysctl_read_config_files (systemd_t))
@@ -385,9 +391,6 @@
 (optional systemd_optional_alsa
     (call alsa_read_config_files (systemd_t)))
 
-(optional systemd_optional_audit
-    (call audit_client_subject (systemd_t)))
-
 (optional systemd_optional_session
     (call session_mounton_home_dirs (systemd_t))
     (call session_link_keyring (systemd_t))
@@ -400,11 +403,6 @@
     (call session_config_filetrans_session_systemd_config_dir (systemd_t))
     (call session_data_filetrans_session_systemd_data_dir (systemd_t))
     (call session_use_tty_nodes (systemd_t)))
-
-(optional systemd_optional_seutil
-    (call seutil_read_config_files (systemd_t))
-    (call seutil_read_default_context_files (systemd_t))
-    (call seutil_read_file_context_files (systemd_t)))
 
 (optional systemd_optional_sshd
     (call ssh_read_sshd_config_files (systemd_t)))
@@ -460,6 +458,10 @@
 (call journald_list_log (is_systemctl_client_subject))
 (call journald_read_log_files (is_systemctl_client_subject))
 
+(call logind_dbus_chat (systemctl_t))
+(call logind_list_run (is_systemd_subject))
+(call logind_read_run_files (is_systemd_subject))
+
 (call machined_read_config_files (is_systemctl_client_subject))
 
 (call miscfiles_read_terminfo_files (is_systemd_subject))
@@ -484,11 +486,6 @@
 
 (call utmp_read_run_files (systemctl_t))
 
-(optional systemctl_optional_logind
-    (call logind_dbus_chat (systemctl_t))
-    (call logind_list_run (is_systemd_subject))
-    (call logind_read_run_files (is_systemd_subject)))
-
 (optional systemctl_optional_session
     (call session_read_generic_home_content_files (systemctl_t)) ; ~/.lesshst
     (call session_use_inherited_terminals (systemctl_t)))
@@ -504,8 +501,7 @@
     (is_systemd_daemon_or_systemd_oneshot_subject))
 (call systemd_read_state (is_systemd_daemon_or_systemd_oneshot_subject))
 
-(optional systemd_daemon_or_systemd_oneshot_subject_optional_shutdown
-    (call shutdownd_sigchld_shutdown (is_systemd_daemon_or_systemd_oneshot_subject)))
+(call shutdownd_sigchld_shutdown (is_systemd_daemon_or_systemd_oneshot_subject))
 
 (call system_use_fd (is_systemd_generator_subject))
 (call system_read_generic_proc_files (is_systemd_generator_subject))

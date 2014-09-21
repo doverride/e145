@@ -64,12 +64,11 @@
 
 (call selinux_get_filesystems_mount (is_udevd_subject))
 
+(call seutil_read_config_files (is_udevd_subject))
+(call seutil_read_file_context_files (is_udevd_subject))
+
 (call udevd_list_config (is_udevd_subject))
 (call udevd_read_config_files (is_udevd_subject))
-
-(optional udev_optional_seutil
-    (call seutil_read_config_files (is_udevd_subject))
-    (call seutil_read_file_context_files (is_udevd_subject)))
 
 (allow udevd_t self (capability (dac_override net_admin chown sys_admin
 	sys_rawio fsetid fowner)))
@@ -142,6 +141,8 @@
 (call kmod_read_modules_dep_files (udevd_t))
 (call kmod_subtrans (udevd_t))
 
+(call logind_read_run_files (udevd_t))
+
 (call miscfiles_read_localization_files (udevd_t))
 (call miscfiles_read_module_files (udevd_t))
 (call miscfiles_read_network_config_files (udevd_t))
@@ -159,9 +160,6 @@
 
 (optional udevd_optional_lvm
     (call lvm_subtrans_lvm (udevd_t)))
-
-(optional udevd_optional_logind
-    (call logind_read_run_files (udevd_t)))
 
 (call devices_read_urandom (udevadm_t))
 

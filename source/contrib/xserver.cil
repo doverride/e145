@@ -152,6 +152,7 @@
 (call devices_rw_xserver_misc (is_xorg_subject))
 (call devices_rw_framebuf (is_xorg_subject))
 (call devices_rw_dri (is_xorg_subject))
+(call devices_rw_inherited_event (is_xorg_subject))
 
 (call files_read_generic_etc_files (is_xorg_subject)) ; /etc/drirc
 (call files_read_generic_usr_files (is_xorg_subject))
@@ -164,6 +165,9 @@
 
 (call dbus_system_client_subject (is_xorg_subject))
 
+(call logind_use_fd (is_xorg_subject))
+(call logind_dbus_chat (is_xorg_subject))
+
 (call miscfiles_read_network_config_files (is_xorg_subject))
 (call miscfiles_read_fonts_files (is_xorg_subject))
 (call miscfiles_read_localization_files (is_xorg_subject))
@@ -173,11 +177,6 @@
 
 (call xserver_tcp_bind_xserver_port (is_xorg_subject))
 (call xserver_read_config (is_xorg_subject))
-
-(optional xorg_optional_logind
-    (call devices_rw_inherited_event (is_xorg_subject))
-    (call logind_use_fd (is_xorg_subject))
-    (call logind_dbus_chat (is_xorg_subject)))
 
 (optional xinit_optional_usersubject
     (type user_x_tmp_t)

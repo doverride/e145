@@ -101,15 +101,14 @@
 
 (call mount_read_run_files (fstools_t))
 
+(call seutil_read_config_files (fstools_t))
+
 (call udevd_read_config_files (fstools_t))
 (call udevd_read_run_files (fstools_t))
 
 (optional fstools_optional_session
     (call session_search_all_home (fstools_t))
     (call session_use_inherited_terminals (fstools_t)))
-
-(optional fstools_optional_seutil
-    (call seutil_read_config_files (fstools_t)))
 
 (optional fstools_optional_usersubject
     (call usersubject_search_all_home (fstools_t))

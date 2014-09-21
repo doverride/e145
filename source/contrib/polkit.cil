@@ -67,10 +67,10 @@
 
 (call selinux_get_filesystems_mount (is_polkit_subject))
 
+(call auth_nsswitch_client_subject (is_polkit_subject))
+
 (call polkit_list_config (is_polkit_subject))
 (call polkit_read_all_config_files (is_polkit_subject))
-
-(call auth_nsswitch_client_subject (is_polkit_subject))
 
 (allow polkitd_t self (process (getsched setsched)))
 (allow polkitd_t self (capability (setuid setgid)))
@@ -93,16 +93,15 @@
 
 (call journald_client_subject (polkitd_t))
 
+(call logind_list_run (polkitd_t))
+(call logind_read_run_files (polkitd_t))
+
 (call machined_list_run (polkitd_t))
 (call machined_read_run_files (polkitd_t))
 
 (call miscfiles_read_localization_files (polkitd_t))
 
 (call polkit_subtrans_auth (polkitd_t))
-
-(optional polkit_optional_logind
-    (call logind_list_run (polkitd_t))
-    (call logind_read_run_files (polkitd_t)))
 
 (allow polkitd_auth_t self create_unix_stream_socket_perms)
 

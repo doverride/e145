@@ -31,6 +31,8 @@
 
 (call files_search_etc (utmp_t))
 
+(call audit_client_subject (utmp_t))
+
 (call auth_write_wtmp_log_files (utmp_t))
 
 (call journald_client_subject (utmp_t))
@@ -39,9 +41,6 @@
 (call systemd_get_status_system (utmp_t))
 (call systemd_get_status_transient_system_service (utmp_t)) ; graphical.target
 (call systemd_stream_connect (utmp_t))
-
-(optional utmp_optional_audit
-    (call audit_client_subject (utmp_t)))
 
 (allow is_utmp_admin_subject utmp_t signal_perms)
 (allow is_utmp_admin_subject utmp_t (process (ptrace)))

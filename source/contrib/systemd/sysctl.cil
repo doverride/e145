@@ -51,14 +51,12 @@
 
 (call files_search_etc (sd_sysctl_t))
 
+(call journald_client_subject (sd_sysctl_t))
+
 (call sysctl_list_config (sd_sysctl_t))
 (call sysctl_read_config_files (sd_sysctl_t))
 
-(optional sd_sysctl_optional_journald
-    (call journald_client_subject (sd_sysctl_t)))
-
-(optional sd_sysctl_optional_udevd
-    (call udevd_rw_inherited_udp_socket (sd_sysctl_t)))
+(call udevd_rw_inherited_udp_socket (sd_sysctl_t))
 
 (call system_read_all_sysctl_files (sctl_t))
 

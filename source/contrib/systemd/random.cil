@@ -37,10 +37,10 @@
 
 (call files_search_etc (random_t))
 
-(call journald_client_subject (random_t))
-
 (call selinux_list (random_t))
 (call selinux_get_filesystems_mount (random_t))
+
+(call journald_client_subject (random_t))
 
 (allow is_random_admin_subject random_t signal_perms)
 (allow is_random_admin_subject random_t (process (ptrace)))

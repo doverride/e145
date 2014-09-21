@@ -190,8 +190,16 @@
 
 (call auth_nsswitch_client_subject (is_common_login_user_subject))
 
+(call consoletype_exec (is_common_login_user_subject))
+
+(call hostname_exec (is_common_login_user_subject))
+
+(call login_signull (is_common_login_user_subject))
+
 (call miscfiles_read_man_files (is_common_login_user_subject))
 (call miscfiles_read_network_config_files (is_common_login_user_subject)) ; hostname
+
+(call seutil_exec_chcon (is_common_login_user_subject))
 
 (call systemd_relabelable_object_exception (is_user_home_file_object))
 (call systemd_relabelable_object_exception (is_user_mail_spool_file_object))
@@ -208,15 +216,6 @@
 (call tmpfiles_manageable_object_exception (is_user_run_file_object))
 (call tmpfiles_relabelable_object_exception (is_user_run_file_object))
 
-(optional usersubject_common_login_user_optional_consoletype
-    (call consoletype_exec (is_common_login_user_subject)))
-
-(optional usersubject_common_login_user_optional_login
-    (call login_signull (is_common_login_user_subject)))
-
-(optional usersubject_common_login_user_optional_hostname
-    (call hostname_exec (is_common_login_user_subject)))
-
 (optional usersubject_common_login_user_optional_pciutil
     (call pciutil_exec (is_common_login_user_subject)))
 
@@ -226,9 +225,6 @@
     (call readahead_readable_object_exception (is_user_tmp_file_object))
     (call readahead_readable_object_exception (is_user_tmpfs_file_object))
     (call readahead_readable_object_exception (is_user_run_file_object)))
-
-(optional usersubject_common_login_user_optional_seutil
-    (call seutil_exec_chcon (is_common_login_user_subject)))
 
 (optional usersubject_common_login_user_optional_ssh
     (call ssh_rw_inherited_sshd_tcp_sockets (is_common_login_user_subject))
@@ -1682,6 +1678,12 @@
 (macro usersubject_relabel_terminals ((type ARG1))
     (allow ARG1 device_user_pts_t relabel_chr_file_perms)
     (allow ARG1 device_user_tty_t relabel_chr_file_perms))
+
+(macro usersubject_use_all_base_user_subjects_fd ((type ARG1))
+    (allow ARG1 is_base_user_subject (fd (use))))
+
+(macro usersubject_rw_inherited_fifo_files_all_base_user_subjects ((type ARG1))
+    (allow ARG1 is_base_user_subject rw_inherited_fifo_file_perms))
 
 (macro usersubject_application_subject ((type ARG1))
     (typeattributeset is_user_application_subject (ARG1)))

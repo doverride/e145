@@ -85,6 +85,10 @@
 (allow plymouthd_t plymouthd_var_spool_t manage_dir_perms)
 (call files_var_spool_filetrans (plymouthd_t plymouthd_var_spool_t dir "*"))
 
+(call system_change_ring_buffer_level (plymouthd_t))
+(call system_manage_var_log_files (plymouthd_t))
+(call system_var_log_filetrans_boot_log_files (plymouthd_t))
+
 (call devices_read_sysfs_files (plymouthd_t))
 (call devices_rw_dri (plymouthd_t))
 (call devices_rw_framebuf (plymouthd_t))
@@ -96,12 +100,9 @@
 (call terminal_use_generic_pty_nodes (plymouthd_t)) ; /dev/pts/ptmx
 (call terminal_use_ptmx_nodes (plymouthd_t))
 
-(call system_change_ring_buffer_level (plymouthd_t))
-(call system_manage_var_log_files (plymouthd_t))
-(call system_var_log_filetrans_boot_log_files (plymouthd_t))
-(call systemd_send_signal (plymouthd_t))
-
 (call auth_nsswitch_client_subject (plymouthd_t))
+
+(call systemd_send_signal (plymouthd_t))
 
 (allow is_plymouth_admin_subject is_plymouth_subject signal_perms)
 (allow is_plymouth_admin_subject is_plymouth_subject (process (ptrace)))

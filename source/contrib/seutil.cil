@@ -244,6 +244,8 @@
 
 (call terminal_use_inherited_console_nodes (setfiles_t))
 
+(call audit_client_subject (setfiles_t))
+
 (call auth_relabel_shadow_files (setfiles_t))
 
 (call seutil_read_config_files (setfiles_t))
@@ -252,9 +254,6 @@
 (call seutil_relabel_policy_config_files (setfiles_t))
 
 (call systemd_use_fd (setfiles_t))
-
-(optional setfiles_optional_audit
-    (call audit_client_subject (setfiles_t)))
 
 (allow is_seutil_admin_subject is_seutil_subject signal_perms)
 (allow is_seutil_admin_subject is_seutil_subject (process (ptrace)))

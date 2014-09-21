@@ -99,9 +99,8 @@
 
 (call selinux_get_enforce_mode (is_lvm_subject))
 
-(optional lvm_optional_seutil
-    (call seutil_read_config_files (is_lvm_subject))
-    (call seutil_read_file_context_files (is_lvm_subject)))
+(call seutil_read_config_files (is_lvm_subject))
+(call seutil_read_file_context_files (is_lvm_subject))
 
 (allow lvm_t self (capability (ipc_lock sys_nice sys_admin)))
 (allow lvm_t self (process (setsched)))

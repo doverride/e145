@@ -122,11 +122,10 @@
 
 (call plymouth_subtrans (is_login_subject))
 
-(call systemd_getpgid (sulogin_t))
+(call seutil_read_config_files (sulogin_t))
+(call seutil_read_default_context_files (sulogin_t))
 
-(optional sulogin_optional_seutil
-    (call seutil_read_config_files (sulogin_t))
-    (call seutil_read_default_context_files (sulogin_t)))
+(call systemd_getpgid (sulogin_t))
 
 (allow is_login_admin_subject is_login_subject signal_perms)
 (allow is_login_admin_subject is_login_subject (process (ptrace)))

@@ -84,6 +84,8 @@
 
 (call dbus_acquire_service_system (upowerd_t))
 
+(call logind_dbus_chat (upowerd_t))
+
 (call polkit_dbus_chat_polkitd (upowerd_t))
 
 (call udevd_read_config_files (upowerd_t))
@@ -91,9 +93,6 @@
 
 (call upower_read_config_files (upowerd_t))
 (call upower_manage_var_lib_files (upowerd_t))
-
-(optional upowerd_optional_logind
-    (call logind_dbus_chat (upowerd_t)))
 
 (allow is_upower_admin_subject is_upower_subject signal_perms)
 (allow is_upower_admin_subject is_upower_subject (process (ptrace)))
