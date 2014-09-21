@@ -733,21 +733,21 @@
     (type session_ffmpeg_t)
     (call ffmpeg_role_template (session_r session_t session_ffmpeg_t session_ffmpeg_tmpfs_t))
 
+    (optional session_ffmpeg_optional_session_pa
+        (call pa_client_subject (session_r session_ffmpeg_t session_pa_t session_pa_home_t
+            session_pa_run_t session_ffmpeg_tmpfs_t))
+
+        (call session_home_dir_filetrans_session_config_dir (session_ffmpeg_t))
+        (call session_config_filetrans (session_ffmpeg_t session_pa_home_t dir "pulse"))
+        (call session_run_user_dir_filetrans (session_ffmpeg_t session_pa_run_t dir "pulse")))
+
     (call session_manage_generic_home_content_files (session_ffmpeg_t))
     (call session_home_dir_filetrans_session_home (session_ffmpeg_t file "*"))
 
     (call session_manage_generic_tmp_files (session_ffmpeg_t))
     (call session_tmp_filetrans_generic_tmp (session_ffmpeg_t file "*"))
 
-    (call session_application_subject (session_ffmpeg_t))
-
-        (optional session_ffmpeg_optional_session_pa
-            (call pa_client_subject (session_r session_ffmpeg_t session_pa_t session_pa_home_t
-                session_pa_run_t session_ffmpeg_tmpfs_t))
-
-            (call session_home_dir_filetrans_session_config_dir (session_ffmpeg_t))
-            (call session_config_filetrans (session_ffmpeg_t session_pa_home_t dir "pulse"))
-            (call session_run_user_dir_filetrans (session_ffmpeg_t session_pa_run_t dir "pulse"))))
+    (call session_application_subject (session_ffmpeg_t)))
 
 (optional session_optional_session_rtorrent
     (type session_rtorrent_t)
@@ -770,6 +770,15 @@
     (type session_elinks_t)
     (call http_role_template_elinks (session_r session_t session_elinks_t
         session_elinks_home_t session_elinks_tmp_t))
+
+    (optional session_elinks_optional_session_newsb
+        (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms))
+
+    (optional session_elinks_optional_session_mutt
+        (allow session_elinks_t session_mutt_t read_fifo_file_perms)
+        (allow session_elinks_t session_mutt_tmp_t rw_file_perms)
+        (call mail_role_template_mutt (session_r session_elinks_t session_mutt_t
+            session_mutt_home_t session_mutt_tmp_t)))
 
     (allow session_t session_elinks_t (process (signal signull sigkill sigstop)))
     (dontaudit session_t session_elinks_t (unix_stream_socket (read write)))
@@ -797,15 +806,7 @@
     (call commands_shell_auto_subject_type_transition (session_elinks_t session_t))
 
     (call session_application_subject (session_elinks_t))
-    (call session_use_terminals (session_elinks_t))
-
-    (optional session_elinks_optional_session_newsb
-        (allow session_elinks_t session_newsb_home_t rw_inherited_file_perms))
-
-    (optional session_elinks_optional_session_mutt
-        (allow session_mutt_t session_elinks_tmp_t rw_file_perms)
-        (call mail_role_template_mutt (session_r session_elinks_t session_mutt_t
-            session_mutt_home_t session_mutt_tmp_t))))
+    (call session_use_terminals (session_elinks_t)))
 
 (optional session_optional_session_emacs
     (type session_emacs_t)
@@ -858,6 +859,34 @@
     (call git_role_template (session_r session_t session_git_t session_git_home_t session_git_conf_t
         session_git_tmp_t))
 
+    (optional session_git_optional_seutil
+        (filecon "/etc/selinux/e145/\.git(/.*)?" any file_session_git_home)
+
+        (call seutil_manage_config_dirs (session_git_t))
+        (call seutil_manage_config_files (session_git_t))
+        (call seutil_manage_default_context_dirs (session_git_t))
+        (call seutil_manage_default_context_files (session_git_t))
+        (call seutil_manage_file_context_dirs (session_git_t))
+        (call seutil_manage_file_context_files (session_git_t))
+        (call seutil_manage_source_dirs (session_git_t))
+        (call seutil_manage_source_files (session_git_t))
+        (call seutil_selinux_config_filetrans (session_git_t session_git_home_t dir ".git")))
+
+    (optional session_git_optional_usersubject
+        (call usersubject_use_inherited_terminals (session_git_t))
+        (call usersubject_search_generic_config (session_git_t))
+        (allow session_git_t user_git_conf_t read_file_perms))
+
+    (optional session_tig_optional_usersubject
+        (call usersubject_use_inherited_terminals (session_tig_t))
+        (allow session_tig_t user_tig_home_t read_file_perms))
+
+    (optional session_git_optional_session_ssh
+        (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t)))
+
+    (optional session_git_optional_session_gpg
+        (call gpg_role_template (session_r session_git_t session_gpg_t session_gpg_home_t)))
+
     (allow session_t session_git_t (process (signal signull sigstop sigkill)))
 
     (context file_session_git_home (session_u object_r session_git_home_t ((s0)(s0))))
@@ -888,34 +917,6 @@
     (call session_home_dir_filetrans_session_home (session_git_t dir "*"))
     (call session_home_dir_filetrans_session_home (session_git_t file "*"))
     (call session_home_dir_filetrans_session_home (session_git_t lnk_file "*"))
-
-    (optional session_git_optional_seutil
-        (filecon "/etc/selinux/e145/\.git(/.*)?" any file_session_git_home)
-
-        (call seutil_manage_config_dirs (session_git_t))
-        (call seutil_manage_config_files (session_git_t))
-        (call seutil_manage_default_context_dirs (session_git_t))
-        (call seutil_manage_default_context_files (session_git_t))
-        (call seutil_manage_file_context_dirs (session_git_t))
-        (call seutil_manage_file_context_files (session_git_t))
-        (call seutil_manage_source_dirs (session_git_t))
-        (call seutil_manage_source_files (session_git_t))
-        (call seutil_selinux_config_filetrans (session_git_t session_git_home_t dir ".git"))
-
-	    (optional session_git_optional_usersubject
-            (call usersubject_use_inherited_terminals (session_git_t))
-            (call usersubject_search_generic_config (session_git_t))
-            (allow session_git_t user_git_conf_t read_file_perms))
-
-	    (optional session_tig_optional_usersubject
-            (call usersubject_use_inherited_terminals (session_tig_t))
-            (allow session_tig_t user_tig_home_t read_file_perms)))
-
-    (optional session_git_optional_session_ssh
-        (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t)))
-
-    (optional session_git_optional_session_gpg
-        (call gpg_role_template (session_r session_git_t session_gpg_t session_gpg_home_t)))
 
     (type session_tig_t)
     (call git_role_template_tig (session_r session_t session_tig_t session_tig_home_t))
@@ -956,6 +957,44 @@
     (call gpg_role_template (session_r session_t session_gpg_t
         session_gpg_home_t))
 
+    (type session_gpgagent_t)
+    (call gpg_role_template_agent (session_r session_t session_gpgagent_t
+        session_gpgagent_home_t))
+
+    (type session_scd_t)
+    (call gpg_role_template_scd (session_r session_gpgagent_t session_scd_t session_scd_tmp_t
+        session_scd_home_t))
+
+    (optional session_gpg_optional_usersubject
+        (call usersubject_use_inherited_terminals (session_gpg_t))
+        (call usersubject_search_home_dir (session_gpg_t))
+        (call manage_files_pattern (session_gpg_t user_gpg_home_t user_gpg_home_t)))
+
+    (optional session_gpg_optional_joe
+        (call stream_connect_pattern (session_gpg_t user_gpg_home_t user_gpgagent_home_t
+            joe_gpgagent_t)))
+
+    (optional session_gpg_optional_session_elinks
+        (allow session_gpg_t session_elinks_t (fifo_file (write)))
+        (allow session_gpg_t session_elinks_tmp_t rw_file_perms))
+
+    (optional session_gpgagent_optional_session_pinentry_curses
+        (type session_pinentry_t)
+        (call pinentry_role_template (session_r session_gpgagent_t session_pinentry_t))
+
+        (allow session_t session_pinentry_t (process (signal signull sigkill sigstop)))
+
+        (call stream_connect_pattern (session_pinentry_t session_gpg_home_t session_gpgagent_home_t
+            session_gpgagent_t))
+
+        (allow session_pinentry_t session_terminfo_home_t read_file_perms)
+
+        (call session_application_subject (session_pinentry_t))
+        (call session_use_terminals (session_pinentry_t)))
+
+    (optional session_gpg_optional_session_git
+        (allow session_gpg_t session_git_tmp_t read_file_perms))
+
     (allow session_t session_gpg_t (process (signal signull sigstop sigkill)))
 
     (context file_session_gpg_home (session_u object_r session_gpg_home_t ((s0)(s0))))
@@ -976,26 +1015,6 @@
 
     (call session_application_subject (session_gpg_t))
     (call session_use_terminals (session_gpg_t))
-
-    (optional session_gpg_optional_usersubject
-        (call usersubject_use_inherited_terminals (session_gpg_t))
-        (call usersubject_search_home_dir (session_gpg_t))
-        (call manage_files_pattern (session_gpg_t user_gpg_home_t user_gpg_home_t)))
-
-    (optional session_gpg_optional_joe
-        (call stream_connect_pattern (session_gpg_t user_gpg_home_t user_gpgagent_home_t
-            joe_gpgagent_t)))
-
-    (optional session_gpg_optional_session_elinks
-        (allow session_gpg_t session_elinks_t (fifo_file (write)))
-        (allow session_gpg_t session_elinks_tmp_t rw_file_perms))
-
-    (optional session_gpg_optional_session_git
-        (allow session_gpg_t session_git_tmp_t read_file_perms))
-
-    (type session_gpgagent_t)
-    (call gpg_role_template_agent (session_r session_t session_gpgagent_t
-        session_gpgagent_home_t))
 
     (call gpg_role_template_agent (session_r session_gpg_t session_gpgagent_t
         session_gpgagent_home_t))
@@ -1026,24 +1045,6 @@
 
     (call stream_connect_pattern (session_gpgagent_t session_scd_tmp_t session_scd_tmp_t session_scd_t))
 
-    (optional session_gpgagent_optional_session_pinentry_curses
-        (type session_pinentry_t)
-        (call pinentry_role_template (session_r session_gpgagent_t session_pinentry_t))
-
-        (allow session_t session_pinentry_t (process (signal signull sigkill sigstop)))
-
-        (call stream_connect_pattern (session_pinentry_t session_gpg_home_t session_gpgagent_home_t
-            session_gpgagent_t))
-
-        (allow session_pinentry_t session_terminfo_home_t read_file_perms)
-
-        (call session_application_subject (session_pinentry_t))
-        (call session_use_terminals (session_pinentry_t)))
-
-    (type session_scd_t)
-    (call gpg_role_template_scd (session_r session_gpgagent_t session_scd_t session_scd_tmp_t
-        session_scd_home_t))
-
     (allow session_t session_scd_t (process (signal signull sigkill sigstop)))
 
     (context file_session_scd_home (session_u object_r session_scd_home_t ((s0)(s0))))
@@ -1066,6 +1067,17 @@
     (type session_mutt_t)
     (call mail_role_template_mutt (session_r session_t session_mutt_t
         session_mutt_home_t session_mutt_tmp_t))
+
+    (optional session_mutt_optional_session_elinks
+        (allow session_mutt_t session_elinks_tmp_t rw_file_perms)
+        (call http_role_template_elinks (session_r session_mutt_t session_elinks_t
+            session_elinks_home_t session_elinks_tmp_t)))
+
+    (optional session_mutt_gpg_optional_session_gpg
+        (call gpg_role_template (session_r session_mutt_t session_gpg_t session_gpg_home_t))
+        (call gpg_role_template (session_r session_mutt_gpg_t session_gpg_t session_gpg_home_t))
+        (allow session_gpg_t session_mutt_home_t read_file_perms)
+        (allow session_gpg_t session_mutt_tmp_t rw_file_perms))
 
     (context file_session_mutt_home (session_u object_r session_mutt_home_t ((s0)(s0))))
     (filecon "/root/\.muttrc" file file_session_mutt_home)
@@ -1092,19 +1104,7 @@
     (type session_mutt_gpg_t)
     (call mail_role_template_mutt_gpg (session_r session_mutt_t session_mutt_gpg_t))
 
-    (call session_application_subject (session_mutt_gpg_t))
-
-    (optional session_mutt_optional_session_elinks
-        (allow session_elinks_t session_mutt_t read_fifo_file_perms)
-        (allow session_elinks_t session_mutt_tmp_t rw_file_perms)
-        (call http_role_template_elinks (session_r session_mutt_t session_elinks_t
-            session_elinks_home_t session_elinks_tmp_t)))
-
-    (optional session_mutt_gpg_optional_session_gpg
-        (call gpg_role_template (session_r session_mutt_t session_gpg_t session_gpg_home_t))
-        (call gpg_role_template (session_r session_mutt_gpg_t session_gpg_t session_gpg_home_t))
-        (allow session_gpg_t session_mutt_home_t read_file_perms)
-        (allow session_gpg_t session_mutt_tmp_t rw_file_perms)))
+    (call session_application_subject (session_mutt_gpg_t)))
 
 (optional session_optional_session_irc
     (type session_irssi_t)
@@ -1127,6 +1127,14 @@
     (call newsb_role_template (session_r session_t session_newsb_t
         session_newsb_home_t))
 
+    (optional session_newsb_optional_session_moc
+        (call moc_role_template (session_r session_newsb_t session_moc_t
+            session_moc_home_t)))
+
+    (optional session_newsb_optional_session_elinks
+        (call http_role_template_elinks (session_r session_newsb_t session_elinks_t
+            session_elinks_home_t session_elinks_tmp_t)))
+
     (context file_session_newsb_home (session_u object_r session_newsb_home_t ((s0)(s0))))
     (filecon "/root/\.newsbeuter(/.*)?" any file_session_newsb_home)
 
@@ -1141,15 +1149,7 @@
 
     (call session_application_subject (session_newsb_t))
     (call session_use_terminals (session_newsb_t))
-    (call session_read_cert_files (session_newsb_t))
-
-    (optional session_newsb_optional_session_moc
-        (call moc_role_template (session_r session_newsb_t session_moc_t
-            session_moc_home_t)))
-
-    (optional session_newsb_optional_session_elinks
-        (call http_role_template_elinks (session_r session_newsb_t session_elinks_t
-            session_elinks_home_t session_elinks_tmp_t))))
+    (call session_read_cert_files (session_newsb_t)))
 
 (optional session_optional_session_screen
     (type session_screen_t)
@@ -1172,6 +1172,19 @@
 (optional session_optional_session_ssh
     (type session_ssh_t)
     (call ssh_role_template (session_r session_t session_ssh_t session_ssh_home_t))
+
+    (optional session_ssh_optional_session_gpgagent
+        (call stream_connect_pattern (session_ssh_t session_gpg_home_t session_gpgagent_home_t
+            session_gpgagent_t)))
+
+    (optional session_ssh_optional_usersubject
+        (call usersubject_use_inherited_pty_nodes (session_ssh_t))
+        (call usersubject_search_home_dir (session_ssh_t))
+        (call manage_files_pattern (session_ssh_t user_ssh_home_t user_ssh_home_t)))
+
+    (optional session_ssh_optional_joe_gpgagent
+        (call stream_connect_pattern (session_ssh_t user_gpg_home_t user_gpgagent_home_t
+            joe_gpgagent_t)))
 
     (context file_session_ssh_home (session_u object_r session_ssh_home_t ((s0)(s0))))
     (filecon "/root/\.ssh(/.*)?" any file_session_ssh_home)
@@ -1202,19 +1215,6 @@
     (call ssh_rw_inherited_sshd_tcp_sockets (session_t))
     (call ssh_rw_inherited_sshd_unix_stream_sockets (session_t))
     (call ssh_rw_inherited_sshd_unix_dgram_sockets (session_t))
-
-    (optional session_ssh_optional_session_gpgagent
-        (call stream_connect_pattern (session_ssh_t session_gpg_home_t session_gpgagent_home_t
-            session_gpgagent_t)))
-
-    (optional session_ssh_optional_usersubject
-        (call usersubject_use_inherited_pty_nodes (session_ssh_t))
-        (call usersubject_search_home_dir (session_ssh_t))
-        (call manage_files_pattern (session_ssh_t user_ssh_home_t user_ssh_home_t))
-
-        (optional session_ssh_optional_joe_gpgagent
-            (call stream_connect_pattern (session_ssh_t user_gpg_home_t user_gpgagent_home_t
-            joe_gpgagent_t))))
 
     (type session_sshkeygen_t)
     (call ssh_role_template_keygen (session_r session_t session_sshkeygen_t session_ssh_home_t))
@@ -1293,6 +1293,17 @@
     (call moc_role_template (session_r session_t session_moc_t
         session_moc_home_t))
 
+    (optional session_moc_optional_session_newsb
+        (allow session_moc_t session_newsb_home_t rw_inherited_file_perms))
+
+    (optional session_moc_optional_session_pa
+        (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
+            session_pa_run_t session_pa_tmpfs_t))
+
+        (call session_home_dir_filetrans_session_config_dir (session_moc_t))
+        (call session_config_filetrans (session_moc_t session_pa_home_t dir "pulse"))
+        (call session_run_user_dir_filetrans (session_moc_t session_pa_run_t dir "pulse")))
+
     (context file_session_moc_home (session_u object_r session_moc_home_t ((s0)
         (s0))))
     (filecon "/root/\.moc(/.*)?" any file_session_moc_home)
@@ -1305,22 +1316,16 @@
     (call session_home_dir_filetrans (session_t session_moc_home_t dir ".moc")) 
     (call session_home_dir_filetrans (session_moc_t session_moc_home_t dir ".moc")) 
 
-    (allow session_moc_t session_terminfo_home_t read_file_perms)
-
-    (optional session_moc_optional_session_newsb
-        (allow session_moc_t session_newsb_home_t rw_inherited_file_perms))
-
-    (optional session_moc_optional_session_pa
-        (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
-            session_pa_run_t session_pa_tmpfs_t))
-
-        (call session_home_dir_filetrans_session_config_dir (session_moc_t))
-        (call session_config_filetrans (session_moc_t session_pa_home_t dir "pulse"))
-        (call session_run_user_dir_filetrans (session_moc_t session_pa_run_t dir "pulse"))))
+    (allow session_moc_t session_terminfo_home_t read_file_perms))
 
 (optional session_optional_session_sudo
     (type session_sudo_t)
     (call sudo_role_template (session_r session_t session_sudo_t))
+
+    (optional session_sudo_optional_usersubject
+        (call usersubject_use_terminals (session_sudo_t))
+        (call usersubject_search_keyring_all_common_login_user_subjects (session_sudo_t)))
+
     (call sudo_search_all_keyrings (session_sudo_t))
 
     (call session_application_subject (session_sudo_t))
@@ -1330,11 +1335,7 @@
     (type session_visudo_t)
     (call sudo_visudo_role_template (session_r session_t session_visudo_t))
 
-    (call session_application_subject (session_visudo_t))
-
-    (optional session_sudo_optional_usersubject
-        (call usersubject_use_terminals (session_sudo_t))
-        (call usersubject_search_keyring_all_common_login_user_subjects (session_sudo_t))))
+    (call session_application_subject (session_visudo_t)))
 
 ; miscfiles
 (type session_pass_home_t)
