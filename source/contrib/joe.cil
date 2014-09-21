@@ -213,128 +213,194 @@
     (type joe_xorg_wrap_t)
     (call xserver_role_template_xorg_wrap (joe_r joe_xinit_t joe_xorg_wrap_t))
 
-    (allow joe_t joe_xorg_wrap_t (process (signal sigstop signull sigkill)))
-    (call ps_subject_pattern (joe_t joe_xorg_wrap_t))
+    (optional joe_xserver_optional_joe_xlock
+        (type joe_xlock_t)
+        (call xlock_role_template (joe_r joe_t joe_xlock_t user_xlock_home_t))
 
-    (context file_joe_user_xauth_home (joe_u object_r user_xauth_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.Xauthority.*" file file_joe_user_xauth_home)
-    (filecon "/home/joe/\.serverauth.*" file file_joe_user_xauth_home)
+        (context file_joe_user_xlock_home (joe_u object_r user_xlock_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.xlockrc" file file_joe_user_xlock_home)
 
-    (call usersubject_home_dir_filetrans_user_bin (joe_t file ".xinitrc"))
-    (filecon "/home/joe/\.xinitrc" file file_joe_user_bin)
+        (call usersubject_home_dir_filetrans (joe_t user_xlock_home_t file ".xlockrc"))
 
-    (context file_joe_user_x_home (joe_u object_r user_x_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.xserverrc" file file_joe_user_x_home)
+        (call usersubject_application_subject (joe_xlock_t))
+        (call usersubject_read_generic_home_content_files (joe_xlock_t)) ; ~/.signature
 
-    (context file_joe_user_xrdb_home (joe_u object_r user_xrdb_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.Xresources" file file_joe_user_xrdb_home)
+        (call xserver_common_client_subject (joe_xlock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
-    (context file_joe_user_xsel_log (joe_u object_r user_xsel_log_t ((s0)(s0))))
-    (filecon "/home/joe/\.xsel.log.*" file file_joe_user_xsel_log)
+    (optional joe_xserver_optional_joe_qiv
+        (type joe_qiv_t)
+        (call qiv_role_template (joe_r joe_t joe_qiv_t user_qiv_home_t user_qiv_tmpfs_t))
 
-    (allow joe_t user_x_home_t manage_file_perms)
-    (allow joe_t user_x_home_t relabel_file_perms)
-    (call usersubject_home_dir_filetrans (joe_t user_x_home_t file ".xserverrc"))
+        (context file_joe_user_qiv_home (joe_u object_r user_qiv_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.qiv-trash" dir file_joe_user_qiv_home)
 
-    (allow joe_xinit_t user_xauth_home_t read_file_perms)
+        (allow joe_t joe_qiv_t (process (signal signull sigstop sigkill)))
+        (call ps_subject_pattern (joe_t joe_qiv_t))
 
-    (call usersubject_execute_generic_bin_files (joe_xinit_t))
+        (allow joe_t user_qiv_home_t manage_dir_perms)
+        (allow joe_t user_qiv_home_t relabel_dir_perms)
+        (allow joe_t user_qiv_tmpfs_t manage_file_perms)
+        (allow joe_t user_qiv_tmpfs_t relabel_file_perms)
 
-    (allow joe_xorg_t joe_xinit_t (process (signal)))
-    (allow joe_xinit_t joe_xorg_t (process (signal)))
+        (call filetrans_pattern (joe_t user_qiv_home_t user_home_t file "*"))
+        (call filetrans_pattern (joe_qiv_t user_qiv_home_t user_home_t file "*"))
 
-    (allow joe_t user_x_tmp_t manage_file_perms)
-    (allow joe_t user_x_tmp_t relabel_file_perms)
-    (allow joe_t user_x_tmp_t manage_sock_file_perms)
-    (allow joe_t user_x_tmp_t relabel_sock_file_perms)
+        (call usersubject_home_dir_filetrans (joe_t user_qiv_home_t dir ".qiv-trash"))
+        (call usersubject_home_dir_filetrans (joe_qiv_t user_qiv_home_t dir ".qiv-trash"))
 
-    (allow joe_xorg_t user_xauth_home_t read_file_perms)
+        (call usersubject_dontaudit_read_all_inherited_user_files (joe_qiv_t))
 
-    (call files_tmp_filetrans (joe_xorg_t user_x_tmp_t file "*"))
-    (call files_tmp_filetrans (joe_xorg_t user_x_tmp_t sock_file "*"))
+        (call usersubject_manage_font_cache_dirs (joe_qiv_t))
+        (call usersubject_manage_font_cache_files (joe_qiv_t))
+        (call usersubject_cache_filetrans_user_font_cache_dir (joe_qiv_t))
 
-    (call stream_connect_pattern (joe_xinit_t user_x_tmp_t user_x_tmp_t joe_xorg_t))
+        (call usersubject_application_subject (joe_qiv_t))
 
-    (allow joe_xorg_t joe_xinit_t (process (sigchld)))
+        (call usersubject_manage_generic_home_content_files (joe_qiv_t))
+        (call usersubject_home_dir_filetrans_user_home (joe_qiv_t file "*"))
 
-    (allow joe_xorg_t joe_xinit_t (dirs (list)))
-    (allow joe_xorg_t joe_xinit_t read_file_perms)
+        (call xserver_common_client_subject (joe_qiv_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_client_subject_tmpfs_template (joe_qiv_t user_qiv_tmpfs_t)))
 
-    (call usersubject_application_subject (joe_xinit_t))
+    (optional joe_xserver_optional_joe_xpdf
+        (type joe_xpdf_t)
+        (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t))
 
-    (call usersubject_application_subject (joe_xorg_t))
-    (call usersubject_use_tty_nodes (joe_xorg_t))
+        (context file_joe_user_xpdf_home (joe_u object_r user_xpdf_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.xpdfrc" file file_joe_user_xpdf_home)
 
-    (call usersubject_application_subject (joe_xorg_wrap_t))
+        (allow joe_t joe_xpdf_t (process (signal signull sigstop sigkill)))
+        (call ps_subject_pattern (joe_t joe_xpdf_t))
+ 
+        (allow joe_t user_xpdf_home_t manage_file_perms)
+        (allow joe_t user_xpdf_home_t relabel_file_perms)
 
-    (call usersubject_application_subject (joe_xhost_t))
+        (allow joe_t user_xpdf_tmp_t manage_file_perms)
+        (allow joe_t user_xpdf_tmp_t relabel_file_perms)
+ 
+        (call usersubject_home_dir_filetrans (joe_t user_xpdf_home_t file ".xpdfrc"))
 
-    (call xserver_client_subject (joe_xhost_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call usersubject_dontaudit_read_all_inherited_user_files (joe_xpdf_t))
+        (call usersubject_application_subject (joe_xpdf_t))
 
-    (allow joe_t joe_xhost_t (dirs (list)))
-    (allow joe_t joe_xhost_t read_file_perms)
+        (call usersubject_manage_generic_home_content_files (joe_xpdf_t))
+        (call usersubject_home_dir_filetrans_user_home (joe_xpdf_t file "*"))
 
-    (call ps_subject_pattern (joe_t joe_xhost_t))
+        (call xserver_common_client_subject (joe_xpdf_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
-    (allow joe_t user_xauth_home_t manage_file_perms)
-    (allow joe_t user_xauth_home_t relabel_file_perms)
+    (optional joe_xpdf_optional_joe_mozilla
+        (call mozilla_role_template_firefox (joe_r joe_xpdf_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
+            user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
 
-    (allow joe_xinit_t joe_xorg_wrap_t (process (siginh)))
-    (allow joe_xorg_wrap_t joe_xorg_t (process (siginh)))
+        (call mozilla_role_template_xremotec (joe_r joe_xpdf_t joe_xremotec_t)))
 
-    (call usersubject_home_dir_filetrans (joe_xauth_t user_xauth_home_t file "*"))
+    (optional joe_xserver_optional_joe_mplayer
+        (type joe_mplayer_t)
+        (call mplayer_role_template (joe_r joe_t joe_mplayer_t user_mplayer_home_t user_mplayer_tmpfs_t
+            user_mplayer_tmp_t))
 
-    (call usersubject_read_generic_tmp_files (joe_xauth_t))
+        (optional joe_mplayer_optional_joe_pa
+            (call pa_client_subject (joe_r joe_mplayer_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_mplayer_tmpfs_t))
 
-    (call usersubject_application_subject (joe_xauth_t))
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_mplayer_t))
+            (call usersubject_config_filetrans (joe_mplayer_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_mplayer_t user_pa_run_t dir "pulse")))
 
-    (call usersubject_application_subject (joe_xterm_t))
-    (call usersubject_use_terminals (joe_xterm_t))
-    (call usersubject_setattr_terminals (joe_xterm_t))
-    (call usersubject_create_pty_node (joe_xterm_t))
+        (context file_joe_user_mplayer_home (joe_u object_r user_mplayer_home_t ((s0)(s0))))
+        (filecon "/home/joe/\.mplayer(/.*)?" any file_joe_user_mplayer_home)
 
-    (call xserver_common_client_subject (joe_xterm_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call usersubject_home_dir_filetrans (joe_t user_mplayer_home_t dir ".mplayer"))
+        (call usersubject_home_dir_filetrans (joe_mplayer_t user_mplayer_home_t dir ".mplayer"))
 
-    (optional joe_xterm_optional_joe_screen
-        (allow joe_xterm_t joe_screen_t (process (signal))))
+        (call usersubject_list_generic_home_content (joe_mplayer_t))
+        (call usersubject_read_generic_home_content_files (joe_mplayer_t))
 
-    (call usersubject_manage_font_cache_dirs (joe_xclock_t))
-    (call usersubject_manage_font_cache_files (joe_xclock_t))
-    (call usersubject_cache_filetrans_user_font_cache_dir (joe_xclock_t))
+        (call usersubject_manage_font_cache_dirs (joe_mplayer_t))
+        (call usersubject_manage_font_cache_files (joe_mplayer_t))
+        (call usersubject_cache_filetrans_user_font_cache_dir (joe_mplayer_t))
 
-    (call usersubject_application_subject (joe_xclock_t))
+        (call usersubject_application_subject (joe_mplayer_t))
 
-    (call xserver_common_client_subject (joe_xclock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-    (call usersubject_home_dir_filetrans (joe_t user_xloadimg_conf_t file ".xloadimagerc"))
-
-    (call usersubject_application_subject (joe_xloadimg_t))
-    (call usersubject_read_generic_home_content_files (joe_xloadimg_t))
-
-    (call xserver_common_client_subject (joe_xloadimg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-    (allow joe_t joe_xrdb_t (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (joe_t joe_xrdb_t))
-
-    (allow joe_t user_xrdb_home_t manage_file_perms)
-    (allow joe_t user_xrdb_home_t relabel_file_perms)
-
-    (call usersubject_application_subject (joe_xrdb_t))
-
-    (call usersubject_home_dir_filetrans (joe_t user_xrdb_home_t file ".Xresources"))
-
-    (call xserver_common_client_subject (joe_xrdb_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-    (call usersubject_application_subject (joe_xsel_t))
-
-    (call xserver_client_subject (joe_xsel_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-    (call usersubject_home_dir_filetrans (joe_t user_xsel_log_t file ".xsel.log"))
+        (call xserver_common_client_subject (joe_mplayer_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_client_subject_tmpfs_template (joe_mplayer_t user_mplayer_tmpfs_t))
+ 
+        (allow joe_xorg_t joe_mplayer_t (fd (use)))
+        (allow joe_xorg_t user_mplayer_tmp_t rw_inherited_file_perms))
 
     (optional joe_xserver_optional_joe_mozilla
         (type joe_firefox_t)
         (call mozilla_role_template_firefox (joe_r joe_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
-        user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
+            user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
+
+        (optional joe_firefox_optional_joe_xpdf
+            (call xpdf_role_template (joe_r joe_firefox_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t)))
+
+        (optional joe_firefox_optional_joe_mutt
+            (allow joe_firefox_t user_mutt_tmp_t rw_file_perms))
+
+        (optional joe_xremotec_optional_joe_mutt
+            (allow joe_xremotec_t user_mutt_tmp_t (file (read write))))
+
+        (optional joe_firefox_optional_joe_pa
+            (call pa_client_subject (joe_r joe_firefox_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_firefox_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_firefox_t))
+            (call usersubject_config_filetrans (joe_firefox_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_firefox_t user_pa_run_t dir "pulse")))
+
+        (optional joe_plugs_optional_joe_pa
+            (call pa_client_subject (joe_r joe_plugs_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_plugs_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_plugs_t))
+            (call usersubject_config_filetrans (joe_plugs_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_plugs_t user_pa_run_t dir "pulse")))
+
+        (optional joe_firefox_optional_googletalk
+            (type joe_googletalk_t)
+            (call googletalk_role_template (joe_r joe_plugs_t joe_googletalk_t user_googletalk_config_t
+                user_googletalk_tmp_t user_googletalk_tmpfs_t))
+
+            (optional joe_googletalk_optional_joe_pa
+                (call pa_client_subject (joe_r joe_googletalk_t joe_pa_t user_pa_home_t
+                    user_pa_run_t user_googletalk_tmpfs_t))
+
+                (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
+                (call usersubject_config_filetrans (joe_googletalk_t user_pa_home_t dir "pulse"))
+                (call usersubject_run_user_dir_filetrans (joe_googletalk_t user_pa_run_t dir "pulse")))
+
+            (context file_joe_user_googletalk_config (joe_u object_r user_googletalk_config_t ((s0)(s0))))
+            (filecon "/home/joe/\.config/google-googletalkplugin(/.*)?" any file_joe_user_googletalk_config)
+
+            (allow joe_t joe_googletalk_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_googletalk_t))
+
+            (allow joe_t user_googletalk_config_t manage_dir_perms)
+            (allow joe_t user_googletalk_config_t relabel_dir_perms)
+            (allow joe_t user_googletalk_config_t manage_file_perms)
+            (allow joe_t user_googletalk_config_t relabel_file_perms)
+            (call usersubject_config_filetrans (joe_t user_googletalk_config_t dir "google-googletalkplugin"))
+
+            (allow joe_t user_googletalk_tmp_t manage_file_perms)
+            (allow joe_t user_googletalk_tmp_t relabel_file_perms)
+
+            (allow joe_t user_googletalk_tmpfs_t manage_file_perms)
+            (allow joe_t user_googletalk_tmpfs_t relabel_file_perms)
+
+            (call usersubject_manage_font_cache_dirs (joe_googletalk_t))
+            (call usersubject_manage_font_cache_files (joe_googletalk_t))
+            (call usersubject_cache_filetrans_user_font_cache_dir (joe_googletalk_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
+
+            (call usersubject_application_subject (joe_googletalk_t))
+ 
+            (call xserver_common_client_subject (joe_googletalk_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+            (call xserver_client_subject_tmpfs_template (joe_googletalk_t user_googletalk_tmpfs_t))
+
+            (call usersubject_config_filetrans (joe_plugs_t user_googletalk_config_t dir "google-googletalkplugin")))
 
         (context file_joe_user_mozilla_cache (joe_u object_r user_mozilla_cache_t ((s0)(s0))))
         (filecon "/home/joe/\.cache/mozilla(/.*)?" any file_joe_user_mozilla_cache)
@@ -419,17 +485,6 @@
         (allow joe_xorg_t user_firefox_tmp_t rw_inherited_file_perms)
         (allow joe_xorg_t joe_firefox_t (fd (use)))
 
-        (optional joe_firefox_optional_joe_xpdf
-            (call xpdf_role_template (joe_r joe_firefox_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t)))
-
-        (optional joe_firefox_optional_joe_pa
-            (call pa_client_subject (joe_r joe_firefox_t joe_pa_t user_pa_home_t
-                user_pa_run_t user_firefox_tmpfs_t))
-
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_firefox_t))
-            (call usersubject_config_filetrans (joe_firefox_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_firefox_t user_pa_run_t dir "pulse")))
-
         (type joe_plugs_t)
         (call mozilla_role_template_plugs (joe_r joe_firefox_t joe_plugs_t user_plugs_tmpfs_t user_firefox_home_t))
 
@@ -459,177 +514,7 @@
         (call usersubject_application_subject (joe_xremotec_t))
         (call usersubject_read_generic_home_content_files (joe_xremotec_t))
 
-        (call xserver_common_client_subject (joe_xremotec_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-        (optional joe_plugs_optional_joe_pa
-            (call pa_client_subject (joe_r joe_plugs_t joe_pa_t user_pa_home_t
-                user_pa_run_t user_plugs_tmpfs_t))
-
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_plugs_t))
-            (call usersubject_config_filetrans (joe_plugs_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_plugs_t user_pa_run_t dir "pulse")))
-
-        (optional joe_firefox_optional_googletalk
-            (type joe_googletalk_t)
-            (call googletalk_role_template (joe_r joe_plugs_t joe_googletalk_t user_googletalk_config_t
-                user_googletalk_tmp_t user_googletalk_tmpfs_t))
-
-            (context file_joe_user_googletalk_config (joe_u object_r user_googletalk_config_t ((s0)(s0))))
-            (filecon "/home/joe/\.config/google-googletalkplugin(/.*)?" any file_joe_user_googletalk_config)
-
-            (allow joe_t joe_googletalk_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_googletalk_t))
-
-            (allow joe_t user_googletalk_config_t manage_dir_perms)
-            (allow joe_t user_googletalk_config_t relabel_dir_perms)
-            (allow joe_t user_googletalk_config_t manage_file_perms)
-            (allow joe_t user_googletalk_config_t relabel_file_perms)
-            (call usersubject_config_filetrans (joe_t user_googletalk_config_t dir "google-googletalkplugin"))
-
-            (allow joe_t user_googletalk_tmp_t manage_file_perms)
-            (allow joe_t user_googletalk_tmp_t relabel_file_perms)
-
-            (allow joe_t user_googletalk_tmpfs_t manage_file_perms)
-            (allow joe_t user_googletalk_tmpfs_t relabel_file_perms)
-
-            (call usersubject_manage_font_cache_dirs (joe_googletalk_t))
-            (call usersubject_manage_font_cache_files (joe_googletalk_t))
-            (call usersubject_cache_filetrans_user_font_cache_dir (joe_googletalk_t))
-
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
-
-            (call usersubject_application_subject (joe_googletalk_t))
- 
-            (call xserver_common_client_subject (joe_googletalk_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-            (call xserver_client_subject_tmpfs_template (joe_googletalk_t user_googletalk_tmpfs_t))
-
-            (call usersubject_config_filetrans (joe_plugs_t user_googletalk_config_t dir "google-googletalkplugin"))
-
-            (optional joe_googletalk_optional_joe_pa
-                (call pa_client_subject (joe_r joe_googletalk_t joe_pa_t user_pa_home_t
-                    user_pa_run_t user_googletalk_tmpfs_t))
-
-                (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
-                (call usersubject_config_filetrans (joe_googletalk_t user_pa_home_t dir "pulse"))
-                (call usersubject_run_user_dir_filetrans (joe_googletalk_t user_pa_run_t dir "pulse"))))
-
-    (optional joe_xserver_optional_joe_xlock
-        (type joe_xlock_t)
-        (call xlock_role_template (joe_r joe_t joe_xlock_t user_xlock_home_t))
-
-        (context file_joe_user_xlock_home (joe_u object_r user_xlock_home_t ((s0)(s0))))
-        (filecon "/home/joe/\.xlockrc" file file_joe_user_xlock_home)
-
-
-        (call usersubject_home_dir_filetrans (joe_t user_xlock_home_t file ".xlockrc"))
-
-
-        (call usersubject_application_subject (joe_xlock_t))
-        (call usersubject_read_generic_home_content_files (joe_xlock_t)) ; ~/.signature
-
-        (call xserver_common_client_subject (joe_xlock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
-
-    (optional joe_xserver_optional_joe_qiv
-        (type joe_qiv_t)
-        (call qiv_role_template (joe_r joe_t joe_qiv_t user_qiv_home_t user_qiv_tmpfs_t))
-
-        (context file_joe_user_qiv_home (joe_u object_r user_qiv_home_t ((s0)(s0))))
-        (filecon "/home/joe/\.qiv-trash" dir file_joe_user_qiv_home)
-
-        (allow joe_t joe_qiv_t (process (signal signull sigstop sigkill)))
-        (call ps_subject_pattern (joe_t joe_qiv_t))
-
-        (allow joe_t user_qiv_home_t manage_dir_perms)
-        (allow joe_t user_qiv_home_t relabel_dir_perms)
-        (allow joe_t user_qiv_tmpfs_t manage_file_perms)
-        (allow joe_t user_qiv_tmpfs_t relabel_file_perms)
-
-        (call filetrans_pattern (joe_t user_qiv_home_t user_home_t file "*"))
-        (call filetrans_pattern (joe_qiv_t user_qiv_home_t user_home_t file "*"))
-
-        (call usersubject_home_dir_filetrans (joe_t user_qiv_home_t dir ".qiv-trash"))
-        (call usersubject_home_dir_filetrans (joe_qiv_t user_qiv_home_t dir ".qiv-trash"))
-
-        (call usersubject_dontaudit_read_all_inherited_user_files (joe_qiv_t))
-
-        (call usersubject_manage_font_cache_dirs (joe_qiv_t))
-        (call usersubject_manage_font_cache_files (joe_qiv_t))
-        (call usersubject_cache_filetrans_user_font_cache_dir (joe_qiv_t))
-
-        (call usersubject_application_subject (joe_qiv_t))
-
-        (call usersubject_manage_generic_home_content_files (joe_qiv_t))
-        (call usersubject_home_dir_filetrans_user_home (joe_qiv_t file "*"))
-
-        (call xserver_common_client_subject (joe_qiv_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-        (call xserver_client_subject_tmpfs_template (joe_qiv_t user_qiv_tmpfs_t)))
-
-    (optional joe_xserver_optional_joe_xpdf
-        (type joe_xpdf_t)
-        (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t))
-
-        (context file_joe_user_xpdf_home (joe_u object_r user_xpdf_home_t ((s0)(s0))))
-        (filecon "/home/joe/\.xpdfrc" file file_joe_user_xpdf_home)
-
-        (allow joe_t joe_xpdf_t (process (signal signull sigstop sigkill)))
-        (call ps_subject_pattern (joe_t joe_xpdf_t))
- 
-        (allow joe_t user_xpdf_home_t manage_file_perms)
-        (allow joe_t user_xpdf_home_t relabel_file_perms)
-
-        (allow joe_t user_xpdf_tmp_t manage_file_perms)
-        (allow joe_t user_xpdf_tmp_t relabel_file_perms)
- 
-        (call usersubject_home_dir_filetrans (joe_t user_xpdf_home_t file ".xpdfrc"))
-
-        (call usersubject_dontaudit_read_all_inherited_user_files (joe_xpdf_t))
-
-        (call usersubject_application_subject (joe_xpdf_t))
-
-        (call usersubject_manage_generic_home_content_files (joe_xpdf_t))
-        (call usersubject_home_dir_filetrans_user_home (joe_xpdf_t file "*"))
-
-        (call xserver_common_client_subject (joe_xpdf_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-        (optional joe_xpdf_optional_joe_mozilla
-            (call mozilla_role_template_firefox (joe_r joe_xpdf_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
-                user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
-
-            (call mozilla_role_template_xremotec (joe_r joe_xpdf_t joe_xremotec_t))))
-
-    (optional joe_xserver_optional_joe_mplayer
-        (type joe_mplayer_t)
-        (call mplayer_role_template (joe_r joe_t joe_mplayer_t user_mplayer_home_t user_mplayer_tmpfs_t
-        user_mplayer_tmp_t))
-
-        (context file_joe_user_mplayer_home (joe_u object_r user_mplayer_home_t ((s0)(s0))))
-        (filecon "/home/joe/\.mplayer(/.*)?" any file_joe_user_mplayer_home)
-
-        (call usersubject_home_dir_filetrans (joe_t user_mplayer_home_t dir ".mplayer"))
-        (call usersubject_home_dir_filetrans (joe_mplayer_t user_mplayer_home_t dir ".mplayer"))
-
-        (call usersubject_list_generic_home_content (joe_mplayer_t))
-        (call usersubject_read_generic_home_content_files (joe_mplayer_t))
-
-        (call usersubject_manage_font_cache_dirs (joe_mplayer_t))
-        (call usersubject_manage_font_cache_files (joe_mplayer_t))
-        (call usersubject_cache_filetrans_user_font_cache_dir (joe_mplayer_t))
-
-        (call usersubject_application_subject (joe_mplayer_t))
-
-        (call xserver_common_client_subject (joe_mplayer_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-        (call xserver_client_subject_tmpfs_template (joe_mplayer_t user_mplayer_tmpfs_t))
- 
-        (allow joe_xorg_t joe_mplayer_t (fd (use)))
-        (allow joe_xorg_t user_mplayer_tmp_t rw_inherited_file_perms)
-
-        (optional joe_mplayer_optional_joe_pa
-            (call pa_client_subject (joe_r joe_mplayer_t joe_pa_t user_pa_home_t
-                user_pa_run_t user_mplayer_tmpfs_t))
-
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_mplayer_t))
-            (call usersubject_config_filetrans (joe_mplayer_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_mplayer_t user_pa_run_t dir "pulse")))
+        (call xserver_common_client_subject (joe_xremotec_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
     (optional joe_xserver_optional_joe_ratpoison
         (type joe_rp_t)
@@ -659,14 +544,129 @@
  
         (call usersubject_application_subject (joe_rp_t))
 
-        (call xserver_common_client_subject (joe_rp_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+        (call xserver_common_client_subject (joe_rp_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
         (type joe_rpws_t)
         (call ratpoison_role_template_rpws (joe_r joe_t joe_rpws_t user_rpws_tmp_t))
 
         (call xserver_common_client_subject (joe_rpws_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
-        (call usersubject_application_subject (joe_rpws_t))))
+        (call usersubject_application_subject (joe_rpws_t)))
+
+    (allow joe_t joe_xorg_wrap_t (process (signal sigstop signull sigkill)))
+    (call ps_subject_pattern (joe_t joe_xorg_wrap_t))
+
+    (context file_joe_user_xauth_home (joe_u object_r user_xauth_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.Xauthority.*" file file_joe_user_xauth_home)
+    (filecon "/home/joe/\.serverauth.*" file file_joe_user_xauth_home)
+
+    (call usersubject_home_dir_filetrans_user_bin (joe_t file ".xinitrc"))
+    (filecon "/home/joe/\.xinitrc" file file_joe_user_bin)
+
+    (context file_joe_user_x_home (joe_u object_r user_x_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.xserverrc" file file_joe_user_x_home)
+
+    (context file_joe_user_xrdb_home (joe_u object_r user_xrdb_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.Xresources" file file_joe_user_xrdb_home)
+
+    (context file_joe_user_xsel_log (joe_u object_r user_xsel_log_t ((s0)(s0))))
+    (filecon "/home/joe/\.xsel.log.*" file file_joe_user_xsel_log)
+
+    (allow joe_t user_x_home_t manage_file_perms)
+    (allow joe_t user_x_home_t relabel_file_perms)
+    (call usersubject_home_dir_filetrans (joe_t user_x_home_t file ".xserverrc"))
+
+    (allow joe_xinit_t user_xauth_home_t read_file_perms)
+
+    (call usersubject_execute_generic_bin_files (joe_xinit_t))
+
+    (allow joe_xorg_t joe_xinit_t (process (signal)))
+    (allow joe_xinit_t joe_xorg_t (process (signal)))
+
+    (allow joe_t user_x_tmp_t manage_file_perms)
+    (allow joe_t user_x_tmp_t relabel_file_perms)
+    (allow joe_t user_x_tmp_t manage_sock_file_perms)
+    (allow joe_t user_x_tmp_t relabel_sock_file_perms)
+
+    (allow joe_xorg_t user_xauth_home_t read_file_perms)
+
+    (call files_tmp_filetrans (joe_xorg_t user_x_tmp_t file "*"))
+    (call files_tmp_filetrans (joe_xorg_t user_x_tmp_t sock_file "*"))
+
+    (call stream_connect_pattern (joe_xinit_t user_x_tmp_t user_x_tmp_t joe_xorg_t))
+
+    (allow joe_xorg_t joe_xinit_t (process (sigchld)))
+
+    (allow joe_xorg_t joe_xinit_t (dirs (list)))
+    (allow joe_xorg_t joe_xinit_t read_file_perms)
+
+    (call usersubject_application_subject (joe_xinit_t))
+
+    (call usersubject_application_subject (joe_xorg_t))
+    (call usersubject_use_tty_nodes (joe_xorg_t))
+
+    (call usersubject_application_subject (joe_xorg_wrap_t))
+
+    (call usersubject_application_subject (joe_xhost_t))
+
+    (call xserver_client_subject (joe_xhost_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (allow joe_t joe_xhost_t (dirs (list)))
+    (allow joe_t joe_xhost_t read_file_perms)
+
+    (call ps_subject_pattern (joe_t joe_xhost_t))
+
+    (allow joe_t user_xauth_home_t manage_file_perms)
+    (allow joe_t user_xauth_home_t relabel_file_perms)
+
+    (allow joe_xinit_t joe_xorg_wrap_t (process (siginh)))
+    (allow joe_xorg_wrap_t joe_xorg_t (process (siginh)))
+
+    (call usersubject_home_dir_filetrans (joe_xauth_t user_xauth_home_t file "*"))
+
+    (call usersubject_read_generic_tmp_files (joe_xauth_t))
+
+    (call usersubject_application_subject (joe_xauth_t))
+
+    (call usersubject_application_subject (joe_xterm_t))
+    (call usersubject_use_terminals (joe_xterm_t))
+    (call usersubject_setattr_terminals (joe_xterm_t))
+    (call usersubject_create_pty_node (joe_xterm_t))
+
+    (call xserver_common_client_subject (joe_xterm_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call usersubject_manage_font_cache_dirs (joe_xclock_t))
+    (call usersubject_manage_font_cache_files (joe_xclock_t))
+    (call usersubject_cache_filetrans_user_font_cache_dir (joe_xclock_t))
+
+    (call usersubject_application_subject (joe_xclock_t))
+
+    (call xserver_common_client_subject (joe_xclock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call usersubject_home_dir_filetrans (joe_t user_xloadimg_conf_t file ".xloadimagerc"))
+
+    (call usersubject_application_subject (joe_xloadimg_t))
+    (call usersubject_read_generic_home_content_files (joe_xloadimg_t))
+
+    (call xserver_common_client_subject (joe_xloadimg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (allow joe_t joe_xrdb_t (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (joe_t joe_xrdb_t))
+
+    (allow joe_t user_xrdb_home_t manage_file_perms)
+    (allow joe_t user_xrdb_home_t relabel_file_perms)
+
+    (call usersubject_application_subject (joe_xrdb_t))
+
+    (call usersubject_home_dir_filetrans (joe_t user_xrdb_home_t file ".Xresources"))
+
+    (call xserver_common_client_subject (joe_xrdb_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call usersubject_application_subject (joe_xsel_t))
+
+    (call xserver_client_subject (joe_xsel_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call usersubject_home_dir_filetrans (joe_t user_xsel_log_t file ".xsel.log")))
 
 (optional joe_optional_java
     (allow joe_t user_java_home_t manage_dir_perms)
@@ -681,41 +681,37 @@
 
     (call usersubject_home_dir_filetrans (joe_t user_java_home_t dir ".java"))
 
-    (context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))
-    (filecon "/home/joe/\.java(/.*)?" any file_joe_user_java_home)
+    ; BUG?
 
-    (optional joe_optional_joe_fop
-        (type joe_fop_t)
-        (call fop_role_template (joe_r joe_t joe_fop_t
-            user_fop_home_t user_java_home_t user_java_tmp_t))
+    ;(context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))
+    ;(filecon "/home/joe/\.java(/.*)?" any file_joe_user_java_home))
 
-        (context file_joe_user_fop_home (joe_u object_r user_fop_home_t ((s0)(s0))))
-        (filecon "/home/joe/\.fop(/.*)?" any file_joe_user_fop_home)
-        (filecon "/home/joe/\.foprc" file file_joe_user_fop_home)
+    (filecon "/home/joe/\.java(/.*)?" any (joe_u object_r user_java_home_t ((s0)(s0)))))
 
-        (call usersubject_home_dir_filetrans (joe_t user_fop_home_t dir ".fop"))
-        (call usersubject_home_dir_filetrans (joe_t user_fop_home_t file ".foprc"))
+(optional joe_optional_joe_fop
+    (type joe_fop_t)
+    (call fop_role_template (joe_r joe_t joe_fop_t
+        user_fop_home_t user_java_home_t user_java_tmp_t))
 
-        (call usersubject_home_dir_filetrans (joe_fop_t user_fop_home_t dir ".fop"))
+    (context file_joe_user_fop_home (joe_u object_r user_fop_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.fop(/.*)?" any file_joe_user_fop_home)
+    (filecon "/home/joe/\.foprc" file file_joe_user_fop_home)
 
-        (call usersubject_home_dir_filetrans (joe_fop_t user_java_home_t dir ".java"))
+    (call usersubject_home_dir_filetrans (joe_t user_fop_home_t dir ".fop"))
+    (call usersubject_home_dir_filetrans (joe_t user_fop_home_t file ".foprc"))
 
-        (call usersubject_manage_generic_home_content_files (joe_fop_t))
-        (call usersubject_home_dir_filetrans_user_home (joe_fop_t file "*"))
+    (call usersubject_home_dir_filetrans (joe_fop_t user_fop_home_t dir ".fop"))
 
-        (call usersubject_application_subject (joe_fop_t))))
+    (call usersubject_home_dir_filetrans (joe_fop_t user_java_home_t dir ".java"))
+
+    (call usersubject_manage_generic_home_content_files (joe_fop_t))
+    (call usersubject_home_dir_filetrans_user_home (joe_fop_t file "*"))
+
+    (call usersubject_application_subject (joe_fop_t)))
 
 (optional joe_optional_joe_ffmpeg
     (type joe_ffmpeg_t)
     (call ffmpeg_role_template (joe_r joe_t joe_ffmpeg_t user_ffmpeg_tmpfs_t))
-
-    (call usersubject_manage_generic_home_content_files (joe_ffmpeg_t))
-    (call usersubject_home_dir_filetrans_user_home (joe_ffmpeg_t file "*"))
-
-    (call usersubject_manage_generic_tmp_content_files (joe_ffmpeg_t))
-    (call usersubject_tmp_filetrans_generic_user_tmp (joe_ffmpeg_t file "*"))
-
-    (call usersubject_application_subject (joe_ffmpeg_t))
 
     (optional joe_ffmeg_optional_joe_xserver
         (call xserver_client_subject (joe_ffmpeg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
@@ -727,7 +723,15 @@
  
         (call usersubject_home_dir_filetrans_user_config_dir (joe_ffmpeg_t))
         (call usersubject_config_filetrans (joe_ffmpeg_t user_pa_home_t dir "pulse"))
-        (call usersubject_run_user_dir_filetrans (joe_ffmpeg_t user_pa_run_t dir "pulse"))))
+        (call usersubject_run_user_dir_filetrans (joe_ffmpeg_t user_pa_run_t dir "pulse")))
+
+    (call usersubject_manage_generic_home_content_files (joe_ffmpeg_t))
+    (call usersubject_home_dir_filetrans_user_home (joe_ffmpeg_t file "*"))
+
+    (call usersubject_manage_generic_tmp_content_files (joe_ffmpeg_t))
+    (call usersubject_tmp_filetrans_generic_user_tmp (joe_ffmpeg_t file "*"))
+
+    (call usersubject_application_subject (joe_ffmpeg_t)))
 
 (optional joe_optional_joe_rtorrent
     (type joe_rtorrent_t)
@@ -750,6 +754,15 @@
     (type joe_elinks_t)
     (call http_role_template_elinks (joe_r joe_t joe_elinks_t
         user_elinks_home_t user_elinks_tmp_t))
+
+    (optional joe_elinks_optional_joe_newsb
+        (allow joe_elinks_t user_newsb_home_t rw_inherited_file_perms))
+
+    (optional joe_elinks_optional_joe_mutt
+        (allow joe_elinks_t joe_mutt_t read_fifo_file_perms)
+        (allow joe_elinks_t user_mutt_tmp_t rw_file_perms)
+        (call mail_role_template_mutt (joe_r joe_elinks_t joe_mutt_t
+            user_mutt_home_t user_mutt_tmp_t)))
 
     (context file_joe_user_elinks_home (joe_u object_r user_elinks_home_t ((s0)(s0))))
     (filecon "/home/joe/\.elinks(/.*)?" any file_joe_user_elinks_home)
@@ -790,12 +803,7 @@
     (call commands_shell_auto_subject_type_transition (joe_elinks_t joe_t))
 
     (call usersubject_application_subject (joe_elinks_t))
-    (call usersubject_use_terminals (joe_elinks_t))
-
-    (optional joe_elinks_optional_joe_mutt
-        (allow joe_mutt_t user_elinks_tmp_t rw_file_perms)
-        (call mail_role_template_mutt (joe_r joe_elinks_t joe_mutt_t
-            user_mutt_home_t user_mutt_tmp_t))))
+    (call usersubject_use_terminals (joe_elinks_t)))
 
 (optional joe_optional_joe_emacs
     (type joe_emacs_t)
@@ -853,6 +861,12 @@
     (call git_role_template (joe_r joe_t joe_git_t user_git_home_t user_git_conf_t
         user_git_tmp_t))
 
+    (optional joe_git_optional_joe_ssh
+        (call ssh_role_template (joe_r joe_git_t joe_ssh_t user_ssh_home_t)))
+
+    (optional joe_git_optional_joe_gpg
+        (call gpg_role_template (joe_r joe_git_t joe_gpg_t user_gpg_home_t)))
+
     (context file_user_joe_git_conf (joe_u object_r user_git_conf_t ((s0)(s0))))
     (filecon "/home/joe/\.gitaliases" file file_user_joe_git_conf)
     (filecon "/home/joe/\.gitconfig" file file_user_joe_git_conf)
@@ -894,12 +908,6 @@
     (call usersubject_home_dir_filetrans_user_home (joe_git_t dir "*"))
     (call usersubject_home_dir_filetrans_user_home (joe_git_t file "*"))
     (call usersubject_home_dir_filetrans_user_home (joe_git_t lnk_file "*"))
-
-    (optional joe_git_optional_joe_ssh
-        (call ssh_role_template (joe_r joe_git_t joe_ssh_t user_ssh_home_t)))
-
-    (optional joe_git_optional_joe_gpg
-        (call gpg_role_template (joe_r joe_git_t joe_gpg_t user_gpg_home_t)))
 
     (type joe_tig_t)
     (call git_role_template_tig (joe_r joe_t joe_tig_t user_tig_home_t))
@@ -943,6 +951,32 @@
     (call gpg_role_template (joe_r joe_t joe_gpg_t
         user_gpg_home_t))
 
+    (optional joe_gpgagent_optional_joe_pinentry
+        (type joe_pinentry_t)
+        (call pinentry_role_template (joe_r joe_gpgagent_t joe_pinentry_t))
+
+        (allow joe_t joe_pinentry_t (process (signal signull sigkill sigstop)))
+        (call ps_subject_pattern (joe_t joe_pinentry_t))
+
+        (call stream_connect_pattern (joe_pinentry_t user_gpg_home_t user_gpgagent_home_t
+            joe_gpgagent_t))
+
+        (allow joe_pinentry_t user_terminfo_home_t read_file_perms)
+
+        (call usersubject_application_subject (joe_pinentry_t))
+        (call usersubject_use_terminals (joe_pinentry_t)))
+
+    (optional joe_gpg_optional_joe_elinks
+        (allow joe_gpg_t joe_elinks_t (fifo_file (write)))
+        (allow joe_gpg_t user_elinks_tmp_t rw_file_perms))
+
+    (optional joe_gpg_optional_joe_mutt
+        (allow joe_gpg_t user_mutt_home_t read_file_perms)
+        (allow joe_gpg_t user_mutt_tmp_t rw_file_perms))
+
+    (optional joe_gpg_optional_joe_git
+        (allow joe_gpg_t user_git_tmp_t read_file_perms))
+
     (context file_joe_user_gpg_home (joe_u object_r user_gpg_home_t ((s0)(s0))))
     (filecon "/home/joe/\.gnupg(/.*)?" any file_joe_user_gpg_home)
 
@@ -970,18 +1004,9 @@
     (call usersubject_application_subject (joe_gpg_t))
     (call usersubject_use_terminals (joe_gpg_t))
 
-    (optional joe_gpg_optional_joe_elinks
-        (allow joe_gpg_t joe_elinks_t (fifo_file (write)))
-        (allow joe_gpg_t user_elinks_tmp_t rw_file_perms))
-
-    (optional joe_gpg_optional_joe_git
-        (allow joe_gpg_t user_git_tmp_t read_file_perms))
-
     (type joe_gpgagent_t)
-    (call gpg_role_template_agent (joe_r joe_t joe_gpgagent_t
-        user_gpgagent_home_t))
-    (call gpg_role_template_agent (joe_r joe_gpg_t joe_gpgagent_t
-        user_gpgagent_home_t))
+    (call gpg_role_template_agent (joe_r joe_t joe_gpgagent_t user_gpgagent_home_t))
+    (call gpg_role_template_agent (joe_r joe_gpg_t joe_gpgagent_t user_gpgagent_home_t))
 
     (allow joe_t joe_gpgagent_t (process (signal signull sigkill sigstop)))
     (call ps_subject_pattern (joe_t joe_gpgagent_t))
@@ -1012,21 +1037,6 @@
     (call usersubject_use_terminals (joe_gpgagent_t))
 
     (call stream_connect_pattern (joe_gpgagent_t user_scd_tmp_t user_scd_tmp_t joe_scd_t))
-
-    (optional joe_gpgagent_optional_joe_pinentry
-        (type joe_pinentry_t)
-        (call pinentry_role_template (joe_r joe_gpgagent_t joe_pinentry_t))
-
-        (allow joe_t joe_pinentry_t (process (signal signull sigkill sigstop)))
-        (call ps_subject_pattern (joe_t joe_pinentry_t))
-
-        (call stream_connect_pattern (joe_pinentry_t user_gpg_home_t user_gpgagent_home_t
-            joe_gpgagent_t))
-
-        (allow joe_pinentry_t user_terminfo_home_t read_file_perms)
-
-        (call usersubject_application_subject (joe_pinentry_t))
-        (call usersubject_use_terminals (joe_pinentry_t)))
 
     (type joe_scd_t) 
     (call gpg_role_template_scd (joe_r joe_gpgagent_t joe_scd_t user_scd_tmp_t
@@ -1065,6 +1075,22 @@
     (call mail_role_template_mutt (joe_r joe_t joe_mutt_t
         user_mutt_home_t user_mutt_tmp_t))
 
+    (optional joe_mutt_optional_joe_firefox
+        (call mozilla_role_template_firefox (joe_r joe_mutt_t joe_firefox_t user_firefox_home_t
+            user_mozilla_cache_t user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t)))
+
+    (optional joe_mutt_optional_joe_xremotec
+        (call mozilla_role_template_xremotec (joe_r joe_mutt_t joe_xremotec_t)))
+
+    (optional joe_mutt_optional_joe_elinks
+        (allow joe_mutt_t user_elinks_tmp_t rw_file_perms)
+        (call http_role_template_elinks (joe_r joe_mutt_t joe_elinks_t
+            user_elinks_home_t user_elinks_tmp_t)))
+
+    (optional joe_mutt_gpg_optional_joe_gpg
+        (call gpg_role_template (joe_r joe_mutt_t joe_gpg_t user_gpg_home_t))
+        (call gpg_role_template (joe_r joe_mutt_gpg_t joe_gpg_t user_gpg_home_t)))
+
     (context file_joe_user_mutt_home (joe_u object_r user_mutt_home_t ((s0)(s0))))
     (filecon "/home/joe/\.muttrc" file file_joe_user_mutt_home)
     (filecon "/home/joe/\.mutt_cache" file file_joe_user_mutt_home)
@@ -1098,35 +1124,16 @@
     (type joe_mutt_gpg_t)
     (call mail_role_template_mutt_gpg (joe_r joe_mutt_t joe_mutt_gpg_t))
 
-    (call usersubject_application_subject (joe_mutt_gpg_t))
-
-    (optional joe_mutt_optional_joe_firefox
-            (call mozilla_role_template_firefox (joe_r joe_mutt_t joe_firefox_t user_firefox_home_t
-                user_mozilla_cache_t user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
-
-            (allow joe_firefox_t user_mutt_tmp_t rw_file_perms))
-
-    (optional joe_mutt_optional_joe_xremotec
-            (call mozilla_role_template_xremotec (joe_r joe_mutt_t joe_xremotec_t))
-
-            (allow joe_xremotec_t user_mutt_tmp_t (file (read write))))
-
-    (optional joe_mutt_optional_joe_elinks
-        (allow joe_elinks_t joe_mutt_t read_fifo_file_perms)
-        (allow joe_elinks_t user_mutt_tmp_t rw_file_perms)
-        (call http_role_template_elinks (joe_r joe_mutt_t joe_elinks_t
-            user_elinks_home_t user_elinks_tmp_t))))
-
-    (optional joe_mutt_gpg_optional_joe_gpg
-        (call gpg_role_template (joe_r joe_mutt_t joe_gpg_t user_gpg_home_t))
-        (call gpg_role_template (joe_r joe_mutt_gpg_t joe_gpg_t user_gpg_home_t))
-        (allow joe_gpg_t user_mutt_home_t read_file_perms)
-        (allow joe_gpg_t user_mutt_tmp_t rw_file_perms)))
+    (call usersubject_application_subject (joe_mutt_gpg_t)))
 
 (optional joe_optional_joe_irc
     (type joe_irssi_t)
     (call irc_role_template_irssi (joe_r joe_t joe_irssi_t
         user_irssi_home_t))
+
+    (optional joe_irssi_optional_joe_moc
+        (call moc_role_template (joe_r joe_irssi_t joe_moc_t
+            user_moc_home_t)))
 
     (context file_joe_user_irssi_home (joe_u object_r user_irssi_home_t ((s0)(s0))))
     (filecon "/home/joe/\.irssi(/.*)?" any file_joe_user_irssi_home)
@@ -1137,17 +1144,20 @@
     (allow joe_irssi_t user_terminfo_home_t read_file_perms)
 
     (call usersubject_application_subject (joe_irssi_t))
-    (call usersubject_read_cert_files (joe_irssi_t))
+    (call usersubject_read_cert_files (joe_irssi_t)))
 
-    (optional joe_irssi_optional_joe_moc
-        (call moc_role_template (joe_r joe_irssi_t joe_moc_t
-            user_moc_home_t))
-        (allow joe_moc_t joe_irssi_t (tcp_socket (read write)))))
-    
 (optional joe_optional_joe_newsb
     (type joe_newsb_t)
     (call newsb_role_template (joe_r joe_t joe_newsb_t
         user_newsb_home_t))
+
+    (optional joe_newsb_optional_joe_moc
+        (call moc_role_template (joe_r joe_newsb_t joe_moc_t
+            user_moc_home_t)))
+
+    (optional joe_newsb_optional_joe_elinks
+        (call http_role_template_elinks (joe_r joe_newsb_t joe_elinks_t
+            user_elinks_home_t user_elinks_tmp_t)))
 
     (context file_joe_user_newsb_home (joe_u object_r user_newsb_home_t ((s0)(s0))))
     (filecon "/home/joe/\.newsbeuter(/.*)?" any file_joe_user_newsb_home)
@@ -1164,22 +1174,21 @@
 
     (call usersubject_application_subject (joe_newsb_t))
     (call usersubject_use_terminals (joe_newsb_t))
-    (call usersubject_read_cert_files (joe_newsb_t))
-
-    (optional joe_newsb_optional_joe_moc
-        (allow joe_moc_t user_newsb_home_t rw_inherited_file_perms)
-        (call moc_role_template (joe_r joe_newsb_t joe_moc_t
-            user_moc_home_t)))
-
-    (optional joe_newsb_optional_joe_elinks
-        (call http_role_template_elinks (joe_r joe_newsb_t joe_elinks_t
-            user_elinks_home_t user_elinks_tmp_t))
-        (allow joe_elinks_t user_newsb_home_t rw_inherited_file_perms)))
+    (call usersubject_read_cert_files (joe_newsb_t)))
 
 (optional joe_optional_joe_screen
     (type joe_screen_t)
     (call screen_role_template (joe_r joe_t joe_screen_t
         user_screen_home_t user_screen_tmp_t))
+
+    ; BUG?
+    ; moving the two below optional block out of here will make secilc segfault
+
+    (optional joe_screen_optional_joe_xterm
+        (allow joe_screen_t joe_xterm_t (process (sigchld))))
+
+    (optional joe_xterm_optional_joe_screen
+        (allow joe_xterm_t joe_screen_t (process (signal))))
 
     (context file_joe_user_screen_home (joe_u object_r user_screen_home_t ((s0)(s0))))
     (filecon "/home/joe/\.screenrc" file file_joe_user_screen_home)
@@ -1192,14 +1201,15 @@
     (call usersubject_use_terminals (joe_screen_t))
     (call usersubject_setattr_terminals (joe_screen_t))
     (call usersubject_create_pty_node (joe_screen_t))
-    (call usersubject_home_bin_auto_subject_type_transition (joe_screen_t joe_t))
-
-    (optional joe_screen_optional_joe_xterm
-        (allow joe_screen_t joe_xterm_t (process (sigchld)))))
+    (call usersubject_home_bin_auto_subject_type_transition (joe_screen_t joe_t)))
 
 (optional joe_optional_joe_ssh
     (type joe_ssh_t)
     (call ssh_role_template (joe_r joe_t joe_ssh_t user_ssh_home_t))
+
+    (optional joe_ssh_optional_joe_gpgagent
+        (call stream_connect_pattern (joe_ssh_t user_gpg_home_t user_gpgagent_home_t
+            joe_gpgagent_t)))
 
     (context file_joe_user_ssh_home (joe_u object_r user_ssh_home_t ((s0)(s0))))
     (filecon "/home/joe/\.ssh(/.*)?" any file_joe_user_ssh_home)
@@ -1234,10 +1244,6 @@
     (call usersubject_manage_generic_tmp_content_files (joe_ssh_t))
     (call usersubject_tmp_filetrans_generic_user_tmp (joe_ssh_t file "*"))
 
-    (optional joe_ssh_optional_joe_gpgagent
-        (call stream_connect_pattern (joe_ssh_t user_gpg_home_t user_gpgagent_home_t
-            joe_gpgagent_t)))
-
     (type joe_sshkeygen_t)
     (call ssh_role_template_keygen (joe_r joe_t joe_sshkeygen_t user_ssh_home_t))
 
@@ -1266,6 +1272,12 @@
     (call pa_role_template (joe_r joe_t joe_pa_t user_pa_home_t
         user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t))
 
+    (optional joe_pactl_optional_joe_xserver
+        (call xserver_client_subject (joe_pactl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+
+    (optional joe_pa_optional_joe_xserver
+        (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+
     (call usersubject_application_subject (joe_pa_t))
 
     (context file_joe_user_pa_home (joe_u object_r user_pa_home_t ((s0)(s0))))
@@ -1292,9 +1304,6 @@
 
     (call usersubject_search_generic_config (joe_pa_t))
 
-    (optional joe_pa_optional_joe_xserver
-        (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
-
     (type joe_pactl_t)
     (call pa_role_template_pactl (joe_r joe_t joe_pactl_t user_pa_run_t
         joe_pa_t))
@@ -1309,15 +1318,29 @@
     (call usersubject_config_filetrans (joe_pactl_t user_pa_home_t dir "pulse"))
     (call usersubject_run_user_dir_filetrans (joe_pactl_t user_pa_run_t dir "pulse"))
 
-    (call usersubject_application_subject (joe_pactl_t))
-
-    (optional joe_pactl_optional_joe_xserver
-        (call xserver_client_subject (joe_pactl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))))
+    (call usersubject_application_subject (joe_pactl_t)))
 
 (optional joe_optional_joe_moc
     (type joe_moc_t)
     (call moc_role_template (joe_r joe_t joe_moc_t
         user_moc_home_t))
+
+    (optional joe_moc_optional_joe_xserver
+        (call xserver_client_subject (joe_moc_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+
+    (optional joe_moc_optional_joe_pa
+        (call pa_client_subject (joe_r joe_moc_t joe_pa_t user_pa_home_t
+            user_pa_run_t user_pa_tmpfs_t))
+
+        (call usersubject_home_dir_filetrans_user_config_dir (joe_moc_t))
+        (call usersubject_config_filetrans (joe_moc_t user_pa_home_t dir "pulse"))
+        (call usersubject_run_user_dir_filetrans (joe_moc_t user_pa_run_t dir "pulse")))
+
+    (optional joe_moc_optional_joe_newsb
+        (allow joe_moc_t user_newsb_home_t rw_inherited_file_perms))
+
+    (optional joe_moc_optional_joe_irssi
+        (allow joe_moc_t joe_irssi_t (tcp_socket (read write))))
 
     (context file_joe_user_moc_home (joe_u object_r user_moc_home_t ((s0)
         (s0))))
@@ -1331,35 +1354,17 @@
     (call usersubject_home_dir_filetrans (joe_t user_moc_home_t dir ".moc")) 
     (call usersubject_home_dir_filetrans (joe_moc_t user_moc_home_t dir ".moc")) 
 
-    (allow joe_moc_t user_terminfo_home_t read_file_perms)
-
-    (optional joe_moc_optional_joe_xserver
-        (call xserver_client_subject (joe_moc_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
-
-    (optional joe_moc_optional_joe_pa
-        (call pa_client_subject (joe_r joe_moc_t joe_pa_t user_pa_home_t
-            user_pa_run_t user_pa_tmpfs_t))
-
-        (call usersubject_home_dir_filetrans_user_config_dir (joe_moc_t))
-        (call usersubject_config_filetrans (joe_moc_t user_pa_home_t dir "pulse"))
-        (call usersubject_run_user_dir_filetrans (joe_moc_t user_pa_run_t dir "pulse"))))
+    (allow joe_moc_t user_terminfo_home_t read_file_perms))
 
 (optional joe_optional_joe_sudo
     (type joe_sudo_t)
     (call sudo_role_template (joe_r joe_t joe_sudo_t))
 
+    (optional joe_sudo_optional_session
+        (call sudo_role_change_template (joe_t joe_sudo_t session_t)))
+
     (call usersubject_application_subject (joe_sudo_t))
     (call usersubject_use_terminals (joe_sudo_t))
     (call usersubject_relabel_terminals (joe_sudo_t))
 
-    (call usersubject_home_bin_auto_subject_type_transition (joe_sudo_t joe_t))
-
-    (optional joe_sudo_optional_session
-        (call sudo_role_change_template (joe_t joe_sudo_t session_t))))
- 
-(macro joe_use_fd ((type ARG1))
-    (allow ARG1 joe_t (fd (use))))
-
-(macro joe_rw_inherited_fifo_files ((type ARG1))
-    (allow ARG1 joe_t rw_inherited_fifo_file_perms))
-
+    (call usersubject_home_bin_auto_subject_type_transition (joe_sudo_t joe_t)))
