@@ -214,6 +214,7 @@
     (call xserver_role_template_xorg_wrap (joe_r joe_xinit_t joe_xorg_wrap_t))
 
     (optional joe_xserver_optional_joe_screen
+        (allow joe_xterm_t joe_screen_t (process (signal)))
         (call screen_role_template (joe_r joe_xterm_t joe_screen_t
             user_screen_home_t user_screen_tmp_t)))
 
