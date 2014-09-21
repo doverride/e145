@@ -1334,12 +1334,7 @@
 
     (optional session_sudo_optional_usersubject
         (call usersubject_use_terminals (session_sudo_t))
-        (call usersubject_search_keyring_all_common_login_user_subjects (session_sudo_t))
-
-        (optional session_optional_joe
-            (allow session_t joe_sudo_t (process (signal)))
-            (call joe_rw_inherited_fifo_files (session_t))
-            (call joe_use_fd (session_t)))))
+        (call usersubject_search_keyring_all_common_login_user_subjects (session_sudo_t))))
 
 ; miscfiles
 (type session_pass_home_t)

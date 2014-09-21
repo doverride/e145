@@ -1679,7 +1679,7 @@
     (allow ARG1 device_user_pts_t relabel_chr_file_perms)
     (allow ARG1 device_user_tty_t relabel_chr_file_perms))
 
-(macro usersubject_use_all_base_user_subjects_fd ((type ARG1))
+(macro usersubject_use_fd_all_base_user_subjects ((type ARG1))
     (allow ARG1 is_base_user_subject (fd (use))))
 
 (macro usersubject_rw_inherited_fifo_files_all_base_user_subjects ((type ARG1))

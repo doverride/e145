@@ -168,7 +168,10 @@
     (allow ARG2 ARG3 (key (create search link write)))
     (allow ARG1 ARG3 (process (signal)))
     (allow ARG2 ARG3 (process (signal)))
+    (allow ARG3 ARG2 (process (signal)))
     (allow ARG3 ARG2 (process (sigchld)))
+    (allow ARG3 ARG1 rw_inherited_fifo_file_perms)
+    (allow ARG3 ARG1 (fd (use)))
     (call commands_shell_manual_subject_type_transition (ARG2 ARG3)))
 
 (macro sudo_rw_inherited_fifo_files_all_sudo ((type ARG1))
