@@ -6,6 +6,7 @@
 (context bin (system_u object_r bin_t ((s0) (s0))))
 (filecon "/bin" symlink bin)
 (filecon "/etc/dhcp/dhclient\.d/chrony\.sh" file bin)
+(filecon "/etc/grub\.d/.*" file bin)
 (filecon "/etc/profile\.d/.*" file bin)
 (filecon "/etc/kernel/postinst\.d/.*" file bin)
 (filecon "/etc/rc\.d/rc\.local" file bin)
@@ -92,6 +93,10 @@
 (macro commands_read_bin_files ((type ARG1))
     (call files_search_usr (ARG1))
     (call read_files_pattern (ARG1 bin_t bin_t)))
+
+(macro commands_list_bin ((type ARG1))
+    (call files_search_usr (ARG1))
+    (allow ARG1 bin_t (dirs (list))))
 
 (macro commands_search_bin ((type ARG1))
     (call files_search_usr (ARG1))

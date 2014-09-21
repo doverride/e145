@@ -128,6 +128,10 @@
 (macro terminal_getattr_devpts_filesystems ((type ARG1))
     (allow ARG1 devpts_t (filesystem (getattr))))
 
+(macro terminal_list_devpts ((type ARG1))
+    (call devices_search (ARG1))
+    (allow ARG1 devpts_t (dirs (list))))
+
 (macro terminal_search_devpts ((type ARG1))
     (call devices_search (ARG1))
     (allow ARG1 devpts_t (dirs (search))))

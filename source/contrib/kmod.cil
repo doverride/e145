@@ -46,6 +46,7 @@
     file_kmod_unit)
 
 (allow kmod_t kmod_run_t manage_file_perms)
+(call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*"))
 
 (call system_link_keyring (kmod_t))
 (call system_list_debugfs (kmod_t))
@@ -61,13 +62,20 @@
 
 (call filesystem_manage_generic_tmpfs_files (kmod_t)) ; early /run/tmpfiles.d/kmod.conf
 
+(call application_subject (kmod_t))
+(call application_executable_object (kmod_exec_t))
+
 (call kmod_list_modules_config (kmod_t))
 (call kmod_read_modules_config_files (kmod_t))
 (call kmod_read_modules_dep_files (kmod_t))
 
 (call miscfiles_read_module_files (kmod_t))
 
-(call tmpfiles_run_filetrans (kmod_t kmod_run_t file "*"))
+(optional kmod_optional_session
+    (call session_use_inherited_terminals (session_t)))
+
+(optional kmod_optional_usersubject
+    (call usersubject_use_inherited_terminals (kmod_t)))
 
 (allow is_kmod_admin_subject kmod_t signal_perms)
 (allow is_kmod_admin_subject kmod_t (process (ptrace)))

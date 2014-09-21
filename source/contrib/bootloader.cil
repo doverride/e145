@@ -19,6 +19,9 @@
     (s0))))
 (filecon "/usr/sbin/grub2-.*" file file_grub_exec)
 
+(type grub_tmp_t)
+(call files_tmp_object (grub_tmp_t))
+
 (type grubby_t)
 (type grubby_exec_t)
 (call application_subject_entry (grubby_t grubby_exec_t))
@@ -35,7 +38,8 @@
 (context file_bootloader_conf (system_u object_r bootloader_conf_t ((s0)
     (s0))))
 (filecon "/etc/default/grub" file file_bootloader_conf)
-(filecon "/etc/grub\.d(/.*)?" any file_bootloader_conf)
+(filecon "/etc/grub\.d" dir file_bootloader_conf)
+(filecon "/etc/grub\.d/README" file file_bootloader_conf)
 (filecon "/etc/grub2-efi\.cfg" symlink file_bootloader_conf)
 (filecon "/etc/prelink\.conf\.d/grub2\.conf" file file_bootloader_conf)
 
@@ -46,8 +50,6 @@
     (s0))))
 (filecon "/var/log/grubby" file file_grubby_log)
 
-(allow grubby_t self rw_fifo_file_perms)
-
 (allow grubby_t grubby_log_t read_file_perms)
 (allow grubby_t grubby_log_t append_file_perms)
 (allow grubby_t grubby_log_t delete_file_perms)
@@ -55,29 +57,13 @@
 (allow grubby_t grubby_log_t (file (setattr)))
 (call files_var_log_filetrans (grubby_t grubby_log_t file "*"))
 
-(call system_read_generic_proc_files (grubby_t))
-
-(call commands_execute_bin_files (grubby_t)) ; /usr/bin/grub-editenv
-(call commands_execute_shell_files (grubby_t))
-
-(call devices_read_lnk_files (grubby_t))
-(call devices_list_sysfs (grubby_t))
-(call devices_read_sysfs_files (grubby_t))
-
-(call files_list_boot (grubby_t)) ; /boot/grub2/grubenv
 (call files_rw_boot_files (grubby_t)) ; /boot/grub2/grubenv
 (call files_list_etc (grubby_t)) ; /etc/popt.d
 (call files_search_run (grubby_t))
 
-(call filesystem_manage_dosfs_files (grubby_t)) ; /boot/efi/EFI/fedora/grub.cfg
-
-(call storage_read_fixed_disk_nodes (grubby_t))
-
 (call terminal_use_inherited_unallocated_tty_nodes (grubby_t))
 
 (call fstools_read_run_files (grubby_t))
-
-(call miscfiles_read_localization_files (grubby_t))
 
 (optional grubby_optional_rpm
     (call rpm_append_inherited_tmp_files (grubby_t))
@@ -85,11 +71,85 @@
     (call rpm_read_inherited_fifo_files (grubby_t))
     (call rpm_use_fd (grubby_t)))
 
-(optional grubby_optional_session
-    (call session_use_inherited_terminals (grubby_t)))
+(allow grub_t self (capability (dac_override))) ; running grub2-mkconfig with sudo from /home/joe
+(allow grub_t self (process (getsched)))
 
-(optional grubby_optional_usersubject
-    (call usersubject_use_inherited_terminals (grubby_t)))
+(allow grub_t grub_tmp_t manage_dir_perms)
+(allow grub_t grub_tmp_t manage_file_perms)
+(call files_tmp_filetrans (grub_t grub_tmp_t dir "*"))
+(call files_tmp_filetrans (grub_t grub_tmp_t file "*"))
+
+(call system_read_proc_mdstat_files (grub_t))
+
+(call commands_list_bin (grub_t))
+
+(call devices_list (grub_t))
+(call devices_read_urandom (grub_t))
+(call devices_rw_lvm_control (grub_t))
+(call devices_getattr_all_nodes (grub_t))
+
+(call files_list_root (grub_t))
+(call files_list_home_root (grub_t))
+(call files_read_boot_files (grub_t))
+(call files_read_generic_etc_files (grub_t)) ; /etc/fedora-release
+(call files_read_generic_usr_files (grub_t)) ; /usr/share/grub/grub-mkconfig_lib
+
+(call filesystem_getattr_tmpfs_filesystems (grub_t))
+(call filesystem_list_tmpfs (grub_t))
+(call filesystem_list_hugetlbfs (grub_t))
+
+(call terminal_list_devpts (grub_t))
+(call terminal_getattr_generic_pty_nodes (grub_t))
+
+(call auth_nsswitch_client_subject (grub_t))
+ 
+(call bootloader_exec_grub (grub_t))
+
+(call fstools_subtrans (grub_t))
+
+(call journald_client_subject (grub_t))
+
+(call kmod_subtrans (grub_t))
+
+(call mount_getattr_mount_executable_files (grub_t))
+
+(call udevd_subtrans_udevadm (grub_t))
+
+(optional grub_optional_lvm
+    (call lvm_subtrans_lvm (grub_t)))
+
+(optional grub_optional_session
+    (call session_list_home_dir (grub_t))
+    (call session_search_all_home (grub_t)))
+
+(optional grub_optional_usersubject
+    (call usersubject_list_home_dir (grub_t))
+    (call usersubject_search_all_home (grub_t)))
+
+(allow is_bootloader_subject self rw_fifo_file_perms)
+
+(call system_read_generic_proc_files (is_bootloader_subject))
+
+(call commands_execute_bin_files (is_bootloader_subject)) ; /usr/bin/grub-editenv
+(call commands_execute_shell_files (is_bootloader_subject))
+
+(call devices_read_lnk_files (is_bootloader_subject))
+(call devices_list_sysfs (is_bootloader_subject))
+(call devices_read_sysfs_files (is_bootloader_subject))
+
+(call files_list_boot (is_bootloader_subject)) ; /boot/grub2/grubenv
+
+(call filesystem_manage_dosfs_files (is_bootloader_subject)) ; /boot/efi/EFI/fedora/grub.cfg
+
+(call storage_read_fixed_disk_nodes (is_bootloader_subject))
+
+(call miscfiles_read_localization_files (is_bootloader_subject))
+
+(optional bootloader_subject_optional_session
+    (call session_use_inherited_terminals (is_bootloader_subject)))
+
+(optional bootloader_subject_optional_usersubject
+    (call usersubject_use_inherited_terminals (is_bootloader_subject)))
 
 (allow is_bootloader_admin_subject is_bootloader_subject signal_perms)
 (allow is_bootloader_admin_subject is_bootloader_subject (process (ptrace)))
@@ -97,12 +157,19 @@
 
 (call admin_pattern (is_bootloader_subject is_bootloader_file_object))
 
+(macro bootloader_exec_grub ((type ARG1))
+    (call can_exec (ARG1 grub_exec_t)))
+
 (macro bootloader_subtrans_grub ((type ARG1))
     (call subtrans_pattern (ARG1 grub_exec_t grub_t)))
 
 (macro bootloader_run_grub ((type ARG1)(role ARG2))
     (call bootloader_subtrans_grub (ARG1))
     (roleattributeset is_grub_role (ARG2)))
+
+(macro bootloader_read_state_grub ((type ARG1))
+    (allow ARG1 grub_t (dirs (list)))
+    (allow ARG1 grub_t read_file_perms))
 
 (macro bootloader_subtrans_grubby ((type ARG1))
     (call subtrans_pattern (ARG1 grubby_exec_t grubby_t)))

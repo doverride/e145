@@ -99,6 +99,9 @@
     (call mount_subtrans_showmount (ARG1))
     (roleattributeset is_showmount_role (ARG2)))
 
+(macro mount_getattr_mount_executable_files ((type ARG1))
+    (allow ARG1 mount_exec_t (file (getattr))))
+
 (macro mount_manage_run_files ((type ARG1))
     (call files_search_run (ARG1))
     (call manage_files_pattern (ARG1 mount_run_t mount_run_t)))

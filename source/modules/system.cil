@@ -478,6 +478,9 @@
 (macro system_read_proc_net_files ((type ARG1))
     (call read_files_pattern (ARG1 proc_net_t proc_net_t)))
 
+(macro system_read_proc_mdstat_files ((type ARG1))
+    (call read_files_pattern (ARG1 proc_t proc_mdstat_t)))
+
 (macro system_read_sysctl_crypto_files ((type ARG1))
     (call system_search_sysctl (ARG1))
     (call read_files_pattern (ARG1 sysctl_crypto_t sysctl_crypto_t)))

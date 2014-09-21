@@ -122,10 +122,6 @@
 
 (call selinux_get_enforce_mode (udevd_t))
 
-(call storage_read_fixed_disk_nodes (udevd_t))
-(call storage_read_removable_nodes (udevd_t))
-(call storage_read_scsi_generic_nodes (udevd_t))
-
 (call terminal_use_unallocated_tty_nodes (udevd_t))
 
 (call auth_nsswitch_client_subject (udevd_t))
@@ -161,13 +157,26 @@
 (optional udevd_optional_lvm
     (call lvm_subtrans_lvm (udevd_t)))
 
+(call storage_read_fixed_disk_nodes (is_udevd_subject))
+(call storage_read_removable_nodes (is_udevd_subject))
+(call storage_read_scsi_generic_nodes (is_udevd_subject))
+
+(call application_subject (udevadm_t))
+(call application_executable_object (udevadm_exec_t))
+
 (call devices_read_urandom (udevadm_t))
+
+(call systemd_search_run (udevadm_t)) ; /run/systemd/container
 
 (call udevd_manage_config_files (udevadm_t))
 (call udevd_manage_run_files (udevadm_t))
 (call udevd_stream_connect_udevd (udevadm_t))
 
-(call systemd_search_run (udevadm_t)) ; /run/systemd/container
+(optional udevadm_optional_session
+    (call session_use_inherited_terminals (udevadm_t)))
+
+(optional udevadm_optional_usersubject
+    (call usersubject_use_inherited_terminals (udevadm_t)))
 
 (allow is_udevd_admin_subject is_udevd_subject signal_perms)
 (allow is_udevd_admin_subject is_udevd_subject (process (ptrace)))

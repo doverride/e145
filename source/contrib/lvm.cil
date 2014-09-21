@@ -129,7 +129,12 @@
 
 (call storage_manage_fixed_disk_nodes (lvm_t))
 
+(call subject_obj_id_change_exemption (lvm_t)) ; creating lock with setfscreatecon()
+
 (call terminal_getattr_generic_pty_nodes (lvm_t))
+
+(call application_subject (lvm_t))
+(call application_executable_object (lvm_exec_t))
 
 (call lvm_read_config_files (lvm_t))
 (call lvm_manage_metadata_files (lvm_t))
@@ -139,6 +144,15 @@
 
 (call udevd_read_config_files (lvm_t))
 (call udevd_read_run_files (lvm_t))
+
+(optional lvm_optional_bootloader
+    (call bootloader_read_state_grub (lvm_t)))
+
+(optional lvm_optional_session
+    (call session_use_inherited_terminals (lvm_t)))
+
+(optional lvm_optional_usersubject
+    (call usersubject_use_inherited_terminals (lvm_t)))
 
 (allow lvmetad_t self create_unix_stream_stream_socket_perms)
 
