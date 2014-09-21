@@ -262,9 +262,11 @@
 (call udevd_read_run_files (networkmgrcli_t))
 
 (optional networkmgrcli_optional_session
+    (call session_search_all_home (networkmgrcli_t))
     (call session_use_inherited_terminals (networkmgrcli_t)))
 
 (optional networkmgrcli_optional_usersubject
+    (call usersubject_search_all_home (networkmgrcli_t))
     (call usersubject_use_inherited_terminals (networkmgrcli_t)))
 
 (allow is_networkmgr_admin_subject is_networkmgr_subject signal_perms)
