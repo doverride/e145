@@ -890,7 +890,6 @@
 
     (optional session_git_optional_usersubject
         (call usersubject_use_inherited_terminals (session_git_t))
-        (call usersubject_read_generic_home_content_lnk_files (session_git_t)) 
         (call usersubject_search_generic_config (session_git_t))
         (allow session_git_t user_git_conf_t read_file_perms))
 
