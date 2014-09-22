@@ -38,6 +38,22 @@
 (allow session_t session_terminfo_home_t relabel_file_perms)
 (call session_home_dir_filetrans (session_t session_terminfo_home_t file ".terminfo"))
 
+(type session_pass_home_t)
+(call session_home_object (session_pass_home_t))
+
+(context file_session_pass_home (session_u object_r session_pass_home_t ((s0)(s0))))
+(filecon "/root/\.password-store(/.*)?" any file_session_pass_home)
+(call session_home_dir_filetrans (session_t session_pass_home_t dir ".password-store")) 
+
+(type session_google_home_t)
+(call session_home_object (session_google_home_t))
+
+(context file_session_google_home (session_u object_r session_google_home_t ((s0)(s0))))
+(filecon "/root/\.config/googlecl(/.*)?" any file_session_google_home)
+(filecon "/root/\.local/share/googlecl(/.*)?" any file_session_google_home)
+(call session_config_filetrans (session_t session_google_home_t dir "googlecl")) 
+(call session_data_filetrans (session_t session_google_home_t dir "googlecl")) 
+
 (type session_cache_t)
 (call session_cache_object (session_cache_t))
 
@@ -1336,23 +1352,6 @@
     (call sudo_visudo_role_template (session_r session_t session_visudo_t))
 
     (call session_application_subject (session_visudo_t)))
-
-; miscfiles
-(type session_pass_home_t)
-(call session_home_object (session_pass_home_t))
-
-(context file_session_pass_home (session_u object_r session_pass_home_t ((s0)(s0))))
-(filecon "/root/\.password-store(/.*)?" any file_session_pass_home)
-(call session_home_dir_filetrans (session_t session_pass_home_t dir ".password-store")) 
-
-(type session_google_home_t)
-(call session_home_object (session_google_home_t))
-
-(context file_session_google_home (session_u object_r session_google_home_t ((s0)(s0))))
-(filecon "/root/\.config/googlecl(/.*)?" any file_session_google_home)
-(filecon "/root/\.local/share/googlecl(/.*)?" any file_session_google_home)
-(call session_config_filetrans (session_t session_google_home_t dir "googlecl")) 
-(call session_data_filetrans (session_t session_google_home_t dir "googlecl")) 
 
 (macro session_cache_object ((type ARG1))
     (call session_home_object (ARG1))
