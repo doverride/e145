@@ -1542,6 +1542,10 @@
     (call usersubject_search_home_dir (ARG1))
     (call read_files_pattern (ARG1 user_home_t user_home_t)))
 
+(macro usersubject_read_generic_home_content_lnk_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call read_lnk_files_pattern (ARG1 user_home_t user_home_t)))
+
 (macro usersubject_dontaudit_read_generic_home_content_files ((type ARG1))
     (dontaudit ARG1 user_home_t read_file_perms))
 
