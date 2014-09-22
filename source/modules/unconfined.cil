@@ -61,7 +61,6 @@
 (call system_unconfined (is_unconfined_subject))
 
 (call auth_unconfined (is_unconfined_subject))
-(call dns_etc_filetrans_resolv_conf_files (is_unconfined_subject))
 (call libraries_etc_filetrans_ld_so_cache_files (is_unconfined_subject))
 (call dbus_unconfined (is_unconfined_subject))
 (call seutil_unconfined (is_unconfined_subject))
@@ -86,6 +85,9 @@
 (booleanif unconfined_ptrace
     (true
         (call subject_ptrace_all_subjects (is_unconfined_subject))))
+
+(optional unconfined_optional_dns
+    (call dns_etc_filetrans_resolv_conf_files (is_unconfined_subject)))
 
 (optional unconfined_optional_autorelabel
     (call autorelabel_root_filetrans_autorelabel_flag_files (is_unconfined_subject)))
