@@ -705,12 +705,8 @@
 (optional session_optional_java
     (call session_home_dir_filetrans (session_t session_java_home_t dir ".java"))
 
-        ; BUG?
-
-        ;(context file_session_java_home (session_u object_r session_java_home_t ((s0)(s0))))
-        ;(filecon "/root/\.java(/.*)?" any file_session_java_home)
-
-        (filecon "/root/\.java(/.*)?" any (session_u object_r session_java_home_t ((s0)(s0))))
+        (context file_session_java_home (session_u object_r session_java_home_t ((s0)(s0))))
+        (filecon "/root/\.java(/.*)?" any file_session_java_home)
 
     (optional session_optional_session_fop
         (type session_fop_t)

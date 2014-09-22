@@ -686,12 +686,8 @@
 
     (call usersubject_home_dir_filetrans (joe_t user_java_home_t dir ".java"))
 
-    ; BUG?
-
-    ;(context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))
-    ;(filecon "/home/joe/\.java(/.*)?" any file_joe_user_java_home))
-
-    (filecon "/home/joe/\.java(/.*)?" any (joe_u object_r user_java_home_t ((s0)(s0)))))
+    (context file_joe_user_java_home (joe_u object_r user_java_home_t ((s0)(s0))))
+    (filecon "/home/joe/\.java(/.*)?" any file_joe_user_java_home))
 
 (optional joe_optional_joe_fop
     (type joe_fop_t)
