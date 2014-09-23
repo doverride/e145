@@ -15,6 +15,7 @@
 
 (context file_cryptsetup_unit (system_u object_r cryptsetup_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*cryptsetup.*" file file_cryptsetup_unit)
+(filecon "/usr/lib/systemd/system/[^/]*luks-.*\.d/.*" file file_cryptsetup_unit)
 
 (type cryptsetup_generator_t)
 (type cryptsetup_generator_exec_t)
