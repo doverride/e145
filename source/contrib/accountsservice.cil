@@ -11,7 +11,7 @@
 
 (type accountsd_t)
 (type accountsd_exec_t)
-(call systemd_daemon_subject_entry (accountsd_t accountd_exec_t))
+(call systemd_daemon_subject_entry (accountsd_t accountsd_exec_t))
 
 (context file_accountsd_exec (system_u object_r accountsd_exec_t ((s0)
     (s0))))
@@ -43,7 +43,7 @@
 (allow is_accountsservice_admin_subject is_accountsservice_subject (process (ptrace)))
 (call ps_subject_pattern (is_accountsservice_admin_subject is_accountsservice_subject))
 
-(allow is_accountsservice_admin_subject accountd_unit_t (service (all)))
+(allow is_accountsservice_admin_subject accountsd_unit_t (service (all)))
 
 (call admin_pattern (is_accountsservice_admin_subject is_accountsservice_file_object))
 
