@@ -489,6 +489,9 @@
     (call proxyd_admin (session_t))
     (call proxyd_run_busproxyd (session_t session_r)))
 
+(optional session_optional_qemu
+    (call qemu_admin (session_t)))
+
 (optional session_optional_random
     (call random_admin (session_t)))
 

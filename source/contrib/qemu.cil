@@ -1,0 +1,42 @@
+(typepermissive qga_t)
+
+(typeattribute is_qemu_admin_subject)
+
+(typeattribute is_qemu_subject)
+(typeattributeset is_qemu_subject (qga_t))
+
+(typeattribute is_qemu_file_object)
+(typeattributeset is_qemu_file_object (qga_unit_t qga_run_t))
+
+(type qga_t)
+(type qga_exec_t)
+(call systemd_daemon_subject_entry (qga_t qga_exec_t))
+
+(context file_qga_exec (system_u object_r qga_exec_t ((s0) (s0))))
+(filecon "/usr/bin/qemu-ga" file file_qga_exec)
+
+(type qga_unit_t)
+(call systemd_unit_object (qga_unit_t))
+
+(context file_qga_unit (system_u object_r qga_unit_t ((s0) (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*qemu-guest-agent.*" file file_qga_unit)
+
+(type qga_run_t)
+(call files_run_object (qga_run_t))
+
+(context file_qga_run (system_u object_r qga_run_t ((s0) (s0))))
+(filecon "/run/qga\.state" file file_qga_run)
+
+(allow qga_t qga_run_t manage_file_perms)
+(call files_run_filetrans (qga_t qga_run_t file "*"))
+
+(allow is_qemu_admin_subject is_qemu_subject signal_perms)
+(allow is_qemu_admin_subject is_qemu_subject (process (ptrace)))
+(call ps_subject_pattern (is_qemu_admin_subject is_qemu_subject))
+
+(allow is_qemu_admin_subject qga_unit_t (service (all)))
+
+(call admin_pattern (is_qemu_admin_subject is_qemu_file_object))
+
+(macro qemu_admin ((type ARG1))
+    (typeattributeset is_qemu_admin_subject ARG1))
