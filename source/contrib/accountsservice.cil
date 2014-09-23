@@ -27,7 +27,7 @@
 (type accountsd_dbus_conf_t)
 (call dbus_etc_object (accountsd_dbus_conf_t))
 
-(context file_accountsd_dbus_conf (system_u object_r acountsd_dbus_conf_t
+(context file_accountsd_dbus_conf (system_u object_r accountsd_dbus_conf_t
     ((s0) (s0))))
 (filecon "/etc/dbus-1/system\.d/org\.freedesktop\.Accounts\.conf" file
     file_accountsd_dbus_conf)
