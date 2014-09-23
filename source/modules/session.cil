@@ -293,6 +293,9 @@
 (call session_use_terminals (session_t))
 (call session_create_pty_node (session_t)) ; script/script replay
 
+(optional session_optional_accountsservice
+    (call accountsservice_admin (session_t)))
+
 (optional session_optional_audit
     (call audit_admin (session_t))
     (call audit_run_auditctl (session_t session_r))

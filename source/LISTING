@@ -8,6 +8,7 @@ ipcpatterns.cil
 isid.cil
 miscpatterns.cil
 mls.cil
+contrib/accountsservice.cil
 contrib/akmods.cil
 contrib/alsa.cil
 contrib/application.cil
