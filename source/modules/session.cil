@@ -450,6 +450,9 @@
 (optional session_optional_mandb
     (call mandb_admin (session_t)))
 
+(optional session_optional_mcelog
+    (call mcelog_admin (session_t)))
+
 (optional session_optional_modemmgr
     (call modemmgr_admin (session_t))
     (call modemmgr_run_mmcli (session_t session_r)))

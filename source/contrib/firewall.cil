@@ -1,3 +1,6 @@
+(typepermissive firewalld_t)
+(typepermissive firewallcmd_t)
+
 (roleattribute is_firewallcmd_role)
 
 (typeattribute is_firewall_admin_subject)

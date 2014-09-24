@@ -53,6 +53,7 @@ contrib/login.cil
 contrib/lvm.cil
 contrib/mail.cil
 contrib/mandb.cil
+contrib/mcelog.cil
 contrib/miscfiles.cil
 contrib/moc.cil
 contrib/modemmgr.cil

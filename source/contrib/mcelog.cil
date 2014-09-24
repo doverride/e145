@@ -1,0 +1,56 @@
+(typepermissive mcelog_t)
+
+(typeattribute is_mcelog_admin_subject)
+
+(typeattribute is_mcelog_file_object)
+(typeattributeset is_mcelog_file_object (mcelog_conf_t
+    mcelog_unit_t mcelog_run_t))
+
+(type mcelog_t)
+(type mcelog_exec_t)
+(call systemd_daemon_subject_entry (mcelog_t mcelog_exec_t))
+
+(context file_mcelog_exec (system_u object_r mcelog_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/mcelog" file file_mcelog_exec)
+
+(type mcelog_run_t)
+(call files_run_object (mcelog_run_t))
+
+(context file_mcelog_run (system_u object_r mcelog_run_t ((s0)
+    (s0))))
+(filecon "/run/mcelog-client" socket file_mcelog_run)
+(filecon "/run/mcelog\.pid" file file_mcelog_run)
+
+(type mcelog_conf_t)
+(call files_etc_object (mcelog_conf_t))
+
+(context file_mcelog_conf (system_u object_r mcelog_conf_t
+    ((s0) (s0))))
+(filecon "/etc/mcelog(/.*)?" any file_mcelog_conf)
+
+(type mcelog_unit_t)
+(call systemd_unit_object (mcelog_unit_t))
+
+(context file_mcelog_unit (system_u object_r mcelog_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*mcelog.*" file file_mcelog_unit)
+
+(allow mcelog_t mcelog_run_t manage_file_perms)
+(allow mcelog_t mcelog_run_t manage_sock_file_perms)
+(call files_run_filetrans (mcelog_t mcelog_run_t sock_file "*"))
+(call files_run_filetrans (mcelog_t mcelog_run_t file "*"))
+
+(optional mcelog_optional_cron
+    (call cron_system_cronjob_subject_entry (mcelog_t mcelog_exec_t)))
+
+(allow is_mcelog_admin_subject mcelog_t signal_perms)
+(allow is_mcelog_admin_subject mcelog_t (process (ptrace)))
+(call ps_subject_pattern (is_mcelog_admin_subject mcelog_t))
+
+(allow is_mcelog_admin_subject mcelog_unit_t (service (all)))
+
+(call admin_pattern (is_mcelog_admin_subject is_mcelog_file_object))
+
+(macro mcelog_admin ((type ARG1))
+    (typeattributeset is_mcelog_admin_subject ARG1))
