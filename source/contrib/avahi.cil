@@ -17,7 +17,7 @@
 
 (context file_avahid_exec (system_u object_r avahid_exec_t ((s0)
     (s0))))
-(filecon "/usr/sbin/avahi" file file_avahid_exec)
+(filecon "/usr/sbin/avahi-daemon" file file_avahid_exec)
 
 (type avahid_run_t)
 (call files_run_object (avahid_run_t))
