@@ -14,6 +14,7 @@ contrib/alsa.cil
 contrib/application.cil
 contrib/audit.cil
 contrib/auth.cil
+contrib/avahi.cil
 contrib/avccow.cil
 contrib/bluetooth.cil
 contrib/bootloader.cil

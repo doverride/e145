@@ -296,15 +296,6 @@
 (optional session_optional_accountsservice
     (call accountsservice_admin (session_t)))
 
-(optional session_optional_audit
-    (call audit_admin (session_t))
-    (call audit_run_auditctl (session_t session_r))
-    (call audit_run_augenrules (session_t session_r))
-    (call audit_run_ausearch (session_t session_r)))
-
-(optional session_optional_autorelabel
-    (call autorelabel_admin (session_t)))
-
 (optional session_optional_alsactl
     (call alsa_admin (session_t))
     (call alsa_run_alsactl (session_t session_r)))
@@ -316,6 +307,18 @@
 (optional session_optional_askpwd
     (call askpwd_admin (session_t))
     (call askpwd_run_agent (session_t session_r)))
+
+(optional session_optional_audit
+    (call audit_admin (session_t))
+    (call audit_run_auditctl (session_t session_r))
+    (call audit_run_augenrules (session_t session_r))
+    (call audit_run_ausearch (session_t session_r)))
+
+(optional session_optional_autorelabel
+    (call autorelabel_admin (session_t)))
+
+(optional session_optional_avahi
+    (call avahi_admin (session_t)))
 
 (optional session_optional_backlight
     (call backlight_admin (session_t)))

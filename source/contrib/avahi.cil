@@ -1,0 +1,60 @@
+(typepermissive avahid_t)
+
+(typeattribute is_avahi_admin_subject)
+
+(typeattribute is_avahi_subject)
+(typeattributeset is_avahi_subject (avahid_t))
+
+(typeattribute is_avahi_file_object)
+(typeattributeset is_avahi_file_object (avahid_dbus_conf_t
+    avahid_conf_t avahid_unit_t avahid_run_t))
+
+(type avahid_t)
+(type avahid_exec_t)
+(call systemd_daemon_subject_entry (avahid_t avahid_exec_t))
+
+(call systemd_socket_activated_subject (avahid_t avahid_run_t))
+
+(context file_avahid_exec (system_u object_r avahid_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/avahid" file file_avahid_exec)
+
+(type avahid_run_t)
+(call files_run_object (avahid_run_t))
+
+(context file_avahid_run (system_u object_r avahid_run_t ((s0)
+    (s0))))
+(filecon "/run/avahi-daemon(/.*)?" any file_avahid_run)
+
+(type avahid_conf_t)
+(call files_etc_object (avahid_conf_t))
+
+(context file_avahid_conf (system_u object_r avahid_conf_t
+    ((s0) (s0))))
+(filecon "/etc/avahi(/.*)?" any file_avahid_conf)
+
+(type avahid_dbus_conf_t)
+(call dbus_etc_object (avahid_dbus_conf_t))
+
+(context file_avahid_dbus_conf (system_u object_r avahid_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/avahi-dbus\.conf" file
+    file_avahid_dbus_conf)
+
+(type avahid_unit_t)
+(call systemd_unit_object (avahid_unit_t))
+
+(context file_avahid_unit (system_u object_r avahid_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*avahi-daemon.*" file file_avahid_unit)
+
+(allow is_avahi_admin_subject is_avahi_subject signal_perms)
+(allow is_avahi_admin_subject is_avahi_subject (process (ptrace)))
+(call ps_subject_pattern (is_avahi_admin_subject is_avahi_subject))
+
+(allow is_avahi_admin_subject avahid_unit_t (service (all)))
+
+(call admin_pattern (is_avahi_admin_subject is_avahi_file_object))
+
+(macro avahi_admin ((type ARG1))
+    (typeattributeset is_avahi_admin_subject ARG1))
