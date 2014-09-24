@@ -371,6 +371,9 @@
 (optional session_optional_dracut
     (call dracut_admin (session_t)))
 
+(optional session_optional_firewall
+    (call firewall_admin (session_t)))
+
 (optional session_optional_fprint
     (call fprint_admin (session_t))
     (call fprint_run_fprintcli (session_t session_r)))

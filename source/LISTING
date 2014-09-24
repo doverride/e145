@@ -30,6 +30,7 @@ contrib/dns.cil
 contrib/dracut.cil
 contrib/emacs.cil
 contrib/ffmpeg.cil
+contrib/firewall.cil
 contrib/fop.cil
 contrib/fprint.cil
 contrib/fstools.cil
