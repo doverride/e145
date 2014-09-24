@@ -25,7 +25,7 @@
 
 (context file_firewalld_exec (system_u object_r firewalld_exec_t ((s0)
     (s0))))
-(filecon "/usr/sbin/firewalld" file file_bluetoothd_exec)
+(filecon "/usr/sbin/firewalld" file file_firewalld_exec)
 
 (type firewalld_env_t)
 (call files_env_object (firewalld_env_t))
@@ -46,7 +46,7 @@
 
 (context file_firewalld_dbus_conf (system_u object_r firewalld_dbus_conf_t
     ((s0) (s0))))
-(filecon "/etc/dbus-1/system\.d/firewallD\.conf" file
+(filecon "/etc/dbus-1/system\.d/FirewallD\.conf" file
     file_firewalld_dbus_conf)
 
 (type firewalld_unit_t)
