@@ -410,6 +410,9 @@
 (macro filesystem_remount_hugetlbfs_filesystems ((type ARG1))
     (allow ARG1 hugetlbfs_t (filesystem (remount))))
 
+(macro filesystem_getattr_hugetlbfs_filesystems ((type ARG1))
+    (allow ARG1 hugetlbfs_t (filesystem (getattr))))
+
 (macro filesystem_list_hugetlbfs ((type ARG1))
     (allow ARG1 hugetlbfs_t (dirs (list))))
 

@@ -25,7 +25,7 @@
 (type iscsid_exec_t)
 (call systemd_daemon_subject_entry (iscsid_t iscsid_exec_t))
 
-(call systemd_socket_activated_subject (iscsid_t iscsid_run_t)) ; FIXME 
+(call systemd_socket_activated_subject (iscsid_t iscsid_var_lib_t)) 
 
 (context file_iscsid_exec (system_u object_r iscsid_exec_t ((s0)
     (s0))))

@@ -104,6 +104,10 @@
 (macro gdm_run_user_root_filetrans_run_user_dir ((type ARG1)(name ARG2))
     (call files_run_user_root_filetrans (ARG1 gdm_run_user_dir_t dir ARG2)))
 
+(macro gdm_manage_run_user_dir ((type ARG1))
+    (call files_rw_run_user_root_dirs (ARG1))
+    (allow ARG1 gdm_run_user_dir_t manage_dir_perms))
+
 (macro gdm_mounton_run_user_dir ((type ARG1))
     (allow ARG1 gdm_run_user_dir_t (dir (mounton))))
 

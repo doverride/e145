@@ -28,7 +28,7 @@
 
 (context file_colord_var_lib (system_u object_r colord_var_lib_t ((s0)
     (s0))))
-(filecon "/var/lib/colord(/.*)?" any file_colord_var_lib)
+(filecon "/var/lib/color(/.*)?" any file_colord_var_lib)
 
 (type colord_dbus_conf_t)
 (call dbus_etc_object (colord_dbus_conf_t))
@@ -47,6 +47,27 @@
 
 (type colord_tmp_t)
 (call files_tmp_object (colord_tmp_t))
+
+(allow colord_t self create_netlink_kobject_uevent_socket_perms)
+
+(call manage_files_pattern (colord_t colord_var_lib_t colord_var_lib_t))
+
+(call devices_list_sysfs (colord_t))
+(call devices_read_sysfs_files (colord_t))
+
+(call files_read_generic_usr_files (colord_t)) ; /usr/share/mime/mime.cache
+
+(call auth_nsswitch_client_subject (colord_t))
+
+(call dbus_acquire_service_system (colord_t))
+(call dbus_system_client_subject (colord_t))
+
+(call miscfiles_read_localization_files (colord_t))
+
+(call journald_client_subject (colord_t))
+
+(call udevd_read_config_files (colord_t))
+(call udevd_read_run_files (colord_t))
 
 (allow is_color_admin_subject colord_t signal_perms)
 (allow is_color_admin_subject colord_t (process (ptrace)))

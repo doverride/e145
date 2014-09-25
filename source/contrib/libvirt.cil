@@ -85,22 +85,57 @@
 (filecon "/etc/sysconfig/libvirtd" file file_libvirtd_env)
 (filecon "/etc/sysconfig/virtlockd" file file_libvirtd_env)
 
-(allow libvirtd_t self (process (getsched)))
+(allow libvirtd_t self (capability (dac_override)))
+(allow libvirtd_t self (process (signal getsched setcap getcap)))
+(allow libvirtd_t self create_netlink_kobject_uevent_socket_perms)
+(allow libvirtd_t self (unix_stream_socket (listen accept)))
+
+(allow libvirtd_t libvirtd_cache_t list_dir_perms)
 
 (allow libvirtd_t libvirtd_run_t manage_file_perms)
+(allow libvirtd_t libvirtd_run_t manage_sock_file_perms)
+(allow libvirtd_t libvirtd_run_t manage_dir_perms)
 (call files_run_filetrans (libvirtd_t libvirtd_run_t file "*"))
+(call files_run_filetrans (libvirtd_t libvirtd_run_t dir "*"))
 
+(allow libvirtd_t libvirtd_var_lib_t list_dir_perms)
+
+(call system_read_generic_proc_files (libvirtd_t))
 (call system_read_proc_net_files (libvirtd_t))
+(call system_read_sysctl_kernel_files (libvirtd_t))
+(call system_write_proc_mtrr_files (libvirtd_t))
 
 (call devices_list_sysfs (libvirtd_t))
-(call devices_read_sysfs_files (libvirtd_t))
+(call devices_rw_sysfs_files (libvirtd_t))
 (call devices_read_urandom (libvirtd_t))
 
 (call files_read_generic_etc_files (libvirtd_t)) ; /etc/libnl/classid
+(call files_read_generic_usr_files (libvirtd_t)) ; /usr/share/netcf/xml/interface.rng
+
+(call filesystem_getattr_hugetlbfs_filesystems (libvirtd_t))
+
+(call selinux_get_enforce_mode (libvirtd_t))
+
+(call audit_client_subject (libvirtd_t))
+
+(call auth_nsswitch_client_subject (libvirtd_t))
 
 (call dbus_system_client_subject (libvirtd_t))
 
 (call journald_client_subject (libvirtd_t))
+
+(call libvirt_read_libvirtd_config_files (libvirtd_t))
+
+(call miscfiles_read_localization_files (libvirtd_t))
+(call miscfiles_read_hwdata_files (libvirtd_t))
+
+(call seutil_read_config_files (libvirtd_t))
+(call seutil_read_file_context_files (libvirtd_t))
+
+(call systemd_stream_connect (libvirtd_t))
+
+(call udevd_read_config_files (libvirtd_t))
+(call udevd_read_run_files (libvirtd_t))
 
 (optional libvirtd_optional_firewalld
     (call firewall_dbus_chat_firewalld (libvirtd_t)))
@@ -112,6 +147,11 @@
 (allow is_libvirt_admin_subject libvirtd_unit_t (service (all)))
 
 (call admin_pattern (is_libvirt_admin_subject is_libvirt_file_object))
+
+(macro libvirt_read_libvirtd_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 libvirtd_conf_t (dirs (list)))
+    (allow ARG1 libvirtd_conf_t read_file_perms))
 
 (macro libvirt_admin ((type ARG1))
     (typeattributeset is_libvirt_admin_subject ARG1))

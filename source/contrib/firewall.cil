@@ -91,7 +91,7 @@
 (call system_read_generic_proc_files (firewalld_t))
 (call system_read_proc_net_files (firewalld_t))
 
-(call commands_mprot_read_bin_files (firewalld_t))
+(call commands_read_bin_files (firewalld_t))
 
 (call devices_read_urandom (firewalld_t))
 

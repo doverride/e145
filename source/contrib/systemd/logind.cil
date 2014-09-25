@@ -141,6 +141,7 @@
 
 (optional logind_optional_gdm
     (call gdm_mounton_run_user_dir (logind_t))
+    (call gdm_manage_run_user_dir (logind_t))
     (call gdm_run_user_root_filetrans_run_user_dir (logind_t "42")))
 
 (optional logind_optional_networkmgr
