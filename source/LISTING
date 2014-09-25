@@ -75,6 +75,7 @@ contrib/ppp.cil
 contrib/qemu.cil
 contrib/qiv.cil
 contrib/ratpoison.cil
+contrib/rpcbind.cil
 contrib/rpm.cil
 contrib/rtkit.cil
 contrib/screen.cil

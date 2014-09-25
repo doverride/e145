@@ -1,0 +1,53 @@
+(typeattribute is_rpcbind_admin_subject)
+
+(typeattribute is_rpcbind_file_object)
+(typeattributeset is_rpcbind_file_object (rpcbind_env_t
+    rpcbind_unit_t rpcbind_var_lib_t rpcbind_run_t))
+
+(type rpcbind_t)
+(type rpcbind_exec_t)
+(call systemd_daemon_subject_entry (rpcbind_t rpcbind_exec_t))
+
+(call systemd_socket_activated_subject (rpcbind_t rpcbind_run_t))
+
+(context file_rpcbind_exec (system_u object_r rpcbind_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/rpcbind" file file_bluetoothd_exec)
+
+(type rpcbind_run_t)
+(call files_run_object (rpcbind_run_t))
+
+(context file_rpcbind_run (system_u object_r rpcbind_run_t ((s0)
+    (s0))))
+(filecon "/run/rpcbind\.sock" socket file_rpcbind_run)
+
+(type rpcbind_var_lib_t)
+(call files_var_lib_object (rpcbind_var_lib_t))
+
+(context file_rpcbind_var_lib (system_u object_r rpcbind_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/rpcbind(/.*)?" any file_rpcbind_var_lib)
+
+(type rpcbind_env_t)
+(call files_env_object (rpcbind_env_t))
+
+(context file_rpcbind_env (system_u object_r rpcbind_env_t ((s0) (s0))))
+(filecon "/etc/sysconfig/rpcbind" file file_rpcbind_env)
+
+(type rpcbind_unit_t)
+(call systemd_unit_object (rpcbind_unit_t))
+
+(context file_rpcbind_unit (system_u object_r rpcbind_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*rpcbind.*" file file_rpcbind_unit)
+
+(allow is_rpcbind_admin_subject rpcbind_t signal_perms)
+(allow is_rpcbind_admin_subject rpcbind_t (process (ptrace)))
+(call ps_subject_pattern (is_rpcbind_admin_subject rpcbind_t))
+
+(allow is_rpcbind_admin_subject rpcbind_unit_t (service (all)))
+
+(call admin_pattern (is_rpcbind_admin_subject is_rpcbind_file_object))
+
+(macro rpcbind_admin ((type ARG1))
+    (typeattributeset is_rpcbind_admin_subject ARG1))

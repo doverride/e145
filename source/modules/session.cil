@@ -531,6 +531,9 @@
 (optional session_optional_rfkill
     (call rfkill_admin (session_t)))
 
+(optional session_optional_rpcbind
+    (call rpcbind_admin (session_t)))
+
 (optional session_optional_rtkit
     (call rtkit_admin (session_t))
     (call rtkit_run (session_t session_r)))
