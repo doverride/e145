@@ -421,6 +421,10 @@
     (call iptables_admin (session_t))
     (call iptables_run (session_t session_r)))
 
+(optional session_optional_iscsi
+    (call iscsi_admin (session_t))
+    (call iscsi_run_iscsiadm (session_t session_r)))
+
 (optional session_optional_journald
     (call journald_admin (session_t))
     (call journald_client_subject (session_t))

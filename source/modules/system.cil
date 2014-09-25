@@ -338,6 +338,7 @@
 (call systemd_dynamic_subject_type_transition (system_t))
 (call systemd_getattr_exec_files (system_t))
 (call systemd_send_signal (system_t))
+
 (call systemd_send_sigchld (invalid_t))
 
 (booleanif (not secure_mode_insmod)

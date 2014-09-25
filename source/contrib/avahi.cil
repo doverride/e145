@@ -49,7 +49,7 @@
 (filecon "/usr/lib/systemd/system/[^/]*avahi-daemon.*" file file_avahid_unit)
 
 (allow avahid_t self (capability (chown setgid setuid sys_chroot)))
-(allow avahid_t self (process (setcap setrlimit)))
+(allow avahid_t self (process (setcap setrlimit signal)))
 (allow avahid_t self rw_fifo_file_perms)
 
 (allow avahid_t avahid_run_t (dir (setattr)))

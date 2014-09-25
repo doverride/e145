@@ -394,6 +394,12 @@
 (optional systemd_optional_alsa
     (call alsa_read_config_files (systemd_t)))
 
+(optional systemd_optional_bluetooth
+    (call bluetooth_bind_unix_stream_sockets (systemd_t))) ; rpcbind
+
+(optional systemd_optional_mcelog
+    (call mcelog_search_config (systemd_t))) ; BUG: for /etc/mcelog/mcelog.setup
+
 (optional systemd_optional_session
     (call session_mounton_home_dirs (systemd_t))
     (call session_link_keyring (systemd_t))

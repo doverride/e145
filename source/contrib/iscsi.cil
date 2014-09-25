@@ -1,0 +1,95 @@
+(roleattribute is_iscsiadm_role)
+
+(typeattribute is_iscsi_admin_subject)
+
+(typeattribute is_iscsi_subject)
+(typeattributeset is_iscsi_subject (iscsiadm_t iscsid_t))
+
+(typeattribute is_iscsi_file_object)
+(typeattributeset is_iscsi_file_object (iscsid_conf_t
+    iscsid_unit_t iscsid_var_lib_t iscsid_lock_t iscsid_run_t))
+
+(type iscsiadm_t)
+(type iscsiadm_exec_t)
+(call systemd_oneshot_subject_entry (iscsiadm_t iscsiadm_exec_t))
+(roletype is_iscsiadm_role iscsiadm_t)
+
+(context file_iscsiadm_exec (system_u object_r iscsiadm_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/iscsi-mark-root-nodes" file file_iscsiadm_exec)
+(filecon "/usr/sbin/iscsi-iname" file file_iscsiadm_exec)
+(filecon "/usr/sbin/iscsiadm" file file_iscsiadm_exec)
+(filecon "/usr/sbin/iscsistart" file file_iscsiadm_exec)
+
+(type iscsid_t)
+(type iscsid_exec_t)
+(call systemd_daemon_subject_entry (iscsid_t iscsid_exec_t))
+
+(call systemd_socket_activated_subject (iscsid_t iscsid_run_t)) ; FIXME 
+
+(context file_iscsid_exec (system_u object_r iscsid_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/iscsid" file file_iscsid_exec)
+
+(type iscsid_run_t)
+(call files_run_object (iscsid_run_t))
+(call systemd_pid_object (iscsid_run_t))
+
+(context file_iscsid_run (system_u object_r iscsid_run_t ((s0)
+    (s0))))
+(filecon "/run/iscsid\.pid" any file_iscsid_run)
+
+(type iscsid_var_lib_t)
+(call files_var_lib_object (iscsid_var_lib_t))
+
+(context file_iscsid_var_lib (system_u object_r iscsid_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/iscsi(/.*)?" any file_iscsid_var_lib)
+
+(type iscsid_lock_t)
+(call files_run_lock_object (iscsid_lock_t))
+
+(context file_iscsid_lock (system_u object_r iscsid_lock_t ((s0)
+    (s0))))
+(filecon "/run/lock/iscsi(/.*)?" any file_iscsid_lock)
+
+(type iscsid_conf_t)
+(call files_etc_object (iscsid_conf_t))
+
+(context file_iscsid_conf (system_u object_r iscsid_conf_t
+    ((s0) (s0))))
+(filecon "/etc/iscsi(/.*)?" any file_iscsid_conf)
+
+(type iscsid_unit_t)
+(call systemd_unit_object (iscsid_unit_t))
+
+(context file_iscsid_unit (system_u object_r iscsid_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*iscsi.*" file file_iscsid_unit)
+
+(call application_subject (iscsiadm_t))
+(call application_executable_object (iscsiadm_exec_t))
+
+(optional iscsiadm_optional_usersubject
+    (call usersubject_use_inherited_terminals (iscsiadm_t)))
+
+(optional iscsiadm_optional_session
+    (call session_use_inherited_terminals (iscsiadm_t)))
+
+(allow is_iscsi_admin_subject is_iscsi_subject signal_perms)
+(allow is_iscsi_admin_subject is_iscsi_subject (process (ptrace)))
+(call ps_subject_pattern (is_iscsi_admin_subject is_iscsi_subject))
+
+(allow is_iscsi_admin_subject iscsid_unit_t (service (all)))
+
+(call admin_pattern (is_iscsi_admin_subject is_iscsi_file_object))
+
+(macro iscsi_subtrans_iscsiadm ((type ARG1))
+    (call subtrans_pattern (ARG1 iscsiadm_exec_t iscsiadm_t)))
+
+(macro iscsi_run_iscsiadm ((type ARG1)(role ARG2))
+    (call iscsi_subtrans_iscsiadm (ARG1))
+    (roleattributeset is_iscsiadm_role ARG2))
+
+(macro iscsi_admin ((type ARG1))
+    (typeattributeset is_iscsi_admin_subject ARG1))

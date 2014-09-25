@@ -45,6 +45,8 @@
 
 (call system_read_generic_proc_files (mcelog_t))
 
+(call commands_execute_bin_files (mcelog_t))
+
 (call devices_read_kmsg (mcelog_t))
 (call devices_read_memory_raw (mcelog_t))
 (call devices_write_sysfs_files (mcelog_t)) ; soft-online-page
@@ -63,6 +65,10 @@
 (allow is_mcelog_admin_subject mcelog_unit_t (service (all)))
 
 (call admin_pattern (is_mcelog_admin_subject is_mcelog_file_object))
+
+(macro mcelog_search_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 mcelog_conf_t (dirs (search))))
 
 (macro mcelog_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
