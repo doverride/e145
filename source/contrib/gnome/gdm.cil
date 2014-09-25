@@ -45,6 +45,12 @@
     (s0))))
 (filecon "/run/user/42/.*" any file_gdm_user_run)
 
+(type gdm_systemd_run_t)
+(call files_run_object (gdm_systemd_run_t))
+
+(context file_gdm_user_systemd_run (system_u object_r gdm_systemd_run_t ((s0) (s0))))
+(filecon "/run/user/42/systemd(/.*)?" any file_gdm_user_systemd_run)
+
 (type gdm_var_lib_t)
 (call files_var_lib_object (gdm_var_lib_t))
 
@@ -110,6 +116,39 @@
 
 (macro gdm_mounton_run_user_dir ((type ARG1))
     (allow ARG1 gdm_run_user_dir_t (dir (mounton))))
+
+(macro gdm_rw_run_user_dir ((type ARG1))
+    (call files_search_run_user_root (ARG1))
+    (allow ARG1 gdm_run_user_dir_t rw_dir_perms))
+
+(macro gdm_search_run_user_dir ((type ARG1))
+    (call files_search_run_user_root (ARG1))
+    (allow ARG1 gdm_run_user_dir_t (dirs (search))))
+
+(macro gdm_delete_systemd_run_dirs ((type ARG1))
+    (call gdm_rw_run_user_dir (ARG1))
+    (call delete_dirs_pattern (ARG1 gdm_systemd_run_t gdm_systemd_run_t)))
+
+(macro gdm_delete_systemd_run_sock_files ((type ARG1))
+    (call gdm_search_run_user_dir (ARG1))
+    (call delete_sock_files_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
+
+(macro gdm_run_user_dir_filetrans_systemd_run_dir ((type ARG1))
+    (call gdm_search_run_user_dir (ARG1))
+    (call gdm_run_user_dir_filetrans (ARG1 gdm_systemd_run_t dir "systemd")))
+
+(macro gdm_manage_systemd_run_dirs ((type ARG1))
+    (call gdm_search_run_user_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 gdm_systemd_run_t gdm_systemd_run_t)))
+
+(macro gdm_manage_systemd_run_sock_files ((type ARG1))
+    (call gdm_search_run_user_dir (ARG1))
+    (call manage_sock_files_pattern (ARG1 gdm_systemd_run_t gdm_systemd_run_t)))
+
+(macro gdm_run_user_dir_filetrans ((type ARG1)(type ARG2)(class ARG3)
+    (name ARG4))
+    (call gdm_search_run_user_dir (ARG1))
+    (call filetrans_pattern (ARG1 gdm_run_user_dir_t ARG2 ARG3 ARG4)))
 
 (macro gdm_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
