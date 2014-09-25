@@ -78,6 +78,8 @@
 (optional udisksctl_optional_session
     (call session_use_inherited_terminals (udisksctl_t)))
 
+(call files_run_filetrans (udisksd_t udisksd_run_t dir "*"))
+
 (call dbus_system_client_subject (udisksd_t))
 
 (call polkit_dbus_chat_polkitd (udisksd_t))
