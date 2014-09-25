@@ -39,6 +39,19 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*accounts-daemon.*" file file_accountsd_unit)
 
+(allow accountsd_t self (capability (dac_override)))
+
+(call dbus_acquire_service_system (accountsd_t))
+(call dbus_system_client_subject (accountsd_t))
+
+(call auth_nsswitch_client_subject (accountsd_t))
+
+(call journald_client_subject (accountsd_t))
+
+(call miscfiles_read_localization_files (accountsd_t))
+
+(call polkit_dbus_chat_polkitd (accountsd_t))
+
 (allow is_accountsservice_admin_subject is_accountsservice_subject signal_perms)
 (allow is_accountsservice_admin_subject is_accountsservice_subject (process (ptrace)))
 (call ps_subject_pattern (is_accountsservice_admin_subject is_accountsservice_subject))

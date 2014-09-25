@@ -59,11 +59,55 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*firewalld.*" file file_firewalld_unit)
 
+(type firewalld_log_t)
+(call files_var_log_object (firewalld_log_t))
+
+(context file_firewalld_log (system_u object_r firewalld_log_t ((s0)
+    (s0))))
+(filecon "/var/log/firewalld.*" file file_firewalld_log)
+
+(type firewalld_tmp_t)
+(call files_tmp_object (firewalld_tmp_t))
+
 (optional firewallcmd_optional_usersubject
     (call usersubject_use_inherited_terminals (firewallcmd_t)))
 
 (optional firewallcmd_optional_session
     (call session_use_inherited_terminals (firewallcmd_t)))
+
+(allow firewalld_t self rw_fifo_file_perms)
+
+(allow firewalld_t firewalld_log_t append_file_perms)
+(allow firewalld_t firewalld_log_t delete_file_perms)
+(allow firewalld_t firewalld_log_t create_file_perms)
+(allow firewalld_t firewalld_log_t read_file_perms)
+(allow firewalld_t firewalld_log_t (file (setattr)))
+(call files_var_log_filetrans (firewalld_t firewalld_log_t file "*"))
+
+(allow firewalld_t firewalld_tmp_t manage_file_perms)
+(allow firewalld_t firewalld_tmp_t mmap_file_perms)
+(call files_tmp_filetrans (firewalld_t firewalld_tmp_t file "*"))
+
+(call system_read_generic_proc_files (firewalld_t))
+
+(call devices_read_urandom (firewalld_t))
+
+(call auth_nsswitch_client_subject (firewalld_t))
+
+(call dbus_acquire_service_system (firewalld_t))
+(call dbus_system_client_subject (firewalld_t))
+
+(call firewall_read_firewalld_config_files (firewalld_t))
+
+(call iptables_subtrans (firewalld_t))
+
+(call miscfiles_read_localization_files (firewalld_t))
+(call miscfiles_read_network_environ_files (firewalld_t))
+
+(call polkit_dbus_chat_polkitd (firewalld_t))
+
+(optional firewalld_optional_networkmgr
+    (call networkmgr_dbus_chat (firewalld_t)))
 
 (allow is_firewall_admin_subject is_firewall_subject signal_perms)
 (allow is_firewall_admin_subject is_firewall_subject (process (ptrace)))
@@ -79,6 +123,11 @@
 (macro firewall_run_firewallcmd ((type ARG1)(role ARG2))
     (call firewall_subtrans_firewallcmd (ARG1))
     (roleattributeset is_firewallcmd_role ARG2))
+
+(macro firewall_read_firewalld_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 firewalld_conf_t (dirs (list)))
+    (allow ARG1 firewalld_conf_t read_file_perms))
 
 (macro firewall_admin ((type ARG1))
     (typeattributeset is_firewall_admin_subject ARG1))

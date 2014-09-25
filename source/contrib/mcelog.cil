@@ -41,6 +41,13 @@
 (call files_run_filetrans (mcelog_t mcelog_run_t sock_file "*"))
 (call files_run_filetrans (mcelog_t mcelog_run_t file "*"))
 
+(call system_read_generic_proc_files (mcelog_t))
+
+(call devices_read_kmsg (mcelog_t))
+(call devices_read_memory_raw (mcelog_t))
+
+(call auth_nsswitch_client_subject (mcelog_t))
+
 (optional mcelog_optional_cron
     (call cron_system_cronjob_subject_entry (mcelog_t mcelog_exec_t)))
 

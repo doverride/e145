@@ -48,6 +48,31 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*avahi-daemon.*" file file_avahid_unit)
 
+(allow avahid_t self (capability (chown setgid setuid sys_chroot)))
+(allow avahid_t self (process (setcap setrlimit)))
+(allow avahid_t self rw_fifo_file_perms)
+
+(call manage_files_pattern (avahid_t avahid_run_t avahid_run_t))
+
+(call system_read_sysctl_kernel_files (avahid_t))
+
+(call network_udp_bind_generic_node (avahid_t))
+
+(call devices_read_urandom (avahid_t))
+
+(call dbus_acquire_service_system (avahid_t))
+(call dbus_system_client_subject (avahid_t))
+
+(call dns_udp_bind_mdns_port (avahid_t))
+
+(call auth_nsswitch_client_subject (avahid_t))
+
+(call avahi_read_avahid_config_files (avahid_t))
+
+(call journald_client_subject (avahid_t))
+
+(call miscfiles_read_localization_files (avahid_t))
+
 (allow is_avahi_admin_subject is_avahi_subject signal_perms)
 (allow is_avahi_admin_subject is_avahi_subject (process (ptrace)))
 (call ps_subject_pattern (is_avahi_admin_subject is_avahi_subject))
@@ -55,6 +80,11 @@
 (allow is_avahi_admin_subject avahid_unit_t (service (all)))
 
 (call admin_pattern (is_avahi_admin_subject is_avahi_file_object))
+
+(macro avahi_read_avahid_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 avahid_conf_t (dirs (list)))
+    (allow ARG1 avahid_conf_t read_file_perms))
 
 (macro avahi_admin ((type ARG1))
     (typeattributeset is_avahi_admin_subject ARG1))

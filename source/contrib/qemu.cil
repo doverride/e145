@@ -30,6 +30,12 @@
 (allow qga_t qga_run_t manage_file_perms)
 (call files_run_filetrans (qga_t qga_run_t file "*"))
 
+(call devices_read_lnk_files (qga_t))
+
+(call terminal_use_virtio_nodes (qga_t))
+
+(call miscfiles_read_localization_files (qga_t))
+
 (allow is_qemu_admin_subject is_qemu_subject signal_perms)
 (allow is_qemu_admin_subject is_qemu_subject (process (ptrace)))
 (call ps_subject_pattern (is_qemu_admin_subject is_qemu_subject))

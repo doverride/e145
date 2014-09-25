@@ -195,6 +195,9 @@
     (call dhcp_send_signal_dhclient (networkmgr_t))
     (call dhcp_subtrans_dhclient (networkmgr_t)))
 
+(optional networkmgr_optional_http
+    (call http_tcp_connect_http_port (networkmgr_t)))
+
 (optional networkmgr_optional_session
     (call session_getattr (networkmgr_t))
     (call session_read_state (networkmgr_t)))

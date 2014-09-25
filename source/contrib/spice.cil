@@ -39,6 +39,9 @@
 (type vdagentd_tmp_t)
 (call files_tmp_object (vdagentd_tmp_t))
 
+(call manage_files_pattern (vdagentd_t vdagentd_run_t vdagentd_run_t))
+(call manage_sock_files_pattern (vdagentd_t vdagentd_run_t vdagentd_run_t))
+
 (allow is_spice_admin_subject vdagentd_t signal_perms)
 (allow is_spice_admin_subject vdagentd_t (process (ptrace)))
 (call ps_subject_pattern (is_spice_admin_subject vdagentd_t))

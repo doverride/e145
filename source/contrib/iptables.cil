@@ -16,7 +16,7 @@
 (filecon "/usr/libexec/ebtables" file file_iptables_exec)
 (filecon "/usr/libexec/iptables/ip6tables\.init" file file_iptables_exec)
 (filecon "/usr/libexec/iptables/iptables\.init" file file_iptables_exec)
-(filecon "/usr/bin/ebtables.*" file file_iptables_exec)
+(filecon "/usr/sbin/ebtables.*" file file_iptables_exec)
 (filecon "/usr/sbin/arptables.*" file file_iptables_exec)
 (filecon "/usr/sbin/xtables-multi" file file_iptables_exec)
 
