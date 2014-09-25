@@ -3,7 +3,7 @@
 (typeattribute is_cups_admin_subject)
 
 (typeattribute is_cups_subject)
-(typeattributeset is_cups_subject (cupsctl_t cupsd_t))
+(typeattributeset is_cups_subject (cupsctl_t cupsd_t cupsbrowsed_t))
 
 (typeattribute is_cups_file_object)
 (typeattributeset is_cups_file_object (cupsd_dbus_conf_t
@@ -35,6 +35,14 @@
 (context file_cupsd_exec (system_u object_r cupsd_exec_t ((s0)
     (s0))))
 (filecon "/usr/sbin/cupsd" file file_cupsd_exec)
+
+(type cupsbrowsed_t)
+(type cupsbrowsed_exec_t)
+(call systemd_daemon_subject_entry (cupsbrowsed_t cupsbrowsed_exec_t))
+
+(context file_cupsbrowsed_exec (system_u object_r cupsbrowsed_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/cups-browsed" file file_cupsbrowsed_exec)
 
 (type cupsd_helper_exec_t)
 (call commands_bin_object (cupsd_helper_exec_t))
@@ -92,6 +100,7 @@
 (context file_cupsd_unit (system_u object_r cupsd_unit_t ((s0)
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*cups.*" file file_cupsd_unit)
+(filecon "/usr/lib/systemd/system/[^/]*cups-browsed.*" file file_cupsd_unit)
 
 (optional cupsctl_optional_usersubject
     (call usersubject_use_inherited_terminals (cupsctl_t)))
