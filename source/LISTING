@@ -79,6 +79,7 @@ contrib/rtkit.cil
 contrib/screen.cil
 contrib/sensors.cil
 contrib/seutil.cil
+contrib/spice.cil
 contrib/ssh.cil
 contrib/sudo.cil
 contrib/tune.cil

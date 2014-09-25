@@ -1,0 +1,57 @@
+(roleattribute is_vdagent_role)
+
+(typeattribute is_spice_admin_subject)
+
+(typeattribute is_vdagent_subject)
+
+(typeattribute is_spice_file_object)
+(typeattributeset is_spice_file_object (vdagentd_run_t
+    vdagentd_unit_t))
+
+(type vdagent_exec_t)
+(call application_subject_entry (is_vdagent_subject vdagent_exec_t))
+
+(context file_vdagent_exec (system_u object_r vdagent_exec_t ((s0)(s0))))
+(filecon "/usr/bin/spice-vdagent" file file_vdagent_exec)
+
+(type vdagentd_t)
+(type vdagentd_exec_t)
+(call systemd_daemon_subject_entry (vdagentd_t vdagentd_exec_t))
+
+(context file_vdagentd_exec (system_u object_r vdagentd_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/spice-vdagentd" file file_vdagentd_exec)
+
+(type vdagentd_run_t)
+(call files_run_object (vdagentd_run_t))
+
+(context file_vdagentd_run (system_u object_r vdagentd_run_t ((s0)
+    (s0))))
+(filecon "/run/spice-vdagentd(/.*)?" any file_vdagentd_run)
+
+(type vdagentd_unit_t)
+(call systemd_unit_object (vdagentd_unit_t))
+
+(context file_vdagentd_unit (system_u object_r vdagentd_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*spice-vdagentd.*" file file_vdagentd_unit)
+
+(type vdagentd_tmp_t)
+(call files_tmp_object (vdagentd_tmp_t))
+
+(allow is_spice_admin_subject vdagentd_t signal_perms)
+(allow is_spice_admin_subject vdagentd_t (process (ptrace)))
+(call ps_subject_pattern (is_spice_admin_subject vdagentd_t))
+
+(allow is_spice_admin_subject vdagentd_unit_t (service (all)))
+
+(call admin_pattern (is_spice_admin_subject is_spice_file_object))
+
+(macro spice_role_template_vdagent ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_vdagent_role ARG1)
+    (typeattributeset is_vdagent_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 vdagent_exec_t ARG3)))
+
+(macro spice_admin ((type ARG1))
+    (typeattributeset is_spice_admin_subject ARG1))
