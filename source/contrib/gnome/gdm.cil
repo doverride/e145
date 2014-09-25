@@ -3,7 +3,7 @@
 (typeattribute is_gdm_file_object)
 (typeattributeset is_gdm_file_object (gdm_dbus_conf_t
     gdm_conf_t gdm_pam_conf_t gdm_unit_t gdm_run_t gdm_cache_t
-    gdm_var_lib_t gdm_log_t))
+    gdm_var_lib_t gdm_log_t gdm_run_user_dir_t))
 
 (type gdm_t)
 (type gdm_exec_t)
@@ -21,7 +21,7 @@
 (filecon "/var/cache/gdm(/.*)?" any file_gdm_cache)
 
 (type gdm_log_t)
-(call files_log_object (gdm_log_t))
+(call files_var_log_object (gdm_log_t))
 
 (context file_gdm_log (system_u object_r gdm_log_t ((s0)
     (s0))))
@@ -33,6 +33,9 @@
 (context file_gdm_run (system_u object_r gdm_run_t ((s0)
     (s0))))
 (filecon "/run/gdm(/.*)?" any file_gdm_run)
+
+(type gdm_run_user_dir_t)
+(call files_mnt_object (gdm_run_user_dir_t))
 
 (context file_gdm_user_run_user_dir (system_u object_r gdm_run_user_dir_t ((s0)
     mls_systemhigh)))
@@ -83,9 +86,9 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*gdm.*" file file_gdm_unit)
 
-(call filetrans_pattern (gdm_t gdm_user_run_dir_t gdm_run_t dir "*"))
+(call filetrans_pattern (gdm_t gdm_run_user_dir_t gdm_run_t dir "*"))
 
-auth_login_program_subject(gdm_t))
+(call auth_login_program_subject (gdm_t))
 
 (optional gdm_optional_unconfined
     (call unconfined_subject (gdm_t)))

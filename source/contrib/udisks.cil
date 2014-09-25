@@ -50,7 +50,7 @@
     file_udisksd_dbus_conf)
 
 (type udisksd_polkit_conf_t)
-(call polit_etc_object (udisksd_polkit_conf_t))
+(call polkit_etc_object (udisksd_polkit_conf_t))
 
 (context file_udisksd_polkit_conf (system_u object_r udisksd_polkit_conf_t
     ((s0) (s0))))
