@@ -1,0 +1,92 @@
+(roleattribute is_udisksctl_role)
+
+(typeattribute is_udisks_admin_subject)
+
+(typeattribute is_udisks_subject)
+(typeattributeset is_udisks_subject (udisksctl_t udisksd_t))
+
+(typeattribute is_udisks_file_object)
+(typeattributeset is_udisks_file_object (udisksd_dbus_conf_t
+    udisksd_conf_t udisksd_polkit_conf_t udisksd_unit_t udisksd_var_lib_t))
+
+(type udisksctl_t)
+(type udisksctl_exec_t)
+(call application_subject_entry (udisksctl_t udisksctl_exec_t))
+(roletype is_udisksctl_role udisksctl_t)
+
+(context file_udisksctl_exec (system_u object_r udisksctl_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/udisksctl" file file_udisksctl_exec)
+
+(type udisksd_t)
+(type udisksd_exec_t)
+(call systemd_daemon_subject_entry (udisksd_t udisksd_exec_t))
+
+(context file_udisksd_exec (system_u object_r udisksd_exec_t ((s0)
+    (s0))))
+(filecon "/usr/lib/udisks2/udisksd" file file_udisksd_exec)
+(filecon "/usr/sbin/umount\.udisks2" file file_udisksd_exec)
+
+(type udisksd_var_lib_t)
+(call files_var_lib_object (udisksd_var_lib_t))
+
+(context file_udisksd_var_lib (system_u object_r udisksd_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/udisks2(/.*)?" any file_udisksd_var_lib)
+
+(type udisksd_conf_t)
+(call files_etc_object (udisksd_conf_t))
+
+(context file_udisksd_conf (system_u object_r udisksd_conf_t
+    ((s0) (s0))))
+(filecon "/etc/udisks2" file file_udisksd_conf)
+
+(type udisksd_dbus_conf_t)
+(call dbus_etc_object (udisksd_dbus_conf_t))
+
+(context file_udisksd_dbus_conf (system_u object_r udisksd_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.UDisks2\.conf" file
+    file_udisksd_dbus_conf)
+
+(type udisksd_polkit_conf_t)
+(call polit_etc_object (udisksd_polkit_conf_t))
+
+(context file_udisksd_polkit_conf (system_u object_r udisksd_polkit_conf_t
+    ((s0) (s0))))
+(filecon "/usr/share/polkit-1/actions/org\.freedesktop\.udisks2\.policy" file
+    file_udisksd_polkit_conf)
+
+(type udisksd_unit_t)
+(call systemd_unit_object (udisksd_unit_t))
+
+(context file_udisksd_unit (system_u object_r udisksd_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*udisks2.*" file file_udisksd_unit)
+
+(optional udisksctl_optional_usersubject
+    (call usersubject_use_inherited_terminals (udisksctl_t)))
+
+(optional udisksctl_optional_session
+    (call session_use_inherited_terminals (udisksctl_t)))
+
+(allow is_udisks_admin_subject is_udisks_subject signal_perms)
+(allow is_udisks_admin_subject is_udisks_subject (process (ptrace)))
+(call ps_subject_pattern (is_udisks_admin_subject is_udisks_subject))
+
+(allow is_udisks_admin_subject udisksd_unit_t (service (all)))
+
+(call admin_pattern (is_udisks_admin_subject is_udisks_file_object))
+
+(macro udisks_exec_udisksctl ((type ARG1))
+    (call can_exec (ARG1 udisksctl_exec_t)))
+
+(macro udisks_subtrans_udisksctl ((type ARG1))
+    (call subtrans_pattern (ARG1 udisksctl_exec_t udisksctl_t)))
+
+(macro udisks_run_udisksctl ((type ARG1)(role ARG2))
+    (call udisks_subtrans_udisksctl (ARG1))
+    (roleattributeset is_udisksctl_role ARG2))
+
+(macro udisks_admin ((type ARG1))
+    (typeattributeset is_udisks_admin_subject ARG1))

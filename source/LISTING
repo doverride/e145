@@ -84,6 +84,7 @@ contrib/spice.cil
 contrib/ssh.cil
 contrib/sudo.cil
 contrib/tune.cil
+contrib/udisks.cil
 contrib/upower.cil
 contrib/usermanage.cil
 contrib/usersubject.cil

@@ -581,6 +581,10 @@
     (call udevd_admin (session_t))
     (call udevd_run_udevadm (session_t session_r)))
 
+(optional session_optional_udisks
+    (call udisks_admin (session_t))
+    (call udisks_run_udisksctl (session_t session_r)))
+
 (optional session_optional_updated
     (call updated_admin (session_t)))
 
