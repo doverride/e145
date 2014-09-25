@@ -1,0 +1,56 @@
+(roleattribute is_rngtest_role)
+
+(typeattribute is_rng_admin_subject)
+
+(typeattribute is_rng_subject)
+(typeattributeset is_rng_subject (rngtest_t rngd_t))
+
+(type rngtest_t)
+(type rngtest_exec_t)
+(call application_subject_entry (rngtest_t rngtest_exec_t))
+(roletype is_rngtest_role rngtest_t)
+
+(context file_rngtest_exec (system_u object_r rngtest_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/rngtest" file file_rngtest_exec)
+
+(type rngd_t)
+(type rngd_exec_t)
+(call systemd_daemon_subject_entry (rngd_t rngd_exec_t))
+
+(context file_rngd_exec (system_u object_r rngd_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/rngd" file file_rngd_exec)
+
+(type rngd_unit_t)
+(call systemd_unit_object (rngd_unit_t))
+
+(context file_rngd_unit (system_u object_r rngd_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*rngd.*" file file_rngd_unit)
+
+(optional rngtest_optional_usersubject
+    (call usersubject_use_inherited_terminals (rngtest_t)))
+
+(optional rngtest_optional_session
+    (call session_use_inherited_terminals (rngtest_t)))
+
+(allow is_rng_admin_subject is_rng_subject signal_perms)
+(allow is_rng_admin_subject is_rng_subject (process (ptrace)))
+(call ps_subject_pattern (is_rng_admin_subject is_rng_subject))
+
+(call admin_pattern (is_rng_admin_subject rngd_unit_t))
+(allow is_rng_admin_subject rngd_unit_t (service (all)))
+
+(macro rng_exec_rngtest ((type ARG1))
+    (call can_exec (ARG1 rngtest_exec_t)))
+
+(macro rng_subtrans_rngtest ((type ARG1))
+    (call subtrans_pattern (ARG1 rngtest_exec_t rngtest_t)))
+
+(macro rng_run_rngtest ((type ARG1)(role ARG2))
+    (call rng_subtrans_rngtest (ARG1))
+    (roleattributeset is_rngtest_role ARG2))
+
+(macro rng_admin ((type ARG1))
+    (typeattributeset is_rng_admin_subject ARG1))

@@ -531,6 +531,10 @@
 (optional session_optional_rfkill
     (call rfkill_admin (session_t)))
 
+(optional session_optional_rng
+    (call rng_admin (session_t))
+    (call rng_run_rngtest (session_t session_r)))
+
 (optional session_optional_rpcbind
     (call rpcbind_admin (session_t)))
 
