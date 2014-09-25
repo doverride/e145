@@ -91,5 +91,11 @@
     (call iscsi_subtrans_iscsiadm (ARG1))
     (roleattributeset is_iscsiadm_role ARG2))
 
+(macro iscsi_get_status ((type ARG1))
+    (allow ARG1 iscsid_unit_t (service (status))))
+
+(macro iscsi_reload ((type ARG1))
+    (allow ARG1 iscsid_unit_t (service (reload))))
+
 (macro iscsi_admin ((type ARG1))
     (typeattributeset is_iscsi_admin_subject ARG1))

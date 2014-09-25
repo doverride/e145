@@ -240,6 +240,10 @@
 (optional networkmgr_disp_optional_dhcp
     (call dhcp_subtrans_dhclient (networkmgr_disp_t))) ; /etc/NetworkManager/dispatcher.d/11-dhclient
 
+(optional networkmgr_disp_optional_iscsi
+    (call iscsi_get_status (networkmgr_disp_t))
+    (call iscsi_reload (networkmgr_disp_t))) ; /etc/NetworkManager/dispatcher.d/04-iscsi
+
 (optional networkmgr_disp_optional_ntp
     (call ntp_subtrans (networkmgr_disp_t))) ; chronyc
 
