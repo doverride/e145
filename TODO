@@ -22,8 +22,13 @@ net_admin
     requests for this capability need to be reviewed system-wide
 
 /usr/lib/.*\.d(/.*)?
+    and their respective counterparts in /etc if applicable
+
     create private types for the various .d dirs in there
-    binfmt.d, modprobe.d, modules-load,d, sysctl.d, sysusers.d, tmpfiles.d
+    binfmt.d, modprobe.d, modules-load.d, sysctl.d, sysusers.d, tmpfiles.d
+
+/etc/logrotate\.d
+    private types for administration
 
 block_suspend review block_suspend use
     these is a bug in kernel which triggers false block suspend
@@ -100,10 +105,6 @@ auth.cil:
 
     miscfiles_read_network_config_files() would probably be associated with
     is_dns_resolve_client_subject which in turn is associated with is_auth_nsswitch_client_subject
-
-tmpfiles.cil:
-    implement a tmpfiles_config_object(), and apply that to targeted subjects where possible
-    this is for administration purposes
 
 various:
     systemd uses tmpfs a lot but does not fix labels right after it mounts, or is not able to
