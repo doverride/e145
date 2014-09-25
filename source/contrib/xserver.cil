@@ -105,7 +105,7 @@
 (portcon "tcp" 6000 port_xserver)
 (portcon "udp" 6000 port_xserver)
 
-(call xserver_read_config (is_xorg_wrap_subject))
+(call xserver_read_config_files (is_xorg_wrap_subject))
 
 (allow is_xinit_subject self (process (setpgid signal)))
 
@@ -176,7 +176,7 @@
 (call udevd_read_run_files (is_xorg_subject))
 
 (call xserver_tcp_bind_xserver_port (is_xorg_subject))
-(call xserver_read_config (is_xorg_subject))
+(call xserver_read_config_files (is_xorg_subject))
 
 (optional xinit_optional_usersubject
     (type user_x_tmp_t)
@@ -193,7 +193,7 @@
 
 (call miscfiles_read_terminfo_files (is_xterm_subject))
 
-(call xserver_read_config (is_xterm_subject))
+(call xserver_read_config_files (is_xterm_subject))
 (call xserver_signal_all_client_subjects (is_xterm_subject))
 
 (allow is_xauth_subject self create_unix_dgram_socket_perms)
@@ -214,7 +214,7 @@
 
 (call auth_nsswitch_client_subject (is_xloadimg_subject))
 
-(call xserver_read_config (is_xloadimg_subject))
+(call xserver_read_config_files (is_xloadimg_subject))
 
 (optional xloadimg_optional_usersubject
     (type user_xloadimg_conf_t)
@@ -369,7 +369,7 @@
 (macro xserver_signal_all_client_subjects ((type ARG1))
     (allow ARG1 is_xserver_client_subject (process (signal))))
 
-(macro xserver_read_config ((type ARG1))
+(macro xserver_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 xserver_conf_t (dirs (list)))
     (allow ARG1 xserver_conf_t read_file_perms))
