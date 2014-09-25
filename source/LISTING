@@ -51,6 +51,7 @@ contrib/java.cil
 contrib/joe.cil
 contrib/kmod.cil
 contrib/libraries.cil
+contrib/libvirt.cil
 contrib/login.cil
 contrib/lvm.cil
 contrib/mail.cil

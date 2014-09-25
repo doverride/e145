@@ -438,6 +438,9 @@
     (call libraries_admin (session_t))
     (call libraries_run_ldconfig (session_t session_r)))
 
+(optional session_optional_libvirt
+    (call libvirt_admin (session_t)))
+
 (optional session_optional_localed
     (call localed_admin (session_t))
     (call localed_run_localectl (session_t session_r)))

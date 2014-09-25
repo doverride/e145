@@ -1,0 +1,96 @@
+(typeattribute is_libvirt_admin_subject)
+
+(typeattribute is_libvirt_subject)
+(typeattributeset is_libvirt_subject (virtlockd_t libvirtd_t))
+
+(typeattribute is_libvirt_file_object)
+(typeattributeset is_libvirt_file_object (libvirtd_conf_t
+    libvirtd_unit_t libvirtd_cache_t libvirtd_var_lib_t libvirtd_log_t
+    libvirtd_run_t libvirtd_env_t))
+
+(type libvirtd_t)
+(type libvirtd_exec_t)
+(call systemd_daemon_subject_entry (libvirtd_t libvirtd_exec_t))
+
+(context file_libvirtd_exec (system_u object_r libvirtd_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/libvirtd" file file_libvirtd_exec)
+
+(type virtlockd_t)
+(type virtlockd_exec_t)
+(call systemd_daemon_subject_entry (virtlockd_t virtlockd_exec_t))
+
+(call systemd_socket_activated_subject (virtlockd_t libvirtd_run_t))
+
+(context file_virtlockd_exec (system_u object_r virtlockd_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/virtlockd" file file_virtlockd_exec)
+
+(type libvirtd_cache_t)
+(call files_var_cache_object (libvirtd_cache_t))
+
+(context file_libvirtd_cache (system_u object_r libvirtd_cache_t ((s0)
+    (s0))))
+(filecon "/var/cache/libvirt(/.*)?" any file_libvirtd_cache)
+
+(type libvirtd_log_t)
+(call files_var_log_object (libvirtd_log_t))
+
+(context file_libvirtd_log (system_u object_r libvirtd_log_t ((s0)
+    (s0))))
+(filecon "/var/log/libvirt(/.*)?" any file_libvirtd_log)
+
+(type libvirtd_run_t)
+(call files_run_object (libvirtd_run_t))
+
+(context file_libvirtd_run (system_u object_r libvirtd_run_t ((s0)
+    (s0))))
+(filecon "/run/libvirt(/.*)?" any file_libvirtd_run)
+
+(type libvirtd_var_lib_t)
+(call files_var_lib_object (libvirtd_var_lib_t))
+
+(context file_libvirtd_var_lib (system_u object_r libvirtd_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/libvirt(/.*)?" any file_libvirtd_var_lib)
+
+(type libvirtd_conf_t)
+(call files_etc_object (libvirtd_conf_t))
+
+(context file_libvirtd_conf (system_u object_r libvirtd_conf_t
+    ((s0) (s0))))
+(filecon "/etc/libvirt(/.*)?" any file_libvirtd_conf)
+
+(type libvirtd_unit_t)
+(call systemd_unit_object (libvirtd_unit_t))
+
+(context file_libvirtd_unit (system_u object_r libvirtd_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*libvirtd.*" file file_libvirtd_unit)
+(filecon "/usr/lib/systemd/system/[^/]*virtlockd.*" file file_libvirtd_unit)
+
+(type libvirtd_helper_exec_t)
+(call commands_bin_object (libvirtd_helper_exec_t))
+
+(context file_libvirtd_helper_exec (system_u object_r libvirtd_helper_exec_t
+    ((s0) (s0))))
+(filecon "/usr/libexec/libvirt_iohelper" file file_libvirtd_helper_exec)
+
+(type libvirtd_env_t)
+(call files_env_object (libvirtd_env_t))
+
+(context file_libvirtd_env (system_u object_r libvirtd_env_t
+    ((s0) (s0))))
+(filecon "/etc/sysconfig/libvirtd" file file_libvirtd_env)
+(filecon "/etc/sysconfig/virtlockd" file file_libvirtd_env)
+
+(allow is_libvirt_admin_subject is_libvirt_subject signal_perms)
+(allow is_libvirt_admin_subject is_libvirt_subject (process (ptrace)))
+(call ps_subject_pattern (is_libvirt_admin_subject is_libvirt_subject))
+
+(allow is_libvirt_admin_subject libvirtd_unit_t (service (all)))
+
+(call admin_pattern (is_libvirt_admin_subject is_libvirt_file_object))
+
+(macro libvirt_admin ((type ARG1))
+    (typeattributeset is_libvirt_admin_subject ARG1))
