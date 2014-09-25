@@ -92,6 +92,7 @@ contrib/wpa.cil
 contrib/xlock.cil
 contrib/xpdf.cil
 contrib/xserver.cil
+contrib/gnome/gdm.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/autorelabel.cil
 contrib/systemd/backlight.cil

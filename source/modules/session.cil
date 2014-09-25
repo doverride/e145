@@ -395,6 +395,9 @@
 (optional session_optional_getty
     (call getty_admin (session_t)))
 
+(optional session_optional_gdm
+    (call gdm_admin (session_t)))
+
 (optional session_optional_googletalk
     (call googletalk_run_cronjob (session_t session_r)))
  
