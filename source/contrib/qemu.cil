@@ -32,6 +32,8 @@
 
 (call devices_read_lnk_files (qga_t))
 
+(call filesystem_getattr_tmpfs_filesystems (qga_t))
+
 (call terminal_use_virtio_nodes (qga_t))
 
 (call miscfiles_read_localization_files (qga_t))

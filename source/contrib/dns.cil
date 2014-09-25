@@ -18,8 +18,8 @@
 (call network_unreserved_port_object (port_mdns_t))
 
 (context port_mdns (system_u object_r port_mdns_t ((s0) (s0))))
-(portcon "tcp" 5353 port_dns)
-(portcon "udp" 5353 port_dns)
+(portcon "tcp" 5353 port_mdns)
+(portcon "udp" 5353 port_mdns)
 
 (type resolv_conf_t)
 (call files_etc_object (resolv_conf_t))

@@ -36,6 +36,8 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*mcelog.*" file file_mcelog_unit)
 
+(allow mcelog_t self (unix_stream_socket (listen accept)))
+
 (allow mcelog_t mcelog_run_t manage_file_perms)
 (allow mcelog_t mcelog_run_t manage_sock_file_perms)
 (call files_run_filetrans (mcelog_t mcelog_run_t sock_file "*"))
@@ -45,8 +47,11 @@
 
 (call devices_read_kmsg (mcelog_t))
 (call devices_read_memory_raw (mcelog_t))
+(call devices_write_sysfs_files (mcelog_t)) ; soft-online-page
 
 (call auth_nsswitch_client_subject (mcelog_t))
+
+(call mcelog_read_config_files (mcelog_t))
 
 (optional mcelog_optional_cron
     (call cron_system_cronjob_subject_entry (mcelog_t mcelog_exec_t)))
@@ -58,6 +63,11 @@
 (allow is_mcelog_admin_subject mcelog_unit_t (service (all)))
 
 (call admin_pattern (is_mcelog_admin_subject is_mcelog_file_object))
+
+(macro mcelog_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 mcelog_conf_t (dirs (list)))
+    (allow ARG1 mcelog_conf_t read_file_perms))
 
 (macro mcelog_admin ((type ARG1))
     (typeattributeset is_mcelog_admin_subject ARG1))

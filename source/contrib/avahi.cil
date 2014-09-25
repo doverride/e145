@@ -52,6 +52,7 @@
 (allow avahid_t self (process (setcap setrlimit)))
 (allow avahid_t self rw_fifo_file_perms)
 
+(allow avahid_t avahid_run_t (dir (setattr)))
 (call manage_files_pattern (avahid_t avahid_run_t avahid_run_t))
 
 (call system_read_sysctl_kernel_files (avahid_t))
@@ -72,6 +73,8 @@
 (call journald_client_subject (avahid_t))
 
 (call miscfiles_read_localization_files (avahid_t))
+
+(call systemd_stream_connect (avahid_t))
 
 (allow is_avahi_admin_subject is_avahi_subject signal_perms)
 (allow is_avahi_admin_subject is_avahi_subject (process (ptrace)))

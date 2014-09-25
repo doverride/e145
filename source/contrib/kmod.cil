@@ -71,8 +71,15 @@
 
 (call miscfiles_read_module_files (kmod_t))
 
+(optional kmod_optional_firewall
+    (call firewall_rw_inherited_fifo_files_firewalld (kmod_t)))
+
+(optional kmod_optional_iptables
+    (call iptables_dontaudit_rw_inherited_stream_sockets (kmod_t))
+    (call iptables_dontaudit_rw_inherited_rawip_sockets (kmod_t)))
+
 (optional kmod_optional_session
-    (call session_use_inherited_terminals (session_t)))
+    (call session_use_inherited_terminals (kmod_t)))
 
 (optional kmod_optional_usersubject
     (call usersubject_use_inherited_terminals (kmod_t)))

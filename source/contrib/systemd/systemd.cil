@@ -49,6 +49,7 @@
 (context file_sd_helper_exec (system_u object_r sd_helper_exec_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/[^/]*" file file_sd_helper_exec)
 (filecon "/usr/lib/systemd/system-generators/[^/]*" file file_sd_helper_exec)
+(filecon "/etc/mcelog/mcelog\.setup" file file_sd_helper_exec) ; BUG
 
 (type systemctl_t)
 (type systemctl_exec_t)
@@ -207,11 +208,13 @@
 
 (call auth_nsswitch_client_subject (systemd_daemon_t))
 
+(call miscfiles_read_localization_files (systemd_daemon_t))
+
 (call systemd_send_signal_all_systemd_daemons (systemd_daemon_t))
 (call systemd_send_signal (systemd_daemon_t))
 
-(optional systemd_daemon_optional_miscfiles
-    (call miscfiles_read_localization_files (systemd_daemon_t)))
+(optional systemd_daemon_optional_spice
+    (call spice_delete_vdagentd_run_sock_files (systemd_daemon_t)))
 
 (allow systemd_t self (process (getcap setfscreate setsockcreate
     signull setrlimit setsched setcap sigkill getsched)))

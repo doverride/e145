@@ -614,6 +614,12 @@
 (macro devices_setattr_dri ((type ARG1))
     (call setattr_chr_files_pattern (ARG1 device_t device_dri_t)))
 
+(macro devices_getattr_wireless ((type ARG1))
+    (call getattr_chr_files_pattern (ARG1 device_t device_wireless_t)))
+
+(macro devices_setattr_wireless ((type ARG1))
+    (call setattr_chr_files_pattern (ARG1 device_t device_wireless_t)))
+
 (macro devices_getattr_sound ((type ARG1))
     (call getattr_chr_files_pattern (ARG1 device_t device_sound_t)))
 
@@ -727,6 +733,10 @@
 (macro devices_read_sysfs_files ((type ARG1))
     (allow ARG1 sysfs_t (dirs (search)))
     (allow ARG1 sysfs_t read_file_perms))
+
+(macro devices_write_sysfs_files ((type ARG1))
+    (allow ARG1 sysfs_t (dirs (search)))
+    (allow ARG1 sysfs_t write_file_perms))
 
 (macro devices_rw_sysfs_dirs ((type ARG1))
     (allow ARG1 sysfs_t rw_dir_perms)) 

@@ -13,6 +13,7 @@
 (filecon "/etc/gdm/PostSession/.*" file bin)
 (filecon "/etc/gdm/PreSession/.*" file bin)
 (filecon "/etc/kernel/postinst\.d/.*" file bin)
+(filecon "/etc/mcelog/triggers/.*" file bin)
 (filecon "/etc/rc\.d/rc\.local" file bin)
 (filecon "/etc/rc\.d/init\.d/.*" file bin)
 (filecon "/etc/security/namespace\.init" file bin)
@@ -131,6 +132,9 @@
 
 (macro commands_getattr_shell_files ((type ARG1))
     (allow ARG1 shell_t (file (getattr))))
+
+(macro commands_mprot_read_bin_files ((type ARG1))
+    (allow ARG1 bin_t (file (read))))
 
 (macro commands_mprot_read_shell_files ((type ARG1))
     (allow ARG1 shell_t (file (read))))

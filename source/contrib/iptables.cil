@@ -112,6 +112,9 @@
 
 (call plymouth_subtrans (iptables_t))
 
+(optional iptables_optional_firewalld
+    (call firewall_rw_inherited_firewalld_tmp_files (iptables_t)))
+
 (optional iptables_optional_session
     (call session_use_inherited_terminals (iptables_t)))
 
@@ -136,6 +139,12 @@
 (macro iptables_read_env_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 iptables_env_t read_file_perms))
+
+(macro iptables_dontaudit_rw_inherited_stream_sockets ((type ARG1))
+    (dontaudit ARG1 iptables_t (unix_stream_socket (read write))))
+
+(macro iptables_dontaudit_rw_inherited_rawip_sockets ((type ARG1))
+    (dontaudit ARG1 iptables_t (rawip_socket (read write))))
 
 (macro iptables_admin ((type ARG1))
     (typeattributeset is_iptables_admin_subject ARG1))

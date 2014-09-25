@@ -79,6 +79,7 @@
 
 (call devices_getattr_dri (logind_t))
 (call devices_getattr_sound (logind_t))
+(call devices_getattr_wireless (logind_t))
 (call devices_getattr_v4l (logind_t))
 (call devices_list_sysfs (logind_t))
 (call devices_rw_sysfs_files (logind_t))
@@ -87,6 +88,7 @@
 (call devices_setattr_dri (logind_t))
 (call devices_rw_dri (logind_t))
 (call devices_setattr_sound (logind_t))
+(call devices_setattr_wireless (logind_t))
 (call devices_setattr_v4l (logind_t))
 
 (call files_search_home_root (logind_t))

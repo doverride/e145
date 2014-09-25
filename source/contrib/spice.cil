@@ -24,6 +24,7 @@
 
 (type vdagentd_run_t)
 (call files_run_object (vdagentd_run_t))
+(call systemd_pid_object (vdagentd_run_t))
 
 (context file_vdagentd_run (system_u object_r vdagentd_run_t ((s0)
     (s0))))
@@ -39,8 +40,12 @@
 (type vdagentd_tmp_t)
 (call files_tmp_object (vdagentd_tmp_t))
 
+(allow vdagentd_t self create_unix_stream_stream_socket_perms)
+
 (call manage_files_pattern (vdagentd_t vdagentd_run_t vdagentd_run_t))
 (call manage_sock_files_pattern (vdagentd_t vdagentd_run_t vdagentd_run_t))
+
+(call logind_read_run_files (vdagentd_t))
 
 (allow is_spice_admin_subject vdagentd_t signal_perms)
 (allow is_spice_admin_subject vdagentd_t (process (ptrace)))
@@ -55,6 +60,10 @@
     (typeattributeset is_vdagent_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 vdagent_exec_t ARG3)))
+
+(macro spice_delete_vdagentd_run_sock_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call delete_sock_files_pattern (ARG1 vdagentd_run_t vdagentd_run_t)))
 
 (macro spice_admin ((type ARG1))
     (typeattributeset is_spice_admin_subject ARG1))

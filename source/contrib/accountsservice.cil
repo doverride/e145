@@ -41,16 +41,28 @@
 
 (allow accountsd_t self (capability (dac_override)))
 
-(call dbus_acquire_service_system (accountsd_t))
-(call dbus_system_client_subject (accountsd_t))
+(call accountsservice_manage_accountsd_var_lib_files (accountsd_t))
+
+(call files_list_etc (accountsd_t))
+(call files_list_var_log (accountsd_t))
+
+(call filesystem_getattr_filesystems (accountsd_t))
 
 (call auth_nsswitch_client_subject (accountsd_t))
+(call auth_read_shadow_files (accountsd_t))
+(call auth_read_wtmp_log_files (accountsd_t))
+
+(call dbus_acquire_service_system (accountsd_t))
+(call dbus_system_client_subject (accountsd_t))
 
 (call journald_client_subject (accountsd_t))
 
 (call miscfiles_read_localization_files (accountsd_t))
 
 (call polkit_dbus_chat_polkitd (accountsd_t))
+
+(optional accountsd_optional_gdm
+    (call gdm_read_config_files (accountsd_t)))
 
 (allow is_accountsservice_admin_subject is_accountsservice_subject signal_perms)
 (allow is_accountsservice_admin_subject is_accountsservice_subject (process (ptrace)))
@@ -59,6 +71,10 @@
 (allow is_accountsservice_admin_subject accountsd_unit_t (service (all)))
 
 (call admin_pattern (is_accountsservice_admin_subject is_accountsservice_file_object))
+
+(macro accountsservice_manage_accountsd_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 accountsd_var_lib_t accountsd_var_lib_t)))
 
 (macro accountsservice_admin ((type ARG1))
     (typeattributeset is_accountsservice_admin_subject ARG1))
