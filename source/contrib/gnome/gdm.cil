@@ -101,6 +101,12 @@
 
 (call admin_pattern (is_gdm_admin_subject is_gdm_file_object))
 
+(macro gdm_run_user_root_filetrans_run_user_dir ((type ARG1)(name ARG2))
+    (call files_run_user_root_filetrans (ARG1 gdm_run_user_dir_t dir ARG2)))
+
+(macro gdm_mounton_run_user_dir ((type ARG1))
+    (allow ARG1 gdm_run_user_dir_t (dir (mounton))))
+
 (macro gdm_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 gdm_conf_t (dirs (list)))

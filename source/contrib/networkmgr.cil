@@ -237,6 +237,8 @@
 (call networkmgr_list_run (networkmgr_disp_t))
 (call networkmgr_read_config_files (networkmgr_disp_t))
 
+(call systemd_exec_systemctl (networkmgr_disp_t))
+
 (optional networkmgr_disp_optional_dhcp
     (call dhcp_subtrans_dhclient (networkmgr_disp_t))) ; /etc/NetworkManager/dispatcher.d/11-dhclient
 

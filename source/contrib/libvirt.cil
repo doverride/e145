@@ -46,6 +46,7 @@
 (context file_libvirtd_run (system_u object_r libvirtd_run_t ((s0)
     (s0))))
 (filecon "/run/libvirt(/.*)?" any file_libvirtd_run)
+(filecon "/run/libvirt\.pid" file file_libvirtd_run)
 
 (type libvirtd_var_lib_t)
 (call files_var_lib_object (libvirtd_var_lib_t))
@@ -83,6 +84,26 @@
     ((s0) (s0))))
 (filecon "/etc/sysconfig/libvirtd" file file_libvirtd_env)
 (filecon "/etc/sysconfig/virtlockd" file file_libvirtd_env)
+
+(allow libvirtd_t self (process (getsched)))
+
+(allow libvirtd_t libvirtd_run_t manage_file_perms)
+(call files_run_filetrans (libvirtd_t libvirtd_run_t file "*"))
+
+(call system_read_proc_net_files (libvirtd_t))
+
+(call devices_list_sysfs (libvirtd_t))
+(call devices_read_sysfs_files (libvirtd_t))
+(call devices_read_urandom (libvirtd_t))
+
+(call files_read_generic_etc_files (libvirtd_t)) ; /etc/libnl/classid
+
+(call dbus_system_client_subject (libvirtd_t))
+
+(call journald_client_subject (libvirtd_t))
+
+(optional libvirtd_optional_firewalld
+    (call firewall_dbus_chat_firewalld (libvirtd_t)))
 
 (allow is_libvirt_admin_subject is_libvirt_subject signal_perms)
 (allow is_libvirt_admin_subject is_libvirt_subject (process (ptrace)))

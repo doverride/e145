@@ -139,6 +139,10 @@
 (optional logind_optional_cron
     (call cron_read_crond_state (logind_t)))
 
+(optional logind_optional_gdm
+    (call gdm_mounton_run_user_dir (logind_t))
+    (call gdm_run_user_root_filetrans_run_user_dir (logind_t "42")))
+
 (optional logind_optional_networkmgr
     (call networkmgr_getattr (logind_t))
     (call networkmgr_read_state (logind_t)))
