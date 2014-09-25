@@ -7,7 +7,8 @@
 
 (typeattribute is_udisks_file_object)
 (typeattributeset is_udisks_file_object (udisksd_dbus_conf_t
-    udisksd_conf_t udisksd_polkit_conf_t udisksd_unit_t udisksd_var_lib_t))
+    udisksd_conf_t udisksd_polkit_conf_t udisksd_unit_t
+	udisksd_run_t udisksd_var_lib_t))
 
 (type udisksctl_t)
 (type udisksctl_exec_t)
@@ -27,6 +28,13 @@
 (filecon "/usr/lib/udisks2/udisksd" file file_udisksd_exec)
 (filecon "/usr/sbin/umount\.udisks2" file file_udisksd_exec)
 
+(type udisksd_run_t)
+(call files_run_object (udisksd_run_t))
+
+(context file_udisksd_run (system_u object_r udisksd_run_t ((s0)
+    (s0))))
+(filecon "/run/udisks2(/.*)?" any file_udisksd_run)
+
 (type udisksd_var_lib_t)
 (call files_var_lib_object (udisksd_var_lib_t))
 
@@ -39,7 +47,7 @@
 
 (context file_udisksd_conf (system_u object_r udisksd_conf_t
     ((s0) (s0))))
-(filecon "/etc/udisks2" file file_udisksd_conf)
+(filecon "/etc/udisks2(/.*)?" file file_udisksd_conf)
 
 (type udisksd_dbus_conf_t)
 (call dbus_etc_object (udisksd_dbus_conf_t))
