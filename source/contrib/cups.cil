@@ -1,0 +1,118 @@
+(roleattribute is_cupsctl_role)
+
+(typeattribute is_cups_admin_subject)
+
+(typeattribute is_cups_subject)
+(typeattributeset is_cups_subject (cupsctl_t cupsd_t))
+
+(typeattribute is_cups_file_object)
+(typeattributeset is_cups_file_object (cupsd_dbus_conf_t
+    cupsd_pam_conf_t cupsd_conf_t cupsd_unit_t cupsd_spool_t
+    cupsd_run_t cupsd_log_t))
+
+(type cupsctl_t)
+(type cupsctl_exec_t)
+(call application_subject_entry (cupsctl_t cupsctl_exec_t))
+(roletype is_cupsctl_role cupsctl_t)
+
+(context file_cupsctl_exec (system_u object_r cupsctl_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/accept" file file_cupsctl_exec)
+(filecon "/usr/sbin/cupsaccept" file file_cupsctl_exec)
+(filecon "/usr/sbin/cupsaddsmb" file file_cupsctl_exec)
+(filecon "/usr/sbin/cupsctl" file file_cupsctl_exec)
+(filecon "/usr/sbin/cupsdisable" file file_cupsctl_exec)
+(filecon "/usr/sbin/cupsenable" file file_cupsctl_exec)
+(filecon "/usr/sbin/cupsfilter" file file_cupsctl_exec)
+(filecon "/usr/sbin/cupsreject" file file_cupsctl_exec)
+
+(type cupsd_t)
+(type cupsd_exec_t)
+(call systemd_daemon_subject_entry (cupsd_t cupsd_exec_t))
+
+(call systemd_socket_activated_subject (cupsd_t cupsd_run_t))
+
+(context file_cupsd_exec (system_u object_r cupsd_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/cupsd" file file_cupsd_exec)
+
+(type cupsd_helper_exec_t)
+(call commands_bin_object (cupsd_helper_exec_t))
+
+(context file_cupsd_helper_exec (system_u object_r cupsd_helper_exec_t ((s0)
+    (s0))))
+(filecon "/usr/lib/cups/daemon/.*" file file_cupsd_helper_exec)
+
+(type cupsd_log_t)
+(call files_var_log_object (cupsd_log_t))
+
+(context file_cupsd_log (system_u object_r cupsd_log_t ((s0)
+    (s0))))
+(filecon "/var/log/cups(/.*)?" any file_cupsd_log)
+
+(type cupsd_run_t)
+(call files_run_object (cupsd_run_t))
+
+(context file_cupsd_run (system_u object_r cupsd_run_t ((s0)
+    (s0))))
+(filecon "/run/cups(/.*)?" any file_cupsd_run)
+
+(type cupsd_spool_t)
+(call files_var_spool_object (cupsd_spool_t))
+
+(context file_cupsd_spool (system_u object_r cupsd_spool_t ((s0)
+    (s0))))
+(filecon "/var/spool/cups(/.*)?" any file_cupsd_spool)
+
+(type cupsd_conf_t)
+(call files_etc_object (cupsd_conf_t))
+
+(context file_cupsd_conf (system_u object_r cupsd_conf_t
+    ((s0) (s0))))
+(filecon "/etc/cups(/.*)?" any file_cupsd_conf)
+
+(type cupsd_dbus_conf_t)
+(call dbus_etc_object (cupsd_dbus_conf_t))
+
+(context file_cupsd_dbus_conf (system_u object_r cupsd_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/cups\.conf" file
+    file_cupsd_dbus_conf)
+
+(type cupsd_pam_conf_t)
+(call auth_pam_etc_object (cupsd_pam_conf_t))
+
+(context file_cupsd_pam_conf (system_u object_r cupsd_pam_conf_t
+    ((s0) (s0))))
+(filecon "/etc/pam\.d/cups" file file_cupsd_pam_conf)
+
+(type cupsd_unit_t)
+(call systemd_unit_object (cupsd_unit_t))
+
+(context file_cupsd_unit (system_u object_r cupsd_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*cups.*" file file_cupsd_unit)
+
+(optional cupsctl_optional_usersubject
+    (call usersubject_use_inherited_terminals (cupsctl_t)))
+
+(optional cupsctl_optional_session
+    (call session_use_inherited_terminals (cupsctl_t)))
+
+(allow is_cups_admin_subject is_cups_subject signal_perms)
+(allow is_cups_admin_subject is_cups_subject (process (ptrace)))
+(call ps_subject_pattern (is_cups_admin_subject is_cups_subject))
+
+(allow is_cups_admin_subject cupsd_unit_t (service (all)))
+
+(call admin_pattern (is_cups_admin_subject is_cups_file_object))
+
+(macro cups_subtrans_cupsctl ((type ARG1))
+    (call subtrans_pattern (ARG1 cupsctl_exec_t cupsctl_t)))
+
+(macro cups_run_cupsctl ((type ARG1)(role ARG2))
+    (call cups_subtrans_cupsctl (ARG1))
+    (roleattributeset is_cupsctl_role ARG2))
+
+(macro cups_admin ((type ARG1))
+    (typeattributeset is_cups_admin_subject ARG1))

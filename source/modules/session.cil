@@ -356,6 +356,10 @@
 (optional session_optional_cryptsetup
     (call cryptsetup_admin (session_t)))
 
+(optional session_optional_cups
+    (call cups_admin (session_t))
+    (call cups_run_cupsctl (session_t session_r)))
+
 (optional session_optional_dbus
     (call dbus_admin (session_t)))
 

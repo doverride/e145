@@ -23,6 +23,7 @@ contrib/bti.cil
 contrib/color.cil
 contrib/consoletype.cil
 contrib/cron.cil
+contrib/cups.cil
 contrib/dbus.cil
 contrib/dhcp.cil
 contrib/dm.cil
