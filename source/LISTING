@@ -20,6 +20,7 @@ contrib/bluetooth.cil
 contrib/bootloader.cil
 contrib/bt.cil
 contrib/bti.cil
+contrib/color.cil
 contrib/consoletype.cil
 contrib/cron.cil
 contrib/dbus.cil

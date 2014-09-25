@@ -338,6 +338,9 @@
     (call bootloader_run_grub (session_t session_r))
     (call bootloader_run_grubby (session_t session_r)))
 
+(optional session_optional_color
+    (call color_admin (session_t)))
+
 (optional session_optional_coredump
     (call coredump_admin (session_t))
     (call coredump_run_coredumpctl (session_t session_r)))

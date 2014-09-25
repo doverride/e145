@@ -1,0 +1,66 @@
+(roleattribute is_color_role)
+
+(typeattribute is_color_admin_subject)
+
+(typeattribute is_color_subject)
+
+(typeattribute is_color_file_object)
+(typeattributeset is_color_file_object (colord_dbus_conf_t
+    colord_unit_t colord_var_lib_t colord_tmp_t))
+
+(type color_exec_t)
+(call application_subject_entry (is_color_subject color_exec_t))
+
+(context file_color_exec (system_u object_r color_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/colord-session" file file_color_exec)
+
+(type colord_t)
+(type colord_exec_t)
+(call systemd_daemon_subject_entry (colord_t colord_exec_t))
+
+(context file_colord_exec (system_u object_r colord_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/colord" file file_colord_exec)
+
+(type colord_var_lib_t)
+(call files_var_lib_object (colord_var_lib_t))
+
+(context file_colord_var_lib (system_u object_r colord_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/colord(/.*)?" any file_colord_var_lib)
+
+(type colord_dbus_conf_t)
+(call dbus_etc_object (colord_dbus_conf_t))
+
+(context file_colord_dbus_conf (system_u object_r colord_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.ColorManager\.conf" file
+    file_colord_dbus_conf)
+
+(type colord_unit_t)
+(call systemd_unit_object (colord_unit_t))
+
+(context file_colord_unit (system_u object_r colord_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*colord.*" file file_colord_unit)
+
+(type colord_tmp_t)
+(call files_tmp_object (colord_tmp_t))
+
+(allow is_color_admin_subject colord_t signal_perms)
+(allow is_color_admin_subject colord_t (process (ptrace)))
+(call ps_subject_pattern (is_color_admin_subject colord_t))
+
+(allow is_color_admin_subject colord_unit_t (service (all)))
+
+(call admin_pattern (is_color_admin_subject is_color_file_object))
+
+(macro color_role_template ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_color_role ARG1)
+    (typeattributeset is_color_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 color_exec_t ARG3)))
+
+(macro color_admin ((type ARG1))
+    (typeattributeset is_color_admin_subject ARG1))

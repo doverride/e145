@@ -6,7 +6,7 @@
 
 (typeattribute is_spice_file_object)
 (typeattributeset is_spice_file_object (vdagentd_run_t
-    vdagentd_unit_t))
+    vdagentd_unit_t vdagentd_tmp_t))
 
 (type vdagent_exec_t)
 (call application_subject_entry (is_vdagent_subject vdagent_exec_t))
