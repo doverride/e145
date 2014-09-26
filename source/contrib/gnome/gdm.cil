@@ -109,7 +109,9 @@
 
 (allow gdm_t gdm_tmp_t mmap_file_perms)
 (allow gdm_t gdm_tmp_t manage_file_perms)
+(allow gdm_t gdm_tmp_t manage_sock_file_perms)
 (call files_tmp_filetrans (gdm_t gdm_tmp_t file "*"))
+(call files_tmp_filetrans (gdm_t gdm_tmp_t sock_file "*"))
 
 (allow gdm_t gdm_tmpfs_t manage_file_perms)
 (call filesystem_tmpfs_filetrans (gdm_t gdm_tmpfs_t file "*"))
@@ -202,6 +204,7 @@
 (call systemd_dbus_chat (gdm_t))
 (call systemd_get_status_system (gdm_t))
 (call systemd_getattr_generic_unit_dirs (gdm_t))
+(call systemd_exec_helper (gdm_t)) ; systemd-multi-seat-x
 
 (call udevd_client_subject (gdm_t))
 
