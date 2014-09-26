@@ -152,6 +152,9 @@
 
 (call admin_pattern (is_pa_admin_subject is_pa_file_object))
 
+(macro pa_exec_pa ((type ARG1))
+    (call can_exec (ARG1 pa_exec_t)))
+
 (macro pa_exec_pactl ((type ARG1))
     (call can_exec (ARG1 pactl_exec_t)))
 

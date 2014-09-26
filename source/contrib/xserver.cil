@@ -23,7 +23,8 @@
 (typeattribute is_xserver_tmpfs_file)
 
 (typeattribute is_xserver_file_object)
-(typeattributeset is_xserver_file_object (xserver_conf_t xserver_log_t))
+(typeattributeset is_xserver_file_object (xserver_conf_t xserver_log_t
+    xorg_tmp_t xserver_var_lib_t))
 
 (type xinit_exec_t)
 (call application_subject_entry (is_xinit_subject xinit_exec_t))
@@ -106,12 +107,21 @@
 (context file_xserver_log (system_u object_r xserver_log_t ((s0)(s0))))
 (filecon "/var/log/Xorg.*\.log.*" file file_xserver_log)
 
+(type xserver_var_lib_t)
+(call files_var_lib_object (xserver_var_lib_t))
+
+(context file_xserver_var_lib (system_u object_r xserver_var_lib_t ((s0)(s0))))
+(filecon "/var/lib/xkb(/.*)?" any file_xserver_var_lib)
+
 (type port_xserver_t)
 (call network_unreserved_port_object (port_xserver_t))
 
 (context port_xserver (system_u object_r port_xserver_t ((s0) (s0))))
 (portcon "tcp" 6000 port_xserver)
 (portcon "udp" 6000 port_xserver)
+
+(type xorg_tmp_t)
+(call files_tmp_object (xorg_tmp_t))
 
 (call xserver_subtrans_xorg (xorg_wrap_t))
 
@@ -143,12 +153,18 @@
 
 (allow is_xorg_subject self (capability (dac_override setgid setuid sys_admin sys_rawio ipc_owner sys_ptrace)))
 (allow is_xorg_subject self (process (signal)))
+(allow xorg_t self (process (getpgid setpgid)))
 (allow is_xorg_subject self (unix_stream_socket (accept listen)))
 (allow is_xorg_subject self r_netlink_route_socket_perms)
 (allow is_xorg_subject self rw_fifo_file_perms)
 
 (allow is_xorg_subject xserver_log_t manage_file_perms)
 (call files_var_log_filetrans (is_xorg_subject xserver_log_t file "*"))
+
+(allow xorg_t xorg_tmp_t manage_file_perms)
+(allow xorg_t xorg_tmp_t manage_sock_file_perms)
+(call files_tmp_filetrans (xorg_t xorg_tmp_t file "*"))
+(call files_tmp_filetrans (xorg_t xorg_tmp_t socket "*"))
 
 (call system_read_generic_proc_files (is_xorg_subject))
 (call system_write_proc_mtrr_files (is_xorg_subject))
@@ -170,6 +186,8 @@
 
 (call network_tcp_bind_generic_node (is_xorg_subject))
 
+(call terminal_use_unallocated_tty_nodes (xorg_t))
+
 (call auth_nsswitch_client_subject (is_xorg_subject))
 
 (call dbus_system_client_subject (is_xorg_subject))
@@ -185,6 +203,11 @@
 
 (call xserver_tcp_bind_xserver_port (is_xorg_subject))
 (call xserver_read_config_files (is_xorg_subject))
+(call xserver_manage_var_lib_files (xorg_t))
+
+(optional xorg_optional_gdm
+    (call gdm_read_state (xorg_t))
+    (call gdm_read_run_files (xorg_t)))
 
 (optional xinit_optional_usersubject
     (type user_x_tmp_t)
@@ -261,6 +284,9 @@
 (allow is_xorg_subject is_xserver_tmpfs_file (file (read write)))
 
 (call admin_pattern (is_xserver_admin_subject is_xserver_file_object))
+
+(macro xserver_exec_xrdb ((type ARG1))
+    (call can_exec (ARG1 xrdb_exec_t)))
 
 (macro xserver_subtrans_xorg_wrap ((type ARG1))
     (call subtrans_pattern (ARG1 xorg_wrap_exec_t xorg_wrap_t)))
@@ -408,6 +434,10 @@
     (call files_rw_etc_dirs (ARG1))
     (allow ARG1 xserver_conf_t manage_dir_perms)
     (allow ARG1 xserver_conf_t manage_file_perms))
+
+(macro xserver_manage_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 xserver_var_lib_t xserver_var_lib_t)))
 
 (macro xserver_etc_filetrans_xserver_conf ((type ARG1)(class ARG2)(name ARG3))
     (call files_etc_filetrans (ARG1 xserver_conf_t ARG2 ARG3)))

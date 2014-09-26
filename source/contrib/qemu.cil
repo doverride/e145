@@ -8,6 +8,12 @@
 (typeattribute is_qemu_file_object)
 (typeattributeset is_qemu_file_object (qga_unit_t qga_run_t))
 
+(type qemu_exec_t)
+(call commands_bin_object (qemu_exec_t))
+
+(context file_qemu_exec (system_u object_r qemu_exec_t ((s0) (s0))))
+(filecon "/usr/bin/qemu-img" file file_qemu_exec)
+
 (type qga_t)
 (type qga_exec_t)
 (call systemd_daemon_subject_entry (qga_t qga_exec_t))
@@ -45,6 +51,9 @@
 (allow is_qemu_admin_subject qga_unit_t (service (all)))
 
 (call admin_pattern (is_qemu_admin_subject is_qemu_file_object))
+
+(macro qemu_getattr_qemu_executable_files ((type ARG1))
+    (allow ARG1 qemu_exec_t (file (getattr))))
 
 (macro qemu_admin ((type ARG1))
     (typeattributeset is_qemu_admin_subject ARG1))

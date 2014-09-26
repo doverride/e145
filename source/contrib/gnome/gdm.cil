@@ -1,8 +1,3 @@
-(auditallow gdm_t bin_t (file (execute_no_trans)))
-(auditallow gdm_t shell_t (file (execute_no_trans)))
-(auditallow gdm_t xorg_exec_t (file (execute_no_trans)))
-(auditallow gdm_t xorg_wrap_exec_t (file (execute_no_trans)))
-
 (typeattribute is_gdm_admin_subject)
 
 (typeattribute is_gdm_file_object)
@@ -97,14 +92,24 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*gdm.*" file file_gdm_unit)
 
+(allow gdm_t self (process (execmem))) ; gnome-shell
+
+(allow gdm_t gdm_run_t manage_dir_perms)
+(call files_run_filetrans (gdm_t gdm_run_t dir "*"))
+
 (call filetrans_pattern (gdm_t gdm_run_user_dir_t gdm_run_t dir "*"))
+
+(call commands_execute_bin_files (gdm_t)) ; /usr/bin/xorg
+(call commands_execute_shell_files (gdm_t))
 
 (call auth_login_program_subject (gdm_t))
 
-(call xserver_subtrans_xorg_wrap (gdm_t))
+(call pa_exec_pa (gdm_t))
 
-(optional gdm_optional_unconfined
-    (call unconfined_subject (gdm_t)))
+(call rtkit_client_subject (gdm_t))
+
+(call xserver_exec_xrdb (gdm_t))
+(call xserver_subtrans_xorg_wrap (gdm_t))
 
 (allow is_gdm_admin_subject gdm_t signal_perms)
 (allow is_gdm_admin_subject gdm_t (process (ptrace)))
@@ -161,6 +166,15 @@
     (call files_search_etc (ARG1))
     (allow ARG1 gdm_conf_t (dirs (list)))
     (allow ARG1 gdm_conf_t read_file_perms))
+
+(macro gdm_read_state ((type ARG1))
+    (allow ARG1 gdm_t (dirs (list)))
+    (allow ARG1 gdm_t read_file_perms))
+
+(macro gdm_read_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (allow ARG1 gdm_run_t (dirs (list)))
+    (allow ARG1 gdm_run_t read_file_perms))
 
 (macro gdm_admin ((type ARG1))
     (typeattributeset is_gdm_admin_subject ARG1))

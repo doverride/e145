@@ -133,6 +133,8 @@
 (call miscfiles_read_localization_files (libvirtd_t))
 (call miscfiles_read_hwdata_files (libvirtd_t))
 
+(call qemu_getattr_qemu_executable_files (libvirtd_t)) ; temporary to make it shut up
+
 (call seutil_read_config_files (libvirtd_t))
 (call seutil_read_file_context_files (libvirtd_t))
 
