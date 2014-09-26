@@ -1,0 +1,55 @@
+(typeattribute is_dnsmasq_admin_subject)
+
+(typeattribute is_dnsmasq_file_object)
+(typeattributeset is_dnsmasq_file_object (dnsmasq_conf_t
+    dnsmasq_dbus_conf_t dnsmasq_unit_t dnsmasq_var_lib_t))
+
+(type dnsmasq_t)
+(type dnsmasq_exec_t)
+(call systemd_daemon_subject_entry (dnsmasq_t dnsmasq_exec_t))
+
+(context file_dnsmasq_exec (system_u object_r dnsmasq_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/dnsmasq" file file_dnsmasq_exec)
+
+(type dnsmasq_var_lib_t)
+(call files_var_lib_object (dnsmasq_var_lib_t))
+
+(context file_dnsmasq_var_lib (system_u object_r dnsmasq_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/dnsmasq(/.*)?" any file_dnsmasq_var_lib)
+
+(type dnsmasq_conf_t)
+(call files_etc_object (dnsmasq_conf_t))
+
+(context file_dnsmasq_conf (system_u object_r dnsmasq_conf_t ((s0) (s0))))
+(filecon "/etc/dnsmasq\.conf" file file_dnsmasq_conf)
+(filecon "/etc/dnsmasq\.d(/.*)?" any file_dnsmasq_conf)
+
+(type dnsmasq_dbus_conf_t)
+(call dbus_etc_object (dnsmasq_dbus_conf_t))
+
+(context file_dnsmasq_dbus_conf (system_u object_r dnsmasq_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/dnsmasq\.conf" file file_dnsmasq_dbus_conf)
+
+(type dnsmasq_unit_t)
+(call systemd_unit_object (dnsmasq_unit_t))
+
+(context file_dnsmasq_unit (system_u object_r dnsmasq_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*dnsmasq.*" file file_dnsmasq_unit)
+
+(allow is_dnsmasq_admin_subject dnsmasq_t signal_perms)
+(allow is_dnsmasq_admin_subject dnsmasq_t (process (ptrace)))
+(call ps_subject_pattern (is_dnsmasq_admin_subject dnsmasq_t))
+
+(allow is_dnsmasq_admin_subject dnsmasq_unit_t (service (all)))
+
+(call admin_pattern (is_dnsmasq_admin_subject is_dnsmasq_file_object))
+
+(macro dnsmasq_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 dnsmasq_exec_t dnsmasq_t)))
+
+(macro dnsmasq_admin ((type ARG1))
+    (typeattributeset is_dnsmasq_admin_subject ARG1))

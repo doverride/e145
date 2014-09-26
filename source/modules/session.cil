@@ -375,6 +375,9 @@
 (optional session_optional_dmesg
     (call dmesg_run (session_t session_r)))
 
+(optional session_optional_dnsmasq
+    (call dnsmasq_admin (session_t)))
+
 (optional session_optional_dracut
     (call dracut_admin (session_t)))
 

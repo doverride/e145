@@ -29,6 +29,7 @@ contrib/dhcp.cil
 contrib/dm.cil
 contrib/dmesg.cil
 contrib/dns.cil
+contrib/dnsmasq.cil
 contrib/dracut.cil
 contrib/emacs.cil
 contrib/ffmpeg.cil
