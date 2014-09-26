@@ -108,7 +108,6 @@
 (allow networkmgr_t self (process (signal setpgid)))
 (allow networkmgr_t self (capability (net_admin net_raw)))
 (allow networkmgr_t self create_netlink_socket_perms)
-(allow networkmgr_t self create_netlink_kobject_uevent_socket_perms)
 (allow networkmgr_t self (netlink_route_socket (nlmsg_write)))
 (allow networkmgr_t self (unix_stream_socket (listen accept)))
 (allow networkmgr_t self create_rawip_socket_perms)
@@ -185,8 +184,7 @@
 
 (call sysctl_read_config_files (networkmgr_t))
 
-(call udevd_read_config_files (networkmgr_t))
-(call udevd_read_run_files (networkmgr_t))
+(call udevd_client_subject (networkmgr_t))
 
 (optional networkmgr_optional_dhcp
     (call dhcp_delete_dhclient_run_files (networkmgr_t))
@@ -249,8 +247,6 @@
 (optional networkmgr_disp_optional_ntp
     (call ntp_subtrans (networkmgr_disp_t))) ; chronyc
 
-(allow networkmgrcli_t self create_netlink_kobject_uevent_socket_perms)
-
 (call devices_read_urandom (networkmgrcli_t))
 (call devices_read_sysfs_files (networkmgrcli_t))
 
@@ -266,8 +262,7 @@
 (call networkmgr_stream_connect (networkmgrcli_t))
 (call networkmgr_dbus_chat (networkmgrcli_t))
 
-(call udevd_read_config_files (networkmgrcli_t))
-(call udevd_read_run_files (networkmgrcli_t))
+(call udevd_client_subject (networkmgrcli_t))
 
 (optional networkmgrcli_optional_session
     (call session_search_all_home (networkmgrcli_t))

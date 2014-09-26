@@ -87,8 +87,8 @@
 
 (allow libvirtd_t self (capability (dac_override)))
 (allow libvirtd_t self (process (signal getsched setcap getcap)))
-(allow libvirtd_t self create_netlink_kobject_uevent_socket_perms)
 (allow libvirtd_t self (unix_stream_socket (listen accept)))
+(allow libvirtd_t self rw_fifo_file_perms)
 
 (allow libvirtd_t libvirtd_cache_t list_dir_perms)
 
@@ -138,8 +138,7 @@
 
 (call systemd_stream_connect (libvirtd_t))
 
-(call udevd_read_config_files (libvirtd_t))
-(call udevd_read_run_files (libvirtd_t))
+(call udevd_client_subject (libvirtd_t))
 
 (optional libvirtd_optional_firewalld
     (call firewall_dbus_chat_firewalld (libvirtd_t)))

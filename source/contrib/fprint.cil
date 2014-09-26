@@ -55,7 +55,6 @@
     (s0))))
 (filecon "/var/lib/fprint(/.*)?" any file_fprintd_var_lib)
 
-(allow fprintd_t self create_netlink_kobject_uevent_socket_perms)
 (allow fprintd_t self rw_fifo_file_perms)
 
 (call devices_list (fprintd_t))
@@ -81,8 +80,7 @@
 
 (call polkit_dbus_chat_polkitd (fprintd_t))
 
-(call udevd_read_config_files (fprintd_t))
-(call udevd_read_run_files (fprintd_t))
+(call udevd_client_subject (fprintd_t))
 
 (call dbus_system_client_subject (fprintcli_t))
 

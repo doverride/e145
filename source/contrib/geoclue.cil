@@ -43,6 +43,21 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*geoclue.*" file file_geoclue_unit)
 
+(call auth_nsswitch_client_subject (geoclue_t))
+
+(call dbus_acquire_service_system (geoclue_t))
+(call dbus_system_client_subject (geoclue_t))
+
+(call geoclue_read_config_files (geoclue_t))
+
+(call miscfiles_read_localization_files (geoclue_t))
+
+(optional geoclue_optional_modemmgr
+    (call modemmgr_dbus_chat (geoclue_t)))
+
+(optional geoclue_optional_wpa
+    (call wpa_dbus_chat (geoclue_t)))
+
 (allow is_geoclue_admin_subject geoclue_t signal_perms)
 (allow is_geoclue_admin_subject geoclue_t (process (ptrace)))
 (call ps_subject_pattern (is_geoclue_admin_subject geoclue_t))
@@ -50,6 +65,11 @@
 (allow is_geoclue_admin_subject geoclue_unit_t (service (all)))
 
 (call admin_pattern (is_geoclue_admin_subject is_geoclue_file_object))
+
+(macro geoclue_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 geoclue_conf_t (dirs (list)))
+    (allow ARG1 geoclue_conf_t read_file_perms))
 
 (macro geoclue_admin ((type ARG1))
     (typeattributeset is_geoclue_admin_subject ARG1))

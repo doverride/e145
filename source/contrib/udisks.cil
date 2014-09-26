@@ -78,11 +78,32 @@
 (optional udisksctl_optional_session
     (call session_use_inherited_terminals (udisksctl_t)))
 
+(allow udisksd_t udisksd_run_t manage_dir_perms)
 (call files_run_filetrans (udisksd_t udisksd_run_t dir "*"))
 
+(call system_read_generic_proc_files (udisksd_t))
+
+(call devices_list_sysfs (udisksd_t))
+(call devices_read_sysfs_files (udisksd_t))
+
+(call files_read_generic_etc_files (udisksd_t)) ; /etc/fstab
+
+(call storage_getattr_fixed_disk_nodes (udisksd_t))
+(call storage_getattr_scsi_generic_nodes (udisksd_t))
+(call storage_getattr_removable_nodes (udisksd_t))
+
+(call auth_nsswitch_client_subject (udisksd_t))
+
+(call dbus_acquire_service_system (udisksd_t))
 (call dbus_system_client_subject (udisksd_t))
 
+(call journald_client_subject (udisksd_t))
+
+(call miscfiles_read_localization_files (udisksd_t))
+
 (call polkit_dbus_chat_polkitd (udisksd_t))
+
+(call udevd_client_subject (udisksd_t))
 
 (allow is_udisks_admin_subject is_udisks_subject signal_perms)
 (allow is_udisks_admin_subject is_udisks_subject (process (ptrace)))

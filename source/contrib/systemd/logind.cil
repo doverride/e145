@@ -65,7 +65,6 @@
 
 (allow logind_t self (capability (chown fowner sys_tty_config sys_admin dac_override)))
 (allow logind_t self (process (getcap setfscreate)))
-(allow logind_t self create_netlink_kobject_uevent_socket_perms)
 
 (allow logind_t logind_run_t manage_dir_perms)
 (allow logind_t logind_run_t manage_fifo_file_perms)
@@ -133,8 +132,7 @@
 (call systemd_stream_connect (logind_t))
 
 (call udevd_list_run (logind_t))
-(call udevd_read_config_files (logind_t))
-(call udevd_read_run_files (logind_t))
+(call udevd_client_subject (logind_t))
 
 (optional logind_optional_cron
     (call cron_read_crond_state (logind_t)))

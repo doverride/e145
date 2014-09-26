@@ -40,6 +40,8 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*dnsmasq.*" file file_dnsmasq_unit)
 
+(call system_read_sysctl_kernel_files (dnsmasq_t))
+
 (allow is_dnsmasq_admin_subject dnsmasq_t signal_perms)
 (allow is_dnsmasq_admin_subject dnsmasq_t (process (ptrace)))
 (call ps_subject_pattern (is_dnsmasq_admin_subject dnsmasq_t))

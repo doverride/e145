@@ -201,6 +201,10 @@
     (allow ARG1 device_fixed_disk_t read_chr_file_perms)
     (typeattributeset can_read_fixed_disk_raw ARG1))
 
+(macro storage_getattr_removable_nodes ((type ARG1))
+    (call devices_search (ARG1))
+    (allow ARG1 device_removable_t (blk_file (getattr))))
+
 (macro storage_read_removable_nodes ((type ARG1))
     (call devices_search (ARG1))
     (allow ARG1 device_removable_t read_blk_file_perms))

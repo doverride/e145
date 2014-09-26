@@ -122,6 +122,10 @@
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 wpa_conf_t wpa_conf_t)))
 
+(macro wpa_dbus_chat ((type ARG1))
+    (allow ARG1 wpa_t (dbus (send_msg)))
+    (allow wpa_t ARG1 (dbus (send_msg))))
+
 (macro wpa_manage_run_files ((type ARG1))
     (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 wpa_run_t wpa_run_t)))

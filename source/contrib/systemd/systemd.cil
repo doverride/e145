@@ -224,7 +224,6 @@
 (allow systemd_t self (capability2 (block_suspend)))
 (allow systemd_t self (unix_dgram_socket (lock)))
 (allow systemd_t self (unix_stream_socket (listen accept)))
-(allow systemd_t self create_netlink_kobject_uevent_socket_perms)
 (allow systemd_t self (netlink_route_socket (nlmsg_write)))
 (allow systemd_t self create_netlink_selinux_socket_perms)
 (allow systemd_t self rw_fifo_file_perms)
@@ -386,8 +385,7 @@
 (call tmpfiles_list_run (systemd_t))
 (call tmpfiles_read_run_files (systemd_t))
 
-(call udevd_read_config_files (systemd_t))
-(call udevd_read_run_files (systemd_t))
+(call udevd_client_subject (systemd_t))
 
 (call utmp_rw_run_files (systemd_t))
 

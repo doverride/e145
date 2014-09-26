@@ -71,7 +71,6 @@
 (optional upower_optional_usersubject
     (call usersubject_use_inherited_terminals (upower_t)))
 
-(allow upowerd_t self create_netlink_kobject_uevent_socket_perms)
 (allow upowerd_t self rw_fifo_file_perms)
 
 (call devices_list (upowerd_t))
@@ -88,8 +87,7 @@
 
 (call polkit_dbus_chat_polkitd (upowerd_t))
 
-(call udevd_read_config_files (upowerd_t))
-(call udevd_read_run_files (upowerd_t))
+(call udevd_client_subject (upowerd_t))
 
 (call upower_read_config_files (upowerd_t))
 (call upower_manage_var_lib_files (upowerd_t))

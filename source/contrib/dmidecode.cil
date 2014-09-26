@@ -13,6 +13,8 @@
 (filecon "/usr/sbin/ownership" file file_dmidecode_exec)
 (filecon "/usr/sbin/vpddecode" file file_dmidecode_exec)
 
+(call devices_read_memory_raw (dmidecode_t))
+
 (optional dmidecode_optional_usersubject
     (call usersubject_use_inherited_terminals (dmidecode_t)))
 

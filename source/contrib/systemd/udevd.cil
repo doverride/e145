@@ -2,6 +2,8 @@
 
 (typeattribute is_udevd_admin_subject)
 
+(typeattribute is_udevd_client_subject)
+
 (typeattribute is_udevd_subject)
 (typeattributeset is_udevd_subject (udevd_t udevadm_t))
 
@@ -178,6 +180,11 @@
 (optional udevadm_optional_usersubject
     (call usersubject_use_inherited_terminals (udevadm_t)))
 
+(allow is_udevd_client_subject self create_netlink_kobject_uevent_socket_perms)
+
+(call udevd_read_config_files(is_udevd_client_subject))
+(call udevd_read_run_files(is_udevd_client_subject))
+
 (allow is_udevd_admin_subject is_udevd_subject signal_perms)
 (allow is_udevd_admin_subject is_udevd_subject (process (ptrace)))
 (call ps_subject_pattern (is_udevd_admin_subject is_udevd_subject))
@@ -226,6 +233,9 @@
 (macro udevd_stream_connect_udevd ((type ARG1))
     (call files_search_run (ARG1))
     (call stream_connect_pattern (ARG1 udevd_run_t udevd_run_t udevd_t)))
+
+(macro udevd_client_subject ((type ARG1))
+    (typeattributeset is_udevd_client_subject ARG1))
 
 (macro udevd_admin ((type ARG1))
     (typeattributeset is_udevd_admin_subject ARG1))

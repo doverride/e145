@@ -135,7 +135,6 @@
 (allow is_xorg_subject self (process (signal)))
 (allow is_xorg_subject self (unix_stream_socket (accept listen)))
 (allow is_xorg_subject self r_netlink_route_socket_perms)
-(allow is_xorg_subject self create_netlink_kobject_uevent_socket_perms)
 (allow is_xorg_subject self rw_fifo_file_perms)
 
 (allow is_xorg_subject xserver_log_t manage_file_perms)
@@ -172,8 +171,7 @@
 (call miscfiles_read_fonts_files (is_xorg_subject))
 (call miscfiles_read_localization_files (is_xorg_subject))
 
-(call udevd_read_config_files (is_xorg_subject))
-(call udevd_read_run_files (is_xorg_subject))
+(call udevd_client_subject (is_xorg_subject))
 
 (call xserver_tcp_bind_xserver_port (is_xorg_subject))
 (call xserver_read_config_files (is_xorg_subject))

@@ -108,7 +108,6 @@
     (call usersubject_home_object (user_gpgagent_home_t)))
 
 (allow is_scd_subject self create_unix_stream_stream_socket_perms)
-(allow is_scd_subject self create_netlink_kobject_uevent_socket_perms)
 (allow is_scd_subject self rw_fifo_file_perms)
 
 (call system_read_sysctl_crypto_files (is_scd_subject))
@@ -119,8 +118,7 @@
 
 (call miscfiles_read_localization_files (is_scd_subject))
 
-(call udevd_read_config_files (is_scd_subject))
-(call udevd_read_run_files (is_scd_subject))
+(call udevd_client_subject (is_scd_subject))
 
 (optional scd_optional_session
     (type session_scd_tmp_t)

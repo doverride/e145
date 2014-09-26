@@ -67,7 +67,6 @@
 (call files_tmp_object (tuned_tmp_t))
 
 (allow tuned_t self (capability (sys_rawio net_admin)))
-(allow tuned_t self create_netlink_kobject_uevent_socket_perms)
 (allow tuned_t self rw_fifo_file_perms)
 
 (allow tuned_t tuned_run_t manage_dir_perms)
@@ -120,8 +119,7 @@
 
 (call tune_rw_config_files (tuned_t))
 
-(call udevd_read_run_files (tuned_t))
-(call udevd_read_config_files (tuned_t))
+(call udevd_client_subject (tuned_t))
 
 (allow is_tune_admin_subject is_tune_subject signal_perms)
 (allow is_tune_admin_subject is_tune_subject (process (ptrace)))

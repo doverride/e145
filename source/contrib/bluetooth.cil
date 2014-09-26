@@ -65,8 +65,6 @@
 (call files_tmp_object (bluetoothd_tmp_t))
 
 (allow bluetoothd_t self (capability (net_admin)))
-(allow bluetoothd_t self create_netlink_kobject_uevent_socket_perms)
-
 ; BUG:
 (allow bluetoothd_t self (capability (net_bind_service)))
 (allow bluetoothd_t self create_socket_perms)
@@ -98,8 +96,7 @@
 
 (call systemd_stream_connect (bluetoothd_t))
 
-(call udevd_read_config_files (bluetoothd_t))
-(call udevd_read_run_files (bluetoothd_t))
+(call udevd_client_subject (bluetoothd_t))
 
 (optional bluetoothd_optional_networkmgr
     (call networkmgr_dbus_chat (bluetoothd_t)))
