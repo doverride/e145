@@ -1,3 +1,8 @@
+(auditallow gdm_t bin_t (file (execute_no_trans)))
+(auditallow gdm_t shell_t (file (execute_no_trans)))
+(auditallow gdm_t xorg_exec_t (file (execute_no_trans)))
+(auditallow gdm_t xorg_wrap_exec_t (file (execute_no_trans)))
+
 (typeattribute is_gdm_admin_subject)
 
 (typeattribute is_gdm_file_object)
