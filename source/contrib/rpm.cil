@@ -2,31 +2,40 @@
 
 (typeattribute is_rpm_admin_subject)
 
-(typeattribute is_rpm_conf_object)
+(typeattribute is_rpm_conf_file_object)
 
 (typeattribute is_rpm_subject)
 (typeattributeset is_rpm_subject (rpm_t rpm_script_t))
 
 (typeattribute is_rpm_file_object)
-(typeattributeset is_rpm_file_object (is_rpm_conf_object rpm_var_lib_t
-    rpm_var_cache_t rpm_log_t rpm_tmp_t rpm_tmpfs_t rpm_unit_t))
+(typeattributeset is_rpm_file_object (is_rpm_conf_file_object rpm_var_lib_t
+    rpm_var_cache_t rpm_log_t rpm_tmp_t rpm_tmpfs_t rpm_unit_t rpm_dbus_conf_t))
 
 (type rpm_t)
 (type rpm_exec_t)
-(call application_subject_entry (rpm_t rpm_exec_t))
+(call systemd_oneshot_subject_entry (rpm_t rpm_exec_t))
 (roletype is_rpm_role rpm_t)
 
 (context file_rpm_exec (system_u object_r rpm_exec_t ((s0)
     (s0))))
 (filecon "/usr/bin/rpm" file file_rpm_exec)
 (filecon "/usr/bin/yum" file file_rpm_exec)
+(filecon "/usr/libexec/packagekitd" file file_rpm_exec)
 
 (type rpm_script_t)
 (call application_subject (rpm_script_t))
 (roletype is_rpm_role rpm_script_t)
 
+(type rpm_dbus_conf_t)
+(call dbus_etc_object (rpm_dbus_conf_t))
+
+(context file_rpm_dbus_conf (system_u object_r rpm_dbus_conf_t ((s0)
+    (s0))))
+(filecon "/etc/dbus-1/system.d/org\.freedesktop\.PackageKit\.conf"
+    file file_rpm_dbus_conf)
+
 (type rpm_conf_t)
-(call files_etc_object (rpm_conf_t))
+(call rpm_etc_object (rpm_conf_t))
 
 (context file_rpm_conf (system_u object_r rpm_conf_t ((s0)
     (s0))))
@@ -34,6 +43,7 @@
 (filecon "/etc/yum(/.*)?" any file_rpm_conf)
 (filecon "/etc/yum\.conf" file file_rpm_conf)
 (filecon "/etc/yum\.repos\.d(/.*)?" any file_rpm_conf)
+(filecon "/etc/PackageKit(/.*)?" any file_rpm_conf)
 
 (type rpm_var_cache_t)
 (call files_var_cache_object (rpm_var_cache_t))
@@ -41,6 +51,7 @@
 (context file_rpm_var_cache (system_u object_r rpm_var_cache_t ((s0)
     (s0))))
 (filecon "/var/cache/yum(/.*)?" any file_rpm_var_cache)
+(filecon "/var/cache/PackageKit(/.*)?" any file_rpm_var_cache)
 
 (type rpm_var_lib_t)
 (call files_var_lib_object (rpm_var_lib_t))
@@ -50,6 +61,7 @@
 (filecon "/var/lib/rpm(/.*)?" any file_rpm_var_lib)
 (filecon "/var/lib/rpm-state(/.*)?" any file_rpm_var_lib)
 (filecon "/var/lib/yum(/.*)?" any file_rpm_var_lib)
+(filecon "/var/lib/PackageKit(/.*)?" any file_rpm_var_lib)
 
 (type rpm_log_t)
 (call files_var_log_object (rpm_log_t))
@@ -69,6 +81,8 @@
 
 (context file_rpm_unit (system_u object_r rpm_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*yum-makecache.*" file
+    file_rpm_unit)
+(filecon "/usr/lib/systemd/system/[^/]*packagekit.*" file
     file_rpm_unit)
 
 (call files_var_log_filetrans (rpm_t rpm_log_t file "yum.log"))
@@ -106,6 +120,9 @@
 (call storage_unconfined (is_rpm_subject))
 (call subject_unconfined (is_rpm_subject))
 (call system_unconfined (is_rpm_subject))
+
+(call application_subject (rpm_t))
+(call application_executable_object (rpm_exec_t))
 
 (call auth_unconfined (is_rpm_subject))
 (call auth_manage_shadow_files (is_rpm_subject))
@@ -207,9 +224,9 @@
     (call files_search_tmp (ARG1))
     (call manage_files_pattern (ARG1 rpm_tmp_t rpm_tmp_t)))
 
-(macro rpm_conf_object ((type ARG1))
+(macro rpm_etc_object ((type ARG1))
     (call files_etc_object (ARG1))
-    (typeattributeset is_rpm_conf_object ARG1))
+    (typeattributeset is_rpm_conf_file_object ARG1))
 
 (macro rpm_config_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
     (call files_search_etc (ARG1))

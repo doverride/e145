@@ -26,7 +26,7 @@
 (call files_etc_object (googletalk_conf_t))
 
 (optional googletalk_optional_rpm
-    (call rpm_conf_object (googletalk_conf_t)))
+    (call rpm_etc_object (googletalk_conf_t)))
 
 (context file_googletalk_conf (system_u object_r googletalk_conf_t ((s0)(s0))))
 (filecon "/etc/yum\.repos\.d/google-talkplugin\.repo.*" file file_googletalk_conf)
