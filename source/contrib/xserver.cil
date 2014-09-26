@@ -73,11 +73,19 @@
 (context file_xloadimg_exec (system_u object_r xloadimg_exec_t ((s0)(s0))))
 (filecon "/usr/bin/xloadimage" file file_xloadimg_exec)
 
+(type xorg_t)
+(typeattributeset is_xorg_subject xorg_t)
+(roletype system_r xorg_t)
+
 (type xorg_exec_t)
 (call application_subject_entry (is_xorg_subject xorg_exec_t))
 
 (context file_xorg_exec (system_u object_r xorg_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/Xorg\.bin" file file_xorg_exec)
+
+(type xorg_wrap_t)
+(typeattributeset is_xorg_wrap_subject xorg_wrap_t)
+(roletype system_r xorg_wrap_t)
 
 (type xorg_wrap_exec_t)
 (call application_subject_entry (is_xorg_wrap_subject xorg_wrap_exec_t))
@@ -104,6 +112,8 @@
 (context port_xserver (system_u object_r port_xserver_t ((s0) (s0))))
 (portcon "tcp" 6000 port_xserver)
 (portcon "udp" 6000 port_xserver)
+
+(call xserver_subtrans_xorg (xorg_wrap_t))
 
 (call xserver_read_config_files (is_xorg_wrap_subject))
 
@@ -252,8 +262,11 @@
 
 (call admin_pattern (is_xserver_admin_subject is_xserver_file_object))
 
-(macro xserver_admin ((type ARG1))
-    (typeattributeset is_xserver_admin_subject ARG1))
+(macro xserver_subtrans_xorg_wrap ((type ARG1))
+    (call subtrans_pattern (ARG1 xorg_wrap_exec_t xorg_wrap_t)))
+
+(macro xserver_subtrans_xorg ((type ARG1))
+    (call subtrans_pattern (ARG1 xorg_exec_t xorg_t)))
 
 (macro xserver_role_template_xinit ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_xserver_role ARG1)
@@ -401,3 +414,6 @@
 
 (macro xserver_exec_xhost ((type ARG1))
     (call can_exec (ARG1 xhost_exec_t)))
+
+(macro xserver_admin ((type ARG1))
+    (typeattributeset is_xserver_admin_subject ARG1))

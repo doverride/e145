@@ -101,6 +101,8 @@
 
 (call auth_login_program_subject (gdm_t))
 
+(call xserver_subtrans_xorg_wrap (gdm_t))
+
 (optional gdm_optional_unconfined
     (call unconfined_subject (gdm_t)))
 
