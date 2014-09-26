@@ -160,6 +160,7 @@
 
 (call selinux_list (gdm_t))
 (call selinux_compute_access_vector (gdm_t))
+(call selinux_compute_create_context (gdm_t))
 
 (call accountsservice_dbus_chat (gdm_t))
 

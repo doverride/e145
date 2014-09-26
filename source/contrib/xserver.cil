@@ -484,5 +484,8 @@
     (allow ARG2 ARG1 rw_inherited_fifo_file_perms)
     (allow ARG2 ARG1 (process (sigchld))))
 
+(macro xserver_xsession_exec_files_entry_subject ((type ARG1))
+    (call subject_entry (ARG1 xsession_exec_t)))
+
 (macro xserver_admin ((type ARG1))
     (typeattributeset is_xserver_admin_subject ARG1))
