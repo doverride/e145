@@ -72,6 +72,10 @@
 
 (call admin_pattern (is_accountsservice_admin_subject is_accountsservice_file_object))
 
+(macro accountsservice_dbus_chat ((type ARG1))
+    (allow ARG1 accountsd_t (dbus (send_msg)))
+    (allow accountsd_t ARG1 (dbus (send_msg))))
+
 (macro accountsservice_manage_accountsd_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 accountsd_var_lib_t accountsd_var_lib_t)))

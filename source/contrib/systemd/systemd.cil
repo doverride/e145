@@ -396,6 +396,7 @@
     (call bluetooth_bind_unix_stream_sockets_bluetoothd (systemd_t))) ; rpcbind
 
 (optional systemd_optional_gdm
+    (call gdm_link_keyring (systemd_t))
     (call gdm_run_user_dir_filetrans_systemd_run_dir (systemd_t))
     (call gdm_manage_systemd_run_dirs (systemd_t))
     (call gdm_manage_systemd_run_sock_files (systemd_t)))

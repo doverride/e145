@@ -683,6 +683,9 @@
 (macro devices_rw_framebuf ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_framebuf_t)))
 
+(macro devices_rw_fuse ((type ARG1))
+    (call rw_chr_files_pattern (ARG1 device_t device_fuse_t)))
+
 (macro devices_rw_lvm_control ((type ARG1))
     (call rw_chr_files_pattern (ARG1 device_t device_lvm_control_t)))
 

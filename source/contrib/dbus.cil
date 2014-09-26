@@ -121,6 +121,9 @@
 (allow is_dbus_system_client_subject has_unconfined_access_to_dbus_assets
     (dbus (send_msg)))
 
+(macro dbus_exec_dbusd ((type ARG1))
+    (call can_exec (ARG1 dbusd_exec_t)))
+
 (macro dbus_etc_object ((type ARG1))
     (call files_etc_object (ARG1))
     (typeattributeset is_dbus_etc_file_object ARG1))

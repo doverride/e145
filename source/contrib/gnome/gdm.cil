@@ -3,7 +3,7 @@
 (typeattribute is_gdm_file_object)
 (typeattributeset is_gdm_file_object (gdm_dbus_conf_t
     gdm_conf_t gdm_pam_conf_t gdm_unit_t gdm_run_t gdm_cache_t
-    gdm_var_lib_t gdm_log_t gdm_run_user_dir_t))
+    gdm_var_lib_t gdm_log_t gdm_run_user_dir_t gdm_tmp_t gdm_tmpfs_t))
 
 (type gdm_t)
 (type gdm_exec_t)
@@ -92,24 +92,127 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*gdm.*" file file_gdm_unit)
 
-(allow gdm_t self (process (execmem))) ; gnome-shell
+(type gdm_tmp_t)
+(call files_tmp_object (gdm_tmp_t))
 
+(type gdm_tmpfs_t)
+(call files_tmpfs_object (gdm_tmpfs_t))
+
+(allow gdm_t self (capability (fsetid fowner dac_override net_admin)))
+(allow gdm_t self (process (execmem setpgid signal sigkill setcap
+    signull setrlimit getsched)))
+(allow gdm_t self (unix_stream_socket (listen accept connectto)))
+(allow gdm_t self (key (write link)))
+(allow gdm_t self create_netlink_selinux_socket_perms)
+(allow gdm_t self rw_fifo_file_perms)
+
+(allow gdm_t gdm_tmp_t mmap_file_perms)
+(allow gdm_t gdm_tmp_t manage_file_perms)
+(allow gdm_t gdm_tmp_t manage_sock_file_perms)
+(call files_tmp_filetrans (gdm_t gdm_tmp_t file "*"))
+(call files_tmp_filetrans (gdm_t gdm_tmp_t socket "*"))
+
+(allow gdm_t gdm_tmpfs_t manage_file_perms)
+(call filesystem_tmpfs_filetrans (gdm_t gdm_tmpfs_t file "*"))
+
+(allow gdm_t gdm_run_t (dir (mounton))) ; /run/user/42/.gvfs
 (allow gdm_t gdm_run_t manage_dir_perms)
+(allow gdm_t gdm_run_t manage_file_perms)
 (call files_run_filetrans (gdm_t gdm_run_t dir "*"))
 
 (call filetrans_pattern (gdm_t gdm_run_user_dir_t gdm_run_t dir "*"))
 
+(call create_files_pattern (gdm_t gdm_log_t gdm_log_t))
+(call delete_files_pattern (gdm_t gdm_log_t gdm_log_t))
+(allow gdm_t gdm_log_t append_file_perms)
+(allow gdm_t gdm_log_t read_file_perms)
+(allow gdm_t gdm_log_t (dir (setattr)))
+(allow gdm_t gdm_log_t (file (setattr)))
+
+(call system_list_proc (gdm_t))
+(call system_read_sysctl_kernel_files (gdm_t))
+(call system_request_load_module (gdm_t))
+(call system_read_sysctl_vm_overcommit_files (gdm_t))
+
 (call commands_execute_bin_files (gdm_t)) ; /usr/bin/xorg
 (call commands_execute_shell_files (gdm_t))
 
+(call devices_list (gdm_t))
+(call devices_read_urandom (gdm_t))
+(call devices_list_sysfs (gdm_t))
+(call devices_read_sysfs_files (gdm_t))
+(call devices_rw_sound (gdm_t))
+(call devices_rw_fuse (gdm_t))
+
+(call files_list_etc (gdm_t))
+(call files_list_tmp (gdm_t))
+(call files_read_generic_etc_files (gdm_t)) ; login.defs
+(call files_read_generic_usr_files (gdm_t))
+
+(call filesystem_getattr_filesystems (gdm_t))
+(call filesystem_mount_fuse_filesystems (gdm_t))
+
+(call selinux_list (gdm_t))
+(call selinux_compute_access_vector (gdm_t))
+
+(call accountsservice_dbus_chat (gdm_t))
+
+(call alsa_read_config_files (gdm_t))
+
 (call auth_login_program_subject (gdm_t))
 
+(call dbus_acquire_service_system (gdm_t))
+(call dbus_exec_dbusd (gdm_t))
+(call dbus_list_config (gdm_t))
+(call dbus_read_generic_config_files (gdm_t))
+
+(call gdm_read_config_files (gdm_t))
+(call gdm_manage_var_lib_dirs (gdm_t))
+(call gdm_manage_var_lib_files (gdm_t))
+
+(call journald_client_subject (gdm_t))
+
+(call logind_list_run (gdm_t))
+(call logind_read_run_files (gdm_t))
+
+(call machined_list_run (gdm_t))
+(call machined_read_config_files (gdm_t))
+
+(call miscfiles_read_fonts_config (gdm_t))
+(call miscfiles_read_fonts_files (gdm_t))
+(call miscfiles_read_fonts_cache_files (gdm_t))
+(call miscfiles_read_generic_cert_files (gdm_t))
+
 (call pa_exec_pa (gdm_t))
+(call pa_read_config_files (gdm_t))
+
+(call plymouth_subtrans (gdm_t))
+
+(call polkit_dbus_chat_polkitd (gdm_t))
 
 (call rtkit_client_subject (gdm_t))
 
+(call systemd_dbus_chat (gdm_t))
+(call systemd_get_status_system (gdm_t))
+
+(call udevd_client_subject (gdm_t))
+
+(call upower_dbus_chat_upowerd (gdm_t))
+
 (call xserver_exec_xrdb (gdm_t))
+(call xserver_read_config_files (gdm_t))
+(call xserver_read_state_xorg (gdm_t))
 (call xserver_subtrans_xorg_wrap (gdm_t))
+(call xserver_stream_connect_xorg (gdm_t))
+
+(optional gdm_optional_color
+    (call color_dbus_chat_colord (gdm_t)))
+
+(optional gdm_optional_geoclue
+    (call geoclue_dbus_chat (gdm_t)))
+
+(optional gdm_optional_networkmgr
+    (call networkmgr_dbus_chat (gdm_t)))
 
 (allow is_gdm_admin_subject gdm_t signal_perms)
 (allow is_gdm_admin_subject gdm_t (process (ptrace)))
@@ -170,6 +273,34 @@
 (macro gdm_read_state ((type ARG1))
     (allow ARG1 gdm_t (dirs (list)))
     (allow ARG1 gdm_t read_file_perms))
+
+(macro gdm_read_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (allow ARG1 gdm_var_lib_t (dirs (list)))
+    (allow ARG1 gdm_var_lib_t read_file_perms))
+
+(macro gdm_manage_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 gdm_var_lib_t gdm_var_lib_t)))
+
+(macro gdm_manage_var_lib_dirs ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_dirs_pattern (ARG1 gdm_var_lib_t gdm_var_lib_t)))
+
+(macro gdm_rw_inherited_stream_sockets ((type ARG1))
+    (allow ARG1 gdm_t (unix_stream_socket (getattr read write))))
+
+(macro gdm_setpgid ((type ARG1))
+    (allow ARG1 gdm_t (process (setpgid))))
+
+(macro gdm_send_sigchld ((type ARG1))
+    (allow ARG1 gdm_t (process (sigchld))))
+
+(macro gdm_send_signal ((type ARG1))
+    (allow ARG1 gdm_t (process (signal))))
+
+(macro gdm_link_keyring ((type ARG1))
+    (allow ARG1 gdm_t (key (link))))
 
 (macro gdm_read_run_files ((type ARG1))
     (call files_search_run (ARG1))

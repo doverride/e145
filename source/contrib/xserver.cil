@@ -127,6 +127,9 @@
 
 (call xserver_read_config_files (is_xorg_wrap_subject))
 
+(optional xorg_wrap_optional_gdm
+    (call gdm_rw_inherited_stream_sockets (xorg_wrap_t)))
+ 
 (allow is_xinit_subject self (process (setpgid signal)))
 
 (call system_read_generic_proc_files (is_xinit_subject))
@@ -206,6 +209,10 @@
 (call xserver_manage_var_lib_files (xorg_t))
 
 (optional xorg_optional_gdm
+    (call gdm_setpgid (xorg_t))
+    (call gdm_send_sigchld (xorg_t))
+    (call gdm_send_signal (xorg_t))
+    (call gdm_rw_inherited_stream_sockets (xorg_t))
     (call gdm_read_state (xorg_t))
     (call gdm_read_run_files (xorg_t)))
 
@@ -405,6 +412,14 @@
 
 (macro xserver_signal_all_client_subjects ((type ARG1))
     (allow ARG1 is_xserver_client_subject (process (signal))))
+
+(macro xserver_read_state_xorg ((type ARG1))
+    (allow ARG1 xorg_t (dirs (list)))
+    (allow ARG1 xorg_t read_file_perms))
+
+(macro xserver_stream_connect_xorg ((type ARG1))
+    (call files_search_tmp (ARG1))
+    (call stream_connect_pattern (ARG1 xorg_tmp_t xorg_tmp_t xorg_t)))
 
 (macro xserver_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))

@@ -87,5 +87,9 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 color_exec_t ARG3)))
 
+(macro color_dbus_chat_colord ((type ARG1))
+    (allow ARG1 colord_t (dbus (send_msg)))
+    (allow colord_t ARG1 (dbus (send_msg))))
+
 (macro color_admin ((type ARG1))
     (typeattributeset is_color_admin_subject ARG1))

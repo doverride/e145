@@ -36,6 +36,7 @@
 (filecon "/usr/lib/qt4/bin(/.*)?" file bin)
 (filecon "/usr/share/texlive/texmf-dist/scripts(/.*)?" file bin)
 (filecon "/usr/lib/firefox/run-mozilla\.sh" file bin)
+(filecon "/usr/share/gnome-sound-recorder/org\.gnome\.SoundRecorder" file bin) ; temporary
 
 (type shell_t)
 (call commands_bin_object (shell_t))
