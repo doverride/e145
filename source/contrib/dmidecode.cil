@@ -1,0 +1,30 @@
+(roleattribute is_dmidecode_role)
+
+(type dmidecode_t)
+(type dmidecode_exec_t)
+(call application_subject_entry (dmidecode_t dmidecode_exec_t))
+(roleattributeset is_dmidecode_role system_r)
+(roletype is_dmidecode_role dmidecode_t)
+
+(context file_dmidecode_exec (system_u object_r dmidecode_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/biosdecode" file file_dmidecode_exec)
+(filecon "/usr/sbin/dmidecode" file file_dmidecode_exec)
+(filecon "/usr/sbin/ownership" file file_dmidecode_exec)
+(filecon "/usr/sbin/vpddecode" file file_dmidecode_exec)
+
+(optional dmidecode_optional_usersubject
+    (call usersubject_use_inherited_terminals (dmidecode_t)))
+
+(optional dmidecode_optional_session
+    (call session_use_inherited_terminals (dmidecode_t)))
+
+(macro dmidecode_exec ((type ARG1))
+    (call can_exec (ARG1 dmidecode_exec_t)))
+
+(macro dmidecode_subtrans ((type ARG1))
+    (call subtrans_pattern (ARG1 dmidecode_exec_t dmidecode_t)))
+
+(macro dmidecode_run ((type ARG1)(role ARG2))
+    (call dmidecode_subtrans (ARG1))
+    (roleattributeset is_dmidecode_role ARG2))

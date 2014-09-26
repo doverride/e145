@@ -122,6 +122,10 @@
 
 (call dbus_system_client_subject (libvirtd_t))
 
+(call dmidecode_subtrans (libvirtd_t))
+
+(call dnsmasq_subtrans (libvirtd_t))
+
 (call journald_client_subject (libvirtd_t))
 
 (call libvirt_read_libvirtd_config_files (libvirtd_t))

@@ -28,6 +28,7 @@ contrib/dbus.cil
 contrib/dhcp.cil
 contrib/dm.cil
 contrib/dmesg.cil
+contrib/dmidecode.cil
 contrib/dns.cil
 contrib/dnsmasq.cil
 contrib/dracut.cil
