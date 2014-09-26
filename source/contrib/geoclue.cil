@@ -1,0 +1,55 @@
+(typeattribute is_geoclue_admin_subject)
+
+(typeattribute is_geoclue_file_object)
+(typeattributeset is_geoclue_file_object (geoclue_dbus_conf_t
+    geoclue_conf_t geoclue_unit_t geoclue_var_lib_t))
+
+(type geoclue_t)
+(type geoclue_exec_t)
+(call systemd_daemon_subject_entry (geoclue_t geoclue_exec_t))
+
+(context file_geoclue_exec (system_u object_r geoclue_exec_t ((s0)
+    (s0))))
+(filecon "/usr/libexec/geoclue" file file_geoclue_exec)
+
+(type geoclue_var_lib_t)
+(call files_var_lib_object (geoclue_var_lib_t))
+
+(context file_geoclue_var_lib (system_u object_r geoclue_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/geoclue(/.*)?" any file_geoclue_var_lib)
+
+(type geoclue_conf_t)
+(call files_etc_object (geoclue_conf_t))
+
+(context file_geoclue_conf (system_u object_r geoclue_conf_t
+    ((s0) (s0))))
+(filecon "/etc/geoclue(/.*)?" any file_geoclue_conf)
+
+(type geoclue_dbus_conf_t)
+(call dbus_etc_object (geoclue_dbus_conf_t))
+
+(context file_geoclue_dbus_conf (system_u object_r geoclue_dbus_conf_t
+    ((s0) (s0))))
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.GeoClue2\.Agent\.conf" file
+    file_geoclue_dbus_conf)
+(filecon "/etc/dbus-1/system\.d/org\.freedesktop\.GeoClue2\.conf" file
+    file_geoclue_dbus_conf)
+
+(type geoclue_unit_t)
+(call systemd_unit_object (geoclue_unit_t))
+
+(context file_geoclue_unit (system_u object_r geoclue_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*geoclue.*" file file_geoclue_unit)
+
+(allow is_geoclue_admin_subject geoclue_t signal_perms)
+(allow is_geoclue_admin_subject geoclue_t (process (ptrace)))
+(call ps_subject_pattern (is_geoclue_admin_subject geoclue_t))
+
+(allow is_geoclue_admin_subject geoclue_unit_t (service (all)))
+
+(call admin_pattern (is_geoclue_admin_subject is_geoclue_file_object))
+
+(macro geoclue_admin ((type ARG1))
+    (typeattributeset is_geoclue_admin_subject ARG1))
