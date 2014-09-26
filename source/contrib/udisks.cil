@@ -78,8 +78,6 @@
 (optional udisksctl_optional_session
     (call session_use_inherited_terminals (udisksctl_t)))
 
-(allow udisksd_t udisksd_var_lib_t manage_file_perms)
-
 (allow udisksd_t udisksd_run_t manage_dir_perms)
 (call files_run_filetrans (udisksd_t udisksd_run_t dir "*"))
 
@@ -108,6 +106,8 @@
 
 (call udevd_client_subject (udisksd_t))
 
+(call udisks_manage_var_lib_files (udisksd_t))
+
 (allow is_udisks_admin_subject is_udisks_subject signal_perms)
 (allow is_udisks_admin_subject is_udisks_subject (process (ptrace)))
 (call ps_subject_pattern (is_udisks_admin_subject is_udisks_subject))
@@ -125,6 +125,14 @@
 (macro udisks_run_udisksctl ((type ARG1)(role ARG2))
     (call udisks_subtrans_udisksctl (ARG1))
     (roleattributeset is_udisksctl_role ARG2))
+
+(macro udisks_dbus_chat_udisksd ((type ARG1))
+    (allow ARG1 udisksd_t (dbus (send_msg)))
+    (allow udisksd_t ARG1 (dbus (send_msg))))
+
+(macro udisks_manage_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 udisksd_var_lib_t udisksd_var_lib_t)))
 
 (macro udisks_admin ((type ARG1))
     (typeattributeset is_udisks_admin_subject ARG1))

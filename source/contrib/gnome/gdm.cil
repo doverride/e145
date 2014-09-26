@@ -98,11 +98,12 @@
 (type gdm_tmpfs_t)
 (call files_tmpfs_object (gdm_tmpfs_t))
 
-(allow gdm_t self (capability (fsetid fowner dac_override net_admin)))
+(allow gdm_t self (capability (fsetid fowner dac_override net_admin kill)))
 (allow gdm_t self (process (execmem setpgid signal sigkill setcap
     signull setrlimit getsched)))
 (allow gdm_t self (unix_stream_socket (listen accept connectto)))
-(allow gdm_t self (key (write link)))
+(allow gdm_t self (key (search read view write link)))
+(allow gdm_t self create_shm_perms)
 (allow gdm_t self create_netlink_selinux_socket_perms)
 (allow gdm_t self rw_fifo_file_perms)
 
@@ -129,10 +130,12 @@
 (allow gdm_t gdm_log_t (dir (setattr)))
 (allow gdm_t gdm_log_t (file (setattr)))
 
+(call system_list_debugfs (gdm_t))
 (call system_list_proc (gdm_t))
 (call system_read_sysctl_kernel_files (gdm_t))
 (call system_request_load_module (gdm_t))
 (call system_read_sysctl_vm_overcommit_files (gdm_t))
+(call system_stream_connectto (gdm_t)) ; journal related
 
 (call commands_execute_bin_files (gdm_t)) ; /usr/bin/xorg
 (call commands_execute_shell_files (gdm_t))
@@ -172,6 +175,8 @@
 
 (call journald_client_subject (gdm_t))
 
+(call localed_dbus_chat_localed (gdm_t))
+
 (call logind_list_run (gdm_t))
 (call logind_read_run_files (gdm_t))
 
@@ -190,6 +195,7 @@
 
 (call polkit_dbus_chat_polkitd (gdm_t))
 
+(call rtkit_dbus_chat_rtkitd (gdm_t))
 (call rtkit_client_subject (gdm_t))
 
 (call systemd_dbus_chat (gdm_t))
@@ -202,6 +208,7 @@
 (call xserver_exec_xrdb (gdm_t))
 (call xserver_read_config_files (gdm_t))
 (call xserver_read_state_xorg (gdm_t))
+(call xserver_send_signal_xorg (gdm_t))
 (call xserver_subtrans_xorg_wrap (gdm_t))
 (call xserver_stream_connect_xorg (gdm_t))
 
@@ -214,6 +221,9 @@
 (optional gdm_optional_networkmgr
     (call networkmgr_dbus_chat (gdm_t)))
 
+(optional gdm_optional_udisks
+    (call udisks_dbus_chat_udisksd (gdm_t)))
+ 
 (allow is_gdm_admin_subject gdm_t signal_perms)
 (allow is_gdm_admin_subject gdm_t (process (ptrace)))
 (call ps_subject_pattern (is_gdm_admin_subject gdm_t))
@@ -290,6 +300,9 @@
 (macro gdm_rw_inherited_stream_sockets ((type ARG1))
     (allow ARG1 gdm_t (unix_stream_socket (getattr read write))))
 
+(macro gdm_getpgid ((type ARG1))
+    (allow ARG1 gdm_t (process (getpgid))))
+
 (macro gdm_setpgid ((type ARG1))
     (allow ARG1 gdm_t (process (setpgid))))
 
@@ -306,6 +319,12 @@
     (call files_search_run (ARG1))
     (allow ARG1 gdm_run_t (dirs (list)))
     (allow ARG1 gdm_run_t read_file_perms))
+
+(macro gdm_rw_shm ((type ARG1))
+    (allow ARG1 gdm_t rw_shm_perms))
+
+(macro gdm_rw_inherited_tmpfs_files ((type ARG1))
+    (allow ARG1 gdm_tmpfs_t (file (read write))))
 
 (macro gdm_admin ((type ARG1))
     (typeattributeset is_gdm_admin_subject ARG1))

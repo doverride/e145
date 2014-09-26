@@ -3,11 +3,12 @@
 (typeattribute is_iscsi_admin_subject)
 
 (typeattribute is_iscsi_subject)
-(typeattributeset is_iscsi_subject (iscsiadm_t iscsid_t))
+(typeattributeset is_iscsi_subject (iscsiadm_t iscsid_t iscsiuio_t))
 
 (typeattribute is_iscsi_file_object)
 (typeattributeset is_iscsi_file_object (iscsid_conf_t
-    iscsid_unit_t iscsid_var_lib_t iscsid_lock_t iscsid_run_t))
+    iscsid_unit_t iscsid_var_lib_t iscsid_lock_t iscsid_run_t
+    iscsiuio_run_t iscsiuio_unit_t))
 
 (type iscsiadm_t)
 (type iscsiadm_exec_t)
@@ -31,6 +32,16 @@
     (s0))))
 (filecon "/usr/sbin/iscsid" file file_iscsid_exec)
 
+(type iscsiuio_t)
+(type iscsiuio_exec_t)
+(call systemd_daemon_subject_entry (iscsiuio_t iscsiuio_exec_t))
+
+(call systemd_socket_activated_subject (iscsiuio_t iscsid_var_lib_t)) 
+
+(context file_iscsiuio_exec (system_u object_r iscsiuio_exec_t ((s0)
+    (s0))))
+(filecon "/usr/sbin/iscsiuio" file file_iscsiuio_exec)
+
 (type iscsid_run_t)
 (call files_run_object (iscsid_run_t))
 (call systemd_pid_object (iscsid_run_t))
@@ -38,6 +49,14 @@
 (context file_iscsid_run (system_u object_r iscsid_run_t ((s0)
     (s0))))
 (filecon "/run/iscsid\.pid" any file_iscsid_run)
+
+(type iscsiuio_run_t)
+(call files_run_object (iscsiuio_run_t))
+(call systemd_pid_object (iscsiuio_run_t))
+
+(context file_iscsiuio_run (system_u object_r iscsiuio_run_t ((s0)
+    (s0))))
+(filecon "/run/iscsiuio\.pid" any file_iscsiuio_run)
 
 (type iscsid_var_lib_t)
 (call files_var_lib_object (iscsid_var_lib_t))
@@ -67,6 +86,13 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*iscsi.*" file file_iscsid_unit)
 
+(type iscsiuio_unit_t)
+(call systemd_unit_object (iscsiuio_unit_t))
+
+(context file_iscsiuio_unit (system_u object_r iscsiuio_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*iscsiuio.*" file file_iscsiuio_unit)
+
 (call application_subject (iscsiadm_t))
 (call application_executable_object (iscsiadm_exec_t))
 
@@ -81,6 +107,7 @@
 (call ps_subject_pattern (is_iscsi_admin_subject is_iscsi_subject))
 
 (allow is_iscsi_admin_subject iscsid_unit_t (service (all)))
+(allow is_iscsi_admin_subject iscsiuio_unit_t (service (all)))
 
 (call admin_pattern (is_iscsi_admin_subject is_iscsi_file_object))
 

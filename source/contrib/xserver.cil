@@ -176,6 +176,7 @@
 (call commands_execute_shell_files (is_xorg_subject))
 
 (call devices_list_sysfs (is_xorg_subject))
+(call devices_read_event (xorg_t))
 (call devices_rw_sysfs_files (is_xorg_subject))
 (call devices_rw_xserver_misc (is_xorg_subject))
 (call devices_rw_framebuf (is_xorg_subject))
@@ -209,9 +210,12 @@
 (call xserver_manage_var_lib_files (xorg_t))
 
 (optional xorg_optional_gdm
+    (call gdm_getpgid (xorg_t))
     (call gdm_setpgid (xorg_t))
     (call gdm_send_sigchld (xorg_t))
     (call gdm_send_signal (xorg_t))
+    (call gdm_rw_shm (xorg_t))
+    (call gdm_rw_inherited_tmpfs_files (xorg_t))
     (call gdm_rw_inherited_stream_sockets (xorg_t))
     (call gdm_read_state (xorg_t))
     (call gdm_read_run_files (xorg_t)))
@@ -416,6 +420,9 @@
 (macro xserver_read_state_xorg ((type ARG1))
     (allow ARG1 xorg_t (dirs (list)))
     (allow ARG1 xorg_t read_file_perms))
+
+(macro xserver_send_signal_xorg ((type ARG1))
+    (allow ARG1 xorg_t (process (signal))))
 
 (macro xserver_stream_connect_xorg ((type ARG1))
     (call files_search_tmp (ARG1))

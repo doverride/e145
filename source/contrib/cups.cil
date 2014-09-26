@@ -123,5 +123,9 @@
     (call cups_subtrans_cupsctl (ARG1))
     (roleattributeset is_cupsctl_role ARG2))
 
+(macro cups_list_spool ((type ARG1))
+    (call files_search_var_spool (ARG1))
+    (allow ARG1 cupsd_spool_t (dirs (list))))
+
 (macro cups_admin ((type ARG1))
     (typeattributeset is_cups_admin_subject ARG1))
