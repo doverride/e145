@@ -68,6 +68,7 @@
 (call dgram_send_pattern (is_journald_client_subject journald_run_t journald_run_t journald_t))
 
 (call system_dgram_sendto (is_journald_client_subject))
+(call system_stream_connectto (is_journald_client_subject)) 
 
 (call devices_read_lnk_files (is_journald_client_subject)) ; /dev/log
 

@@ -109,9 +109,7 @@
 
 (allow gdm_t gdm_tmp_t mmap_file_perms)
 (allow gdm_t gdm_tmp_t manage_file_perms)
-(allow gdm_t gdm_tmp_t manage_sock_file_perms)
 (call files_tmp_filetrans (gdm_t gdm_tmp_t file "*"))
-(call files_tmp_filetrans (gdm_t gdm_tmp_t socket "*"))
 
 (allow gdm_t gdm_tmpfs_t manage_file_perms)
 (call filesystem_tmpfs_filetrans (gdm_t gdm_tmpfs_t file "*"))
@@ -119,6 +117,7 @@
 (allow gdm_t gdm_run_t (dir (mounton))) ; /run/user/42/.gvfs
 (allow gdm_t gdm_run_t manage_dir_perms)
 (allow gdm_t gdm_run_t manage_file_perms)
+(allow gdm_t gdm_run_t manage_sock_file_perms)
 (call files_run_filetrans (gdm_t gdm_run_t dir "*"))
 
 (call filetrans_pattern (gdm_t gdm_run_user_dir_t gdm_run_t dir "*"))
@@ -130,12 +129,12 @@
 (allow gdm_t gdm_log_t (dir (setattr)))
 (allow gdm_t gdm_log_t (file (setattr)))
 
+(call system_getattr_proc_filesystems (gdm_t))
 (call system_list_debugfs (gdm_t))
 (call system_list_proc (gdm_t))
 (call system_read_sysctl_kernel_files (gdm_t))
 (call system_request_load_module (gdm_t))
 (call system_read_sysctl_vm_overcommit_files (gdm_t))
-(call system_stream_connectto (gdm_t)) ; journal related
 
 (call commands_execute_bin_files (gdm_t)) ; /usr/bin/xorg
 (call commands_execute_shell_files (gdm_t))
@@ -148,6 +147,8 @@
 (call devices_rw_fuse (gdm_t))
 
 (call files_list_etc (gdm_t))
+(call files_search_home_root (gdm_t))
+(call files_search_run_user_root (gdm_t))
 (call files_list_tmp (gdm_t))
 (call files_read_generic_etc_files (gdm_t)) ; login.defs
 (call files_read_generic_usr_files (gdm_t))
@@ -200,6 +201,7 @@
 
 (call systemd_dbus_chat (gdm_t))
 (call systemd_get_status_system (gdm_t))
+(call systemd_getattr_generic_unit_dirs (gdm_t))
 
 (call udevd_client_subject (gdm_t))
 

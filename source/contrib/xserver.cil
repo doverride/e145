@@ -167,7 +167,7 @@
 (allow xorg_t xorg_tmp_t manage_file_perms)
 (allow xorg_t xorg_tmp_t manage_sock_file_perms)
 (call files_tmp_filetrans (xorg_t xorg_tmp_t file "*"))
-(call files_tmp_filetrans (xorg_t xorg_tmp_t socket "*"))
+(call files_tmp_filetrans (xorg_t xorg_tmp_t sock_file "*"))
 
 (call system_read_generic_proc_files (is_xorg_subject))
 (call system_write_proc_mtrr_files (is_xorg_subject))

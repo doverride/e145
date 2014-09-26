@@ -254,7 +254,6 @@
 (call system_read_sysctl_kernel_files (systemd_t))
 (call system_link_keyring (systemd_t))
 (call system_read_state_invalid (systemd_t))
-(call system_stream_connectto (systemd_t))
 (call system_use_fd (systemd_t))
 
 (call devices_create_null (systemd_t))
@@ -680,9 +679,8 @@
     is_systemd_unit_file_object)))
 
 (macro systemd_search_generic_unit ((type ARG1))
-    (allow ARG1 systemd_unit_t (dirs (search)))
-    (optional systemd_search_generic_unit_optional_libraries
-        (call libraries_search (ARG1))))
+    (call libraries_search (ARG1))
+    (allow ARG1 systemd_unit_t (dirs (search))))
 
 (macro systemd_unit_filetrans ((type ARG1)(type ARG2)(class ARG3) (name ARG4))
     (call systemd_search_generic_unit (ARG1))
