@@ -210,6 +210,9 @@
 
 (call upower_dbus_chat_upowerd (gdm_t))
 
+(call usersubject_xsession_manual_subject_type_transition_all_gui_login_user_subjects
+    (gdm_t))
+
 (call xserver_exec_xrdb (gdm_t))
 (call xserver_read_config_files (gdm_t))
 (call xserver_read_state_xorg (gdm_t))

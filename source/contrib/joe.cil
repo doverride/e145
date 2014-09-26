@@ -1,7 +1,7 @@
 (user joe_u)
 (role joe_r)
 (type joe_t)
-(call usersubject_base_common_login_user_template (joe_u joe_r joe_t (s0) (s0) systemhigh))
+(call usersubject_base_common_gui_login_user_subject_template (joe_u joe_r joe_t (s0) (s0) systemhigh))
 
 ; miscfiles
 (context file_joe_user_terminfo_home (joe_u object_r user_terminfo_home_t ((s0)(s0))))

@@ -123,6 +123,12 @@
 (type xorg_tmp_t)
 (call files_tmp_object (xorg_tmp_t))
 
+(type xsession_exec_t)
+(call commands_bin_object (xsession_exec_t))
+
+(context file_xsession_exec (system_u object_r xsession_exec_t ((s0)(s0))))
+(filecon "/etc/X11/xinit/Xsession" any file_xsession_exec)
+
 (call xserver_subtrans_xorg (xorg_wrap_t))
 
 (call xserver_read_config_files (is_xorg_wrap_subject))
@@ -428,6 +434,10 @@
     (call files_search_tmp (ARG1))
     (call stream_connect_pattern (ARG1 xorg_tmp_t xorg_tmp_t xorg_t)))
 
+(macro xserver_search_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 xserver_conf_t (dirs (search))))
+
 (macro xserver_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 xserver_conf_t (dirs (list)))
@@ -466,6 +476,13 @@
 
 (macro xserver_exec_xhost ((type ARG1))
     (call can_exec (ARG1 xhost_exec_t)))
+
+(macro xserver_xsession_manual_subject_type_transition ((type ARG1)(type ARG2))
+    (call xserver_search_config (ARG1))
+    (call manual_subject_type_transition_pattern (ARG1 xsession_exec_t ARG2))
+    (allow ARG2 ARG1 (fd (use)))
+    (allow ARG2 ARG1 rw_inherited_fifo_file_perms)
+    (allow ARG2 ARG1 (process (sigchld))))
 
 (macro xserver_admin ((type ARG1))
     (typeattributeset is_xserver_admin_subject ARG1))

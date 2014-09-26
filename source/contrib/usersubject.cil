@@ -2,6 +2,8 @@
 (typeattribute is_base_user_subject)
 (typeattribute is_login_user_subject)
 (typeattribute is_common_login_user_subject)
+(typeattribute is_gui_login_user_subject)
+(typeattribute is_common_gui_login_user_subject)
 
 (typeattribute is_user_cache_file_object)
 (typeattribute is_user_config_file_object)
@@ -253,6 +255,16 @@
     (level ARG4)(level ARG5)(level ARG6))
     (call usersubject_base_login_user_template (ARG1 ARG2 ARG3 ARG4 ARG5 ARG6))
     (typeattributeset is_common_login_user_subject ARG3))
+
+(macro usersubject_base_gui_login_user_template ((user ARG1)(role ARG2)(type ARG3)
+    (level ARG4)(level ARG5)(level ARG6))
+    (call usersubject_base_common_login_user_template (ARG1 ARG2 ARG3 ARG4 ARG5 ARG6))
+    (typeattributeset is_gui_login_user_subject ARG3))
+
+(macro usersubject_base_common_gui_login_user_subject_template ((user ARG1)(role ARG2)(type ARG3) 
+    (level ARG4)(level ARG5)(level ARG6))
+    (call usersubject_base_gui_login_user_template (ARG1 ARG2 ARG3 ARG4 ARG5 ARG6))
+    (typeattributeset is_common_gui_login_user_subject ARG3))  
 
 (macro usersubject_mounton_user_home_dirs ((type ARG1))
     (allow ARG1 user_home_dir_t (dir (mounton))))
@@ -1629,8 +1641,15 @@
     (call dynamic_subject_type_transition_pattern (ARG1
         is_common_login_user_subject)))
 
-(macro usersubject_shell_manual_subject_type_transition_all_common_login_user_subjects ((type ARG1))
+(macro usersubject_shell_manual_subject_type_transition_all_common_login_user_subjects
+    ((type ARG1))
     (call commands_shell_manual_subject_type_transition (ARG1 is_common_login_user_subject)))
+
+(macro usersubject_xsession_manual_subject_type_transition_all_gui_login_user_subjects
+    ((type ARG1))
+    (optional usersubject_optional_xserver
+        (call xserver_xsession_manual_subject_type_transition
+            (ARG1 is_gui_login_user_subject))))
 
 (macro usersubject_create_keyring_all_common_login_user_subjects ((type ARG1))
     (allow ARG1 self (process (setkeycreate)))
