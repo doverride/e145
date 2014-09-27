@@ -560,11 +560,16 @@
 
     ; gnome begin
 
-    (optional joe_optional_joe_gsession
-        (type joe_gsession_t)
-        (call gsession_role_template (joe_r joe_t joe_gsession_t))
+    (optional joe_xserver_optional_joe_dbusd
+        (type joe_dbusd_t)
+        (call dbus_role_template (joe_r joe_t joe_dbusd_t))
 
-        (call usersubject_application_subject (joe_gsession_t)))
+        (optional joe_optional_joe_gsession
+            (type joe_gsession_t)
+            (call gsession_role_template (joe_r joe_t joe_gsession_t))
+
+            (call usersubject_application_subject (joe_gsession_t)))
+    )
 
     ; gnome end
 
