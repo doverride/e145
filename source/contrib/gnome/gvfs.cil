@@ -227,7 +227,7 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gvfsd_exec_t ARG3)))
 
-(macro gvfs_role_template_gvfsacfvm ((role ARG1)(type ARG2)(type ARG3))
+(macro gvfs_role_template_gvfsafcvm ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gvfs_role ARG1)
     (typeattributeset is_gvfs_afcvm_subject ARG3)
     (roletype ARG1 ARG3)
