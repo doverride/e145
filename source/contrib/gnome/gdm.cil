@@ -186,6 +186,8 @@
 (call gkeyring_manual_subject_type_transition_all_gkeyringd_subjects (gdm_t))
 (call gkeyring_exec_gkeyringd (gdm_t))
 
+(call glxutils_exec (gdm_t))
+
 (call gsd_exec_gsd (gdm_t))
 (call gsd_exec_helper (gdm_t)) ; /usr/libexec/gnome-settings-daemon-localeexec
 

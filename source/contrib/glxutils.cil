@@ -1,0 +1,21 @@
+(roleattribute is_glxutils_role)
+
+(typeattribute is_glxutils_subject)
+
+(type glxutils_exec_t)
+(call application_subject_entry (is_glxutils_subject glxutils_exec_t))
+
+(context file_glxutils_exec (system_u object_r glxutils_exec_t ((s0)(s0))))
+(filecon "/usr/bin/glxgears" file file_qiv_exec)
+(filecon "/usr/bin/glxinfo" file file_qiv_exec)
+(filecon "/usr/bin/glxinfo64" file file_qiv_exec)
+(filecon "/usr/bin/xdriinfo" file file_qiv_exec)
+
+(macro glxutils_exec ((type ARG1))
+    (call can_exec (ARG1 glxutils_exec_t)))
+
+(macro glxutils_role_template ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_glxutils_role ARG1)
+    (typeattributeset is_glxutils_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 glxutils_exec_t ARG3)))

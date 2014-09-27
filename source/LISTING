@@ -42,6 +42,7 @@ contrib/fstrim.cil
 contrib/geoclue.cil
 contrib/getty.cil
 contrib/git.cil
+contrib/glxutils.cil
 contrib/googletalk.cil
 contrib/gpg.cil
 contrib/hostname.cil

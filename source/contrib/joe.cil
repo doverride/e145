@@ -270,6 +270,15 @@
         (call xserver_common_client_subject (joe_qiv_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
         (call xserver_client_subject_tmpfs_template (joe_qiv_t user_qiv_tmpfs_t)))
 
+    (optional joe_xserver_optional_joe_glxutils
+        (type joe_glxutils_t)
+        (call glxutils_role_template (joe_r joe_t joe_glxutils_t))
+
+        (allow joe_t joe_glxutils_t (process (signal signull sigkill sigstop)))
+        (call ps_subject_pattern (joe_t joe_glxutils_t))
+
+        (call usersubject_application_subject (joe_glxutils_t)))
+
     (optional joe_xserver_optional_joe_xpdf
         (type joe_xpdf_t)
         (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t))
