@@ -3,6 +3,7 @@
 (typeattribute is_dbus_admin_subject)
 (typeattribute is_dbus_system_client_subject)
 (typeattribute is_dbus_session_subject)
+(typeattribute is_dbus_launch_subject)
 
 (typeattribute is_dbus_etc_file_object)
 
@@ -45,6 +46,13 @@
 (context file_dbusd_var_lib (system_u object_r dbusd_var_lib_t ((s0)
     (s0))))
 (filecon "/var/lib/dbus(/.*)?" any file_dbusd_var_lib)
+
+(type dbuslaunch_exec_t)
+(call application_subject_entry (is_dbus_launch_subject dbuslaunch_exec_t))
+
+(context file_dbuslaunch_exec (system_u object_r dbuslaunch_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/dbus-launch" file file_dbuslaunch_exec)
 
 (call application_subject_entry (is_dbus_session_subject dbusd_exec_t))
 
@@ -129,12 +137,18 @@
 (macro dbus_exec_dbusd ((type ARG1))
     (call can_exec (ARG1 dbusd_exec_t)))
 
-(macro dbus_role_template ((role ARG1)(type ARG2)(type ARG3))
+(macro dbus_role_template_session_bus ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_dbus_session_role ARG1)
     (typeattributeset is_dbus_session_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 dbusd_exec_t ARG3))
-    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
+    (call subtrans_pattern (ARG2 dbusd_exec_t ARG3)))
+
+(macro dbus_role_template_launch ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_dbus_session_role ARG1)
+    (typeattributeset is_dbus_launch_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 dbuslaunch_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal signull sigkill sigstop)))
     (call ps_subject_pattern (ARG2 ARG3)))
 
 (macro dbus_etc_object ((type ARG1))
