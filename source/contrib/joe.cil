@@ -582,6 +582,14 @@
             (call ps_subject_pattern (joe_t joe_gsd_t))
 
             (call usersubject_application_subject (joe_gsd_t))
+
+            (type joe_gsdprinter_t)
+            (call gsd_role_template_printer (joe_r joe_gsd_t joe_gsdprinter_t))
+
+            (allow joe_t joe_gsdprinter_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gsdprinter_t))
+
+            (call usersubject_application_subject (joe_gsdprinter_t))
         )
 
         (allow joe_t joe_dbusd_t (process (signal signull sigkill sigstop)))
@@ -589,8 +597,6 @@
 
         (call usersubject_application_subject (joe_dbusd_t))
         (call usersubject_application_subject (joe_dbuslaunch_t)))
-
-    ; gnome end
 
     (allow joe_t joe_xorg_wrap_t (process (signal sigstop signull sigkill)))
     (call ps_subject_pattern (joe_t joe_xorg_wrap_t))
