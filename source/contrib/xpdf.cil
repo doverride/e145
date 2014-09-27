@@ -26,8 +26,6 @@
 
 (call xpdf_read_config (is_xpdf_subject))
 
-(call xserver_read_config_files (is_xpdf_subject))
-
 (optional xpdf_optional_usersubject
     (type user_xpdf_home_t)
     (call usersubject_home_object (user_xpdf_home_t))

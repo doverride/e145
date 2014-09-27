@@ -570,7 +570,7 @@
 
         (optional joe_optional_joe_gnome
             (type joe_gsession_t)
-            (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t))
+            (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t user_iceauth_tmp_t))
 
             (context file_joe_user_iceauth_home (joe_u object_r user_iceauth_home_t ((s0)(s0))))
             (filecon "/home/joe/\.ICEauthority" file file_joe_user_iceauth_home)

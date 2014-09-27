@@ -294,6 +294,7 @@
 (allow xorg_t is_xserver_client_subject read_file_perms)
 
 (call xserver_stream_connect_xorg (is_xserver_client_subject))
+(call xserver_read_config_files (is_xserver_client_subject))
 
 (optional server_client_subject_optional_gdm
     (call gdm_read_run_files (is_xserver_client_subject)))
@@ -314,8 +315,6 @@
 (call miscfiles_read_fonts_cache_files (is_xserver_common_client_subject))
 (call miscfiles_read_localization_files (is_xserver_common_client_subject))
 
-(call xserver_read_config_files (is_xserver_common_client_subject))
-
 (optional xserver_common_client_subject_optional_ratpoison
     (call ratpoison_client_subject (is_xserver_common_client_subject)))
 
@@ -325,6 +324,9 @@
 
 (macro xserver_exec_xrdb ((type ARG1))
     (call can_exec (ARG1 xrdb_exec_t)))
+
+(macro xserver_exec_xmodmap ((type ARG1))
+    (call can_exec (ARG1 xmodmap_exec_t)))
 
 (macro xserver_subtrans_xorg_wrap ((type ARG1))
     (call subtrans_pattern (ARG1 xorg_wrap_exec_t xorg_wrap_t)))

@@ -26,6 +26,8 @@
 (call devices_read_urandom (is_gkeyringd_subject))
 (call devices_read_random (is_gkeyringd_subject))
 
+(call subject_user_exemption_target (is_gkeyringd_subject)) ; test
+
 (optional gkeyringd_optional_usersubject
     (type user_gkeyringd_run_t)
     (call usersubject_run_object (user_gkeyringd_run_t)))

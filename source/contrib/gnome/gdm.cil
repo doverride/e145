@@ -163,9 +163,6 @@
 (call selinux_compute_access_vector (gdm_t))
 (call selinux_compute_create_context (gdm_t))
 
-(call subject_subj_id_change_exemption (gdm_t)) ; for gkeyringd
-(call subject_role_change_exemption (gdm_t)) ; for gkeyringd
-
 (call accountsservice_dbus_chat (gdm_t))
 
 (call alsa_read_config_files (gdm_t))
@@ -233,6 +230,7 @@
     (gdm_t))
 
 (call xserver_exec_xrdb (gdm_t))
+(call xserver_exec_xmodmap (gdm_t))
 (call xserver_read_config_files (gdm_t))
 (call xserver_read_state_xorg (gdm_t))
 (call xserver_send_signal_xorg (gdm_t))
