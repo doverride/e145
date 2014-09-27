@@ -169,6 +169,7 @@
 
 (call atspi_exec_busl (gdm_t))
 (call atspi_exec_regd (gdm_t))
+(call atspi_read_config_files (gdm_t))
 
 (call auth_login_program_subject (gdm_t))
 (call auth_manage_pam_console_run_files (gdm_t)) ; only read/write confirmed
@@ -195,6 +196,13 @@
 (call gsession_exec_helper (gdm_t))
 
 (call gvfs_exec_gvfsd (gdm_t))
+(call gvfs_exec_gvfsdfuse (gdm_t))
+(call gvfs_exec_gvfsdarch (gdm_t))
+(call gvfs_exec_gvfsudisks2vm (gdm_t))
+(call gvfs_exec_gvfsmtpvm (gdm_t))
+(call gvfs_exec_gvfsgoavm (gdm_t))
+(call gvfs_exec_gvfsgph2vm (gdm_t))
+(call gvfs_exec_gvfsafcvm (gdm_t))
 
 (call journald_client_subject (gdm_t))
 

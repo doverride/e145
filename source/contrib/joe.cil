@@ -666,6 +666,222 @@
             (call ps_subject_pattern (joe_t joe_gvfsd_t))
 
             (call usersubject_application_subject (joe_gvfsd_t))
+
+            (type joe_gvfsafcvm_t)
+            (call gvfs_role_template_gvfsafcvm (joe_r joe_dbusd_t joe_gvfsafcvm_t))
+
+            (allow joe_t joe_gvfsafcvm_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsafcvm_t))
+
+            (call usersubject_application_subject (joe_gvfsafcvm_t))
+
+            (type joe_gvfsgoavm_t)
+            (call gvfs_role_template_gvfsgoavm (joe_r joe_dbusd_t joe_gvfsgoavm_t))
+
+            (allow joe_t joe_gvfsgoavm_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsgoavm_t))
+
+            (call usersubject_application_subject (joe_gvfsgoavm_t))
+
+            (type joe_gvfsgph2vm_t)
+            (call gvfs_role_template_gvfsgph2vm (joe_r joe_dbusd_t joe_gvfsgph2vm_t))
+
+            (allow joe_t joe_gvfsgph2vm_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsgph2vm_t))
+
+            (call usersubject_application_subject (joe_gvfsgph2vm_t))
+
+            (type joe_gvfsmtpvm_t)
+            (call gvfs_role_template_gvfsmtpvm (joe_r joe_dbusd_t joe_gvfsmtpvm_t))
+
+            (allow joe_t joe_gvfsmtpvm_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsmtpvm_t))
+
+            (call usersubject_application_subject (joe_gvfsmtpvm_t))
+
+            (type joe_gvfsudisks2vm_t)
+            (call gvfs_role_template_gvfsmtpvm (joe_r joe_dbusd_t joe_gvfsudisks2vm_t))
+
+            (allow joe_t joe_gvfsudisks2vm_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsudisks2vm_t))
+
+            (call usersubject_application_subject (joe_gvfsudisks2vm_t))
+
+            (type joe_gvfsdafc_t)
+            (call gvfs_role_template_gvfsdafc (joe_r joe_gvfsd_t joe_gvfsdafc_t))
+
+            (allow joe_t joe_gvfsdafc_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdafc_t))
+
+            (call usersubject_application_subject (joe_gvfsdafc_t))
+
+            (type joe_gvfsdafp_t)
+            (call gvfs_role_template_gvfsdafp (joe_r joe_gvfsd_t joe_gvfsdafp_t))
+
+            (allow joe_t joe_gvfsdafp_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdafp_t))
+
+            (call usersubject_application_subject (joe_gvfsdafp_t))
+
+            (type joe_gvfsdafpb_t)
+            (call gvfs_role_template_gvfsdafpb (joe_r joe_gvfsd_t joe_gvfsdafpb_t))
+
+            (allow joe_t joe_gvfsdafpb_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdafpb_t))
+
+            (call usersubject_application_subject (joe_gvfsdafpb_t))
+
+            (type joe_gvfsdarch_t)
+            (call gvfs_role_template_gvfsdarch (joe_r joe_gvfsd_t joe_gvfsdarch_t))
+
+            (allow joe_t joe_gvfsdarch_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdarch_t))
+
+            (call usersubject_application_subject (joe_gvfsdarch_t))
+
+            (type joe_gvfsdburn_t)
+            (call gvfs_role_template_gvfsdburn (joe_r joe_gvfsd_t joe_gvfsdburn_t))
+
+            (allow joe_t joe_gvfsdburn_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdburn_t))
+
+            (call usersubject_application_subject (joe_gvfsdburn_t))
+
+            (type joe_gvfsdcdda_t)
+            (call gvfs_role_template_gvfsdcdda (joe_r joe_gvfsd_t joe_gvfsdcdda_t))
+
+            (allow joe_t joe_gvfsdcdda_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdcdda_t))
+
+            (call usersubject_application_subject (joe_gvfsdcdda_t))
+
+            (type joe_gvfsdcomp_t)
+            (call gvfs_role_template_gvfsdcomp (joe_r joe_gvfsd_t joe_gvfsdcomp_t))
+
+            (allow joe_t joe_gvfsdcomp_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdcomp_t))
+
+            (call usersubject_application_subject (joe_gvfsdcomp_t))
+
+            (type joe_gvfsddav_t)
+            (call gvfs_role_template_gvfsddav (joe_r joe_gvfsd_t joe_gvfsddav_t))
+
+            (allow joe_t joe_gvfsddav_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsddav_t))
+
+            (call usersubject_application_subject (joe_gvfsddav_t))
+
+            (type joe_gvfsddnssd_t)
+            (call gvfs_role_template_gvfsddnssd (joe_r joe_gvfsd_t joe_gvfsddnssd_t))
+
+            (allow joe_t joe_gvfsddnssd_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsddnssd_t))
+
+            (call usersubject_application_subject (joe_gvfsddnssd_t))
+
+            (type joe_gvfsdftp_t)
+            (call gvfs_role_template_gvfsdftp (joe_r joe_gvfsd_t joe_gvfsdftp_t))
+
+            (allow joe_t joe_gvfsdftp_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdftp_t))
+
+            (call usersubject_application_subject (joe_gvfsdftp_t))
+
+            (type joe_gvfsdfuse_t)
+            (call gvfs_role_template_gvfsdfuse (joe_r joe_gvfsd_t joe_gvfsdfuse_t))
+
+            (allow joe_t joe_gvfsdfuse_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdfuse_t))
+
+            (call usersubject_application_subject (joe_gvfsdfuse_t))
+
+            (type joe_gvfsdgph2_t)
+            (call gvfs_role_template_gvfsdgph2 (joe_r joe_gvfsd_t joe_gvfsdgph2_t))
+
+            (allow joe_t joe_gvfsdgph2_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdgph2_t))
+
+            (call usersubject_application_subject (joe_gvfsdgph2_t))
+
+            (type joe_gvfsdhttp_t)
+            (call gvfs_role_template_gvfsdhttp (joe_r joe_gvfsd_t joe_gvfsdhttp_t))
+
+            (allow joe_t joe_gvfsdhttp_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdhttp_t))
+
+            (call usersubject_application_subject (joe_gvfsdhttp_t))
+
+            (type joe_gvfsdltest_t)
+            (call gvfs_role_template_gvfsdltest (joe_r joe_gvfsd_t joe_gvfsdltest_t))
+
+            (allow joe_t joe_gvfsdltest_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdltest_t))
+
+            (call usersubject_application_subject (joe_gvfsdltest_t))
+
+            (type joe_gvfsdmetad_t)
+            (call gvfs_role_template_gvfsdmetad (joe_r joe_gvfsd_t joe_gvfsdmetad_t))
+
+            (allow joe_t joe_gvfsdmetad_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdmetad_t))
+
+            (call usersubject_application_subject (joe_gvfsdmetad_t))
+
+            (type joe_gvfsdmtp_t)
+            (call gvfs_role_template_gvfsdmtp (joe_r joe_gvfsd_t joe_gvfsdmtp_t))
+
+            (allow joe_t joe_gvfsdmtp_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdmtp_t))
+
+            (call usersubject_application_subject (joe_gvfsdmtp_t))
+
+            (type joe_gvfsdnetw_t)
+            (call gvfs_role_template_gvfsdnetw (joe_r joe_gvfsd_t joe_gvfsdnetw_t))
+
+            (allow joe_t joe_gvfsdnetw_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdnetw_t))
+
+            (call usersubject_application_subject (joe_gvfsdnetw_t))
+
+            (type joe_gvfsdrecnt_t)
+            (call gvfs_role_template_gvfsdrecnt (joe_r joe_gvfsd_t joe_gvfsdrecnt_t))
+
+            (allow joe_t joe_gvfsdrecnt_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdrecnt_t))
+
+            (call usersubject_application_subject (joe_gvfsdrecnt_t))
+
+            (type joe_gvfsdsftp_t)
+            (call gvfs_role_template_gvfsdsftp (joe_r joe_gvfsd_t joe_gvfsdsftp_t))
+
+            (allow joe_t joe_gvfsdsftp_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdsftp_t))
+
+            (call usersubject_application_subject (joe_gvfsdsftp_t))
+
+            (type joe_gvfsdsmb_t)
+            (call gvfs_role_template_gvfsdsmb (joe_r joe_gvfsd_t joe_gvfsdsmb_t))
+
+            (allow joe_t joe_gvfsdsmb_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdsmb_t))
+
+            (call usersubject_application_subject (joe_gvfsdsmb_t))
+
+            (type joe_gvfsdsmbb_t)
+            (call gvfs_role_template_gvfsdsmbb (joe_r joe_gvfsd_t joe_gvfsdsmbb_t))
+
+            (allow joe_t joe_gvfsdsmbb_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdsmbb_t))
+
+            (call usersubject_application_subject (joe_gvfsdsmbb_t))
+
+            (type joe_gvfsdtrash_t)
+            (call gvfs_role_template_gvfsdtrash (joe_r joe_gvfsd_t joe_gvfsdtrash_t))
+
+            (allow joe_t joe_gvfsdtrash_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gvfsdtrash_t))
+
+            (call usersubject_application_subject (joe_gvfsdtrash_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
