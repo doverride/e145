@@ -569,6 +569,10 @@
             (type joe_gsession_t)
             (call gsession_role_template (joe_r joe_t joe_gsession_t))
 
+            (optional joe_gsession_optional_joe_pa
+                (call pa_role_template (joe_r joe_gsession_t joe_pa_t user_pa_home_t
+                    user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t)))
+
             (call usersubject_application_subject (joe_gsession_t))
 
             (type joe_gsd_t)
