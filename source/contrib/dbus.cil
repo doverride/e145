@@ -113,11 +113,11 @@
 
 (call systemd_getattr_generic_unit_dirs (dbusd_t))
 
-(allow is_dbus_launch_subject self (process (sigkill)))
 (allow is_dbus_launch_subject self rw_fifo_file_perms)
 
 (call files_search_tmp (is_dbus_session_client_subject))
 
+(allow is_dbus_session_subject self (process (sigkill)))
 (allow is_dbus_session_subject self create_netlink_selinux_socket_perms)
 (allow is_dbus_session_subject self (unix_stream_socket (listen accept)))
 

@@ -26,7 +26,7 @@
 (call devices_read_urandom (is_gkeyringd_subject))
 (call devices_read_random (is_gkeyringd_subject))
 
-(call subject_user_exemption_target (is_gkeyringd_subject)) ; test
+(call subject_user_exemption_target (is_gkeyringd_subject)) ; required by gdm
 
 (optional gkeyringd_optional_usersubject
     (type user_gkeyringd_run_t)
@@ -35,8 +35,8 @@
 (macro gkeyring_exec_gkeyringd ((type ARG1))
     (call can_exec (ARG1 gkeyringd_exec_t)))
 
-(macro gkeyring_manual_subject_type_transition_all_gkeyringd_subjects ((type ARG1))
-    (call spec_subject_type_transition_pattern (ARG1 gkeyringd_exec_t is_gkeyringd_subject)))
+;(macro gkeyring_manual_subject_type_transition_all_gkeyringd_subjects ((type ARG1)) ; not sure if still required
+;    (call spec_subject_type_transition_pattern (ARG1 gkeyringd_exec_t is_gkeyringd_subject)))
 
 (macro gkeyring_role_template_gkeyring ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gkeyring_role ARG1)

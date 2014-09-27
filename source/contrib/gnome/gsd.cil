@@ -24,6 +24,8 @@
 (filecon "/usr/libexec/gsd-locate-pointer" file file_gsd_helper_exec)
 (filecon "/usr/libexec/gsd-wacom-oled-helper" file file_gsd_helper_exec)
 
+(call dbus_acquire_service_system (is_gsd_printer_subject))
+
 (macro gsd_exec_gsd ((type ARG1))
     (call can_exec (ARG1 gsd_exec_t)))
 

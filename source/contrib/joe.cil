@@ -587,6 +587,8 @@
             (call usersubject_home_dir_filetrans (joe_gsession_t user_iceauth_home_t file ".ICEauthority-c"))
             (call usersubject_home_dir_filetrans (joe_gsession_t user_iceauth_home_t file ".ICEauthority"))
 
+            (call dbus_session_client_subject (joe_gsession_t user_dbusd_tmp_t joe_dbusd_t))
+  
             (call xserver_client_subject (joe_gsession_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_gsd_t)
