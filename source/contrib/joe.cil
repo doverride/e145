@@ -600,6 +600,24 @@
 
             (call usersubject_run_user_dir_filetrans (joe_t user_gkeyringd_run_t dir "keyring"))
             (call usersubject_run_user_dir_filetrans (joe_gkeyringd_t user_gkeyringd_run_t dir "keyring"))
+
+            (type joe_atspibusl_t)
+            (call atspi_role_template_busl (joe_r joe_dbusd_t joe_atspibusl_t))
+
+            (allow joe_t joe_atspibusl_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_atspibusl_t))
+
+            (call usersubject_application_subject (joe_atspibus_t))
+
+            (call dbus_role_template_session_bus (joe_r joe_atspibusl_t joe_dbusd_t))
+
+            (type joe_atspiregd_t)
+            (call atspi_role_template_regd (joe_r joe_dbusd_t joe_atspiregd_t))
+
+            (allow joe_t joe_atspiregd_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_atspiregd_t))
+
+            (call usersubject_application_subject (joe_atspiregd_t))
         )
 
         (allow joe_t joe_dbusd_t (process (signal signull sigkill sigstop)))

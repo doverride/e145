@@ -1,0 +1,39 @@
+(roleattribute is_atspi_role)
+
+(typeattribute is_atspibusl_subject)
+(typeattribute is_atspiregd_subject)
+
+(type atspibusl_exec_t)
+(call application_subject_entry (is_atspibusl_subject atspibusl_exec_t))
+
+(context file_atspibusl_exec (system_u object_r atspibusl_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/at-spi-bus-launcher" file file_atspibusl_exec)
+
+(type atspiregd_exec_t)
+(call application_subject_entry (is_atspiregd_subject atspiregd_exec_t))
+
+(context file_atspiregd_exec (system_u object_r atspiregd_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/at-spi2-registryd" file file_atspiregd_exec)
+
+(type atspi_conf_t)
+(call files_etc_object (atspi_conf_t))
+
+(context file_atspi_conf (system_u object_r atspi_conf_t ((s0)(s0))))
+(filecon "/etc/at-spi2(/.*)?" file file_atspi_conf)
+
+(macro atspi_role_template_busl ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_atspi_role ARG1)
+    (typeattributeset is_atspibusl_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 atspibusl_exec_t ARG3)))
+
+(macro atspi_role_template_regd ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_atspi_role ARG1)
+    (typeattributeset is_atspiregd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 atspiregd_exec_t ARG3)))
+
+(macro atspi_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 atspi_conf_t (dirs (list)))
+    (allow ARG1 atspi_conf_t read_file_perms))
