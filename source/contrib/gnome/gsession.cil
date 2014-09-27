@@ -18,6 +18,14 @@
 (filecon "/usr/libexec/gnome-session-check-accelerated-helper" file file_gsession_helper_exec)
 (filecon "/usr/libexec/gnome-session-failed" file file_gsession_helper_exec)
 
+(call gsession_exec_helper (is_gsession_subject))
+
+(macro gsession_exec_gsession ((type ARG1))
+    (call can_exec (ARG1 gsession_exec_t)))
+
+(macro gsession_exec_helper ((type ARG1))
+    (call can_exec (ARG1 gsession_helper_exec_t)))
+
 (macro gsession_role_template ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gsession_role ARG1)
     (typeattributeset is_gsession_subject ARG3)

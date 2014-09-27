@@ -8,7 +8,7 @@
 (typeattribute is_cups_file_object)
 (typeattributeset is_cups_file_object (cupsd_dbus_conf_t
     cupsd_pam_conf_t cupsd_conf_t cupsd_unit_t cupsd_spool_t
-    cupsd_run_t cupsd_log_t))
+    cupsd_run_t cupsd_log_t cupsd_cache_t))
 
 (type cupsctl_t)
 (type cupsctl_exec_t)
@@ -50,6 +50,13 @@
 (context file_cupsd_helper_exec (system_u object_r cupsd_helper_exec_t ((s0)
     (s0))))
 (filecon "/usr/lib/cups/daemon/.*" file file_cupsd_helper_exec)
+
+(type cupsd_cache_t)
+(call files_var_cache_object (cupsd_cache_t))
+
+(context file_cupsd_cache (system_u object_r cupsd_cache_t ((s0)
+    (s0))))
+(filecon "/var/cache/cups(/.*)?" any file_cupsd_cache)
 
 (type cupsd_log_t)
 (call files_var_log_object (cupsd_log_t))
@@ -102,6 +109,17 @@
 (filecon "/usr/lib/systemd/system/[^/]*cups.*" file file_cupsd_unit)
 (filecon "/usr/lib/systemd/system/[^/]*cups-browsed.*" file file_cupsd_unit)
 
+(allow cupsd_t self (capability (dac_override chown fsetid)))
+
+(allow cupsd_t cupsd_cache_t manage_dir_perms)
+(allow cupsd_t cupsd_cache_t manage_file_perms)
+(call files_var_cache_filetrans (cupsd_t cupsd_cache_t dir "*"))
+
+(call cups_manage_cupsd_run_files (cupsd_t))
+(call cups_manage_cupsd_run_sock_files (cupsd_t))
+
+(call miscfiles_read_localization_files (cupsd_t))
+
 (optional cupsctl_optional_usersubject
     (call usersubject_use_inherited_terminals (cupsctl_t)))
 
@@ -126,6 +144,14 @@
 (macro cups_list_spool ((type ARG1))
     (call files_search_var_spool (ARG1))
     (allow ARG1 cupsd_spool_t (dirs (list))))
+
+(macro cups_manage_cupsd_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call manage_files_pattern (ARG1 cupsd_run_t cupsd_run_t)))
+
+(macro cups_manage_cupsd_run_sock_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call manage_sock_files_pattern (ARG1 cupsd_run_t cupsd_run_t)))
 
 (macro cups_admin ((type ARG1))
     (typeattributeset is_cups_admin_subject ARG1))
