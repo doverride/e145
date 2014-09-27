@@ -558,8 +558,6 @@
 
         (call usersubject_application_subject (joe_rpws_t)))
 
-    ; gnome begin
-
     (optional joe_xserver_optional_joe_dbus
         (type joe_dbuslaunch_t)
         (call dbus_role_template_launch (joe_r joe_t joe_dbuslaunch_t))
@@ -567,11 +565,20 @@
         (type joe_dbusd_t)
         (call dbus_role_template_session_bus (joe_r joe_dbuslaunch_t joe_dbusd_t))
 
-        (optional joe_optional_joe_gsession
+        (optional joe_optional_joe_gnome
             (type joe_gsession_t)
             (call gsession_role_template (joe_r joe_t joe_gsession_t))
 
-            (call usersubject_application_subject (joe_gsession_t)))
+            (call usersubject_application_subject (joe_gsession_t))
+
+            (type joe_gsd_t)
+            (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t))
+
+            (allow joe_t joe_gsd_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gsd_t))
+
+            (call usersubject_application_subject (joe_gsd_t))
+        )
 
         (allow joe_t joe_dbusd_t (process (signal signull sigkill sigstop)))
         (call ps_subject_pattern (joe_t joe_dbusd_t))

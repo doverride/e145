@@ -177,6 +177,8 @@
 (call gdm_manage_var_lib_dirs (gdm_t))
 (call gdm_manage_var_lib_files (gdm_t))
 
+(call gsd_exec_gsd (gdm_t))
+
 (call gsession_exec_gsession (gdm_t))
 (call gsession_exec_helper (gdm_t))
 
