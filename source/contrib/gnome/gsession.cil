@@ -18,7 +18,19 @@
 (filecon "/usr/libexec/gnome-session-check-accelerated-helper" file file_gsession_helper_exec)
 (filecon "/usr/libexec/gnome-session-failed" file file_gsession_helper_exec)
 
+(call dbus_system_client_subject (is_gsession_subject))
+
+(call files_read_generic_etc_files (is_gsession_subject))
+
 (call gsession_exec_helper (is_gsession_subject))
+
+(call journald_client_subject (is_gsession_subject))
+
+(call miscfiles_read_localization_files (is_gsession_subject))
+
+(optional gsession_subject_optional_usersubject
+    (type user_iceauth_home_t)
+    (call usersubject_home_object (user_iceauth_home_t)))
 
 (macro gsession_exec_gsession ((type ARG1))
     (call can_exec (ARG1 gsession_exec_t)))
@@ -26,8 +38,13 @@
 (macro gsession_exec_helper ((type ARG1))
     (call can_exec (ARG1 gsession_helper_exec_t)))
 
-(macro gsession_role_template ((role ARG1)(type ARG2)(type ARG3))
+(macro gsession_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gsession_role ARG1)
     (typeattributeset is_gsession_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 gsession_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 gsession_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_file_perms)
+    (allow ARG2 ARG4 relabel_file_perms)
+    (allow ARG3 ARG4 manage_file_perms))

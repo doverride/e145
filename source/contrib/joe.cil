@@ -184,6 +184,9 @@
     (type joe_xhost_t)
     (call xserver_role_template_xhost (joe_r joe_t joe_xhost_t))
 
+    (type joe_xmodmap_t)
+    (call xserver_role_template_xmodmap (joe_r joe_t joe_xmodmap_t))
+
     (type joe_xrdb_t)
     (call xserver_role_template_xrdb (joe_r joe_t joe_xrdb_t user_xrdb_home_t))
     (call xserver_role_template_xrdb (joe_r joe_xinit_t joe_xrdb_t user_xrdb_home_t))
@@ -563,17 +566,22 @@
         (call dbus_role_template_launch (joe_r joe_t joe_dbuslaunch_t))
 
         (type joe_dbusd_t)
-        (call dbus_role_template_session_bus (joe_r joe_dbuslaunch_t joe_dbusd_t))
+        (call dbus_role_template_session_bus (joe_r joe_dbuslaunch_t joe_dbusd_t user_dbusd_tmp_t))
 
         (optional joe_optional_joe_gnome
             (type joe_gsession_t)
-            (call gsession_role_template (joe_r joe_t joe_gsession_t))
+            (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t))
 
             (optional joe_gsession_optional_joe_pa
                 (call pa_role_template (joe_r joe_gsession_t joe_pa_t user_pa_home_t
                     user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t)))
 
             (call usersubject_application_subject (joe_gsession_t))
+
+            (call usersubject_home_dir_filetrans (joe_t user_iceauth_home_t file ".ICEauthority-c"))
+            (call usersubject_home_dir_filetrans (joe_t user_iceauth_home_t file ".ICEauthority"))
+            (call usersubject_home_dir_filetrans (joe_gsession_t user_iceauth_home_t file ".ICEauthority-c"))
+            (call usersubject_home_dir_filetrans (joe_gsession_t user_iceauth_home_t file ".ICEauthority"))
 
             (call xserver_client_subject (joe_gsession_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
@@ -604,21 +612,35 @@
             (type joe_atspibusl_t)
             (call atspi_role_template_busl (joe_r joe_dbusd_t joe_atspibusl_t))
 
+            (call xserver_client_subject (joe_atspibusl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+ 
             (allow joe_t joe_atspibusl_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_atspibusl_t))
 
             (call usersubject_application_subject (joe_atspibusl_t))
 
-            (call dbus_role_template_session_bus (joe_r joe_atspibusl_t joe_dbusd_t))
+            (call dbus_role_template_session_bus (joe_r joe_atspibusl_t joe_dbusd_t user_dbusd_tmp_t))
 
             (type joe_atspiregd_t)
             (call atspi_role_template_regd (joe_r joe_dbusd_t joe_atspiregd_t))
+
+            (call xserver_client_subject (joe_atspiregd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+            (allow joe_atspiregd_t joe_atspibusl_t (fd (use)))
+            (allow joe_atspiregd_t joe_dbusd_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_atspiregd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_atspiregd_t))
 
             (call usersubject_application_subject (joe_atspiregd_t))
+
+            (call dbus_session_client_subject (joe_atspiregd_t user_dbusd_tmp_t joe_dbusd_t))
         )
+
+        (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+        (allow joe_t user_dbusd_tmp_t manage_sock_file_perms)
+        (allow joe_t user_dbusd_tmp_t relabel_sock_file_perms)
 
         (allow joe_t joe_dbusd_t (process (signal signull sigkill sigstop)))
         (call ps_subject_pattern (joe_t joe_dbusd_t))
@@ -684,10 +706,15 @@
 
     (call xserver_client_subject (joe_xhost_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
-    (allow joe_t joe_xhost_t (dirs (list)))
-    (allow joe_t joe_xhost_t read_file_perms)
-
+    (allow joe_t joe_xhost_t (process (signal signull sigkill sigstop)))
     (call ps_subject_pattern (joe_t joe_xhost_t))
+
+    (call usersubject_application_subject (joe_xmodmap_t))
+
+    (call xserver_client_subject (joe_xmodmap_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (allow joe_t joe_xmodmap_t (process (signal signull sigkill sigstop)))
+    (call ps_subject_pattern (joe_t joe_xmodmap_t))
 
     (allow joe_t user_xauth_home_t manage_file_perms)
     (allow joe_t user_xauth_home_t relabel_file_perms)

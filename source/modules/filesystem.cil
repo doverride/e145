@@ -431,6 +431,9 @@
 (macro filesystem_mount_fuse_filesystems ((type ARG1))
     (allow ARG1 fuse_t (filesystem (mount))))
 
+(macro filesystem_unmount_fuse_filesystems ((type ARG1))
+    (allow ARG1 fuse_t (filesystem (mount))))
+
 (macro filesystem_unmount_tmpfs_filesystems ((type ARG1))
     (allow ARG1 tmpfs_t (filesystem (unmount))))
 

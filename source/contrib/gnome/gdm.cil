@@ -157,6 +157,7 @@
 
 (call filesystem_getattr_filesystems (gdm_t))
 (call filesystem_mount_fuse_filesystems (gdm_t))
+(call filesystem_unmount_fuse_filesystems (gdm_t))
 
 (call selinux_list (gdm_t))
 (call selinux_compute_access_vector (gdm_t))
@@ -165,6 +166,9 @@
 (call accountsservice_dbus_chat (gdm_t))
 
 (call alsa_read_config_files (gdm_t))
+
+(call atspi_exec_busl (gdm_t))
+(call atspi_exec_regd (gdm_t))
 
 (call auth_login_program_subject (gdm_t))
 (call auth_manage_pam_console_run_files (gdm_t)) ; only read/write confirmed

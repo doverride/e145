@@ -2,6 +2,7 @@
 
 (typeattribute is_dbus_admin_subject)
 (typeattribute is_dbus_system_client_subject)
+(typeattribute is_dbus_session_client_subject)
 (typeattribute is_dbus_session_subject)
 (typeattribute is_dbus_launch_subject)
 
@@ -112,7 +113,10 @@
 
 (call systemd_getattr_generic_unit_dirs (dbusd_t))
 
+(allow is_dbus_launch_subject self (process (sigkill)))
 (allow is_dbus_launch_subject self rw_fifo_file_perms)
+
+(call files_search_tmp (is_dbus_session_client_subject))
 
 (allow is_dbus_session_subject self create_netlink_selinux_socket_perms)
 (allow is_dbus_session_subject self (unix_stream_socket (listen accept)))
@@ -137,6 +141,13 @@
 
 (call seutil_read_config_files (is_dbus_session_subject))
 (call seutil_read_default_context_files (is_dbus_session_subject))
+
+(optional dbus_session_subject_optional_atspi
+    (call atspi_read_config_files (is_dbus_session_subject)))
+
+(optional dbus_session_subject_optional_usersubject
+    (type user_dbusd_tmp_t)
+    (call usersubject_tmp_object (user_dbusd_tmp_t)))
 
 (allow is_dbus_admin_subject dbusd_t signal_perms)
 (allow is_dbus_admin_subject dbusd_t (process (ptrace)))
@@ -166,11 +177,13 @@
 (macro dbus_exec_launch ((type ARG1))
     (call can_exec (ARG1 dbuslaunch_exec_t)))
 
-(macro dbus_role_template_session_bus ((role ARG1)(type ARG2)(type ARG3))
+(macro dbus_role_template_session_bus ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_dbus_session_role ARG1)
     (typeattributeset is_dbus_session_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 dbusd_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 dbusd_exec_t ARG3))
+    (allow ARG3 ARG4 manage_sock_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG4 sock_file "*")))
 
 (macro dbus_role_template_launch ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_dbus_session_role ARG1)
@@ -217,6 +230,12 @@
 
 (macro dbus_admin ((type ARG1))
     (typeattributeset is_dbus_admin_subject ARG1))
+
+(macro dbus_session_client_subject ((type ARG1)(type ARG2)(type ARG3))
+    (typeattributeset is_dbus_session_client_subject ARG1)
+    (call stream_connect_pattern (ARG1 ARG2 ARG2 ARG3))
+    (allow ARG3 ARG1 (dirs (list)))
+    (allow ARG3 ARG1 read_file_perms))
 
 (macro dbus_system_client_subject ((type ARG1))
     (typeattributeset is_dbus_system_client_subject ARG1))

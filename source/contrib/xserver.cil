@@ -2,6 +2,7 @@
 (roleattribute is_xterm_role)
 (roleattribute is_xclock_role)
 (roleattribute is_xloadimg_role)
+(roleattribute is_xmodmap_role)
 (roleattribute is_xsel_role)
 (roleattribute is_xhost_role)
 
@@ -14,6 +15,7 @@
 (typeattribute is_xorg_wrap_subject)
 (typeattribute is_xrdb_subject)
 (typeattribute is_xsel_subject)
+(typeattribute is_xmodmap_subject)
 (typeattribute is_xhost_subject)
 
 (typeattribute is_xserver_admin_subject)
@@ -38,6 +40,12 @@
 
 (context file_xhost_exec (system_u object_r xhost_exec_t ((s0)(s0))))
 (filecon "/usr/bin/xhost" file file_xhost_exec)
+
+(type xmodmap_exec_t)
+(call application_subject_entry (is_xmodmap_subject xmodmap_exec_t))
+
+(context file_xmodmap_exec (system_u object_r xmodmap_exec_t ((s0)(s0))))
+(filecon "/usr/bin/xmodmap" file file_xmodmap_exec)
 
 (type xauth_exec_t)
 (call application_subject_entry (is_xauth_subject xauth_exec_t))
@@ -354,6 +362,12 @@
     (typeattributeset is_xhost_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 xhost_exec_t ARG3)))
+
+(macro xserver_role_template_xmodmap ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_xmodmap_role ARG1)
+    (typeattributeset is_xmodmap_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 xmodmap_exec_t ARG3)))
 
 (macro xserver_role_template_xrdb ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_xserver_role ARG1)
