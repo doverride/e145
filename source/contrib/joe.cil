@@ -558,6 +558,16 @@
 
         (call usersubject_application_subject (joe_rpws_t)))
 
+    ; gnome begin
+
+    (optional joe_optional_joe_gsession
+        (type joe_gsession_t)
+        (call gsession_role_template (joe_r joe_t joe_gsession_t))
+
+        (call usersubject_application_subject (joe_gsession_t)))
+
+    ; gnome end
+
     (allow joe_t joe_xorg_wrap_t (process (signal sigstop signull sigkill)))
     (call ps_subject_pattern (joe_t joe_xorg_wrap_t))
 
@@ -1371,9 +1381,3 @@
     (call usersubject_relabel_terminals (joe_sudo_t))
 
     (call usersubject_home_bin_auto_subject_type_transition (joe_sudo_t joe_t)))
-
-(optional joe_optional_joe_gsession
-    (type joe_gsession_t)
-    (call gsession_role_template (joe_r joe_t joe_gsession_t))
-
-    (call usersubject_application_subject (joe_gsession_t)))
