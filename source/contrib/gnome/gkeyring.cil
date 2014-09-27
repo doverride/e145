@@ -1,0 +1,34 @@
+(roleattribute is_gkeyring_role)
+
+(typeattribute is_gkeyring_subject)
+(typeattribute is_gkeyringd_subject)
+
+(type gkeyring_exec_t)
+(call application_subject_entry (is_gkeyring_subject gkeyring_exec_t))
+
+(context file_gkeyring_exec (system_u object_r gkeyring_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gnome-keyring" file file_gkeyring_exec)
+(filecon "/usr/bin/gnome-keyring-3" file file_gkeyring_exec)
+
+(type gkeyringd_exec_t)
+(call application_subject_entry (is_gkeyringd_subject gkeyringd_exec_t))
+
+(context file_gkeyringd_exec (system_u object_r gkeyringd_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gnome-keyring-daemon" file file_gkeyringd_exec)
+
+(macro gkeyring_exec_gkeyringd ((type ARG1))
+    (call can_exec (ARG1 gkeyringd_exec_t)))
+
+(macro gkeyring_role_template_gkeyring ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gkeyring_role ARG1)
+    (typeattributeset is_gkeyring_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gkeyring_exec_t ARG3)))
+
+(macro gkeyring_role_template_gkeyringd ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gkeyring_role ARG1)
+    (typeattributeset is_gkeyringd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gkeyringd_exec_t ARG3))
+    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
+    (call ps_subject_pattern (ARG2 ARG3)))

@@ -590,6 +590,11 @@
             (call ps_subject_pattern (joe_t joe_gsdprinter_t))
 
             (call usersubject_application_subject (joe_gsdprinter_t))
+
+            (type joe_gkeyringd_t)
+            (call gkeyring_role_template_gkeyringd (joe_r joe_t joe_gkeyringd_t))
+
+            (call usersubject_application_subject (joe_gkeyringd_t))
         )
 
         (allow joe_t joe_dbusd_t (process (signal signull sigkill sigstop)))
