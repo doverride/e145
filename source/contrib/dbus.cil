@@ -122,11 +122,18 @@
 (call files_read_generic_usr_files (is_dbus_session_subject)) ; /usr/share/dbus-1/services
 
 (call selinux_list (is_dbus_session_subject))
+(call selinux_compute_access_vector (is_dbus_session_subject))
 
 (call auth_nsswitch_client_subject (is_dbus_session_subject))
 
 (call dbus_list_config (is_dbus_session_subject))
 (call dbus_read_generic_config_files (is_dbus_session_subject))
+
+(call journald_client_subject (is_dbus_session_subject))
+
+(call logind_read_run_files (is_dbus_session_subject))
+
+(call miscfiles_read_localization_files (is_dbus_session_subject))
 
 (call seutil_read_config_files (is_dbus_session_subject))
 (call seutil_read_default_context_files (is_dbus_session_subject))
