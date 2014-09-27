@@ -572,6 +572,10 @@
             (type joe_gsession_t)
             (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t))
 
+            (context file_joe_user_iceauth_home (joe_u object_r user_iceauth_home_t ((s0)(s0))))
+            (filecon "/home/joe/\.ICEauthority" file file_joe_user_iceauth_home)
+            (filecon "/home/joe/\.ICEauthority-c" file file_joe_user_iceauth_home)
+
             (optional joe_gsession_optional_joe_pa
                 (call pa_role_template (joe_r joe_gsession_t joe_pa_t user_pa_home_t
                     user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t)))
