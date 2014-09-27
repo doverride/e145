@@ -297,7 +297,7 @@
     (roleattributeset is_gvfs_role ARG1)
     (typeattributeset is_gvfsd_comp_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 gvfsdcom_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 gvfsdcomp_exec_t ARG3)))
 
 (macro gvfs_role_template_gvfsddav ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gvfs_role ARG1)
