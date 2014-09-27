@@ -652,7 +652,7 @@
             (call dbus_session_client_subject (joe_atspiregd_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_vdagent_t)
-            (call spice_role_template_vdagent (joe_t joe_gsession_t joe_vdagent_t))
+            (call spice_role_template_vdagent (joe_r joe_gsession_t joe_vdagent_t))
 
             (allow joe_t joe_vdagent_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_vdagent_t))
