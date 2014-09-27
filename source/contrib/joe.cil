@@ -575,6 +575,8 @@
 
             (call usersubject_application_subject (joe_gsession_t))
 
+            (call xserver_client_subject (joe_gsession_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
             (type joe_gsd_t)
             (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t))
 
@@ -592,9 +594,12 @@
             (call usersubject_application_subject (joe_gsdprinter_t))
 
             (type joe_gkeyringd_t)
-            (call gkeyring_role_template_gkeyringd (joe_r joe_t joe_gkeyringd_t))
+            (call gkeyring_role_template_gkeyringd (joe_r joe_t joe_gkeyringd_t user_gkeyring_run_t))
 
             (call usersubject_application_subject (joe_gkeyringd_t))
+
+            (call usersubject_run_user_dir_filetrans (joe_t user_gkeyringd_run_t dir "keyring"))
+            (call usersubject_run_user_dir_filetrans (joe_gkeyringd_t user_gkeyringd_run_t dir "keyring"))
         )
 
         (allow joe_t joe_dbusd_t (process (signal signull sigkill sigstop)))

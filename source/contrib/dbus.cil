@@ -112,6 +112,25 @@
 
 (call systemd_getattr_generic_unit_dirs (dbusd_t))
 
+(allow is_dbus_launch_subject self rw_fifo_file_perms)
+
+(allow is_dbus_session_subject self create_netlink_selinux_socket_perms)
+(allow is_dbus_session_subject self (unix_stream_socket (listen accept)))
+
+(call devices_read_urandom (is_dbus_session_subject))
+
+(call files_read_generic_usr_files (is_dbus_session_subject)) ; /usr/share/dbus-1/services
+
+(call selinux_list (is_dbus_session_subject))
+
+(call auth_nsswitch_client_subject (is_dbus_session_subject))
+
+(call dbus_list_config (is_dbus_session_subject))
+(call dbus_read_generic_config_files (is_dbus_session_subject))
+
+(call seutil_read_config_files (is_dbus_session_subject))
+(call seutil_read_default_context_files (is_dbus_session_subject))
+
 (allow is_dbus_admin_subject dbusd_t signal_perms)
 (allow is_dbus_admin_subject dbusd_t (process (ptrace)))
 (call ps_subject_pattern (is_dbus_admin_subject dbusd_t))
@@ -136,6 +155,9 @@
 
 (macro dbus_exec_dbusd ((type ARG1))
     (call can_exec (ARG1 dbusd_exec_t)))
+
+(macro dbus_exec_launch ((type ARG1))
+    (call can_exec (ARG1 dbuslaunch_exec_t)))
 
 (macro dbus_role_template_session_bus ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_dbus_session_role ARG1)

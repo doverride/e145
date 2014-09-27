@@ -167,9 +167,11 @@
 (call alsa_read_config_files (gdm_t))
 
 (call auth_login_program_subject (gdm_t))
+(call auth_manage_pam_console_run_files (gdm_t)) ; only read/write confirmed
 
 (call dbus_acquire_service_system (gdm_t))
 (call dbus_exec_dbusd (gdm_t))
+(call dbus_exec_launch (gdm_t))
 (call dbus_list_config (gdm_t))
 (call dbus_read_generic_config_files (gdm_t))
 
@@ -177,7 +179,11 @@
 (call gdm_manage_var_lib_dirs (gdm_t))
 (call gdm_manage_var_lib_files (gdm_t))
 
+(call gkeyring_manual_subject_type_transition_all_gkeyringd_subjects (gdm_t))
+(call gkeyring_exec_gkeyringd (gdm_t))
+
 (call gsd_exec_gsd (gdm_t))
+(call gsd_exec_helper (gdm_t)) ; /usr/libexec/gnome-settings-daemon-localeexec
 
 (call gsession_exec_gsession (gdm_t))
 (call gsession_exec_helper (gdm_t))

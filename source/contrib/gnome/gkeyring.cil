@@ -16,8 +16,25 @@
 (context file_gkeyringd_exec (system_u object_r gkeyringd_exec_t ((s0)(s0))))
 (filecon "/usr/bin/gnome-keyring-daemon" file file_gkeyringd_exec)
 
+(allow is_gkeyringd_subject self (capability (ipc_lock)))
+(allow is_gkeyringd_subject self (process (getcap setcap)))
+(allow is_gkeyringd_subject self (unix_stream_socket (listen accept)))
+
+(call system_read_sysctl_crypto_files (is_gkeyringd_subject))
+(call system_read_sysctl_kernel_files (is_gkeyringd_subject))
+
+(call devices_read_urandom (is_gkeyringd_subject))
+(call devices_read_random (is_gkeyringd_subject))
+
+(optional gkeyringd_optional_usersubject
+    (type user_gkeyringd_run_t)
+    (call usersubject_run_object (user_gkeyringd_run_t)))
+
 (macro gkeyring_exec_gkeyringd ((type ARG1))
     (call can_exec (ARG1 gkeyringd_exec_t)))
+
+(macro gkeyring_manual_subject_type_transition_all_gkeyringd_subjects ((type ARG1))
+    (call spec_subject_type_transition_pattern (ARG1 gkeyringd_exec_t is_gkeyringd_subject)))
 
 (macro gkeyring_role_template_gkeyring ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gkeyring_role ARG1)
@@ -25,10 +42,16 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gkeyring_exec_t ARG3)))
 
-(macro gkeyring_role_template_gkeyringd ((role ARG1)(type ARG2)(type ARG3))
+(macro gkeyring_role_template_gkeyringd ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gkeyring_role ARG1)
     (typeattributeset is_gkeyringd_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gkeyringd_exec_t ARG3))
     (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (ARG2 ARG3)))
+    (call ps_subject_pattern (ARG2 ARG3))
+    (allow ARG2 ARG4 manage_dir_perms)
+    (allow ARG2 ARG4 relabel_dir_perms)
+    (allow ARG2 ARG4 manage_sock_file_perms)
+    (allow ARG2 ARG4 relabel_sock_file_perms)
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_sock_file_perms))
