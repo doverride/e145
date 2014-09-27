@@ -277,7 +277,9 @@
         (allow joe_t joe_glxutils_t (process (signal signull sigkill sigstop)))
         (call ps_subject_pattern (joe_t joe_glxutils_t))
 
-        (call usersubject_application_subject (joe_glxutils_t)))
+        (call usersubject_application_subject (joe_glxutils_t))
+
+        (call xserver_common_client_subject (joe_glxutils_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
     (optional joe_xserver_optional_joe_xpdf
         (type joe_xpdf_t)
@@ -667,6 +669,8 @@
 
             (call usersubject_application_subject (joe_gvfsd_t))
 
+            (call dbus_session_client_subject (joe_gvfsd_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_gvfsafcvm_t)
             (call gvfs_role_template_gvfsafcvm (joe_r joe_dbusd_t joe_gvfsafcvm_t))
 
@@ -794,6 +798,8 @@
             (call ps_subject_pattern (joe_t joe_gvfsdfuse_t))
 
             (call usersubject_application_subject (joe_gvfsdfuse_t))
+
+            (call dbus_session_client_subject (joe_gvfsdfuse_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsdgph2_t)
             (call gvfs_role_template_gvfsdgph2 (joe_r joe_gvfsd_t joe_gvfsdgph2_t))

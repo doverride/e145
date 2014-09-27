@@ -117,6 +117,8 @@
 
 (call auth_nsswitch_client_subject (cupsd_t))
 
+(call dbus_system_client_subject (cupsd_t))
+
 (call cups_manage_cupsd_config_files (cupsd_t)) ; /etc/cups/subscriptions.conf.N
 (call cups_manage_cupsd_run_files (cupsd_t))
 (call cups_manage_cupsd_run_sock_files (cupsd_t))

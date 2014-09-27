@@ -19,13 +19,17 @@
 (filecon "/usr/libexec/gnome-session-failed" file file_gsession_helper_exec)
 
 (allow is_gsession_subject self (unix_stream_socket (listen accept)))
+(allow is_gsession_subject self rw_fifo_file_perms)
 
 (call devices_read_urandom (is_gsession_subject))
 
 (call dbus_system_client_subject (is_gsession_subject))
 
+(call files_list_etc (is_gsession_subject))
 (call files_read_generic_etc_files (is_gsession_subject))
 (call files_read_generic_usr_files (is_gsession_subject))
+
+(call filesystem_getattr_filesystems (is_gsession_subject))
 
 (call gsession_exec_helper (is_gsession_subject))
 
@@ -33,8 +37,10 @@
 
 (call journald_client_subject (is_gsession_subject))
 
+(call logind_list_run (is_gsession_subject))
 (call logind_read_run_files (is_gsession_subject))
 
+(call machined_list_run (is_gsession_subject))
 (call machined_read_run_files (is_gsession_subject))
 
 (call miscfiles_read_localization_files (is_gsession_subject))
