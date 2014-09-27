@@ -179,8 +179,6 @@
     (typeattributeset is_pa_tmpfs_file_object ARG6)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 pa_exec_t ARG3))
-    (allow ARG2 ARG3 (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG2 ARG4 manage_dir_perms)
     (allow ARG2 ARG4 relabel_dir_perms)
     (allow ARG2 ARG4 manage_file_perms)
