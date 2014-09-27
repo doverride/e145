@@ -1,0 +1,207 @@
+(roleattribute is_gvfs_role)
+
+(typeattribute is_gvfs_afcvm_subject)
+(typeattribute is_gvfsd_subject)
+(typeattribute is_gvfsd_afc_subject)
+(typeattribute is_gvfsd_afp_subject)
+(typeattribute is_gvfsd_afpb_subject)
+(typeattribute is_gvfsd_arch_subject)
+(typeattribute is_gvfsd_burn_subject)
+(typeattribute is_gvfsd_cdda_subject)
+(typeattribute is_gvfsd_comp_subject)
+(typeattribute is_gvfsd_dav_subject)
+(typeattribute is_gvfsd_dnssd_subject)
+(typeattribute is_gvfsd_ftp_subject)
+(typeattribute is_gvfsd_fuse_subject)
+(typeattribute is_gvfsd_gph2_subject)
+(typeattribute is_gvfsd_http_subject)
+(typeattribute is_gvfsd_ltest_subject)
+(typeattribute is_gvfsd_metad_subject)
+(typeattribute is_gvfsd_mtp_subject)
+(typeattribute is_gvfsd_netw_subject)
+(typeattribute is_gvfsd_recnt_subject)
+(typeattribute is_gvfsd_sftp_subject)
+(typeattribute is_gvfsd_smb_subject)
+(typeattribute is_gvfsd_smbb_subject)
+(typeattribute is_gvfsd_trash_subject)
+(typeattribute is_gvfs_goavm_subject)
+(typeattribute is_gvfs_gph2vm_subject)
+(typeattribute is_gvfs_mtpvm_subject)
+(typeattribute is_gvfs_udisks2vm_subject)
+
+(type gvfsafcvm_exec_t)
+(call application_subject_entry (is_gvfs_afcvm_subject gvfsafcvm_exec_t))
+
+(context file_gvfsafcvm_exec (system_u object_r gvfsafcvm_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfs-afc-volume-monitor" file file_gvfsafcvm_exec)
+
+(type gvfsd_exec_t)
+(call application_subject_entry (is_gvfsd_subject gvfsd_exec_t))
+
+(context file_gvfsd_exec (system_u object_r gvfsd_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd" file file_gvfsd_exec)
+
+(type gvfsdafc_exec_t)
+(call application_subject_entry (is_gvfsd_afc_subject gvfsdafc_exec_t))
+
+(context file_gvfsdafc_exec (system_u object_r gvfsdafc_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-afc" file file_gvfsdafc_exec)
+
+(type gvfsdafp_exec_t)
+(call application_subject_entry (is_gvfsd_afp_subject gvfsdafp_exec_t))
+
+(context file_gvfsdafp_exec (system_u object_r gvfsdafp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-afp" file file_gvfsdafp_exec)
+
+(type gvfsdafpb_exec_t)
+(call application_subject_entry (is_gvfsd_afpb_subject gvfsdafpb_exec_t))
+
+(context file_gvfsdafpb_exec (system_u object_r gvfsdafpb_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-afp-browse" file file_gvfsdafpb_exec)
+
+(type gvfsdarch_exec_t)
+(call application_subject_entry (is_gvfsd_arch_subject gvfsdarch_exec_t))
+
+(context file_gvfsdarch_exec (system_u object_r gvfsdarch_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-archive" file file_gvfsdarch_exec)
+
+(type gvfsdburn_exec_t)
+(call application_subject_entry (is_gvfsd_burn_subject gvfsdburn_exec_t))
+
+(context file_gvfsdburn_exec (system_u object_r gvfsdburn_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-burn" file file_gvfsdburn_exec)
+
+(type gvfsdcdda_exec_t)
+(call application_subject_entry (is_gvfsd_cdda_subject gvfsdcdda_exec_t))
+
+(context file_gvfsdcdda_exec (system_u object_r gvfsdcdda_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-cdda" file file_gvfsdcdda_exec)
+
+(type gvfsdcomp_exec_t)
+(call application_subject_entry (is_gvfsd_comp_subject gvfsdcomp_exec_t))
+
+(context file_gvfsdcomp_exec (system_u object_r gvfsdcomp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-computer" file file_gvfsdcomp_exec)
+
+(type gvfsddav_exec_t)
+(call application_subject_entry (is_gvfsd_dav_subject gvfsddav_exec_t))
+
+(context file_gvfsddav_exec (system_u object_r gvfsddav_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-dav" file file_gvfsddav_exec)
+
+(type gvfsddnssd_exec_t)
+(call application_subject_entry (is_gvfsd_dnssd_subject gvfsddnssd_exec_t))
+
+(context file_gvfsddnssd_exec (system_u object_r gvfsddnssd_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-dnssd" file file_gvfsddnssd_exec)
+
+(type gvfsdftp_exec_t)
+(call application_subject_entry (is_gvfsd_ftp_subject gvfsdftp_exec_t))
+
+(context file_gvfsdftp_exec (system_u object_r gvfsdftp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-ftp" file file_gvfsdftp_exec)
+
+(type gvfsdfuse_exec_t)
+(call application_subject_entry (is_gvfsd_fuse_subject gvfsdfuse_exec_t))
+
+(context file_gvfsdfuse_exec (system_u object_r gvfsdfuse_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-fuse" file file_gvfsdfuse_exec)
+
+(type gvfsdgph2_exec_t)
+(call application_subject_entry (is_gvfsd_gph2_subject gvfsdgph2_exec_t))
+
+(context file_gvfsdgph2_exec (system_u object_r gvfsdgph2_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-gphoto2" file file_gvfsdgph2_exec)
+
+(type gvfsdhttp_exec_t)
+(call application_subject_entry (is_gvfsd_http_subject gvfsdhttp_exec_t))
+
+(context file_gvfsdhttp_exec (system_u object_r gvfsdhttp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-http" file file_gvfsdhttp_exec)
+
+(type gvfsdltest_exec_t)
+(call application_subject_entry (is_gvfsd_ltest_subject gvfsdltest_exec_t))
+
+(context file_gvfsdltest_exec (system_u object_r gvfsdltest_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-localtest" file file_gvfsdltest_exec)
+
+(type gvfsdmetad_exec_t)
+(call application_subject_entry (is_gvfsd_metad_subject gvfsdmetad_exec_t))
+
+(context file_gvfsdmetad_exec (system_u object_r gvfsdmetad_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-metadata" file file_gvfsdmetad_exec)
+
+(type gvfsdmtp_exec_t)
+(call application_subject_entry (is_gvfsd_mtp_subject gvfsdmtp_exec_t))
+
+(context file_gvfsdmtp_exec (system_u object_r gvfsdmtp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-mtp" file file_gvfsdmtp_exec)
+
+(type gvfsdnetw_exec_t)
+(call application_subject_entry (is_gvfsd_netw_subject gvfsdnetw_exec_t))
+
+(context file_gvfsdnetw_exec (system_u object_r gvfsdnetw_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-network" file file_gvfsdnetw_exec)
+
+(type gvfsdrecnt_exec_t)
+(call application_subject_entry (is_gvfsd_recnt_subject gvfsdrecnt_exec_t))
+
+(context file_gvfsdrecnt_exec (system_u object_r gvfsdrecnt_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-recent" file file_gvfsdrecnt_exec)
+
+(type gvfsdsftp_exec_t)
+(call application_subject_entry (is_gvfsd_sftp_subject gvfsdsftp_exec_t))
+
+(context file_gvfsdsftp_exec (system_u object_r gvfsdsftp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-sftp" file file_gvfsdsftp_exec)
+
+(type gvfsdsmb_exec_t)
+(call application_subject_entry (is_gvfsd_smb_subject gvfsdsmb_exec_t))
+
+(context file_gvfsdsmb_exec (system_u object_r gvfsdsmb_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-smb" file file_gvfsdsmb_exec)
+
+(type gvfsdsmbb_exec_t)
+(call application_subject_entry (is_gvfsd_smbb_subject gvfsdsmbb_exec_t))
+
+(context file_gvfsdsmbb_exec (system_u object_r gvfsdsmbb_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-smb-browse" file file_gvfsdsmbb_exec)
+
+(type gvfsdtrash_exec_t)
+(call application_subject_entry (is_gvfsd_trash_subject gvfsdtrash_exec_t))
+
+(context file_gvfsdtrash_exec (system_u object_r gvfsdtrash_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfsd-trash" file file_gvfsdtrash_exec)
+
+(type gvfsgoavm_exec_t)
+(call application_subject_entry (is_gvfs_goavm_subject gvfsgoavm_exec_t))
+
+(context file_gvfsgoavm_exec (system_u object_r gvfsgoavm_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfs-goa-volume-monitor" file file_gvfsgoavm_exec)
+
+(type gvfsgph2vm_exec_t)
+(call application_subject_entry (is_gvfs_gph2vm_subject gvfsgph2vm_exec_t))
+
+(context file_gvfsgph2vm_exec (system_u object_r gvfsgph2vm_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfs-gphoto2-volume-monitor" file file_gvfsgph2vm_exec)
+
+(type gvfsmtpvm_exec_t)
+(call application_subject_entry (is_gvfs_mtpvm_subject gvfsmtpvm_exec_t))
+
+(context file_gvfsmtpvm_exec (system_u object_r gvfsmtpvm_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfs-mtp-volume-monitor" file file_gvfsmtpvm_exec)
+
+(type gvfsudisks2vm_exec_t)
+(call application_subject_entry (is_gvfs_udisks2vm_subject gvfsudisks2vm_exec_t))
+
+(context file_gvfsudisks2vm_exec (system_u object_r gvfsudisks2vm_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gvfs-udisks2-volume-monitor" file file_gvfsudisks2vm_exec)
+
+(macro gvfs_exec_gvfsd ((type ARG1))
+    (call can_exec (ARG1 gvfsd_exec_t)))
+
+(macro gvfs_role_template_gvfsd ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gvfs_role ARG1)
+    (typeattributeset is_gvfsd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gvfsd_exec_t ARG3)))

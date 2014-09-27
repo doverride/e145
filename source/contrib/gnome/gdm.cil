@@ -194,6 +194,8 @@
 (call gsession_exec_gsession (gdm_t))
 (call gsession_exec_helper (gdm_t))
 
+(call gvfs_exec_gvfsd (gdm_t))
+
 (call journald_client_subject (gdm_t))
 
 (call localed_dbus_chat_localed (gdm_t))
