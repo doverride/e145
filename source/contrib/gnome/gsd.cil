@@ -3,12 +3,6 @@
 (typeattribute is_gsd_subject)
 (typeattribute is_gsd_printer_subject)
 
-;/usr/libexec/gnome-settings-daemon-localeexec
-;/usr/libexec/gsd-backlight-helper
-;/usr/libexec/gsd-locate-pointer
-;/usr/libexec/gsd-wacom-led-helper
-;/usr/libexec/gsd-wacom-oled-helper
-
 (type gsd_exec_t)
 (call application_subject_entry (is_gsd_subject gsd_exec_t))
 
@@ -21,11 +15,23 @@
 (context file_gsdprinter_exec (system_u object_r gsdprinter_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/gsd-printer" file file_gsdprinter_exec)
 
+(type gsd_helper_exec_t)
+(call commands_bin_object (gsd_helper_exec_t))
+
+(context file_gsd_helper_exec (system_u object_r gsd_helper_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnome-settings-daemon-localeexec" file file_gsd_helper_exec)
+(filecon "/usr/libexec/gsd-backlight-helper" file file_gsd_helper_exec)
+(filecon "/usr/libexec/gsd-locate-pointer" file file_gsd_helper_exec)
+(filecon "/usr/libexec/gsd-wacom-oled-helper" file file_gsd_helper_exec)
+
 (macro gsd_exec_gsd ((type ARG1))
     (call can_exec (ARG1 gsd_exec_t)))
 
-(macro gsd_exec_gsdprinter ((type ARG1))
+(macro gsd_exec_printer ((type ARG1))
     (call can_exec (ARG1 gsdprinter_exec_t)))
+
+(macro gsd_exec_helper ((type ARG1))
+    (call can_exec (ARG1 gsd_helper_exec_t)))
 
 (macro gsd_role_template_gsd ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gsd_role ARG1)
