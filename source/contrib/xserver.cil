@@ -305,7 +305,6 @@
 (call system_read_generic_proc_files (is_xserver_common_client_subject))
 
 (call files_read_generic_usr_files (is_xserver_common_client_subject))
-(call files_search_var_cache (is_xserver_common_client_subject))
 
 (call filesystem_getattr_filesystems (is_xserver_common_client_subject))
 
