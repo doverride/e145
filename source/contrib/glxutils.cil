@@ -6,10 +6,10 @@
 (call application_subject_entry (is_glxutils_subject glxutils_exec_t))
 
 (context file_glxutils_exec (system_u object_r glxutils_exec_t ((s0)(s0))))
-(filecon "/usr/bin/glxgears" file file_qiv_exec)
-(filecon "/usr/bin/glxinfo" file file_qiv_exec)
-(filecon "/usr/bin/glxinfo64" file file_qiv_exec)
-(filecon "/usr/bin/xdriinfo" file file_qiv_exec)
+(filecon "/usr/bin/glxgears" file file_glxutils_exec)
+(filecon "/usr/bin/glxinfo" file file_glxutils_exec)
+(filecon "/usr/bin/glxinfo64" file file_glxutils_exec)
+(filecon "/usr/bin/xdriinfo" file file_glxutils_exec)
 
 (macro glxutils_exec ((type ARG1))
     (call can_exec (ARG1 glxutils_exec_t)))
