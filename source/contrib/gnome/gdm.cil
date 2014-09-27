@@ -183,7 +183,7 @@
 (call gdm_manage_var_lib_dirs (gdm_t))
 (call gdm_manage_var_lib_files (gdm_t))
 
-; (call gkeyring_manual_subject_type_transition_all_gkeyringd_subjects (gdm_t)) ; not if still required
+(call gkeyring_manual_subject_type_transition_all_gkeyringd_subjects (gdm_t))
 (call gkeyring_exec_gkeyringd (gdm_t))
 
 (call gsd_exec_gsd (gdm_t))
