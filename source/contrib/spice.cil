@@ -52,6 +52,10 @@
 
 (call miscfiles_read_localization_files (vdagentd_t))
 
+(call devices_rw_event (is_vdagent_subject))
+
+(call terminal_use_virtio_nodes (is_vdagent_subject))
+
 (allow is_spice_admin_subject vdagentd_t signal_perms)
 (allow is_spice_admin_subject vdagentd_t (process (ptrace)))
 (call ps_subject_pattern (is_spice_admin_subject vdagentd_t))
