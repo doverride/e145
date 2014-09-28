@@ -1,0 +1,15 @@
+(roleattribute is_canberra_role)
+
+(typeattribute is_canberra_subject)
+
+(type canberra_exec_t)
+(call application_subject_entry (is_canberra_subject canberra_exec_t))
+
+(context file_canberra_exec (system_u object_r canberra_exec_t ((s0)(s0))))
+(filecon "/usr/bin/canberra-gtk-play" file file_canberra_exec)
+
+(macro canberra_role_template_canberra ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_canberra_role ARG1)
+    (typeattributeset is_canberra_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 canberra_exec_t ARG3)))
