@@ -854,7 +854,7 @@
             (allow joe_fusermount_t user_gvfsd_run_t (dir (mounton)))
 
             (allow joe_fusermount_t joe_gvfsd_t (fd (use)))
-            (allow joe_fusermount_t joe_gvfsdfuse (unix_stream_socket (read write)))
+            (allow joe_fusermount_t joe_gvfsdfuse_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_gvfsdfuse_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsdfuse_t))
