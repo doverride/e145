@@ -21,14 +21,23 @@
 (context file_dconf_conf (system_u object_r dconf_conf_t ((s0)(s0))))
 (filecon "/etc/dconf(/.*)?" any file_dconf_conf)
 
+(optional dconf_optional_usersubject
+    (type user_dconf_run_t)
+    (call usersubject_run_object (user_dconf_run_t)))
+
+(macro dconf_exec_dconfsvc ((type ARG1))
+    (call can_exec (ARG1 dconfsvc_exec_t)))
+
 (macro dconf_role_template_dconf ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_dconf_role ARG1)
     (typeattributeset is_dconf_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 dconf_exec_t ARG3)))
 
-(macro dconf_role_template_dconfsvc ((role ARG1)(type ARG2)(type ARG3))
+(macro dconf_role_template_dconfsvc ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_dconf_role ARG1)
     (typeattributeset is_dconfsvc_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 dconfsvc_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 dconfsvc_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms))

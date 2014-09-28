@@ -180,12 +180,16 @@
 (call dbus_list_config (gdm_t))
 (call dbus_read_generic_config_files (gdm_t))
 
+(call dconf_exec_dconfsvc (gdm_t))
+
 (call fuse_exec_fusermount (gdm_t))
 (call fuse_read_config_files (gdm_t))
 
 (call gdm_read_config_files (gdm_t))
 (call gdm_manage_var_lib_dirs (gdm_t))
 (call gdm_manage_var_lib_files (gdm_t))
+
+(call gis_exec_gis (gdm_t))
 
 (call gkeyring_manual_subject_type_transition_all_gkeyringd_subjects (gdm_t))
 (call gkeyring_exec_gkeyringd (gdm_t))

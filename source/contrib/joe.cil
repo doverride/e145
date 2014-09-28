@@ -604,6 +604,9 @@
   
             (call xserver_client_subject (joe_gsession_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
+            (call usersubject_search_run_user_dir (joe_gsession_t))
+            (call read_files_pattern (joe_gsession_t user_dconf_run_t user_dconf_run_t))
+
             (type joe_gsd_t)
             (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t))
 
@@ -666,6 +669,10 @@
             (type joe_atspibusl_t)
             (call atspi_role_template_busl (joe_r joe_dbusd_t joe_atspibusl_t))
 
+            (allow joe_atspicusl_t user_dconf_run_t manage_dir_perms)
+            (allow joe_atspicusl_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_atspibusl_t user_dconf_run_t dir "dconf"))
+
             (call xserver_client_subject (joe_atspibusl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
  
             (allow joe_t joe_atspibusl_t (process (signal signull sigstop sigkill)))
@@ -674,6 +681,7 @@
             (call usersubject_application_subject (joe_atspibusl_t))
 
             (call dbus_role_template_session_bus (joe_r joe_atspibusl_t joe_dbusd_t user_dbusd_tmp_t))
+            (call dbus_session_client_subject (joe_atspibusl_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_atspiregd_t)
             (call atspi_role_template_regd (joe_r joe_dbusd_t joe_atspiregd_t))
@@ -843,6 +851,10 @@
             (type joe_gvfsdfuse_t)
             (call gvfs_role_template_gvfsdfuse (joe_r joe_gvfsd_t joe_gvfsdfuse_t))
 
+            (call usersubject_search_user_run_dir (joe_gvfsdfuse_t))
+            (allow joe_gvsfdfuse_t user_gvfsd_run_t list_dir_perms)
+            (allow joe_gvfsdfuse_t user_gvfsd_run_t (dir (mounton)))
+
             (allow joe_gvfsdfuse_t joe_fusermount_t (fd (use)))
 
             (type joe_fusermount_t)
@@ -851,7 +863,10 @@
             (allow joe_t joe_fusermount_t (process (signal signull sigkill sigstop)))
             (call ps_subject_pattern (joe_t joe_fusermount_t))
 
+            (call usersubject_search_user_run_dir (joe_fusermount_t))
+            (allow joe_fusermount_t user_gvfsd_run_t list_dir_perms)
             (allow joe_fusermount_t user_gvfsd_run_t (dir (mounton)))
+            (dontaudit joe_fusermount_t user_gvfsd_run_t (dir (audit_access)))
 
             (allow joe_fusermount_t joe_gvfsd_t (fd (use)))
             (allow joe_fusermount_t joe_gvfsdfuse_t (unix_stream_socket (read write)))
@@ -966,6 +981,33 @@
             (call ps_subject_pattern (joe_t joe_gshellcald_t))
 
             (call usersubject_application_subject (joe_gshellcald_t))
+
+            (type joe_dconfsvc_t)
+            (call dconf_role_template_dconfsvc (joe_r joe_dbusd_t joe_dconfsvc_t user_dconf_run_t))
+
+            (allow joe_t user_dconf_run_t manage_dir_perms)
+            (allow joe_t user_dconf_run_t relabel_dir_perms)
+            (allow joe_t user_dconf_run_t manage_file_perms)
+            (allow joe_t user_dconf_run_t relabel_file_perms)
+
+            (call usersubject_run_user_dir_filetrans (joe_t user_dconf_run_t dir "dconf"))
+            (call usersubject_run_user_dir_filetrans (joe_dconfsvc_t user_dconf_run_t dir "dconf"))
+
+            (context file_joe_user_dconf_run (joe_u object_r user_dconf_run_t ((s0)(s0))))
+            (filecon "/run/user/1000/dconf(/.*)?" any file_joe_user_dconf_run)
+
+            (allow joe_t joe_dconfsvc_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_dconfsvc_t))
+
+            (call usersubject_application_subject (joe_dconfsvc_t))
+
+            (type joe_giscw_t)
+            (call gis_role_template_giscw (joe_r joe_gsession_t joe_giscw_t))
+
+            (allow joe_t joe_gitcw_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_giscw_t))
+
+            (call usersubject_application_subject (joe_giscw_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
