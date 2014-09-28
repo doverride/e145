@@ -1697,7 +1697,7 @@
         (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
     (optional joe_pa_optional_joe_dbusd
-        (call dbus_session_client_subject (joe_pa_t user_dbusd_home_t joe_dbusd_t)))
+        (call dbus_session_client_subject (joe_pa_t user_dbusd_tmp_t joe_dbusd_t)))
 
     (allow joe_t joe_pa_t (process (signal signull sigstop sigkill)))
     (call ps_subject_pattern (joe_t joe_pa_t))
