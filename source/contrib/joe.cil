@@ -888,6 +888,14 @@
             (call ps_subject_pattern (joe_t joe_gvfsdtrash_t))
 
             (call usersubject_application_subject (joe_gvfsdtrash_t))
+
+            (type joe_gshell_t)
+            (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t))
+
+            (allow joe_t joe_gshell_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gshell_t))
+
+            (call usersubject_application_subject (joe_gshell_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))

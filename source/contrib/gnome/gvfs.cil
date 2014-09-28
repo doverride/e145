@@ -205,6 +205,8 @@
 
 (call devices_rw_fuse (is_gvfsd_fuse_subject))
 
+(call files_read_generic_etc_files (is_gvfs_udisks2vm_subject)) ; /etc/fstab
+
 (macro gvfs_exec_gvfsd ((type ARG1))
     (call can_exec (ARG1 gvfsd_exec_t)))
 

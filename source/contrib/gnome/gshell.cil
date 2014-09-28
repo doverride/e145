@@ -1,0 +1,51 @@
+(roleattribute is_gshell_role)
+
+(typeattribute is_gshell_subject)
+(typeattribute is_gshell_cald_subject)
+(typeattribute is_gshell_hotp_subject)
+
+(type gshell_exec_t)
+(call application_subject_entry (is_gshell_subject gshell_exec_t))
+
+(context file_gshell_exec (system_u object_r gshell_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gnome-shell" file file_gshell_exec)
+
+(type gshellcald_exec_t)
+(call application_subject_entry (is_gshell_cald_subject gshellcald_exec_t))
+
+(context file_gshellcald_exec (system_u object_r gshellcald_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnome-shell-calendar-server" file file_gshellcald_exec)
+
+(type gshellhotp_exec_t)
+(call application_subject_entry (is_gshell_hotp_subject gshellhotp_exec_t))
+
+(context file_gshellhotp_exec (system_u object_r gshellhotp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnome-shell-hotplug-sniffer" file file_gshellhotp_exec)
+
+(type gshell_helper_exec_t)
+(call commands_bin_object (gshell_helper_exec_t))
+
+(context file_gshell_helper_exec (system_u object_r gshell_helper_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnome-shell-perf-helper" file file_gshell_helper_exec)
+(filecon "/usr/libexec/gnome-shell-portal-helper" file file_gshell_helper_exec)
+
+(macro gshell_exec_gshell ((type ARG1))
+    (call can_exec (ARG1 gshell_exec_t)))
+
+(macro gshell_role_template_gshell ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gshell_role ARG1)
+    (typeattributeset is_gshell_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gshell_exec_t ARG3)))
+
+(macro gshell_role_template_gshellcald ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gshell_role ARG1)
+    (typeattributeset is_gshell_cald_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gshellcald_exec_t ARG3)))
+
+(macro gshell_role_template_gshellhotp ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gshell_role ARG1)
+    (typeattributeset is_gshell_hotp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gshellhotp_exec_t ARG3)))

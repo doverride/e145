@@ -111,6 +111,8 @@
 
 (allow cupsd_t self (capability (dac_override chown fsetid)))
 
+(call append_files_pattern (cupsd_t cupsd_log_t cupsd_log_t))
+
 (allow cupsd_t cupsd_cache_t manage_dir_perms)
 (allow cupsd_t cupsd_cache_t manage_file_perms)
 (call files_var_cache_filetrans (cupsd_t cupsd_cache_t dir "*"))
@@ -150,6 +152,11 @@
     (call files_search_var_spool (ARG1))
     (allow ARG1 cupsd_spool_t (dirs (list))))
 
+(macro cups_read_cupsd_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 cupsd_conf_t (dirs (list)))
+    (allow ARG1 cupsd_conf_t read_file_perms))
+
 (macro cups_manage_cupsd_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call manage_files_pattern (ARG1 cupsd_conf_t cupsd_conf_t)))
@@ -157,6 +164,10 @@
 (macro cups_manage_cupsd_run_files ((type ARG1))
     (call files_search_run (ARG1))
     (call manage_files_pattern (ARG1 cupsd_run_t cupsd_run_t)))
+
+(macro cups_stream_connect_cupsd_t ((type ARG1))
+    (call files_search_run (ARG1))
+    (call stream_connect_pattern (ARG1 cupsd_run_t cupsd_run_t cupsd_run_t)))
 
 (macro cups_manage_cupsd_run_sock_files ((type ARG1))
     (call files_search_run (ARG1))

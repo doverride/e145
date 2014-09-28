@@ -218,3 +218,11 @@
 
 (macro logind_admin ((type ARG1))
     (typeattributeset is_logind_admin_subject ARG1))
+
+; run_user_hack BEGIN
+(allow logind_t tmpfs_t manage_dir_perms)
+(allow logind_t tmpfs_t manage_file_perms)
+(allow logind_t tmpfs_t manage_fifo_file_perms)
+(allow logind_t tmpfs_t manage_lnk_file_perms)
+(allow logind_t tmpfs_t manage_sock_file_perms)
+; run_user_hack END

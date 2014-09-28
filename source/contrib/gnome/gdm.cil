@@ -195,6 +195,8 @@
 (call gsession_exec_gsession (gdm_t))
 (call gsession_exec_helper (gdm_t))
 
+(call gshell_exec_gshell (gdm_t))
+
 (call gvfs_exec_gvfsd (gdm_t))
 (call gvfs_exec_gvfsdfuse (gdm_t))
 (call gvfs_exec_gvfsdarch (gdm_t))
@@ -365,3 +367,12 @@
 
 (macro gdm_admin ((type ARG1))
     (typeattributeset is_gdm_admin_subject ARG1))
+
+; run_user_hack BEGIN
+(allow gdm_t tmpfs_t (dir (mounton)))
+(allow gdm_t tmpfs_t manage_dir_perms)
+(allow gdm_t tmpfs_t manage_file_perms)
+(allow gdm_t tmpfs_t manage_fifo_file_perms)
+(allow gdm_t tmpfs_t manage_lnk_file_perms)
+(allow gdm_t tmpfs_t manage_sock_file_perms)
+; run_user_hack END

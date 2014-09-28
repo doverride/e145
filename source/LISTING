@@ -106,6 +106,7 @@ contrib/gnome/gdm.cil
 contrib/gnome/gkeyring.cil
 contrib/gnome/gsd.cil
 contrib/gnome/gsession.cil
+contrib/gnome/gshell.cil
 contrib/gnome/gvfs.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/autorelabel.cil
