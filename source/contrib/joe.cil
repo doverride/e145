@@ -650,10 +650,10 @@
             (allow joe_t user_gkeyringd_data_t relabel_file_perms)
  
             (context file_joe_user_gkeyringd_run (joe_u object_r user_gkeyringd_run_t ((s0)(s0))))
-            (filecon "/run/user/1000/keyring(/.*)?" file file_joe_user_gkeyringd_run)
+            (filecon "/run/user/1000/keyring(/.*)?" any file_joe_user_gkeyringd_run)
 
             (context file_joe_user_gkeyringd_data (joe_u object_r user_gkeyringd_data_t ((s0)(s0))))
-            (filecon "/home/joe/\.local/share/keyrings(/.*)?" file file_joe_user_gkeyringd_data)
+            (filecon "/home/joe/\.local/share/keyrings(/.*)?" any file_joe_user_gkeyringd_data)
 
             (call usersubject_data_filetrans (joe_t user_gkeyringd_data_t dir "keyrings"))
             (call usersubject_data_filetrans (joe_gkeyringd_t user_gkeyringd_data_t dir "keyrings"))
