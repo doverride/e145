@@ -843,18 +843,23 @@
             (type joe_gvfsdfuse_t)
             (call gvfs_role_template_gvfsdfuse (joe_r joe_gvfsd_t joe_gvfsdfuse_t))
 
+            (allow joe_gvfsdfuse_t joe_fusermount_t (fd (use)))
+
             (type joe_fusermount_t)
             (call fuse_role_template_fusermount (joe_r joe_gvfsdfuse_t joe_fusermount_t))
 
             (allow joe_t joe_fusermount_t (process (signal signull sigkill sigstop)))
             (call ps_subject_pattern (joe_t joe_fusermount_t))
 
+            (allow joe_fusermount_t user_gvfsd_run_t (dir (mounton)))
+
+            (allow joe_fusermount_t joe_gvfsd_t (fd (use)))
+            (allow joe_fusermount_t joe_gvfsdfuse (unix_stream_socket (read write)))
+
             (allow joe_t joe_gvfsdfuse_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsdfuse_t))
 
             (call usersubject_application_subject (joe_gvfsdfuse_t))
-
-            (allow joe_gvfsdfuse_t user_gvfsd_run_t (dir (mounton)))
 
             (call dbus_session_client_subject (joe_gvfsdfuse_t user_dbusd_tmp_t joe_dbusd_t))
 

@@ -180,6 +180,9 @@
 (call dbus_list_config (gdm_t))
 (call dbus_read_generic_config_files (gdm_t))
 
+(call fuse_exec_fusermount (gdm_t))
+(call fuse_read_config_files (gdm_t))
+
 (call gdm_read_config_files (gdm_t))
 (call gdm_manage_var_lib_dirs (gdm_t))
 (call gdm_manage_var_lib_files (gdm_t))
@@ -327,6 +330,10 @@
     (call files_search_var_lib (ARG1))
     (allow ARG1 gdm_var_lib_t (dirs (list)))
     (allow ARG1 gdm_var_lib_t read_file_perms))
+
+(macro gdm_dbus_chat ((type ARG1))
+    (allow ARG1 gdm_t (dbus (send_msg)))
+    (allow gdm_t ARG1 (dbus (send_msg))))
 
 (macro gdm_manage_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))

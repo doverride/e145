@@ -234,6 +234,7 @@
 (macro dbus_session_client_subject ((type ARG1)(type ARG2)(type ARG3))
     (typeattributeset is_dbus_session_client_subject ARG1)
     (call stream_connect_pattern (ARG1 ARG2 ARG2 ARG3))
+    (allow ARG1 ARG3 (process (signal)))
     (allow ARG3 ARG1 (dirs (list)))
     (allow ARG3 ARG1 read_file_perms))
 

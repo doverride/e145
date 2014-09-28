@@ -33,11 +33,21 @@
 
 (call bluetooth_dbus_chat_bluetoothd (is_gshell_subject))
 
+(call dbus_system_client_subject (is_gshell_subject))
+
+(call gdm_dbus_chat (is_gshell_subject))
+
 (call geoclue_dbus_chat (is_gshell_subject))
+
+(call logind_dbus_chat (is_gshell_subject))
+
+(call miscfiles_read_localization_files (is_gshell_subject))
 
 (call networkmgr_dbus_chat (is_gshell_subject))
 
 (call polkit_dbus_chat_polkitd (is_gshell_subject))
+
+(call upower_dbus_chat_upowerd (is_gshell_subject))
 
 (macro gshell_exec_gshell ((type ARG1))
     (call can_exec (ARG1 gshell_exec_t)))

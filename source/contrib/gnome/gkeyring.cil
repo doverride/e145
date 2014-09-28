@@ -18,7 +18,7 @@
 
 (allow is_gkeyringd_subject self (capability (ipc_lock)))
 (allow is_gkeyringd_subject self (process (getcap setcap)))
-(allow is_gkeyringd_subject self (unix_stream_socket (listen accept)))
+(allow is_gkeyringd_subject self (unix_stream_socket (listen accept connectto)))
 
 (call system_read_sysctl_crypto_files (is_gkeyringd_subject))
 (call system_read_sysctl_kernel_files (is_gkeyringd_subject))

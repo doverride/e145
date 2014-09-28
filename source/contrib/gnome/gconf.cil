@@ -1,0 +1,60 @@
+(roleattribute is_gconf_role)
+
+(typeattribute is_gconfd_subject)
+(typeattribute is_gconftool_subject)
+(typeattribute is_gsdconv_subject)
+
+(type gconfd_exec_t)
+(call application_subject_entry (is_gconfd_subject gconfd_exec_t))
+
+(context file_gconfd_exec (system_u object_r gconfd_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gconfd-2" file file_gconfd_exec)
+
+(type gconftool_exec_t)
+(call application_subject_entry (is_gconftool_subject gconftool_exec_t))
+
+(context file_gconftool_exec (system_u object_r gconftool_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gconf-merge-tree" file file_gconftool_exec)
+(filecon "/usr/bin/gconftool-2" file file_gconftool_exec)
+
+(type gsdconv_exec_t)
+(call application_subject_entry (is_gsdconv_subject gsdconv_exec_t))
+
+(context file_gsdconv_exec (system_u object_r gsdconv_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gsettings-data-convert" file file_gsdconv_exec)
+
+(type gconf_helper_exec_t)
+(call commands_bin_object (gconf_helper_exec_t))
+
+(context file_gconf_helper_exec (system_u object_r gconf_helper_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gconf-defaults-mechanism" file file_gconf_helper_exec)
+
+(type gconfd_conf_t)
+(call files_etc_object (gconfd_conf_t))
+
+(context file_gconfd_conf (system_u object_r gconfd_conf_t ((s0)(s0))))
+(filecon "/etc/gconf(/.*)?" any file_gconfd_conf)
+
+(type gconfd_dbus_conf_t)
+(call dbus_etc_object (gconfd_dbus_conf_t))
+
+(context file_gconfd_dbus_conf (system_u object_r gconfd_dbus_conf_t ((s0)(s0))))
+(filecon "/etc/dbus-1/system\.d/org\.gnome\.GConf\.Defaults\.conf" file file_gconfd_dbus_conf)
+
+(macro gconf_role_template_gconfd ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gconf_role ARG1)
+    (typeattributeset is_gconfd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gconfd_exec_t ARG3)))
+
+(macro gconf_role_template_gconftool ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gconf_role ARG1)
+    (typeattributeset is_gconftool_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gconftool_exec_t ARG3)))
+
+(macro gconf_role_template_gsdconv ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gconf_role ARG1)
+    (typeattributeset is_gsdconv_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gsdconv_exec_t ARG3)))

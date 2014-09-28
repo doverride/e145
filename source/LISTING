@@ -103,6 +103,7 @@ contrib/xlock.cil
 contrib/xpdf.cil
 contrib/xserver.cil
 contrib/gnome/atspi.cil
+contrib/gnome/gconf.cil
 contrib/gnome/gdm.cil
 contrib/gnome/gkeyring.cil
 contrib/gnome/gsd.cil
