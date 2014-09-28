@@ -851,7 +851,7 @@
             (type joe_gvfsdfuse_t)
             (call gvfs_role_template_gvfsdfuse (joe_r joe_gvfsd_t joe_gvfsdfuse_t))
 
-            (call usersubject_search_user_run_dir (joe_gvfsdfuse_t))
+            (call usersubject_search_run_user_dir (joe_gvfsdfuse_t))
             (allow joe_gvsfdfuse_t user_gvfsd_run_t list_dir_perms)
             (allow joe_gvfsdfuse_t user_gvfsd_run_t (dir (mounton)))
 
@@ -863,7 +863,7 @@
             (allow joe_t joe_fusermount_t (process (signal signull sigkill sigstop)))
             (call ps_subject_pattern (joe_t joe_fusermount_t))
 
-            (call usersubject_search_user_run_dir (joe_fusermount_t))
+            (call usersubject_search_run_user_dir (joe_fusermount_t))
             (allow joe_fusermount_t user_gvfsd_run_t list_dir_perms)
             (allow joe_fusermount_t user_gvfsd_run_t (dir (mounton)))
             (dontaudit joe_fusermount_t user_gvfsd_run_t (dir (audit_access)))
