@@ -1,0 +1,34 @@
+(roleattribute is_dconf_role)
+
+(typeattribute is_dconf_subject)
+(typeattribute is_dconfsvc_subject)
+
+(type dconf_exec_t)
+(call application_subject_entry (is_dconf_subject dconf_exec_t))
+
+(context file_dconf_exec (system_u object_r dconf_exec_t ((s0)(s0))))
+(filecon "/usr/bin/dconf" file file_dconf_exec)
+
+(type dconfsvc_exec_t)
+(call application_subject_entry (is_dconfsvc_subject dconfsvc_exec_t))
+
+(context file_dconfsvc_exec (system_u object_r dconfsvc_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/dconf-service" file file_dconfsvc_exec)
+
+(type dconf_conf_t)
+(call files_etc_object (dconf_conf_t))
+
+(context file_dconf_conf (system_u object_r dconf_conf_t ((s0)(s0))))
+(filecon "/etc/dconf(/.*)?" any file_dconf_conf)
+
+(macro dconf_role_template_dconf ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_dconf_role ARG1)
+    (typeattributeset is_dconf_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 dconf_exec_t ARG3)))
+
+(macro dconf_role_template_dconfsvc ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_dconf_role ARG1)
+    (typeattributeset is_dconfsvc_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 dconfsvc_exec_t ARG3)))
