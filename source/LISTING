@@ -107,6 +107,7 @@ contrib/gnome/canberra.cil
 contrib/gnome/dconf.cil
 contrib/gnome/gconf.cil
 contrib/gnome/gdm.cil
+contrib/gnome/gis.cil
 contrib/gnome/gkeyring.cil
 contrib/gnome/gsd.cil
 contrib/gnome/gsession.cil

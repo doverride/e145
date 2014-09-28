@@ -1,0 +1,34 @@
+(roleattribute is_gis_role)
+
+(typeattribute is_gis_subject)
+(typeattribute is_giswt_subject)
+
+(type gis_exec_t)
+(call application_subject_entry (is_gis_subject gis_exec_t))
+
+(context file_gis_exec (system_u object_r gis_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnome-initial-setup" file file_gis_exec)
+
+(type giswt_exec_t)
+(call application_subject_entry (is_giswt_subject giswt_exec_t))
+
+(context file_giswt_exec (system_u object_r giswt_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnome-welcome-tour" file file_giswt_exec)
+
+(type gis_helper_exec_t)
+(call commands_bin_object (gis_helper_exec_t))
+
+(context file_gis_helper_exec (system_u object_r gis_helper_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnome-initial-setup-worker" file file_gis_helper_exec)
+
+(macro gis_role_template_gis ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gis_role ARG1)
+    (typeattributeset is_gis_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gis_exec_t ARG3)))
+
+(macro gis_role_template_giswt ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gis_role ARG1)
+    (typeattributeset is_giswt_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 giswt_exec_t ARG3)))
