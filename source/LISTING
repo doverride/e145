@@ -39,6 +39,7 @@ contrib/fop.cil
 contrib/fprint.cil
 contrib/fstools.cil
 contrib/fstrim.cil
+contrib/fuse.cil
 contrib/geoclue.cil
 contrib/getty.cil
 contrib/git.cil

@@ -11,6 +11,8 @@
 (context file_mount_exec (system_u object_r mount_exec_t ((s0) (s0))))
 (filecon "/usr/bin/mount.*" file file_mount_exec)
 (filecon "/usr/bin/umount.*" file file_mount_exec)
+(filecon "/usr/sbin/mount.*" file file_mount_exec)
+(filecon "/usr/sbin/umount.*" file file_mount_exec)
 
 (type mount_run_t)
 (call files_run_object (mount_run_t))

@@ -1,0 +1,38 @@
+(roleattribute is_fuse_role)
+
+(typeattribute is_fusermount_subject)
+(typeattribute is_ulockmgr_subject)
+
+(type fusermount_exec_t)
+(call application_subject_entry (is_fusermount_subject fusermount_exec_t))
+
+(context file_fusermount_exec (system_u object_r fusermount_exec_t ((s0)(s0))))
+(filecon "/usr/bin/fusermount" file file_fusermount_exec)
+
+(type ulockmgr_exec_t)
+(call application_subject_entry (is_ulockmgr_subject ulockmgr_exec_t))
+
+(context file_ulockmgr_exec (system_u object_r ulockmgr_exec_t ((s0)(s0))))
+(filecon "/usr/bin/ulockmgr_server" file file_ulockmgr_exec)
+
+(type fuse_conf_t)
+(call files_etc_object (fuse_conf_t))
+
+(context file_fuse_conf (system_u object_r fuse_conf_t ((s0)(s0))))
+(filecon "/etc/fuse\.conf" file file_fuse_conf)
+
+(macro fuse_role_template_fusermount ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_fuse_role ARG1)
+    (typeattributeset is_fusermount_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 fusermount_exec_t ARG3)))
+
+(macro fuse_role_template_ulockmgr ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_fuse_role ARG1)
+    (typeattributeset is_ulockmgr_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ulockmgr_exec_t ARG3)))
+
+(macro fuse_read_config_files ((type ARG))
+    (call files_search_etc (ARG1))
+    (allow ARG1 fuse_conf_t read_file_perms))
