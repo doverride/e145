@@ -605,7 +605,20 @@
             (call xserver_client_subject (joe_gsession_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_gsd_t)
-            (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t))
+            (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t))
+
+            (call xserver_common_client_subject (joe_gsd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+            (call xserver_client_subject_tmpfs_template (joe_gsd_t user_gsd_tmpfs_t))
+
+            (call pa_client_subject (joe_r joe_gsd_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_gsd_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_gsd_t))
+            (call usersubject_config_filetrans (joe_gsd_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_gsd_t user_pa_run_t dir "pulse"))
+
+            (allow joe_t user_gsd_tmpfs_t manage_file_perms)
+            (allow joe_t user_gsd_tmpfs_t relabel_file_perms)
 
             (allow joe_t joe_gsd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsd_t))

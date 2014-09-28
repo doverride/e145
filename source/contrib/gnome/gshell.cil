@@ -31,6 +31,10 @@
 
 (call accountsservice_dbus_chat (is_gshell_subject))
 
+(call bluetooth_dbus_chat_bluetoothd (is_gshell_subject))
+
+(call geoclue_dbus_chat (is_gshell_subject))
+
 (call networkmgr_dbus_chat (is_gshell_subject))
 
 (call polkit_dbus_chat_polkitd (is_gshell_subject))
