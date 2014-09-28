@@ -2,9 +2,7 @@ remove hacks to deal with mislabeled /run/user:
     grep -ri run_user_hack .
 
 target: logrotate, cron system jobs
-    /usr/bin/canberra-gtk-play, fuse gnome-initial-setup
-
-label /usr/bin/fusermount
+    /usr/bin/canberra-gtk-play, gnome-initial-setup
 
 target /usr/sbin/glibc_post_upgrade.*
     i suspect this is what makes select exec fles end up with file_t type
@@ -34,9 +32,6 @@ net_admin
 
     create private types for the various .d dirs in there
     binfmt.d, modprobe.d, modules-load.d, sysctl.d, sysusers.d, tmpfiles.d
-
-/etc/logrotate\.d
-    private types for administration
 
 block_suspend review block_suspend use
     these is a bug in kernel which triggers false block suspend
