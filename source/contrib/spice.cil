@@ -56,6 +56,8 @@
 
 (call terminal_use_virtio_nodes (is_vdagent_subject))
 
+(call spice_stream_connect_vdagentd (is_vdagent_subject))
+
 (allow is_spice_admin_subject vdagentd_t signal_perms)
 (allow is_spice_admin_subject vdagentd_t (process (ptrace)))
 (call ps_subject_pattern (is_spice_admin_subject vdagentd_t))
@@ -69,6 +71,10 @@
     (typeattributeset is_vdagent_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 vdagent_exec_t ARG3)))
+
+(macro spice_stream_connect_vdagentd ((type ARG1))
+    (call files_search_run (ARG1))
+    (call stream_connect_pattern (ARG1 vdagentd_run_t vdagentd_run_t vdagentd_t)))
 
 (macro spice_delete_vdagentd_run_sock_files ((type ARG1))
     (call files_search_run (ARG1))

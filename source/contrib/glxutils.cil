@@ -11,6 +11,10 @@
 (filecon "/usr/bin/glxinfo64" file file_glxutils_exec)
 (filecon "/usr/bin/xdriinfo" file file_glxutils_exec)
 
+(call devices_read_sysfs_files (is_glxutils_subject))
+
+(call files_read_generic_etc_files (is_glxutils_subject)) ; /etc/drirc
+
 (macro glxutils_exec ((type ARG1))
     (call can_exec (ARG1 glxutils_exec_t)))
 

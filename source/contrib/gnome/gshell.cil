@@ -29,6 +29,12 @@
 (filecon "/usr/libexec/gnome-shell-perf-helper" file file_gshell_helper_exec)
 (filecon "/usr/libexec/gnome-shell-portal-helper" file file_gshell_helper_exec)
 
+(call accountsservice_dbus_chat (is_gshell_subject))
+
+(call networkmgr_dbus_chat (is_gshell_subject))
+
+(call polkit_dbus_chat_polkitd (is_gshell_subject))
+
 (macro gshell_exec_gshell ((type ARG1))
     (call can_exec (ARG1 gshell_exec_t)))
 

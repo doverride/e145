@@ -587,6 +587,8 @@
             (filecon "/home/joe/\.ICEauthority" file file_joe_user_iceauth_home)
             (filecon "/home/joe/\.ICEauthority-c" file file_joe_user_iceauth_home)
 
+            (call gkeyring_role_template_gkeyringd (joe_r joe_gsession_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
+
             (optional joe_gsession_optional_joe_pa
                 (call pa_role_template (joe_r joe_gsession_t joe_pa_t user_pa_home_t
                     user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t)))
@@ -619,7 +621,29 @@
             (call usersubject_application_subject (joe_gsdprinter_t))
 
             (type joe_gkeyringd_t)
-            (call gkeyring_role_template_gkeyringd (joe_r joe_t joe_gkeyringd_t user_gkeyringd_run_t))
+            (call gkeyring_role_template_gkeyringd (joe_r joe_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
+
+            (allow joe_t joe_gkeyringd_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gkeyringd_t))
+
+            (allow joe_t user_gkeyringd_run_t manage_dir_perms)
+            (allow joe_t user_gkeyringd_run_t relabel_dir_perms)
+            (allow joe_t user_gkeyringd_run_t manage_sock_file_perms)
+            (allow joe_t user_gkeyringd_run_t relabel_sock_file_perms)
+
+            (allow joe_t user_gkeyringd_data_t manage_dir_perms)
+            (allow joe_t user_gkeyringd_data_t relabel_dir_perms)
+            (allow joe_t user_gkeyringd_data_t manage_file_perms)
+            (allow joe_t user_gkeyringd_data_t relabel_file_perms)
+ 
+            (context file_joe_user_gkeyringd_run (joe_u object_r user_gkeyringd_run_t ((s0)(s0))))
+            (filecon "/run/user/1000/keyring(/.*)?" file file_joe_user_gkeyringd_run)
+
+            (context file_joe_user_gkeyringd_data (joe_u object_r user_gkeyringd_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/keyrings(/.*)?" file file_joe_user_gkeyringd_data)
+
+            (call usersubject_data_filetrans (joe_t user_gkeyringd_data_t dir "keyrings"))
+            (call usersubject_data_filetrans (joe_gkeyringd_t user_gkeyringd_data_t dir "keyrings"))
 
             (call usersubject_application_subject (joe_gkeyringd_t))
 
@@ -661,13 +685,25 @@
 
             (call usersubject_application_subject (joe_vdagent_t))
 
+            (call xserver_client_subject (joe_vdagent_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
             (type joe_gvfsd_t)
-            (call gvfs_role_template_gvfsd (joe_r joe_dbusd_t joe_gvfsd_t))
+            (call gvfs_role_template_gvfsd (joe_r joe_dbusd_t joe_gvfsd_t user_gvfsd_run_t))
+
+            (allow joe_t user_gvfsd_run_t manage_dir_perms)
+            (allow joe_t user_gvfsd_run_t relabel_dir_perms)
+
+            (context file_joe_user_gvfsd_run (joe_u object_r user_gvfsd_run_t ((s0)(s0))))
+            (filecon "/run/user/1000/gvfs" dir file_joe_user_gvfsd_run)
+            (filecon "/run/user/1000/gvfs/.*" any ())
 
             (allow joe_t joe_gvfsd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsd_t))
 
             (call usersubject_application_subject (joe_gvfsd_t))
+
+            (call usersubject_run_user_dir_filetrans (joe_t user_gvfsd_run_t dir "gvfs"))
+            (call usersubject_run_user_dir_filetrans (joe_gvfsd_t user_gvfsd_run_t dir "gvfs"))
 
             (call dbus_session_client_subject (joe_gvfsd_t user_dbusd_tmp_t joe_dbusd_t))
 
@@ -799,6 +835,8 @@
 
             (call usersubject_application_subject (joe_gvfsdfuse_t))
 
+            (allow joe_gvfsdfuse_t user_gvfsd_run_t (dir (mounton)))
+
             (call dbus_session_client_subject (joe_gvfsdfuse_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsdgph2_t)
@@ -896,6 +934,14 @@
             (call ps_subject_pattern (joe_t joe_gshell_t))
 
             (call usersubject_application_subject (joe_gshell_t))
+
+            (type joe_gshellcald_t)
+            (call gshell_role_template_gshellcald (joe_r joe_dbusd_t joe_gshellcald_t))
+
+            (allow joe_t joe_gshellcald_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gshellcald_t))
+
+            (call usersubject_application_subject (joe_gshellcald_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))

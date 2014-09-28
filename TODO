@@ -2,6 +2,7 @@ remove hacks to deal with mislabeled /run/user:
     grep -ri run_user_hack .
 
 target: logrotate, cron system jobs
+    /usr/bin/canberra-gtk-play, fuse gnome-initial-setup
 
 label /usr/bin/fusermount
 

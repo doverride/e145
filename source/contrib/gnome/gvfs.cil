@@ -203,9 +203,18 @@
 
 (call miscfiles_read_localization_files (is_gvfsd_subject))
 
+(optional gvfsd_subject_optional_usersubject
+    (type user_gvfsd_run_t)
+    (call usersubject_run_object (user_gvfsd_run_t)))
+
 (call devices_rw_fuse (is_gvfsd_fuse_subject))
+(call files_read_generic_etc_files (is_gvfsd_fuse_subject)) ; /etc/fstab
 
 (call files_read_generic_etc_files (is_gvfs_udisks2vm_subject)) ; /etc/fstab
+
+(call dbus_system_client_subject (is_gvfs_udisks2vm_subject))
+
+(call udisks_dbus_chat_udisksd (is_gvfs_udisks2vm_subject))
 
 (macro gvfs_exec_gvfsd ((type ARG1))
     (call can_exec (ARG1 gvfsd_exec_t)))
@@ -231,11 +240,12 @@
 (macro gvfs_exec_gvfsafcvm ((type ARG1))
     (call can_exec (ARG1 gvfsafcvm_exec_t)))
 
-(macro gvfs_role_template_gvfsd ((role ARG1)(type ARG2)(type ARG3))
+(macro gvfs_role_template_gvfsd ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gvfs_role ARG1)
     (typeattributeset is_gvfsd_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 gvfsd_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 gvfsd_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms))
 
 (macro gvfs_role_template_gvfsafcvm ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gvfs_role ARG1)
