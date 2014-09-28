@@ -41,6 +41,12 @@
 (context file_gconfd_dbus_conf (system_u object_r gconfd_dbus_conf_t ((s0)(s0))))
 (filecon "/etc/dbus-1/system\.d/org\.gnome\.GConf\.Defaults\.conf" file file_gconfd_dbus_conf)
 
+(type gconfd_var_lib_t)
+(call files_var_lib_object (gconfd_var_lib_t))
+
+(context file_gconfd_var_lib (system_u object_r gconfd_var_lib_t ((s0)(s0))))
+(filecon "/var/lib/rpm-state(/.*)?" any file_gconfd_var_lib)
+
 (macro gconf_role_template_gconfd ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gconf_role ARG1)
     (typeattributeset is_gconfd_subject ARG3)
