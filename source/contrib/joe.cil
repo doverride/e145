@@ -846,7 +846,7 @@
             (type joe_fusermount_t)
             (call fuse_role_template_fusermount (joe_r joe_gvfsdfuse_t joe_fusermount_t))
 
-            (allow joe_t fusermount_t (process (signal signull sigkill sigstop)))
+            (allow joe_t joe_fusermount_t (process (signal signull sigkill sigstop)))
             (call ps_subject_pattern (joe_t joe_fusermount_t))
 
             (allow joe_t joe_gvfsdfuse_t (process (signal signull sigstop sigkill)))
