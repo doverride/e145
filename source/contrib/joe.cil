@@ -669,8 +669,8 @@
             (type joe_atspibusl_t)
             (call atspi_role_template_busl (joe_r joe_dbusd_t joe_atspibusl_t))
 
-            (allow joe_atspicusl_t user_dconf_run_t manage_dir_perms)
-            (allow joe_atspicusl_t user_dconf_run_t manage_file_perms)
+            (allow joe_atspibusl_t user_dconf_run_t manage_dir_perms)
+            (allow joe_atspibusl_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_atspibusl_t user_dconf_run_t dir "dconf"))
 
             (call xserver_client_subject (joe_atspibusl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
@@ -852,7 +852,7 @@
             (call gvfs_role_template_gvfsdfuse (joe_r joe_gvfsd_t joe_gvfsdfuse_t))
 
             (call usersubject_search_run_user_dir (joe_gvfsdfuse_t))
-            (allow joe_gvsfdfuse_t user_gvfsd_run_t list_dir_perms)
+            (allow joe_gvfsdfuse_t user_gvfsd_run_t list_dir_perms)
             (allow joe_gvfsdfuse_t user_gvfsd_run_t (dir (mounton)))
 
             (allow joe_gvfsdfuse_t joe_fusermount_t (fd (use)))
@@ -1004,7 +1004,7 @@
             (type joe_giscw_t)
             (call gis_role_template_giscw (joe_r joe_gsession_t joe_giscw_t))
 
-            (allow joe_t joe_gitcw_t (process (signal signull sigstop sigkill)))
+            (allow joe_t joe_giscw_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_giscw_t))
 
             (call usersubject_application_subject (joe_giscw_t))
