@@ -49,19 +49,33 @@
 (context file_ibus_cache (system_u object_r ibus_cache_t ((s0)(s0))))
 (filecon "/var/cache/ibus(/.*)?" any file_ibus_cache)
 
+(allow is_ibusd_subject self (process (setpgid)))
 (allow is_ibusd_subject self (unix_stream_socket (listen accept)))
+(allow is_ibusd_subject self rw_fifo_file_perms)
 
 (call devices_read_urandom (is_ibusd_subject))
 
+(call files_list_tmp (is_ibusd_subject))
 (call files_read_generic_usr_files (is_ibusd_subject))
 
 (call auth_nsswitch_client_subject (is_ibusd_subject))
+
+(call ibus_read_cache_files (is_ibusd_subject))
 
 (call miscfiles_read_localization_files (is_ibusd_subject))
 
 (optional ibusd_subject_optional_usersubject
     (type user_ibus_conf_t)
     (call usersubject_config_object (user_ibus_conf_t)))
+
+(call dbus_system_client_subject (is_ibus_dconf_subject))
+
+(optional ibusdconf_subject_optional_dconf
+    (call dconf_read_config_files (is_ibusd_dconf_subject)))
+
+(call files_read_generic_usr_files (is_ibus_x11_subject))
+
+(call miscfiles_read_localization_files (is_ibus_x11_subject))
 
 (macro ibus_exec_ibusd ((type ARG1))
     (call can_exec (ARG1 ibusd_exec_t)))

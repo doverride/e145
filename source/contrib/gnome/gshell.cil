@@ -42,6 +42,8 @@
 
 (call accountsservice_dbus_chat (is_gshell_subject))
 
+(call auth_nsswitch_client_subject (is_gshell_subject))
+
 (call bluetooth_dbus_chat_bluetoothd (is_gshell_subject))
 
 (call dbus_system_client_subject (is_gshell_subject))
@@ -61,6 +63,8 @@
 (call polkit_dbus_chat_polkitd (is_gshell_subject))
 
 (call seutil_read_config_files (is_gshell_subject))
+
+(call systemd_read_state (is_gshell_subject))
 
 (call upower_dbus_chat_upowerd (is_gshell_subject))
 

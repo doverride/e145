@@ -156,6 +156,7 @@
 (call files_read_generic_usr_files (gdm_t))
 
 (call filesystem_getattr_filesystems (gdm_t))
+(call filesystem_getattr_tmpfs_filesystems (gdm_t))
 (call filesystem_mount_fuse_filesystems (gdm_t))
 (call filesystem_unmount_fuse_filesystems (gdm_t))
 
@@ -194,6 +195,7 @@
 (call gkeyring_manual_subject_type_transition_all_gkeyringd_subjects (gdm_t))
 (call gkeyring_exec_gkeyringd (gdm_t))
 
+(call glib_exec_glib (gdm_t))
 (call glib_exec_gsettings (gdm_t))
 
 (call glxutils_exec (gdm_t))

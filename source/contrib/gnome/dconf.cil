@@ -45,3 +45,8 @@
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG5 manage_dir_perms)
     (allow ARG3 ARG5 manage_file_perms))
+
+(macro dconf_read_config_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 dconf_conf_t (dirs (list)))
+    (allow ARG1 dconf_conf_t read_file_perms))

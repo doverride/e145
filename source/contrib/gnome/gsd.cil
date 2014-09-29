@@ -40,17 +40,30 @@
 
 (call dbus_system_client_subject (is_gsd_subject))
 
+(call localed_dbus_chat_localed (is_gsd_subject))
+
 (call logind_use_fd (is_gsd_subject))
 (call logind_write_inherited_run_fifo_files (is_gsd_subject))
+
+(call modemmgr_dbus_chat (is_gsd_subject))
+
+(call networkmgr_dbus_chat (is_gsd_subject))
 
 (call systemd_dbus_chat (is_gsd_subject))
 (call systemd_get_status_system (is_gsd_subject))
 
 (call udevd_client_subject (is_gsd_subject))
 
+(call udisks_dbus_chat_udisksd (is_gsd_subject))
+
+(optional gsd_subject_optional_color
+    (call color_dbus_chat_colord (is_gsd_subject)))
+
 (optional gsd_subject_optional_usersubject
     (type user_gsd_tmpfs_t)
     (call usersubject_tmpfs_object (user_gsd_tmpfs_t)))
+
+(call system_read_sysctl_vm_overcommit_files (is_gsd_printer_subject))
 
 (call dbus_acquire_service_system (is_gsd_printer_subject))
 (call dbus_system_client_subject (is_gsd_printer_subject))

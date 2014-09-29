@@ -154,6 +154,8 @@
 
 (call miscfiles_read_localization_files (cupsd_t))
 
+(call systemd_stream_connect (cupsd_t))
+
 (optional cupsctl_optional_usersubject
     (call usersubject_use_inherited_terminals (cupsctl_t)))
 

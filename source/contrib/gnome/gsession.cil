@@ -21,6 +21,8 @@
 (allow is_gsession_subject self (unix_stream_socket (listen accept)))
 (allow is_gsession_subject self rw_fifo_file_perms)
 
+(call system_read_generic_proc_files (is_gsession_subject))
+
 (call commands_execute_shell_files (is_gsession_subject))
 
 (call devices_read_urandom (is_gsession_subject))

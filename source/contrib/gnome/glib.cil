@@ -28,6 +28,9 @@
 
 (call miscfiles_read_localization_files (is_gsettings_subject))
 
+(macro glib_exec_glib ((type ARG1))
+    (call can_exec (ARG1 glib_exec_t)))
+
 (macro glib_exec_gsettings ((type ARG1))
     (call can_exec (ARG1 gsettings_exec_t)))
 
