@@ -43,17 +43,51 @@
 (context file_ibusx11_exec (system_u object_r ibusx11_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/ibus-x11" file file_ibusx11_exec)
 
+(type ibus_cache_t)
+(call files_var_cache_object (ibus_cache_t))
+
+(context file_ibus_cache (system_u object_r ibus_cache_t ((s0)(s0))))
+(filecon "/var/cache/ibus(/.*)?" any file_ibus_cache)
+
+(allow is_ibusd_subject self (unix_stream_socket (listen accept)))
+
+(call devices_read_urandom (is_ibusd_subject))
+
+(call files_read_generic_usr_files (is_ibusd_subject))
+
+(call auth_nsswitch_client_subject (is_ibusd_subject))
+
+(call miscfiles_read_localization_files (is_ibusd_subject))
+
+(optional ibusd_subject_optional_usersubject
+    (type user_ibus_conf_t)
+    (call usersubject_config_object (user_ibus_conf_t)))
+
+(macro ibus_exec_ibusd ((type ARG1))
+    (call can_exec (ARG1 ibusd_exec_t)))
+
+(macro ibus_exec_ibusdconf ((type ARG1))
+    (call can_exec (ARG1 ibusdconf_exec_t)))
+
+(macro ibus_exec_ibusx11 ((type ARG1))
+    (call can_exec (ARG1 ibusx11_exec_t)))
+
+(macro ibus_exec_ibuseng ((type ARG1))
+    (call can_exec (ARG1 ibuseng_exec_t)))
+
 (macro ibus_role_template_ibus ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_ibus_role ARG1)
     (typeattributeset is_ibus_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 ibus_exec_t ARG3)))
 
-(macro ibus_role_template_ibusd ((role ARG1)(type ARG2)(type ARG3))
+(macro ibus_role_template_ibusd ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_ibus_role ARG1)
     (typeattributeset is_ibusd_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 ibusd_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 ibusd_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms))
 
 (macro ibus_role_template_ibusdconf ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_ibus_role ARG1)
@@ -78,3 +112,7 @@
     (typeattributeset is_ibus_x11_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 ibusx11_exec_t ARG3)))
+
+(macro ibus_read_cache_files ((type ARG1))
+    (call files_search_var_cache (ARG1))
+    (call read_files_pattern (ARG1 ibus_cache_t ibus_cache_t)))

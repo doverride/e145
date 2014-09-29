@@ -194,6 +194,8 @@
 (call gkeyring_manual_subject_type_transition_all_gkeyringd_subjects (gdm_t))
 (call gkeyring_exec_gkeyringd (gdm_t))
 
+(call glib_exec_gsettings (gdm_t))
+
 (call glxutils_exec (gdm_t))
 
 (call gsd_exec_gsd (gdm_t))
@@ -212,6 +214,12 @@
 (call gvfs_exec_gvfsgoavm (gdm_t))
 (call gvfs_exec_gvfsgph2vm (gdm_t))
 (call gvfs_exec_gvfsafcvm (gdm_t))
+
+(call ibus_exec_ibusd (gdm_t))
+(call ibus_exec_ibusdconf (gdm_t))
+(call ibus_exec_ibusx11 (gdm_t))
+(call ibus_exec_ibuseng (gdm_t))
+(call ibus_read_cache_files (gdm_t)) ; maybe gdm creates /var/cache/ibus?
 
 (call journald_client_subject (gdm_t))
 
@@ -247,6 +255,7 @@
 
 (call upower_dbus_chat_upowerd (gdm_t))
 
+(call usersubject_search_home_dir (gdm_t))
 (call usersubject_xsession_manual_subject_type_transition_all_gui_login_user_subjects
     (gdm_t))
 

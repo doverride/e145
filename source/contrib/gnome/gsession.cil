@@ -52,6 +52,8 @@
 (optional gsession_subject_optional_usersubject
     (type user_iceauth_home_t)
     (call usersubject_home_object (user_iceauth_home_t))
+    (type user_gsession_tmpfs_t)
+    (call usersubject_tmpfs_object (user_gsession_tmpfs_t))
     (type user_iceauth_tmp_t)
     (call usersubject_tmp_object (user_iceauth_tmp_t)))
 
@@ -61,7 +63,8 @@
 (macro gsession_exec_helper ((type ARG1))
     (call can_exec (ARG1 gsession_helper_exec_t)))
 
-(macro gsession_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
+(macro gsession_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
+    (type ARG5)(type ARG6))
     (roleattributeset is_gsession_role ARG1)
     (typeattributeset is_gsession_subject ARG3)
     (roletype ARG1 ARG3)
@@ -74,4 +77,8 @@
     (allow ARG2 ARG5 manage_sock_file_perms)
     (allow ARG2 ARG5 relabel_sock_file_perms)
     (allow ARG3 ARG5 manage_sock_file_perms)
-    (call files_tmp_filetrans (ARG3 ARG5 sock_file "*")))
+    (call files_tmp_filetrans (ARG3 ARG5 sock_file "*"))
+    (allow ARG2 ARG6 manage_file_perms)
+    (allow ARG2 ARG6 relabel_file_perms)
+    (allow ARG3 ARG6 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG6 file "*")))

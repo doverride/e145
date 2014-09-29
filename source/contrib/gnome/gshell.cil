@@ -36,6 +36,7 @@
 (call devices_read_urandom (is_gshell_subject))
 (call devices_read_sysfs_files (is_gshell_subject))
 
+(call files_list_etc (is_gshell_subject)) ; /etc/xdg
 (call files_read_generic_etc_files (is_gshell_subject)) ; /etc/drirc
 (call files_read_generic_usr_files (is_gshell_subject)) ; /usr/share/X11/locale/locale.alias
 

@@ -1,3 +1,10 @@
+fixme?
+    are all dbus_session_client_subject "unix_stream_socket (listen accept))"
+    on dbusd_tmp_t sockets
+
+    e.g. can i:
+        (allow is_dbus_session_client_subject self (unix_stream_socket (listen accept)))"
+
 remove hacks to deal with mislabeled /run/user:
     grep -ri run_user_hack .
 

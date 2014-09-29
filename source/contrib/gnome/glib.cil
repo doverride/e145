@@ -24,6 +24,13 @@
 (context file_gsettings_exec (system_u object_r gsettings_exec_t ((s0)(s0))))
 (filecon "/usr/bin/gsettings" file file_gsettings_exec)
 
+(call files_read_generic_usr_files (is_gsettings_subject))
+
+(call miscfiles_read_localization_files (is_gsettings_subject))
+
+(macro glib_exec_gsettings ((type ARG1))
+    (call can_exec (ARG1 gsettings_exec_t)))
+
 (macro glib_role_template_glib ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_glib_role ARG1)
     (typeattributeset is_glib_subject ARG3)

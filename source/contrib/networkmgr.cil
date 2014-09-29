@@ -196,6 +196,9 @@
 (optional networkgr_optional_gdm
     (call gdm_read_state (networkmgr_t)))
 
+(optional networkmgr_optional_gsd
+    (call read_state_all_gsd_subjects (networkmgr_t)))
+
 (optional networkmgr_optional_http
     (call http_tcp_connect_http_port (networkmgr_t)))
 

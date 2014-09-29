@@ -47,6 +47,8 @@
 (context file_gconfd_var_lib (system_u object_r gconfd_var_lib_t ((s0)(s0))))
 (filecon "/var/lib/rpm-state(/.*)?" any file_gconfd_var_lib)
 
+(call miscfiles_read_localization_files (is_gsdconv_subject))
+
 (macro gconf_role_template_gconfd ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gconf_role ARG1)
     (typeattributeset is_gconfd_subject ARG3)

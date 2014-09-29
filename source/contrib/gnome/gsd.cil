@@ -24,6 +24,10 @@
 (filecon "/usr/libexec/gsd-locate-pointer" file file_gsd_helper_exec)
 (filecon "/usr/libexec/gsd-wacom-oled-helper" file file_gsd_helper_exec)
 
+(call devices_read_lnk_files (is_gsd_subject))
+(call devices_rw_wireless (is_gsd_subject))
+
+(call files_list_etc (is_gsd_subject))
 (call files_list_tmp (is_gsd_subject))
 (call files_read_generic_etc_files (is_gsd_subject)) ; /etc/fstab
 
@@ -31,10 +35,16 @@
 
 (call auth_nsswitch_client_subject (is_gsd_subject))
 
+(call cups_read_cupsd_config_files (is_gsd_subject))
+(call cups_stream_connect_cupsd (is_gsd_subject))
+
 (call dbus_system_client_subject (is_gsd_subject))
 
 (call logind_use_fd (is_gsd_subject))
 (call logind_write_inherited_run_fifo_files (is_gsd_subject))
+
+(call systemd_dbus_chat (is_gsd_subject))
+(call systemd_get_status_system (is_gsd_subject))
 
 (call udevd_client_subject (is_gsd_subject))
 
@@ -70,3 +80,7 @@
     (typeattributeset is_gsd_printer_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gsdprinter_exec_t ARG3)))
+
+(macro read_state_all_gsd_subjects ((type ARG1))
+    (allow ARG1 is_gsd_subject (dirs (list)))
+    (allow ARG1 is_gsd_subject read_file_perms))

@@ -128,6 +128,8 @@
 (allow cupsd_t cupsd_cache_t manage_file_perms)
 (call files_var_cache_filetrans (cupsd_t cupsd_cache_t dir "*"))
 
+(call commands_execute_bin_files (cupsd_t)) ; paps
+
 (call devices_read_urandom (cupsd_t))
 
 (call files_read_generic_usr_files (cupsd_t))
@@ -135,6 +137,8 @@
 (call filesystem_getattr_filesystems (cupsd_t))
 
 (call network_tcp_bind_generic_node (cupsd_t))
+
+(call audit_client_subject (cupsd_t))
 
 (call auth_nsswitch_client_subject (cupsd_t))
 
@@ -188,9 +192,9 @@
     (call files_search_run (ARG1))
     (call manage_files_pattern (ARG1 cupsd_run_t cupsd_run_t)))
 
-(macro cups_stream_connect_cupsd_t ((type ARG1))
+(macro cups_stream_connect_cupsd ((type ARG1))
     (call files_search_run (ARG1))
-    (call stream_connect_pattern (ARG1 cupsd_run_t cupsd_run_t cupsd_run_t)))
+    (call stream_connect_pattern (ARG1 cupsd_run_t cupsd_run_t cupsd_t)))
 
 (macro cups_manage_cupsd_run_sock_files ((type ARG1))
     (call files_search_run (ARG1))
@@ -199,7 +203,7 @@
 (macro cups_tcp_bind_cups_port ((type ARG1))
     (allow ARG1 self (capability (net_bind_service)))
     (call network_tcp_bind_subject (ARG1))
-    (allow ARG1 port_cups_t (udp_socket (name_bind))))
+    (allow ARG1 port_cups_t (tcp_socket (name_bind))))
 
 (macro cups_admin ((type ARG1))
     (typeattributeset is_cups_admin_subject ARG1))
