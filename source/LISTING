@@ -114,6 +114,7 @@ contrib/gnome/gsd.cil
 contrib/gnome/gsession.cil
 contrib/gnome/gshell.cil
 contrib/gnome/gvfs.cil
+contrib/gnome/ibus.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/autorelabel.cil
 contrib/systemd/backlight.cil

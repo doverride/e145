@@ -1,0 +1,80 @@
+(roleattribute is_ibus_role)
+
+(typeattribute is_ibus_subject)
+(typeattribute is_ibusd_subject)
+(typeattribute is_ibus_dconf_subject)
+(typeattribute is_ibus_eng_subject)
+(typeattribute is_ibus_ui_subject)
+(typeattribute is_ibus_x11_subject)
+
+(type ibus_exec_t)
+(call application_subject_entry (is_ibus_subject ibus_exec_t))
+
+(context file_ibus_exec (system_u object_r ibus_exec_t ((s0)(s0))))
+(filecon "/usr/bin/ibus" file file_ibus_exec)
+
+(type ibusd_exec_t)
+(call application_subject_entry (is_ibusd_subject ibusd_exec_t))
+
+(context file_ibusd_exec (system_u object_r ibusd_exec_t ((s0)(s0))))
+(filecon "/usr/bin/ibus-daemon" file file_ibusd_exec)
+
+(type ibusdconf_exec_t)
+(call application_subject_entry (is_ibus_dconf_subject ibusdconf_exec_t))
+
+(context file_ibusdconf_exec (system_u object_r ibusdconf_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/ibus-dconf" file file_ibusdconf_exec)
+
+(type ibuseng_exec_t)
+(call application_subject_entry (is_ibus_eng_subject ibuseng_exec_t))
+
+(context file_ibuseng_exec (system_u object_r ibuseng_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/ibus-engine-simple" file file_ibuseng_exec)
+
+(type ibusui_exec_t)
+(call application_subject_entry (is_ibus_ui_subject ibusui_exec_t))
+
+(context file_ibusui_exec (system_u object_r ibusui_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/ibus-ui-gtk3" file file_ibusui_exec)
+
+(type ibusx11_exec_t)
+(call application_subject_entry (is_ibus_x11_subject ibusx11_exec_t))
+
+(context file_ibusx11_exec (system_u object_r ibusx11_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/ibus-x11" file file_ibusx11_exec)
+
+(macro ibus_role_template_ibus ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_ibus_role ARG1)
+    (typeattributeset is_ibus_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ibus_exec_t ARG3)))
+
+(macro ibus_role_template_ibusd ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_ibus_role ARG1)
+    (typeattributeset is_ibusd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ibusd_exec_t ARG3)))
+
+(macro ibus_role_template_ibusdconf ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_ibus_role ARG1)
+    (typeattributeset is_ibus_dconf_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ibusdconf_exec_t ARG3)))
+
+(macro ibus_role_template_ibuseng ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_ibus_role ARG1)
+    (typeattributeset is_ibus_eng_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ibuseng_exec_t ARG3)))
+
+(macro ibus_role_template_ibusui ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_ibus_role ARG1)
+    (typeattributeset is_ibus_ui_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ibusui_exec_t ARG3)))
+
+(macro ibus_role_template_ibusx11 ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_ibus_role ARG1)
+    (typeattributeset is_ibus_x11_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 ibusx11_exec_t ARG3)))
