@@ -701,7 +701,7 @@
             (allow joe_atspibusl_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_atspibusl_t user_dconf_run_t dir "dconf"))
 
-            (call read_files_pattern (joe_apsibusl_t user_dconf_conf_t user_dconf_conf_t))
+            (call read_files_pattern (joe_atspibusl_t user_dconf_conf_t user_dconf_conf_t))
             (call usersubject_search_generic_config (joe_atspibusl_t))
 
             (allow joe_atspibusl_t user_dconf_run_t manage_dir_perms)
