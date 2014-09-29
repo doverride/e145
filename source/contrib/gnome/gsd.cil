@@ -24,9 +24,17 @@
 (filecon "/usr/libexec/gsd-locate-pointer" file file_gsd_helper_exec)
 (filecon "/usr/libexec/gsd-wacom-oled-helper" file file_gsd_helper_exec)
 
+(call files_list_tmp (is_gsd_subject))
 (call files_read_generic_etc_files (is_gsd_subject)) ; /etc/fstab
 
 (call filesystem_getattr_filesystems (is_gsd_subject))
+
+(call auth_nsswitch_client_subject (is_gsd_subject))
+
+(call dbus_system_client_subject (is_gsd_subject))
+
+(call logind_use_fd (is_gsd_subject))
+(call logind_write_inherited_run_fifo_files (is_gsd_subject))
 
 (call udevd_client_subject (is_gsd_subject))
 

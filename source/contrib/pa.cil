@@ -79,6 +79,12 @@
     (s0))))
 (filecon "/var/lib/pulse(/.*)?" any file_pa_var_lib)
 
+(call system_read_generic_proc_files (is_startpa_subject))
+
+(call commands_mprot_read_shell_files (is_startpa_subject))
+
+(call miscfiles_read_localization_files (is_startpa_subject))
+
 (allow is_pa_session_subject self (process (setcap setsched setrlimit signal signull)))
 (allow is_pa_session_subject self (unix_stream_socket (listen accept)))
 (allow is_pa_session_subject self rw_fifo_file_perms)

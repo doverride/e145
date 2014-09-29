@@ -142,6 +142,8 @@
 (call seutil_read_config_files (is_dbus_session_subject))
 (call seutil_read_default_context_files (is_dbus_session_subject))
 
+(call systemd_getattr_generic_unit_dirs (is_dbus_session_subject))
+
 (optional dbus_session_subject_optional_atspi
     (call atspi_read_config_files (is_dbus_session_subject)))
 
