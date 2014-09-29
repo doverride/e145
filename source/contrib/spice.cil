@@ -48,6 +48,10 @@
 (allow vdagentd_t is_vdagent_subject (dirs (list)))
 (allow vdagentd_t is_vdagent_subject read_file_perms)
 
+(call system_request_load_module (vdagentd_t))
+
+(call devices_rw_event (vdagentd_t))
+
 (call terminal_use_virtio_nodes (vdagentd_t))
 
 (call journald_client_subject (vdagentd_t))

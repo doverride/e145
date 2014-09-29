@@ -37,6 +37,10 @@
 (call dbus_acquire_service_system (is_gsd_printer_subject))
 (call dbus_system_client_subject (is_gsd_printer_subject))
 
+(call cups_read_cupsd_config_files (is_gsd_printer_subject))
+
+(call miscfiles_read_localization_files (is_gsd_printer_subject))
+
 (macro gsd_exec_gsd ((type ARG1))
     (call can_exec (ARG1 gsd_exec_t)))
 

@@ -1,0 +1,43 @@
+(roleattribute is_glib_role)
+
+(typeattribute is_glib_subject)
+(typeattribute is_gdbus_subject)
+(typeattribute is_gsettings_subject)
+
+(type glib_exec_t)
+(call application_subject_entry (is_glib_subject glib_exec_t))
+
+(context file_glib_exec (system_u object_r glib_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gapplication" file file_glib_exec)
+(filecon "/usr/bin/gio-querymodules-64" file file_glib_exec)
+(filecon "/usr/bin/glib-compile-schemas" file file_glib_exec)
+
+(type gdbus_exec_t)
+(call application_subject_entry (is_gdbus_subject gdbus_exec_t))
+
+(context file_gdbus_exec (system_u object_r gdbus_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gdbus" file file_gdbus_exec)
+
+(type gsettings_exec_t)
+(call application_subject_entry (is_gsettings_subject gsettings_exec_t))
+
+(context file_gsettings_exec (system_u object_r gsettings_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gsettings" file file_gsettings_exec)
+
+(macro glib_role_template_glib ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_glib_role ARG1)
+    (typeattributeset is_glib_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 glib_exec_t ARG3)))
+
+(macro glib_role_template_gdbus ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_glib_role ARG1)
+    (typeattributeset is_gdbus_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gdbus_exec_t ARG3)))
+
+(macro glib_role_template_gsettings ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_glib_role ARG1)
+    (typeattributeset is_gsettings_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gsettings_exec_t ARG3)))

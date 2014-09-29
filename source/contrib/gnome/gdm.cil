@@ -343,6 +343,10 @@
     (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 gdm_var_lib_t gdm_var_lib_t)))
 
+(macro gdm_manage_run_files ((type ARG1))
+    (call gdm_search_run_user_dir (ARG1))
+    (call manage_files_pattern (ARG1 gdm_run_t gdm_run_t)))
+
 (macro gdm_manage_var_lib_dirs ((type ARG1))
     (call files_search_var_lib (ARG1))
     (call manage_dirs_pattern (ARG1 gdm_var_lib_t gdm_var_lib_t)))

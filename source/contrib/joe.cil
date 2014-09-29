@@ -592,7 +592,7 @@
             (optional joe_gsession_optional_joe_pa
                 (call pa_role_template (joe_r joe_gsession_t joe_pa_t user_pa_home_t
                     user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t)))
-
+ 
             (call usersubject_application_subject (joe_gsession_t))
 
             (call usersubject_home_dir_filetrans (joe_t user_iceauth_home_t file ".ICEauthority-c"))
@@ -635,6 +635,8 @@
             (call ps_subject_pattern (joe_t joe_gsdprinter_t))
 
             (call usersubject_application_subject (joe_gsdprinter_t))
+
+            (call dbus_session_client_subject (joe_gsdprinter_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gkeyringd_t)
             (call gkeyring_role_template_gkeyringd (joe_r joe_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
@@ -736,6 +738,8 @@
 
             (call usersubject_application_subject (joe_gvfsafcvm_t))
 
+            (call dbus_session_client_subject (joe_gvfsafcvm_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_gvfsgoavm_t)
             (call gvfs_role_template_gvfsgoavm (joe_r joe_dbusd_t joe_gvfsgoavm_t))
 
@@ -752,6 +756,8 @@
 
             (call usersubject_application_subject (joe_gvfsgph2vm_t))
 
+            (call dbus_session_client_subject (joe_gvfsgph2vm_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_gvfsmtpvm_t)
             (call gvfs_role_template_gvfsmtpvm (joe_r joe_dbusd_t joe_gvfsmtpvm_t))
 
@@ -760,6 +766,8 @@
 
             (call usersubject_application_subject (joe_gvfsmtpvm_t))
 
+            (call dbus_session_client_subject (joe_gvfsmtpvm_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_gvfsudisks2vm_t)
             (call gvfs_role_template_gvfsudisks2vm (joe_r joe_dbusd_t joe_gvfsudisks2vm_t))
 
@@ -767,6 +775,8 @@
             (call ps_subject_pattern (joe_t joe_gvfsudisks2vm_t))
 
             (call usersubject_application_subject (joe_gvfsudisks2vm_t))
+
+            (call dbus_session_client_subject (joe_gvfsudisks2vm_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsdafc_t)
             (call gvfs_role_template_gvfsdafc (joe_r joe_gvfsd_t joe_gvfsdafc_t))
@@ -967,12 +977,42 @@
             (call usersubject_application_subject (joe_gvfsdtrash_t))
 
             (type joe_gshell_t)
-            (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t))
+            (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t user_gshell_tmpfs_t
+                user_gshell_tmp_t))
+
+            (call pa_client_subject (joe_r joe_gshell_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_gshell_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_gshell_t))
+            (call usersubject_config_filetrans (joe_gshell_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_gshell_t user_pa_run_t dir "pulse"))
+
+            (allow joe_t user_gshell_run_t manage_dir_perms)
+            (allow joe_t user_gshell_run_t relabel_dir_perms)
+            (allow joe_t user_gshell_run_t manage_file_perms)
+            (allow joe_t user_gshell_run_t relabel_file_perms)
+
+            (allow joe_t user_gshell_tmpfs_t manage_file_perms)
+            (allow joe_t user_gshell_tmpfs_t relabel_file_perms)
+
+            (allow joe_t user_gshell_tmp_t manage_file_perms)
+            (allow joe_t user_gshell_tmp_t relabel_file_perms)
+
+            (context file_joe_user_gshell_run (joe_u object_r user_gshell_run_t ((s0)(s0))))
+            (filecon "/run/user/1000/gnome-shell(/.*)?" any file_joe_user_gshell_run)
+
+            (call usersubject_run_user_dir_filetrans (joe_t user_gshell_run_t dir "gnome-shell"))
+            (call usersubject_run_user_dir_filetrans (joe_gshell_t user_gshell_run_t dir "gnome-shell"))
 
             (allow joe_t joe_gshell_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gshell_t))
 
             (call usersubject_application_subject (joe_gshell_t))
+
+            (call dbus_session_client (joe_gshell_t user_dbusd_tmp_t joe_dbusd_t))
+
+            (call xserver_common_client_subject (joe_gshell_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+            (call xserver_client_subject_tmpfs_template (joe_gshell_t user_gshell_tmpfs_t))
 
             (type joe_gshellcald_t)
             (call gshell_role_template_gshellcald (joe_r joe_dbusd_t joe_gshellcald_t))
@@ -982,19 +1022,32 @@
 
             (call usersubject_application_subject (joe_gshellcald_t))
 
+            (call dbus_session_client_subject (joe_gshellcald_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_dconfsvc_t)
-            (call dconf_role_template_dconfsvc (joe_r joe_dbusd_t joe_dconfsvc_t user_dconf_run_t))
+            (call dconf_role_template_dconfsvc (joe_r joe_dbusd_t joe_dconfsvc_t user_dconf_run_t user_dconf_conf_t))
 
             (allow joe_t user_dconf_run_t manage_dir_perms)
             (allow joe_t user_dconf_run_t relabel_dir_perms)
             (allow joe_t user_dconf_run_t manage_file_perms)
             (allow joe_t user_dconf_run_t relabel_file_perms)
 
+            (allow joe_t user_dconf_conf_t manage_dir_perms)
+            (allow joe_t user_dconf_conf_t relabel_dir_perms)
+            (allow joe_t user_dconf_conf_t manage_file_perms)
+            (allow joe_t user_dconf_conf_t relabel_file_perms)
+
             (call usersubject_run_user_dir_filetrans (joe_t user_dconf_run_t dir "dconf"))
             (call usersubject_run_user_dir_filetrans (joe_dconfsvc_t user_dconf_run_t dir "dconf"))
 
+            (call usersubject_conf_filetrans (joe_t user_dconfc_conf_t dir "dconf"))
+            (call usersubject_conf_filetrans (joe_dconfsvc_t user_dconf_conf_t dir "dconf"))
+
             (context file_joe_user_dconf_run (joe_u object_r user_dconf_run_t ((s0)(s0))))
             (filecon "/run/user/1000/dconf(/.*)?" any file_joe_user_dconf_run)
+
+            (context file_joe_user_dconf_conf (joe_u object_r user_dconf_conf_t ((s0)(s0))))
+            (filecon "/home/joe/\.config/dconf(/.*)?" any file_joe_user_dconf_conf)
 
             (allow joe_t joe_dconfsvc_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_dconfsvc_t))
@@ -1008,6 +1061,26 @@
             (call ps_subject_pattern (joe_t joe_giscw_t))
 
             (call usersubject_application_subject (joe_giscw_t))
+
+            (type joe_canberra_t)
+            (call canberra_role_template_canberra (joe_t joe_gsession_t joe_canberra_t))
+
+            (allow joe_t joe_canberra_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_canberra_t))
+
+            (call usersubject_application_subject (joe_canberra_t))
+
+            (type joe_startpa_t)
+            (call pa_role_template_startpa (joe_r joe_gsession_t joe_startpa_t))
+
+            (optional joe_startpa_optional_joe_pactl
+                (call pa_role_template_pactl (joe_r joe_startpa_t joe_pactl_t
+                    user_pa_home_t joe_pa_t)))
+
+            (allow joe_t joe_startpa_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_startpa_t))
+
+            (call usersubject_application_subject (joe_startpa_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))

@@ -10,6 +10,13 @@
     cupsd_pam_conf_t cupsd_conf_t cupsd_unit_t cupsd_spool_t
     cupsd_run_t cupsd_log_t cupsd_cache_t))
 
+(type port_cups_t)
+(call network_hi_reserved_port_object (port_cups_t))
+
+(context port_cups (system_u object_r port_cups_t ((s0) (s0))))
+(portcon "tcp" 631 port_cups)
+(portcon "udp" 631 port_cups)
+
 (type cupsctl_t)
 (type cupsctl_exec_t)
 (call application_subject_entry (cupsctl_t cupsctl_exec_t))
@@ -110,6 +117,10 @@
 (filecon "/usr/lib/systemd/system/[^/]*cups-browsed.*" file file_cupsd_unit)
 
 (allow cupsd_t self (capability (dac_override chown fsetid)))
+(allow cupsd_t self (unix_stream_socket (listen accept)))
+
+(allow cupsd_t cupsd_log_t (file (setattr)))
+(allow cupsd_t cupsd_log_t read_file_perms)
 
 (call append_files_pattern (cupsd_t cupsd_log_t cupsd_log_t))
 
@@ -117,13 +128,25 @@
 (allow cupsd_t cupsd_cache_t manage_file_perms)
 (call files_var_cache_filetrans (cupsd_t cupsd_cache_t dir "*"))
 
+(call devices_read_urandom (cupsd_t))
+
+(call files_read_generic_usr_files (cupsd_t))
+
+(call filesystem_getattr_filesystems (cupsd_t))
+
+(call network_tcp_bind_generic_node (cupsd_t))
+
 (call auth_nsswitch_client_subject (cupsd_t))
 
 (call dbus_system_client_subject (cupsd_t))
 
+(call cups_list_spool (cupsd_t))
+(call cups_tcp_bind_cups_port (cupsd_t))
 (call cups_manage_cupsd_config_files (cupsd_t)) ; /etc/cups/subscriptions.conf.N
 (call cups_manage_cupsd_run_files (cupsd_t))
 (call cups_manage_cupsd_run_sock_files (cupsd_t))
+
+(call journald_client_subject (cupsd_t))
 
 (call miscfiles_read_localization_files (cupsd_t))
 
@@ -172,6 +195,11 @@
 (macro cups_manage_cupsd_run_sock_files ((type ARG1))
     (call files_search_run (ARG1))
     (call manage_sock_files_pattern (ARG1 cupsd_run_t cupsd_run_t)))
+
+(macro cups_tcp_bind_cups_port ((type ARG1))
+    (allow ARG1 self (capability (net_bind_service)))
+    (call network_tcp_bind_subject (ARG1))
+    (allow ARG1 port_cups_t (udp_socket (name_bind))))
 
 (macro cups_admin ((type ARG1))
     (typeattributeset is_cups_admin_subject ARG1))

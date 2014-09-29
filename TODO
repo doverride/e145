@@ -2,13 +2,6 @@ remove hacks to deal with mislabeled /run/user:
     grep -ri run_user_hack .
 
 target: logrotate, cron system jobs
-    glib
-
-    /usr/bin/gapplication
-    /usr/bin/gdbus
-    /usr/bin/gio-querymodules-64
-    /usr/bin/glib-compile-schemas
-    /usr/bin/gsettings
 
 target /usr/sbin/glibc_post_upgrade.*
     i suspect this is what makes select exec fles end up with file_t type

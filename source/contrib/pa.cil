@@ -1,11 +1,13 @@
 (roleattribute is_pa_role)
 (roleattribute is_pactl_role)
+(roleattribute is_startpa_role)
 
 (typeattribute is_pa_admin_subject)
 
 (typeattribute is_pa_subject)
 (typeattributeset is_pa_subject (pa_t))
 
+(typeattribute is_startpa_subject)
 (typeattribute is_pactl_subject)
 
 (typeattribute is_pa_session_subject)
@@ -28,6 +30,14 @@
 (typeattribute is_pa_file_object)
 (typeattributeset is_pa_file_object (pa_conf_t
     pa_dbus_conf_t pa_var_lib_t))
+
+(type startpa_exec_t)
+(call application_subject_entry (is_startpa_subject startpa_exec_t))
+
+(context file_startpa_exec (system_u object_r startpa_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/start-pulseaudio-x11" file file_startpa_exec)
+(filecon "/usr/bin/start-pulseaudio-kde" file file_startpa_exec)
 
 (type pactl_exec_t)
 (call application_subject_entry (is_pactl_subject pactl_exec_t))
@@ -157,6 +167,12 @@
 
 (macro pa_exec_pactl ((type ARG1))
     (call can_exec (ARG1 pactl_exec_t)))
+
+(macro pa_role_template_startpa ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_startpa_role ARG1)
+    (typeattributeset is_startpa_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 startpa_exec_t ARG3)))
 
 (macro pa_role_template_pactl ((role ARG1)(type ARG2)(type ARG3)
     (type ARG4)(type ARG5))

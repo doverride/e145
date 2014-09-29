@@ -29,6 +29,16 @@
 (filecon "/usr/libexec/gnome-shell-perf-helper" file file_gshell_helper_exec)
 (filecon "/usr/libexec/gnome-shell-portal-helper" file file_gshell_helper_exec)
 
+(allow is_gshell_subject self (process (execmem setsched)))
+
+(call system_read_sysctl_vm_overcommit_files (is_gshell_subject))
+
+(call devices_read_urandom (is_gshell_subject))
+(call devices_read_sysfs_files (is_gshell_subject))
+
+(call files_read_generic_etc_files (is_gshell_subject)) ; /etc/drirc
+(call files_read_generic_usr_files (is_gshell_subject)) ; /usr/share/X11/locale/locale.alias
+
 (call accountsservice_dbus_chat (is_gshell_subject))
 
 (call bluetooth_dbus_chat_bluetoothd (is_gshell_subject))
@@ -40,23 +50,44 @@
 (call geoclue_dbus_chat (is_gshell_subject))
 
 (call logind_dbus_chat (is_gshell_subject))
+(call logind_list_run (is_gshell_subject))
+(call logind_read_run_files (is_gshell_subject))
 
-(call miscfiles_read_localization_files (is_gshell_subject))
+(call miscfiles_read_generic_cert_files (is_gshell_subject))
 
 (call networkmgr_dbus_chat (is_gshell_subject))
 
 (call polkit_dbus_chat_polkitd (is_gshell_subject))
 
+(call seutil_read_config_files (is_gshell_subject))
+
 (call upower_dbus_chat_upowerd (is_gshell_subject))
+
+(optional gshell_subject_optional_usersubject
+    (type user_gshell_run_t)
+    (call usersubject_run_object (user_gshell_run_t))
+    (type user_gshell_tmp_t)
+    (call usersubject_tmp_object (user_gshell_tmp_t))
+    (type user_gshell_tmpfs_t)
+    (call usersubject_tmpfs_object (user_gshell_tmpfs_t)))
+
+(call auth_nsswitch_client_subject (is_gshell_cald_subject))
 
 (macro gshell_exec_gshell ((type ARG1))
     (call can_exec (ARG1 gshell_exec_t)))
 
-(macro gshell_role_template_gshell ((role ARG1)(type ARG2)(type ARG3))
+(macro gshell_role_template_gshell ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5)(type ARG6))
     (roleattributeset is_gshell_role ARG1)
     (typeattributeset is_gshell_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 gshell_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 gshell_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG5 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG5 file "*"))
+    (allow ARG3 ARG6 mmap_file_perms)
+    (allow ARG3 ARG6 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG6 file "*")))
 
 (macro gshell_role_template_gshellcald ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gshell_role ARG1)
