@@ -71,7 +71,7 @@
 (call dbus_system_client_subject (is_ibus_dconf_subject))
 
 (optional ibusdconf_subject_optional_dconf
-    (call dconf_read_config_files (is_ibusd_dconf_subject)))
+    (call dconf_read_config_files (is_ibus_dconf_subject)))
 
 (call files_read_generic_usr_files (is_ibus_x11_subject))
 

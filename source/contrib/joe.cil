@@ -1985,7 +1985,7 @@
 
     (optional joe_pa_optional_joe_gsession
         (allow joe_pa_t user_iceauth_home_t read_file_perms)
-        (call stream_connect_pattern (joe_pa_t user_iceauth_tmp_t user_iceauth_tmp_t joe_gession_tmp_t)))
+        (call stream_connect_pattern (joe_pa_t user_iceauth_tmp_t user_iceauth_tmp_t joe_gsession_t)))
 
     (optional joe_pa_optional_joe_xserver
         (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
