@@ -1009,7 +1009,7 @@
 
             (call usersubject_application_subject (joe_gshell_t))
 
-            (call dbus_session_client (joe_gshell_t user_dbusd_tmp_t joe_dbusd_t))
+            (call dbus_session_client_subject (joe_gshell_t user_dbusd_tmp_t joe_dbusd_t))
 
             (call xserver_common_client_subject (joe_gshell_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
             (call xserver_client_subject_tmpfs_template (joe_gshell_t user_gshell_tmpfs_t))
@@ -1040,8 +1040,8 @@
             (call usersubject_run_user_dir_filetrans (joe_t user_dconf_run_t dir "dconf"))
             (call usersubject_run_user_dir_filetrans (joe_dconfsvc_t user_dconf_run_t dir "dconf"))
 
-            (call usersubject_conf_filetrans (joe_t user_dconfc_conf_t dir "dconf"))
-            (call usersubject_conf_filetrans (joe_dconfsvc_t user_dconf_conf_t dir "dconf"))
+            (call usersubject_config_filetrans (joe_t user_dconfc_conf_t dir "dconf"))
+            (call usersubject_config_filetrans (joe_dconfsvc_t user_dconf_conf_t dir "dconf"))
 
             (context file_joe_user_dconf_run (joe_u object_r user_dconf_run_t ((s0)(s0))))
             (filecon "/run/user/1000/dconf(/.*)?" any file_joe_user_dconf_run)

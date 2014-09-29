@@ -25,7 +25,7 @@
     (type user_dconf_run_t)
     (call usersubject_run_object (user_dconf_run_t))
     (type user_dconf_conf_t)
-    (call usersubject_conf_object (user_dconf_conf_t)))
+    (call usersubject_config_object (user_dconf_conf_t)))
 
 (macro dconf_exec_dconfsvc ((type ARG1))
     (call can_exec (ARG1 dconfsvc_exec_t)))
