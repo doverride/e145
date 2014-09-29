@@ -55,6 +55,8 @@
 (call logind_dbus_chat (is_gshell_subject))
 (call logind_list_run (is_gshell_subject))
 (call logind_read_run_files (is_gshell_subject))
+(call logind_use_fd (is_gshell_subject))
+(call logind_write_inherited_run_fifo_files (is_gshell_subject))
 
 (call miscfiles_read_generic_cert_files (is_gshell_subject))
 
@@ -75,6 +77,8 @@
     (call usersubject_tmp_object (user_gshell_tmp_t))
     (type user_gshell_tmpfs_t)
     (call usersubject_tmpfs_object (user_gshell_tmpfs_t)))
+
+(call files_read_generic_usr_files (is_gshell_cald_subject))
 
 (call auth_nsswitch_client_subject (is_gshell_cald_subject))
 

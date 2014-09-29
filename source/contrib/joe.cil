@@ -642,6 +642,14 @@
             (allow joe_gsd_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_gsd_t user_dconf_run_t dir "dconf"))
 
+            (allow joe_gsd_t joe_ibusd_t (process (signull)))
+
+            (call stream_connect_pattern (joe_gsd_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
+
+            (allow joe_gsd_t user_ibus_conf_t (dirs (list)))
+            (allow joe_gsd_t user_ibus_conf_t read_file_perms)
+            (allow joe_gsd_t user_ibus_conf_t (dir (setattr)))
+
             (allow joe_t joe_gsd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsd_t))
 
@@ -786,6 +794,8 @@
             (call ps_subject_pattern (joe_t joe_gvfsgoavm_t))
 
             (call usersubject_application_subject (joe_gvfsgoavm_t))
+
+            (call dbus_session_client_subject (joe_gvfsgoavm_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsgph2vm_t)
             (call gvfs_role_template_gvfsgph2vm (joe_r joe_dbusd_t joe_gvfsgph2vm_t))
@@ -1052,6 +1062,9 @@
 
             (call stream_connect_pattern (joe_gshell_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
 
+            (allow joe_gshell_t user_iceauth_home_t read_file_perms)
+            (call stream_connect_pattern (joe_gshell_t user_iceauth_tmp_t user_iceauth_tmp_t joe_gsession_t))
+
             (allow joe_gshell_t joe_ibusd_t (process (signull)))
 
             (allow joe_gshell_t user_ibus_conf_t (dirs (list)))
@@ -1073,6 +1086,13 @@
 
             (allow joe_t joe_gshellcald_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gshellcald_t))
+
+            (call read_files_pattern (joe_gshellcald_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_gshellcald_t))
+
+            (allow joe_gshellcald_t user_dconf_run_t manage_dir_perms)
+            (allow joe_gshellcald_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_gshellcald_t user_dconf_run_t dir "dconf"))
 
             (call usersubject_application_subject (joe_gshellcald_t))
 
@@ -1119,12 +1139,27 @@
             (call dbus_session_client_subject (joe_giscw_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_canberra_t)
-            (call canberra_role_template_canberra (joe_r joe_gsession_t joe_canberra_t))
+            (call canberra_role_template_canberra (joe_r joe_gsession_t joe_canberra_t
+                user_canberra_tmpfs_t))
+
+            (allow joe_t user_canberra_tmpfs_t manage_file_perms)
+            (allow joe_t user_canberra_tmpfs_t relabel_file_perms)
+
+            (call pa_client_subject (joe_r joe_canberra_t joe_pa_t user_pa_home_t
+                user_pa_run_t user_canberra_tmpfs_t))
+
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_canberra_t))
+            (call usersubject_config_filetrans (joe_canberra_t user_pa_home_t dir "pulse"))
+            (call usersubject_run_user_dir_filetrans (joe_canberra_t user_pa_run_t dir "pulse"))
 
             (allow joe_t joe_canberra_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_canberra_t))
 
             (call usersubject_application_subject (joe_canberra_t))
+
+            (call dbus_session_client_subject (joe_canberra_t user_dbusd_tmp_t joe_dbusd_t))
+
+            (call xserver_client_subject (joe_canberra_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_startpa_t)
             (call pa_role_template_startpa (joe_r joe_gsession_t joe_startpa_t))
@@ -1192,15 +1227,17 @@
             (allow joe_t joe_ibusdconf_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_ibusdconf_t))
 
-            (allow joe_ibusdconf_t joe_ibusd_t (process (signull)))
-
             (call stream_connect_pattern (joe_ibusdconf_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
 
             (call usersubject_application_subject (joe_ibusdconf_t))
 
-            (call usersubject_search_generic_config (joe_ibusdconf_t))
-            (call read_files_pattern (joe_ibusdconf_t user_ibus_conf_t user_ibus_conf_t)) 
+            (allow joe_ibusdconf_t joe_ibusd_t (process (signull)))
 
+            (call usersubject_search_generic_config (joe_ibusdconf_t))
+            (allow joe_ibusdconf_t user_ibus_conf_t (dirs (list)))
+            (allow joe_ibusdconf_t user_ibus_conf_t read_file_perms)
+            (allow joe_ibusdconf_t user_ibus_conf_t (dir (setattr)))
+            
             (call read_files_pattern (joe_ibusdconf_t user_dconf_conf_t user_dconf_conf_t))
             (call usersubject_search_generic_config (joe_ibusdconf_t))
 
@@ -1218,6 +1255,11 @@
 
             (allow joe_ibusx11_t joe_ibusd_t (process (signull)))
 
+            (call usersubject_search_generic_config (joe_ibusx11_t))
+            (allow joe_ibusx11_t user_ibus_conf_t (dirs (list)))
+            (allow joe_ibusx11_t user_ibus_conf_t read_file_perms)
+            (allow joe_ibusx11_t user_ibus_conf_t (dir (setattr)))
+
             (call stream_connect_pattern (joe_ibusx11_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
 
             (call usersubject_application_subject (joe_ibusx11_t))
@@ -1234,17 +1276,16 @@
 
             (allow joe_ibuseng_t joe_ibusd_t (process (signull)))
 
+            (call usersubject_search_generic_config (joe_ibuseng_t))
+            (allow joe_ibuseng_t user_ibus_conf_t (dirs (list)))
+            (allow joe_ibuseng_t user_ibus_conf_t read_file_perms)
+            (allow joe_ibuseng_t user_ibus_conf_t (dir (setattr)))
+
             (call stream_connect_pattern (joe_ibuseng_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
 
+            (call dbus_session_client_subject (joe_ibuseng_t user_dbusd_tmp_t joe_dbusd_t))
+
             (call usersubject_application_subject (joe_ibuseng_t))
-
-            (type joe_gdbus_t)
-            (call glib_role_template_gdbus (joe_r joe_gshell_t joe_gdbus_t))
-
-            (allow joe_t joe_gdbus_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gdbus_t))
-
-            (call usersubject_application_subject (joe_gdbus_t)) 
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))

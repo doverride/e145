@@ -53,6 +53,8 @@
 (allow is_ibusd_subject self (unix_stream_socket (listen accept)))
 (allow is_ibusd_subject self rw_fifo_file_perms)
 
+(call system_read_sysctl_vm_overcommit_files (is_ibusd_subject))
+
 (call devices_read_urandom (is_ibusd_subject))
 
 (call files_list_tmp (is_ibusd_subject))
@@ -62,20 +64,38 @@
 
 (call ibus_read_cache_files (is_ibusd_subject))
 
+(call machined_read_config_files (is_ibusd_subject))
+
 (call miscfiles_read_localization_files (is_ibusd_subject))
 
 (optional ibusd_subject_optional_usersubject
     (type user_ibus_conf_t)
     (call usersubject_config_object (user_ibus_conf_t)))
 
+(call filesystem_getattr_filesystems (is_ibus_dconf_subject))
+
 (call dbus_system_client_subject (is_ibus_dconf_subject))
+
+(call machined_read_config_files (is_ibus_dconf_subject))
+
+(call miscfiles_read_localization_files (is_ibus_dconf_subject))
 
 (optional ibusdconf_subject_optional_dconf
     (call dconf_read_config_files (is_ibus_dconf_subject)))
 
+(call filesystem_getattr_filesystems (is_ibus_x11_subject))
+
 (call files_read_generic_usr_files (is_ibus_x11_subject))
 
+(call machined_read_config_files (is_ibus_x11_subject))
+
 (call miscfiles_read_localization_files (is_ibus_x11_subject))
+
+(call filesystem_getattr_filesystems (is_ibus_eng_subject))
+
+(call machined_read_config_files (is_ibus_eng_subject))
+
+(call miscfiles_read_localization_files (is_ibus_eng_subject))
 
 (macro ibus_exec_ibusd ((type ARG1))
     (call can_exec (ARG1 ibusd_exec_t)))
