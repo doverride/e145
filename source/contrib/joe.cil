@@ -1040,7 +1040,7 @@
             (call usersubject_run_user_dir_filetrans (joe_t user_dconf_run_t dir "dconf"))
             (call usersubject_run_user_dir_filetrans (joe_dconfsvc_t user_dconf_run_t dir "dconf"))
 
-            (call usersubject_config_filetrans (joe_t user_dconfc_conf_t dir "dconf"))
+            (call usersubject_config_filetrans (joe_t user_dconf_conf_t dir "dconf"))
             (call usersubject_config_filetrans (joe_dconfsvc_t user_dconf_conf_t dir "dconf"))
 
             (context file_joe_user_dconf_run (joe_u object_r user_dconf_run_t ((s0)(s0))))
@@ -1063,7 +1063,7 @@
             (call usersubject_application_subject (joe_giscw_t))
 
             (type joe_canberra_t)
-            (call canberra_role_template_canberra (joe_t joe_gsession_t joe_canberra_t))
+            (call canberra_role_template_canberra (joe_r joe_gsession_t joe_canberra_t))
 
             (allow joe_t joe_canberra_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_canberra_t))
