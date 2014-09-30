@@ -1,0 +1,29 @@
+(roleattribute is_telepathy_role)
+
+(typeattribute is_tpmctool_subject)
+(typeattribute is_tpmc_subject)
+
+(type tpmctool_exec_t)
+(call application_subject_entry (is_tpmctool_subject tpmctool_exec_t))
+
+(context file_tpmctool_exec (system_u object_r tpmctool_exec_t ((s0)(s0))))
+(filecon "/usr/bin/mc-tool" file file_tpmctool_exec)
+(filecon "/usr/bin/mc-wait-for-name" file file_tpmctool_exec)
+
+(type tpmc_exec_t)
+(call application_subject_entry (is_tpmc_subject tpmc_exec_t))
+
+(context file_tpmc_exec (system_u object_r tpmc_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/mission-control-5" file file_tpmc_exec)
+
+(macro telepathy_role_template_mctool ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_telepathy_role ARG1)
+    (typeattributeset is_tpmcstool_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 tpmcstool_exec_t ARG3)))
+
+(macro telepathy_role_template_mc ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_telepathy_role ARG1)
+    (typeattributeset is_tpmc_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 tpmc_exec_t ARG3)))
