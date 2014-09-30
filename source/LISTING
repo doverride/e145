@@ -111,6 +111,7 @@ contrib/gnome/gdm.cil
 contrib/gnome/gis.cil
 contrib/gnome/gkeyring.cil
 contrib/gnome/glib.cil
+contrib/gnome/goa.cil
 contrib/gnome/gsd.cil
 contrib/gnome/gsession.cil
 contrib/gnome/gshell.cil
