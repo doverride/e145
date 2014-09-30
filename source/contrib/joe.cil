@@ -1193,7 +1193,18 @@
             (call usersubject_run_user_dir_filetrans (joe_gsettings_t user_dconf_run_t dir "dconf"))
 
             (type joe_gsdconv_t)
-            (call gconf_role_template_gsdconv (joe_r joe_gsession_t joe_gsdconv_t))
+            (call gconf_role_template_gsdconv (joe_r joe_gsession_t joe_gsdconv_t user_gsdconv_data_t))
+
+            (context file_joe_user_gsdconv_data (joe_u object_r user_gsdconv_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/gsettings-data-convert(/.*)?" any file_joe_user_gsdconv_data)
+
+            (allow joe_t user_gsdconv_data_t manage_dir_perms)
+            (allow joe_t user_gsdconv_data_t relabel_dir_perms)
+            (allow joe_t user_gsdconv_data_t manage_file_perms)
+            (allow joe_t user_gsdconv_data_t relabel_file_perms)
+
+            (call usersubject_data_filetrans (joe_t user_gsdconv_data_t dir "gsettings-data-convert"))
+            (call usersubject_data_filetrans (joe_gsdconv_t user_gsdconv_data_t dir "gsettings-data-convert"))
 
             (allow joe_t joe_gsdconv_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsdconv_t))

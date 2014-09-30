@@ -49,6 +49,10 @@
 
 (call miscfiles_read_localization_files (is_gsdconv_subject))
 
+(optional gsdconv_subject_optional_usersubject
+    (type user_gsdconv_data_t)
+    (call usersubject_data_object (user_gsdconv_data_t)))
+
 (macro gconf_role_template_gconfd ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gconf_role ARG1)
     (typeattributeset is_gconfd_subject ARG3)
@@ -61,8 +65,10 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gconftool_exec_t ARG3)))
 
-(macro gconf_role_template_gsdconv ((role ARG1)(type ARG2)(type ARG3))
+(macro gconf_role_template_gsdconv ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gconf_role ARG1)
     (typeattributeset is_gsdconv_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 gsdconv_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 gsdconv_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms))
