@@ -8,6 +8,9 @@
 (context file_goad_exec (system_u object_r goad_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/goa-daemon" file file_goad_exec)
 
+(macro goa_exec_goad ((type ARG1))
+    (call can_exec (ARG1 goad_exec_t)))
+
 (macro goa_role_template_goad ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_goa_role ARG1)
     (typeattributeset is_goad_subject ARG3)

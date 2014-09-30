@@ -16,6 +16,9 @@
 (context file_tpmc_exec (system_u object_r tpmc_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/mission-control-5" file file_tpmc_exec)
 
+(macro telepathy_exec_mc ((type ARG1))
+    (call can_exec (ARG1 tpmc_exec_t)))
+
 (macro telepathy_role_template_mctool ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_telepathy_role ARG1)
     (typeattributeset is_tpmcstool_subject ARG3)

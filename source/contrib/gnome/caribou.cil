@@ -15,6 +15,9 @@
 (context file_caribou_exec (system_u object_r caribou_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/caribou" file file_caribou_exec)
 
+(macro caribou_exec_caribou ((type ARG1))
+    (call can_exec (ARG1 caribou_exec_t)))
+
 (macro caribou_role_template_prefs ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_caribou_role ARG1)
     (typeattributeset is_cariboupref_subject ARG3)

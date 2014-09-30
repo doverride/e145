@@ -175,6 +175,8 @@
 (call auth_login_program_subject (gdm_t))
 (call auth_manage_pam_console_run_files (gdm_t)) ; only read/write confirmed
 
+(call caribou_exec_caribou (gdm_t))
+
 (call dbus_acquire_service_system (gdm_t))
 (call dbus_exec_dbusd (gdm_t))
 (call dbus_exec_launch (gdm_t))
@@ -199,6 +201,8 @@
 (call glib_exec_gsettings (gdm_t))
 
 (call glxutils_exec (gdm_t))
+
+(call goa_exec_goad (gdm_t))
 
 (call gsd_exec_gsd (gdm_t))
 (call gsd_exec_helper (gdm_t)) ; /usr/libexec/gnome-settings-daemon-localeexec
@@ -252,6 +256,8 @@
 (call systemd_get_status_system (gdm_t))
 (call systemd_getattr_generic_unit_dirs (gdm_t))
 (call systemd_exec_helper (gdm_t)) ; systemd-multi-seat-x
+
+(call telepathy_exec_mc (gdm_t))
 
 (call udevd_client_subject (gdm_t))
 

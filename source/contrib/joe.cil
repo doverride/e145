@@ -1297,6 +1297,70 @@
             (call dbus_session_client_subject (joe_ibuseng_t user_dbusd_tmp_t joe_dbusd_t))
 
             (call usersubject_application_subject (joe_ibuseng_t))
+
+            (type joe_tpmc_t)
+            (call telepathy_role_template_mc (joe_r joe_dbusd_t joe_tpmc_t))
+
+            (allow joe_t joe_tpmc_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_tpmc_t))
+
+            (call usersubject_application_subject (joe_tpmc_t))
+
+            (type joe_caribou_t)
+            (call caribou_role_template_caribou (joe_r joe_dbusd_t joe_caribou_t))
+
+            (allow joe_t joe_caribou_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_caribou_t))
+
+            (call usersubject_application_subject (joe_caribou_t)) 
+
+            (type joe_goad_t)
+            (call goa_role_template_goad (joe_r joe_dbusd_t joe_goad_t))
+
+            (allow joe_t joe_goad_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_goad_t))
+
+            (call usersubject_application_subject (joe_goad_t)) 
+
+            (type joe_trminapp_t)
+            (call tracker_role_template_trminapp (joe_r joe_gsession_t joe_trminapp_t))
+
+            (allow joe_t joe_trminapp_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_trminapp_t))
+
+            (call usersubject_application_subject (joe_trminapp_t)) 
+
+            (type joe_trminfs_t)
+            (call tracker_role_template_trminfs (joe_r joe_gsession_t joe_trminfs_t))
+
+            (allow joe_t joe_trminfs_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_trminfs_t))
+
+            (call usersubject_application_subject (joe_trminfs_t)) 
+
+            (type joe_trextr_t)
+            (call tracker_role_template_trextr (joe_r joe_gsession_t joe_trextr_t))
+
+            (allow joe_t joe_trextr_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_trextr_t))
+
+            (call usersubject_application_subject (joe_trextr_t))  
+
+            (type joe_trstore_t)
+            (call tracker_role_template_trstore (joe_r joe_dbusd_t joe_trstore_t))
+
+            (allow joe_t joe_trstore_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_trstore_t))
+
+            (call usersubject_application_subject (joe_trstore_t))  
+
+            (type joe_gdbus_t)
+            (call glib_role_template_gdbus (joe_r joe_dsession_t joe_gdbus_t))
+
+            (allow joe_t joe_gdbus_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gdbus_t))
+
+            (call usersubject_application_subject (joe_gdbus_t)) 
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
