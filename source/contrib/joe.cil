@@ -1050,7 +1050,7 @@
 
             (type joe_gshell_t)
             (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t
-                user_gshell_tmpfs_t user_gshell_tmp_t user_ghell_data_t))
+                user_gshell_tmpfs_t user_gshell_tmp_t user_gshell_data_t))
 
             (context file_joe_user_gshell_data (joe_u object_r user_gshell_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gnome-shell(/.*)?" any file_joe_user_gshell_data)

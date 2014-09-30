@@ -59,7 +59,7 @@
     (type user_gsdconv_data_t)
     (call usersubject_data_object (user_gsdconv_data_t))
     (type user_gsdconv_conf_t)
-    (call usersubject_conf_object (user_gsdconv_conf_t)))
+    (call usersubject_config_object (user_gsdconv_conf_t)))
 
 (macro gconf_role_template_gconfd ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gconf_role ARG1)
