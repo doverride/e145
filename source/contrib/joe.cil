@@ -582,11 +582,14 @@
         (optional joe_optional_joe_gnome
             (type joe_gsession_t)
             (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t user_iceauth_tmp_t
-                user_gsession_tmpfs_t))
+                user_gsession_tmpfs_t user_gsession_conf_t))
 
             (context file_joe_user_iceauth_home (joe_u object_r user_iceauth_home_t ((s0)(s0))))
             (filecon "/home/joe/\.ICEauthority" file file_joe_user_iceauth_home)
             (filecon "/home/joe/\.ICEauthority-c" file file_joe_user_iceauth_home)
+
+            (context file_joe_user_gsession_conf (joe_u object_r user_gsession_conf_t ((s0)(s0))))
+            (filecon "/home/joe/\.config/gnome-session(/.*)?" any file_joe_user_gsession_conf)
 
             (call gkeyring_role_template_gkeyringd (joe_r joe_gsession_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
 
@@ -604,6 +607,9 @@
             (call usersubject_home_dir_filetrans (joe_gsession_t user_iceauth_home_t file ".ICEauthority-c"))
             (call usersubject_home_dir_filetrans (joe_gsession_t user_iceauth_home_t file ".ICEauthority"))
 
+            (call usersubject_config_filetrans (joe_t user_gsession_conf_t dir "gnome-session"))
+            (call usersubject_config_filetrans (joe_gsession_t user_gsession_conf_t dir "gnome-session"))
+
             (allow joe_gsession_t user_dconf_conf_t manage_dir_perms)
             (allow joe_gsession_t user_dconf_conf_t manage_file_perms)
             (call usersubject_config_filetrans (joe_gsession_t user_dconf_conf_t dir "dconf"))
@@ -620,7 +626,18 @@
             (call read_files_pattern (joe_gsession_t user_dconf_run_t user_dconf_run_t))
 
             (type joe_gsd_t)
-            (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t))
+            (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t user_gsd_data_t))
+
+            (context file_joe_user_gsd_data (joe_u object_r user_gsd_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/gnome-settings-daemon(/.*)?" any file_joe_user_gsd_data)
+
+            (allow joe_t user_gsd_data_t manage_dir_perms)
+            (allow joe_t user_gsd_data_t relabel_dir_perms)
+            (allow joe_t user_gsd_data_t manage_file_perms)
+            (allow joe_t user_gsd_data_t relabel_file_perms)
+
+            (call usersubject_data_filetrans (joe_t user_gsd_data_t dir "gnome-settings-daemon"))
+            (call usersubject_data_filetrans (joe_gsd_t user_gsd_data_t dir "gnome-settings-daemon"))
 
             (call xserver_common_client_subject (joe_gsd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
             (call xserver_client_subject_tmpfs_template (joe_gsd_t user_gsd_tmpfs_t))
@@ -631,6 +648,9 @@
             (call usersubject_home_dir_filetrans_user_config_dir (joe_gsd_t))
             (call usersubject_config_filetrans (joe_gsd_t user_pa_home_t dir "pulse"))
             (call usersubject_run_user_dir_filetrans (joe_gsd_t user_pa_run_t dir "pulse"))
+
+            (call usersubject_manage_generic_data_dirs (joe_gsd_t)) ; ~/.local/share/applications
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_gsd_t))
 
             (allow joe_t user_gsd_tmpfs_t manage_file_perms)
             (allow joe_t user_gsd_tmpfs_t relabel_file_perms)
@@ -646,9 +666,9 @@
 
             (call stream_connect_pattern (joe_gsd_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
 
-            (allow joe_gsd_t user_ibus_conf_t (dirs (list)))
+            (allow joe_gsd_t user_ibus_conf_t manage_dir_perms)
             (allow joe_gsd_t user_ibus_conf_t read_file_perms)
-            (allow joe_gsd_t user_ibus_conf_t (dir (setattr)))
+            (call usersubject_config_filetrans (joe_gsd_t user_ibus_conf_t dir "ibus"))
 
             (allow joe_t joe_gsd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsd_t))
@@ -691,6 +711,9 @@
 
             (call usersubject_data_filetrans (joe_t user_gkeyringd_data_t dir "keyrings"))
             (call usersubject_data_filetrans (joe_gkeyringd_t user_gkeyringd_data_t dir "keyrings"))
+
+            (call usersubject_manage_generic_data_dirs (joe_gkeyringd_t))
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_gkeyringd_t))
 
             (call read_files_pattern (joe_gkeyringd_t user_dconf_conf_t user_dconf_conf_t))
             (call usersubject_search_generic_config (joe_gkeyringd_t))
@@ -1026,8 +1049,11 @@
             (call usersubject_application_subject (joe_gvfsdtrash_t))
 
             (type joe_gshell_t)
-            (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t user_gshell_tmpfs_t
-                user_gshell_tmp_t))
+            (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t
+                user_gshell_tmpfs_t user_gshell_tmp_t user_ghell_data_t))
+
+            (context file_joe_user_gshell_data (joe_u object_r user_gshell_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/gnome-shell(/.*)?" any file_joe_user_gshell_data)
 
             (call pa_client_subject (joe_r joe_gshell_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_gshell_tmpfs_t))
@@ -1035,6 +1061,11 @@
             (call usersubject_home_dir_filetrans_user_config_dir (joe_gshell_t))
             (call usersubject_config_filetrans (joe_gshell_t user_pa_home_t dir "pulse"))
             (call usersubject_run_user_dir_filetrans (joe_gshell_t user_pa_run_t dir "pulse"))
+
+            (allow joe_t user_gshell_data_t manage_dir_perms)
+            (allow joe_t user_gshell_data_t relabel_dir_perms)
+            (allow joe_t user_gshell_data_t manage_file_perms)
+            (allow joe_t user_gshell_data_t relabel_file_perms)
 
             (allow joe_t user_gshell_run_t manage_dir_perms)
             (allow joe_t user_gshell_run_t relabel_dir_perms)
@@ -1046,6 +1077,12 @@
 
             (allow joe_t user_gshell_tmp_t manage_file_perms)
             (allow joe_t user_gshell_tmp_t relabel_file_perms)
+
+            (call usersubject_data_filetrans (joe_t user_gshell_data_t dir "gnome-shell"))
+            (call usersubject_data_filetrans (joe_gshell_t user_gshell_data_t dir "gnome-shell"))
+
+            (call usersubject_manage_generic_data_dirs (joe_gshell_t))
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_gshell_t))
 
             (context file_joe_user_gshell_run (joe_u object_r user_gshell_run_t ((s0)(s0))))
             (filecon "/run/user/1000/gnome-shell(/.*)?" any file_joe_user_gshell_run)
@@ -1197,18 +1234,27 @@
             (call usersubject_run_user_dir_filetrans (joe_gsettings_t user_dconf_run_t dir "dconf"))
 
             (type joe_gsdconv_t)
-            (call gconf_role_template_gsdconv (joe_r joe_gsession_t joe_gsdconv_t user_gsdconv_data_t))
+            (call gconf_role_template_gsdconv (joe_r joe_gsession_t joe_gsdconv_t user_gsdconv_data_t
+                user_gsdconv_conf_t))
 
             (context file_joe_user_gsdconv_data (joe_u object_r user_gsdconv_data_t ((s0)(s0))))
-            (filecon "/home/joe/\.local/share/gsettings-data-convert(/.*)?" any file_joe_user_gsdconv_data)
+            (filecon "/home/joe/\.local/share/gsettings-data-convert.*" file file_joe_user_gsdconv_data)
 
-            (allow joe_t user_gsdconv_data_t manage_dir_perms)
-            (allow joe_t user_gsdconv_data_t relabel_dir_perms)
+            (context file_joe_user_gsdconv_conf (joe_u object_r user_gsdconv_conf_t ((s0)(s0))))
+            (filecon "/home/joe/\.config/gconf(/.*)?" any file_joe_user_gsdconv_conf)
+
             (allow joe_t user_gsdconv_data_t manage_file_perms)
             (allow joe_t user_gsdconv_data_t relabel_file_perms)
 
-            (call usersubject_data_filetrans (joe_t user_gsdconv_data_t dir "gsettings-data-convert"))
-            (call usersubject_data_filetrans (joe_gsdconv_t user_gsdconv_data_t dir "gsettings-data-convert"))
+            (allow joe_t user_gsdconv_conf_t manage_dir_perms)
+            (allow joe_t user_gsdconv_conf_t relabel_dir_perms)
+            (allow joe_t user_gsdconv_conf_t manage_file_perms)
+            (allow joe_t user_gsdconv_conf_t relabel_file_perms)
+
+            (call usersubject_data_filetrans (joe_gsdconv_t user_gsdconv_data_t file "*"))
+
+            (call usersubject_config_filetrans (joe_t user_gsdconv_conf_t dir "gconf"))
+            (call usersubject_config_filetrans (joe_gsdconv_t user_gsdconv_conf_t dir "gconf"))
 
             (call read_files_pattern (joe_gsdconv_t user_dconf_conf_t user_dconf_conf_t))
             (call usersubject_search_generic_config (joe_gsdconv_t))
@@ -1312,10 +1358,22 @@
             (call usersubject_application_subject (joe_ibuseng_t))
 
             (type joe_tpmc_t)
-            (call telepathy_role_template_mc (joe_r joe_dbusd_t joe_tpmc_t))
+            (call telepathy_role_template_mc (joe_r joe_dbusd_t joe_tpmc_t user_tpmc_data_t))
+
+            (context file_joe_user_tpmc_data (joe_u object_r user_tpmc_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/telepathy(/.*)?" any file_joe_user_tpmc_data)
+
+            (allow joe_t user_tpmc_data_t manage_dir_perms)
+            (allow joe_t user_tpmc_data_t relabel_dir_perms)
+
+            (call usersubject_data_filetrans (joe_t user_tpmc_data_t dir "telepathy"))
+            (call usersubject_data_filetrans (joe_tpmc_t user_tpmc_data_t dir "telepathy"))
 
             (allow joe_t joe_tpmc_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_tpmc_t))
+
+            (call usersubject_manage_generic_data_dirs (joe_tpmc_t))
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_tpmc_t))
 
             (call read_files_pattern (joe_tpmc_t user_dconf_conf_t user_dconf_conf_t))
             (call usersubject_search_generic_config (joe_tpmc_t))
@@ -1388,6 +1446,14 @@
 
             (call dbus_session_client_subject (joe_trminfs_t user_dbusd_tmp_t joe_dbusd_t))
 
+            (type joe_trmingd_t)
+            (call tracker_role_template_trmingd (joe_r joe_gsession_t joe_trmingd_t))
+
+            (allow joe_t joe_trmingd_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_trmingd_t))
+
+            (call usersubject_application_subject (joe_trmingd_t)) 
+ 
             (type joe_trextr_t)
             (call tracker_role_template_trextr (joe_r joe_gsession_t joe_trextr_t user_trextr_tmp_t))
 
@@ -1410,21 +1476,38 @@
 
             (type joe_trstore_t)
             (call tracker_role_template_trstore (joe_r joe_dbusd_t joe_trstore_t user_trstore_conf_t
-                user_trstore_tmp_t))
+                user_trstore_tmp_t user_trstore_cache_t))
 
             (context file_joe_user_trstore_conf (joe_u object_r user_trstore_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/tracker(/.*)?" any file_joe_user_trstore_conf)
+
+            (context file_joe_user_trstore_cache (joe_u object_r user_trstore_cache_t ((s0)(s0))))
+            (filecon "/home/joe/\.cache/tracker(/.*)?" any file_joe_user_trstore_cache)
 
             (allow joe_t user_trstore_conf_t manage_dir_perms)
             (allow joe_t user_trstore_conf_t relabel_dir_perms)
             (allow joe_t user_trstore_conf_t manage_file_perms)
             (allow joe_t user_trstore_conf_t relabel_file_perms)
 
+            (allow joe_t user_trstore_cache_t manage_dir_perms)
+            (allow joe_t user_trstore_cache_t relabel_dir_perms)
+            (allow joe_t user_trstore_cache_t manage_file_perms)
+            (allow joe_t user_trstore_cache_t relabel_file_perms)
+
             (allow joe_t user_trstore_tmp_t manage_file_perms)
             (allow joe_t user_trstore_tmp_t relabel_file_perms)
 
+            (call usersubject_cache_filetrans (joe_t user_trstore_cache_t dir "tracker"))
+            (call usersubject_cache_filetrans (joe_trstore_t user_trstore_cache_t dir "tracker"))
+
+            (call usersubject_manage_generic_cache_dirs (joe_trstore_t))
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_trstore_t))
+
             (call usersubject_config_filetrans (joe_t user_trstore_conf_t dir "tracker"))
             (call usersubject_config_filetrans (joe_trstore_t user_trstore_conf_t dir "tracker"))
+
+            (call usersubject_manage_generic_config_dirs (joe_trstore_t))
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_trstore_t))
 
             (allow joe_t joe_trstore_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trstore_t))
@@ -2208,7 +2291,9 @@
 
     (call usersubject_home_dir_filetrans (joe_t user_pa_home_t file ".esd_auth")) 
     (call usersubject_home_dir_filetrans (joe_pa_t user_pa_home_t file ".esd_auth"))
+
     (call usersubject_config_filetrans (joe_t user_pa_home_t dir "pulse")) 
+    (call usersubject_config_filetrans (joe_pa_t user_pa_home_t dir "pulse")) 
  
     (context file_joe_user_pa_run (joe_u object_r user_pa_run_t ((s0)(s0))))
     (filecon "/run/user/1000/pulse(/.*)?" any file_joe_user_pa_run)

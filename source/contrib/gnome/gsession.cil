@@ -52,6 +52,8 @@
 (call systemd_read_state (is_gsession_subject))
 
 (optional gsession_subject_optional_usersubject
+    (type user_gsession_conf_t)
+    (call usersubject_config_object (user_gsession_conf_t))
     (type user_iceauth_home_t)
     (call usersubject_home_object (user_iceauth_home_t))
     (type user_gsession_tmpfs_t)
@@ -66,7 +68,7 @@
     (call can_exec (ARG1 gsession_helper_exec_t)))
 
 (macro gsession_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
-    (type ARG5)(type ARG6))
+    (type ARG5)(type ARG6)(type ARG7))
     (roleattributeset is_gsession_role ARG1)
     (typeattributeset is_gsession_subject ARG3)
     (roletype ARG1 ARG3)
@@ -83,4 +85,10 @@
     (allow ARG2 ARG6 manage_file_perms)
     (allow ARG2 ARG6 relabel_file_perms)
     (allow ARG3 ARG6 manage_file_perms)
-    (call filesystem_tmpfs_filetrans (ARG3 ARG6 file "*")))
+    (call filesystem_tmpfs_filetrans (ARG3 ARG6 file "*"))
+    (allow ARG2 ARG7 manage_dir_perms)
+    (allow ARG2 ARG7 relabel_dir_perms)
+    (allow ARG2 ARG7 manage_file_perms)
+    (allow ARG2 ARG7 relabel_file_perms)
+    (allow ARG3 ARG7 manage_dir_perms)
+    (allow ARG3 ARG7 manage_file_perms))

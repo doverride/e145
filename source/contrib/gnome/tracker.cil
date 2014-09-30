@@ -81,6 +81,8 @@
 (call miscfiles_read_localization_files (is_trstore_subject))
 
 (optional trstore_subject_optional_usersubject
+    (type user_trstore_cache_t)
+    (call usersubject_cache_object (user_trstore_cache_t))
     (type user_trstore_conf_t)
     (call usersubject_config_object (user_trstore_conf_t))
     (type user_trstore_tmp_t)
@@ -131,7 +133,7 @@
     (call subtrans_pattern (ARG2 trmingd_exec_t ARG3)))
 
 (macro tracker_role_template_trstore ((role ARG1)(type ARG2)(type ARG3)
-    (type ARG4)(type ARG5))
+    (type ARG4)(type ARG5)(type ARG6))
     (roleattributeset is_tracker_role ARG1)
     (typeattributeset is_trstore_subject ARG3)
     (roletype ARG1 ARG3)
@@ -139,7 +141,9 @@
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG5 manage_file_perms)
-    (call files_tmp_filetrans (ARG3 ARG5 file "*")))
+    (call files_tmp_filetrans (ARG3 ARG5 file "*"))
+    (allow ARG3 ARG6 manage_dir_perms)
+    (allow ARG3 ARG6 manage_file_perms))
 
 (macro tracker_role_template_trwb ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_tracker_role ARG1)

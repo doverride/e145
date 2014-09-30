@@ -72,6 +72,8 @@
 (call upower_dbus_chat_upowerd (is_gshell_subject))
 
 (optional gshell_subject_optional_usersubject
+    (type user_gshell_data_t)
+    (call usersubject_data_object (user_gshell_data_t))
     (type user_gshell_run_t)
     (call usersubject_run_object (user_gshell_run_t))
     (type user_gshell_tmp_t)
@@ -86,7 +88,8 @@
 (macro gshell_exec_gshell ((type ARG1))
     (call can_exec (ARG1 gshell_exec_t)))
 
-(macro gshell_role_template_gshell ((role ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5)(type ARG6))
+(macro gshell_role_template_gshell ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
+    (type ARG5)(type ARG6)(type ARG7))
     (roleattributeset is_gshell_role ARG1)
     (typeattributeset is_gshell_subject ARG3)
     (roletype ARG1 ARG3)
@@ -97,7 +100,9 @@
     (call filesystem_tmpfs_filetrans (ARG3 ARG5 file "*"))
     (allow ARG3 ARG6 mmap_file_perms)
     (allow ARG3 ARG6 manage_file_perms)
-    (call files_tmp_filetrans (ARG3 ARG6 file "*")))
+    (call files_tmp_filetrans (ARG3 ARG6 file "*"))
+    (allow ARG3 ARG7 manage_dir_perms)
+    (allow ARG3 ARG7 manage_file_perms))
 
 (macro gshell_role_template_gshellcald ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gshell_role ARG1)
