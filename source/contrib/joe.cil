@@ -1355,7 +1355,7 @@
             (call usersubject_application_subject (joe_trstore_t))  
 
             (type joe_gdbus_t)
-            (call glib_role_template_gdbus (joe_r joe_dsession_t joe_gdbus_t))
+            (call glib_role_template_gdbus (joe_r joe_gsession_t joe_gdbus_t))
 
             (allow joe_t joe_gdbus_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gdbus_t))
