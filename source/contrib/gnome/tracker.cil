@@ -96,7 +96,7 @@
 
 (optional trextr_subject_optional_subject
     (type user_trextr_tmp_t)
-    (call usersubject_tmp_object (user_txextr_tmp_t)))
+    (call usersubject_tmp_object (user_trextr_tmp_t)))
 
 (macro tracker_role_template_tracker ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_tracker_role ARG1)
