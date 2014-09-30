@@ -8,11 +8,27 @@
 (context file_goad_exec (system_u object_r goad_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/goa-daemon" file file_goad_exec)
 
+(allow is_goad_subject self (key (write link search read view)))
+
+(call devices_read_urandom (is_goad_subject))
+
+(call files_read_generic_etc_files (is_goad_subject)) ; FIXME: /etc/krb5.conf
+
+(call filesystem_getattr_filesystems (is_goad_subject))
+
+(call miscfiles_read_localization_files (is_goad_subject))
+
+(optional goad_subject_optional_usersubject
+    (type user_goad_conf_t)
+    (call usersubject_config_object (user_goad_conf_t)))
+
 (macro goa_exec_goad ((type ARG1))
     (call can_exec (ARG1 goad_exec_t)))
 
-(macro goa_role_template_goad ((role ARG1)(type ARG2)(type ARG3))
+(macro goa_role_template_goad ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_goa_role ARG1)
     (typeattributeset is_goad_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 goad_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 goad_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms))

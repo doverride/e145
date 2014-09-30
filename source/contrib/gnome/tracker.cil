@@ -42,7 +42,7 @@
 (call application_subject_entry (is_trmingd_subject trmingd_exec_t))
 
 (context file_trmingd_exec (system_u object_r trmingd_exec_t ((s0)(s0))))
-(filecon "/usr/libexec/tracker-miner-user-guide" file file_trmingd_exec)
+(filecon "/usr/libexec/tracker-miner-user-guides" file file_trmingd_exec)
 
 (type trstore_exec_t)
 (call application_subject_entry (is_trstore_subject trstore_exec_t))
@@ -56,17 +56,61 @@
 (context file_trwb_exec (system_u object_r trwb_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/tracker-writeback" file file_trwb_exec)
 
+(allow is_trminapp_subject self (process (getsched setsched)))
+
+(call miscfiles_read_localization_files (is_trminapp_subject))
+
+(allow is_trminfs_subject self (process (getsched setsched)))
+
+(call files_read_generic_usr_files (is_trminfs_subject))
+
+(call dbus_system_client_subject (is_trminfs_subject))
+
+(call miscfiles_read_localization_files (is_trminfs_subject))
+
+(call upower_dbus_chat_upowerd (is_trminfs_subject))
+
+(allow is_trstore_subject self (process (getsched setsched)))
+
+(call devices_read_urandom (is_trstore_subject))
+
+(call files_read_generic_usr_files (is_trstore_subject))
+
+(call filesystem_getattr_filesystems (is_trstore_subject))
+
+(call miscfiles_read_localization_files (is_trstore_subject))
+
+(optional trstore_subject_optional_usersubject
+    (type user_trstore_conf_t)
+    (call usersubject_config_object (user_trstore_conf_t))
+    (type user_trstore_tmp_t)
+    (call usersubject_tmp_object (user_trstore_tmp_t)))
+
+(allow is_trextr_subject self (process (getsched setsched)))
+
+(call system_read_generic_proc_files (is_trextr_subject))
+
+(call files_read_generic_usr_files (is_trextr_subject))
+
+(call miscfiles_read_localization_files (is_trextr_subject))
+
+(optional trextr_subject_optional_subject
+    (type user_trextr_tmp_t)
+    (call usersubject_tmp_object (user_txextr_tmp_t)))
+
 (macro tracker_role_template_tracker ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_tracker_role ARG1)
     (typeattributeset is_tracker_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 tracker_exec_t ARG3)))
 
-(macro tracker_role_template_trextr ((role ARG1)(type ARG2)(type ARG3))
+(macro tracker_role_template_trextr ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_tracker_role ARG1)
     (typeattributeset is_trextr_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 trextr_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 trextr_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (call files_tmp_filetrans (ARG3 ARG4 dir "*")))
 
 (macro tracker_role_template_trminapp ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_tracker_role ARG1)
@@ -86,11 +130,16 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 trmingd_exec_t ARG3)))
 
-(macro tracker_role_template_trstore ((role ARG1)(type ARG2)(type ARG3))
+(macro tracker_role_template_trstore ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4)(type ARG5))
     (roleattributeset is_tracker_role ARG1)
     (typeattributeset is_trstore_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 trstore_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 trstore_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms)
+    (allow ARG3 ARG5 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 file "*")))
 
 (macro tracker_role_template_trwb ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_tracker_role ARG1)

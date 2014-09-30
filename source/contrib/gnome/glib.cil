@@ -28,6 +28,8 @@
 
 (call miscfiles_read_localization_files (is_gsettings_subject))
 
+(call miscfiles_read_localization_files (is_gdbus_subject))
+
 (macro glib_exec_glib ((type ARG1))
     (call can_exec (ARG1 glib_exec_t)))
 

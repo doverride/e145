@@ -1128,6 +1128,8 @@
 
             (call usersubject_application_subject (joe_dconfsvc_t))
 
+            (call dbus_session_client_subject (joe_dconfsvc_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_giscw_t)
             (call gis_role_template_giscw (joe_r joe_gsession_t joe_giscw_t))
 
@@ -1151,6 +1153,8 @@
             (call usersubject_home_dir_filetrans_user_config_dir (joe_canberra_t))
             (call usersubject_config_filetrans (joe_canberra_t user_pa_home_t dir "pulse"))
             (call usersubject_run_user_dir_filetrans (joe_canberra_t user_pa_run_t dir "pulse"))
+
+            (call usersubject_manage_generic_cache_files (joe_canberra_t))
 
             (allow joe_t joe_canberra_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_canberra_t))
@@ -1206,10 +1210,19 @@
             (call usersubject_data_filetrans (joe_t user_gsdconv_data_t dir "gsettings-data-convert"))
             (call usersubject_data_filetrans (joe_gsdconv_t user_gsdconv_data_t dir "gsettings-data-convert"))
 
+            (call read_files_pattern (joe_gsdconv_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_gsdconv_t))
+
+            (allow joe_gsdconv_t user_dconf_run_t manage_dir_perms)
+            (allow joe_gsdconv_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_gsdconv_t user_dconf_run_t dir "dconf"))
+
             (allow joe_t joe_gsdconv_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsdconv_t))
 
             (call usersubject_application_subject (joe_gsdconv_t))
+
+            (call dbus_session_client_subject (joe_gsdconv_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_ibusd_t)
             (call ibus_role_template_ibusd (joe_r joe_dbusd_t joe_ibusd_t user_ibus_conf_t))
@@ -1304,7 +1317,16 @@
             (allow joe_t joe_tpmc_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_tpmc_t))
 
+            (call read_files_pattern (joe_tpmc_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_tpmc_t))
+
+            (allow joe_tpmc_t user_dconf_run_t manage_dir_perms)
+            (allow joe_tpmc_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_tpmc_t user_dconf_run_t dir "dconf"))
+
             (call usersubject_application_subject (joe_tpmc_t))
+
+            (call dbus_session_client_subject (joe_tpmc_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_caribou_t)
             (call caribou_role_template_caribou (joe_r joe_dbusd_t joe_caribou_t))
@@ -1314,13 +1336,30 @@
 
             (call usersubject_application_subject (joe_caribou_t)) 
 
+            (call dbus_session_client_subject (joe_caribou_t user_dbusd_tmp_t joe_dbusd_t))
+
+            (call xserver_client_subject (joe_caribou_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
             (type joe_goad_t)
-            (call goa_role_template_goad (joe_r joe_dbusd_t joe_goad_t))
+            (call goa_role_template_goad (joe_r joe_dbusd_t joe_goad_t user_goad_conf_t))
+
+            (context file_joe_user_goad_conf (joe_u object_r user_goad_conf_t ((s0)(s0))))
+            (filecon "/home/joe/\.config/goa-1\.0(/.*)?" any file_joe_user_goad_conf)
+
+            (allow joe_t user_goad_conf_t manage_dir_perms)
+            (allow joe_t user_goad_conf_t relabel_dir_perms)
+            (allow joe_t user_goad_conf_t manage_file_perms)
+            (allow joe_t user_goad_conf_t relabel_file_perms)
+
+            (call usersubject_config_filetrans (joe_t user_goad_conf_t dir "goa-1.0"))
+            (call usersubject_config_filetrans (joe_goad_t user_goad_conf_t dir "goa-1.0"))
 
             (allow joe_t joe_goad_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_goad_t))
 
             (call usersubject_application_subject (joe_goad_t)) 
+
+            (call dbus_session_client_subject (joe_goad_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_trminapp_t)
             (call tracker_role_template_trminapp (joe_r joe_gsession_t joe_trminapp_t))
@@ -1330,29 +1369,76 @@
 
             (call usersubject_application_subject (joe_trminapp_t)) 
 
+            (call dbus_session_client_subject (joe_trminapp_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_trminfs_t)
             (call tracker_role_template_trminfs (joe_r joe_gsession_t joe_trminfs_t))
 
             (allow joe_t joe_trminfs_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trminfs_t))
 
+            (call read_files_pattern (joe_trminfs_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_trminfs_t))
+
+            (allow joe_trminfs_t user_dconf_run_t manage_dir_perms)
+            (allow joe_trminfs_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_trminfs_t user_dconf_run_t dir "dconf"))
+
             (call usersubject_application_subject (joe_trminfs_t)) 
 
+            (call dbus_session_client_subject (joe_trminfs_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_trextr_t)
-            (call tracker_role_template_trextr (joe_r joe_gsession_t joe_trextr_t))
+            (call tracker_role_template_trextr (joe_r joe_gsession_t joe_trextr_t user_trextr_tmp_t))
+
+            (allow joe_t user_trextr_tmp_t manage_dir_perms)
+            (allow joe_t user_trextr_tmp_t relabel_dir_perms)
 
             (allow joe_t joe_trextr_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trextr_t))
 
+            (call read_files_pattern (joe_trextr_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_trextr_t))
+
+            (allow joe_trextr_t user_dconf_run_t manage_dir_perms)
+            (allow joe_trextr_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_trextr_t user_dconf_run_t dir "dconf"))
+
             (call usersubject_application_subject (joe_trextr_t))  
 
+            (call dbus_session_client_subject (joe_trextr_t user_dbusd_tmp_t joe_dbusd_t))
+
             (type joe_trstore_t)
-            (call tracker_role_template_trstore (joe_r joe_dbusd_t joe_trstore_t))
+            (call tracker_role_template_trstore (joe_r joe_dbusd_t joe_trstore_t user_trstore_conf_t
+                user_trstore_tmp_t))
+
+            (context file_joe_user_trstore_conf (joe_u object_r user_trstore_conf_t ((s0)(s0))))
+            (filecon "/home/joe/\.config/tracker(/.*)?" any file_joe_user_trstore_conf)
+
+            (allow joe_t user_trstore_conf_t manage_dir_perms)
+            (allow joe_t user_trstore_conf_t relabel_dir_perms)
+            (allow joe_t user_trstore_conf_t manage_file_perms)
+            (allow joe_t user_trstore_conf_t relabel_file_perms)
+
+            (allow joe_t user_trstore_tmp_t manage_file_perms)
+            (allow joe_t user_trstore_tmp_t relabel_file_perms)
+
+            (call usersubject_config_filetrans (joe_t user_trstore_conf_t dir "tracker"))
+            (call usersubject_config_filetrans (joe_trstore_t user_trstore_conf_t dir "tracker"))
 
             (allow joe_t joe_trstore_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trstore_t))
 
+            (call read_files_pattern (joe_trstore_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_trstore_t))
+
+            (allow joe_trstore_t user_dconf_run_t manage_dir_perms)
+            (allow joe_trstore_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_trstore_t user_dconf_run_t dir "dconf"))
+
             (call usersubject_application_subject (joe_trstore_t))  
+
+            (call dbus_session_client_subject (joe_trstore_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gdbus_t)
             (call glib_role_template_gdbus (joe_r joe_gsession_t joe_gdbus_t))
@@ -1361,6 +1447,8 @@
             (call ps_subject_pattern (joe_t joe_gdbus_t))
 
             (call usersubject_application_subject (joe_gdbus_t)) 
+
+            (call dbus_session_client_subject (joe_gdbus_t user_dbusd_tmp_t joe_dbusd_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))

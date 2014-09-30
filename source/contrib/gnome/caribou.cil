@@ -15,6 +15,16 @@
 (context file_caribou_exec (system_u object_r caribou_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/caribou" file file_caribou_exec)
 
+(allow is_caribou_subject self (unix_stream_socket (listen accept)))
+
+(call system_read_sysctl_vm_overcommit_files (is_caribou_subject))
+
+(call devices_read_urandom (is_caribou_subject))
+
+(call files_read_generic_usr_files (is_caribou_subject))
+
+(call miscfiles_read_localization_files (is_caribou_subject))
+
 (macro caribou_exec_caribou ((type ARG1))
     (call can_exec (ARG1 caribou_exec_t)))
 

@@ -30,6 +30,7 @@
 (filecon "/usr/libexec/gnome-shell-portal-helper" file file_gshell_helper_exec)
 
 (allow is_gshell_subject self (process (execmem setsched)))
+(allow is_gshell_subject self (unix_stream_socket (listen accept)))
 
 (call system_read_sysctl_vm_overcommit_files (is_gshell_subject))
 

@@ -24,6 +24,8 @@
 (filecon "/usr/libexec/gsd-locate-pointer" file file_gsd_helper_exec)
 (filecon "/usr/libexec/gsd-wacom-oled-helper" file file_gsd_helper_exec)
 
+(allow is_gsd_subject self (unix_stream_socket (listen accept)))
+
 (call devices_read_lnk_files (is_gsd_subject))
 (call devices_rw_wireless (is_gsd_subject))
 

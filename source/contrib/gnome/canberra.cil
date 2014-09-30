@@ -8,6 +8,8 @@
 (context file_canberra_exec (system_u object_r canberra_exec_t ((s0)(s0))))
 (filecon "/usr/bin/canberra-gtk-play" file file_canberra_exec)
 
+(call files_read_generic_usr_files (is_canberra_subject))
+
 (call miscfiles_read_localization_files (is_canberra_subject))
 
 (optional canberra_subject_optional_usersubject

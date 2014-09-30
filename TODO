@@ -1,3 +1,10 @@
+at: deal with accessibility technology more gracefully
+    various components listen and accept unix stream socket connections
+    on atspi sockets in ~
+
+xdg: anyone how maintains anything in .config/.local/.cache needs to also
+    be able to maintain those dirs properly
+
 fixme?
     are all dbus_session_client_subject "unix_stream_socket (listen accept))"
     on dbusd_tmp_t sockets

@@ -226,6 +226,8 @@
 
 (call udisks_dbus_chat_udisksd (is_gvfs_udisks2vm_subject))
 
+(call systemd_read_state (is_gvfs_udisks2vm_subject))
+
 (call miscfiles_read_localization_files (is_gvfs_goavm_subject))
 
 (call devices_read_urandom (is_gvfs_afcvm_subject))
