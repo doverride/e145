@@ -1,0 +1,99 @@
+(roleattribute is_tracker_role)
+
+(typeattribute is_tracker_subject)
+(typeattribute is_trextr_subject)
+(typeattribute is_trminapp_subject)
+(typeattribute is_trminfs_subject)
+(typeattribute is_trmingd_subject)
+(typeattribute is_trstore_subject)
+(typeattribute is_trwb_subject)
+
+(type tracker_exec_t)
+(call application_subject_entry (is_tracker_subject tracker_exec_t))
+
+(context file_tracker_exec (system_u object_r tracker_exec_t ((s0)(s0))))
+(filecon "/usr/bin/tracker-control" file file_tracker_exec)
+(filecon "/usr/bin/tracker-import" file file_tracker_exec)
+(filecon "/usr/bin/tracker-info" file file_tracker_exec)
+(filecon "/usr/bin/tracker-search" file file_tracker_exec)
+(filecon "/usr/bin/tracker-sparql" file file_tracker_exec)
+(filecon "/usr/bin/tracker-stats" file file_tracker_exec)
+(filecon "/usr/bin/tracker-tag" file file_tracker_exec)
+
+(type trextr_exec_t)
+(call application_subject_entry (is_trextr_subject trextr_exec_t))
+
+(context file_trextr_exec (system_u object_r trextr_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/tracker-extract" file file_trextr_exec)
+
+(type trminapp_exec_t)
+(call application_subject_entry (is_trminapp_subject trminapp_exec_t))
+
+(context file_trminapp_exec (system_u object_r trminapp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/tracker-miner-apps" file file_trminapp_exec)
+
+(type trminfs_exec_t)
+(call application_subject_entry (is_trminfs_subject trminfs_exec_t))
+
+(context file_trminfs_exec (system_u object_r trminfs_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/tracker-miner-fs" file file_trminfs_exec)
+
+(type trmingd_exec_t)
+(call application_subject_entry (is_trmingd_subject trmingd_exec_t))
+
+(context file_trmingd_exec (system_u object_r trmingd_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/tracker-miner-user-guide" file file_trmingd_exec)
+
+(type trstore_exec_t)
+(call application_subject_entry (is_trstore_subject trstore_exec_t))
+
+(context file_trstore_exec (system_u object_r trstore_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/tracker-store" file file_trstore_exec)
+
+(type trwb_exec_t)
+(call application_subject_entry (is_trwb_subject trwb_exec_t))
+
+(context file_trwb_exec (system_u object_r trwb_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/tracker-writeback" file file_trwb_exec)
+
+(macro tracker_role_template_tracker ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_tracker_role ARG1)
+    (typeattributeset is_tracker_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 tracker_exec_t ARG3)))
+
+(macro tracker_role_template_trextr ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_tracker_role ARG1)
+    (typeattributeset is_trextr_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 trextr_exec_t ARG3)))
+
+(macro tracker_role_template_trminapp ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_tracker_role ARG1)
+    (typeattributeset is_trminapp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 trminapp_exec_t ARG3)))
+
+(macro tracker_role_template_trminfs ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_tracker_role ARG1)
+    (typeattributeset is_trminfs_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 trminfs_exec_t ARG3)))
+
+(macro tracker_role_template_trmingd ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_tracker_role ARG1)
+    (typeattributeset is_trmingd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 trmingd_exec_t ARG3)))
+
+(macro tracker_role_template_trstore ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_tracker_role ARG1)
+    (typeattributeset is_trstore_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 trstore_exec_t ARG3)))
+
+(macro tracker_role_template_trwb ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_tracker_role ARG1)
+    (typeattributeset is_trwb_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 trwb_exec_t ARG3)))
