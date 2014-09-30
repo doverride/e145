@@ -104,6 +104,7 @@ contrib/xpdf.cil
 contrib/xserver.cil
 contrib/gnome/atspi.cil
 contrib/gnome/canberra.cil
+contrib/gnome/caribou.cil
 contrib/gnome/dconf.cil
 contrib/gnome/gconf.cil
 contrib/gnome/gdm.cil

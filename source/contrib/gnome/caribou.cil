@@ -1,0 +1,28 @@
+(roleattribute is_caribou_role)
+
+(typeattribute is_cariboupref_subject)
+(typeattribute is_caribou_subject)
+
+(type cariboupref_exec_t)
+(call application_subject_entry (is_cariboupref_subject cariboupref_exec_t))
+
+(context file_cariboupref_exec (system_u object_r cariboupref_exec_t ((s0)(s0))))
+(filecon "/usr/bin/caribou-preferences" file file_cariboupref_exec)
+
+(type caribou_exec_t)
+(call application_subject_entry (is_caribou_subject caribou_exec_t))
+
+(context file_caribou_exec (system_u object_r caribou_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/caribou" file file_caribou_exec)
+
+(macro caribou_role_template_prefs ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_caribou_role ARG1)
+    (typeattributeset is_cariboupref_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 cariboupref_exec_t ARG3)))
+
+(macro caribou_role_template_caribou ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_caribou_role ARG1)
+    (typeattributeset is_caribou_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 caribou_exec_t ARG3)))
