@@ -99,6 +99,7 @@
 (call sudo_manage_var_dirs (is_sudo_subject))
 (call sudo_manage_var_files (is_sudo_subject))
 
+(call systemd_getpgid (is_sudo_subject))
 (call systemd_search_keyring (is_sudo_subject))
 
 (call utmp_read_run_files (is_sudo_subject))
