@@ -1004,7 +1004,7 @@
             (allow joe_t joe_gvfsdmetad_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsdmetad_t))
 
-            (call dbus_session_client_subject (joe_gvfsdmetad_t user_dbusd_t joe_dbusd_t))
+            (call dbus_session_client_subject (joe_gvfsdmetad_t user_dbusd_tmp_t joe_dbusd_t))
 
             (call usersubject_application_subject (joe_gvfsdmetad_t))
 
