@@ -1,3 +1,6 @@
+session: re-evaluate dbus_system_client_subject(session_t) (packagekit plugin i think)
+    and capability sys_admin
+
 at: deal with accessibility technology more gracefully
     various components listen and accept unix stream socket connections
     on atspi sockets in ~
@@ -11,6 +14,8 @@ fixme?
 
     e.g. can i:
         (allow is_dbus_session_client_subject self (unix_stream_socket (listen accept)))"
+
+    EDIT: nope these are atpsi client subjects
 
 remove hacks to deal with mislabeled /run/user:
     grep -ri run_user_hack .
