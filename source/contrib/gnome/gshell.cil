@@ -41,6 +41,8 @@
 (call files_read_generic_etc_files (is_gshell_subject)) ; /etc/drirc
 (call files_read_generic_usr_files (is_gshell_subject)) ; /usr/share/X11/locale/locale.alias
 
+(call selinux_list (is_gshell_subject)) ; only search is confirmed
+
 (call accountsservice_dbus_chat (is_gshell_subject))
 
 (call auth_nsswitch_client_subject (is_gshell_subject))
@@ -84,6 +86,8 @@
 (call files_read_generic_usr_files (is_gshell_cald_subject))
 
 (call auth_nsswitch_client_subject (is_gshell_cald_subject))
+
+(call miscfiles_read_localization_files (is_gshell_cald_subject))
 
 (macro gshell_exec_gshell ((type ARG1))
     (call can_exec (ARG1 gshell_exec_t)))

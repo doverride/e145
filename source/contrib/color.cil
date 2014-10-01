@@ -76,6 +76,9 @@
 (optional colord_optional_gdm
     (call gdm_read_state (colord_t)))
 
+(optional colord_optional_gsd
+    (call read_state_all_gsd_subjects (colord_t)))
+
 (allow is_color_admin_subject colord_t signal_perms)
 (allow is_color_admin_subject colord_t (process (ptrace)))
 (call ps_subject_pattern (is_color_admin_subject colord_t))

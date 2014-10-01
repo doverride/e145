@@ -207,6 +207,10 @@
     (type user_gvfsd_run_t)
     (call usersubject_run_object (user_gvfsd_run_t)))
 
+(optional gvfsdmetad_subject_optional_usersubject
+    (type user_gvfsdmetad_data_t)
+    (call usersubject_data_object (user_gvfsdmetad_data_t)))
+
 (allow is_gvfsd_fuse_subject self (process (signal)))
 
 (call devices_rw_fuse (is_gvfsd_fuse_subject))
@@ -395,11 +399,13 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gvfsdltest_exec_t ARG3)))
 
-(macro gvfs_role_template_gvfsdmetad ((role ARG1)(type ARG2)(type ARG3))
+(macro gvfs_role_template_gvfsdmetad ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gvfs_role ARG1)
     (typeattributeset is_gvfsd_metad_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 gvfsdmetad_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 gvfsdmetad_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms))
 
 (macro gvfs_role_template_gvfsdmtp ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gvfs_role ARG1)

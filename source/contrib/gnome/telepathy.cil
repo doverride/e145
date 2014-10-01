@@ -54,5 +54,6 @@
     (typeattributeset is_tpmc_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 tpmc_exec_t ARG3))
-    (allow ARG3 ARG4 manage_dir_perms))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms))
 

@@ -1,3 +1,10 @@
+target: gnome-control-center, evolution-source-registry
+    gnome-software evolution-alarm abrt-applet epiphany evolution-calendar.*
+
+    label /usr/bin/firefox for gnome access check
+
+pulseaudio client subjects: review them, there may be duplicate rules
+
 session: re-evaluate dbus_system_client_subject(session_t) (packagekit plugin i think)
     and capability sys_admin
 

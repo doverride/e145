@@ -985,7 +985,21 @@
             (call usersubject_application_subject (joe_gvfsdltest_t))
 
             (type joe_gvfsdmetad_t)
-            (call gvfs_role_template_gvfsdmetad (joe_r joe_gvfsd_t joe_gvfsdmetad_t))
+            (call gvfs_role_template_gvfsdmetad (joe_r joe_dbusd_t joe_gvfsdmetad_t user_gvfsdmetad_data_t))
+
+            (context file_joe_user_gvfsdmetad_data (joe_u object_r user_gvfsdmetad_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/gvfs-metadata(/.*)?" any file_joe_user_gvfsdmetad_data)
+
+            (allow joe_t user_gvfsdmetad_data_t manage_dir_perms)
+            (allow joe_t user_gvfsdmetad_data_t relabel_dir_perms)
+            (allow joe_t user_gvfsdmetad_data_t manage_file_perms)
+            (allow joe_t user_gvfsdmetad_data_t relabel_file_perms)
+
+            (call usersubject_data_filetrans (joe_t user_gvfsdmetad_data_t dir "gvfs-metadata"))
+            (call usersubject_data_filetrans (joe_gvfsdmetad_t user_gvfsdmetad_data_t dir "gvfs-metadata"))
+
+            (call usersubject_manage_generic_data_dirs (joe_gvfsdmetad_t))
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_gvfsdmetad_t))
 
             (allow joe_t joe_gvfsdmetad_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsdmetad_t))
@@ -1365,6 +1379,8 @@
 
             (allow joe_t user_tpmc_data_t manage_dir_perms)
             (allow joe_t user_tpmc_data_t relabel_dir_perms)
+            (allow joe_t user_tpmc_data_t manage_file_perms)
+            (allow joe_t user_tpmc_data_t relabel_file_perms)
 
             (call usersubject_data_filetrans (joe_t user_tpmc_data_t dir "telepathy"))
             (call usersubject_data_filetrans (joe_tpmc_t user_tpmc_data_t dir "telepathy"))
@@ -1393,6 +1409,8 @@
             (call ps_subject_pattern (joe_t joe_caribou_t))
 
             (call usersubject_application_subject (joe_caribou_t)) 
+
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_caribou_t))
 
             (call dbus_session_client_subject (joe_caribou_t user_dbusd_tmp_t joe_dbusd_t))
 
@@ -1453,6 +1471,8 @@
             (call ps_subject_pattern (joe_t joe_trmingd_t))
 
             (call usersubject_application_subject (joe_trmingd_t)) 
+
+            (call dbus_session_client_subject (joe_trmingd_t user_dbusd_tmp_t joe_dbusd_t))
  
             (type joe_trextr_t)
             (call tracker_role_template_trextr (joe_r joe_gsession_t joe_trextr_t user_trextr_tmp_t))
@@ -1476,10 +1496,13 @@
 
             (type joe_trstore_t)
             (call tracker_role_template_trstore (joe_r joe_dbusd_t joe_trstore_t user_trstore_conf_t
-                user_trstore_tmp_t user_trstore_cache_t))
+                user_trstore_tmp_t user_trstore_cache_t user_trstore_data_t))
 
             (context file_joe_user_trstore_conf (joe_u object_r user_trstore_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/tracker(/.*)?" any file_joe_user_trstore_conf)
+
+            (context file_joe_user_trstore_data (joe_u object_r user_trstore_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/tracker(/.*)?" any file_joe_user_trstore_data)
 
             (context file_joe_user_trstore_cache (joe_u object_r user_trstore_cache_t ((s0)(s0))))
             (filecon "/home/joe/\.cache/tracker(/.*)?" any file_joe_user_trstore_cache)
@@ -1493,6 +1516,11 @@
             (allow joe_t user_trstore_cache_t relabel_dir_perms)
             (allow joe_t user_trstore_cache_t manage_file_perms)
             (allow joe_t user_trstore_cache_t relabel_file_perms)
+
+            (allow joe_t user_trstore_data_t manage_dir_perms)
+            (allow joe_t user_trstore_data_t relabel_dir_perms)
+            (allow joe_t user_trstore_data_t manage_file_perms)
+            (allow joe_t user_trstore_data_t relabel_file_perms)
 
             (allow joe_t user_trstore_tmp_t manage_file_perms)
             (allow joe_t user_trstore_tmp_t relabel_file_perms)
@@ -1508,6 +1536,12 @@
 
             (call usersubject_manage_generic_config_dirs (joe_trstore_t))
             (call usersubject_home_dir_filetrans_user_config_dir (joe_trstore_t))
+
+            (call usersubject_data_filetrans (joe_t user_trstore_data_t dir "tracker"))
+            (call usersubject_data_filetrans (joe_trstore_t user_trstore_data_t dir "tracker"))
+
+            (call usersubject_manage_generic_data_dirs (joe_trstore_t))
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_trstore_t))
 
             (allow joe_t joe_trstore_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trstore_t))
