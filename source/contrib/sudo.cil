@@ -38,10 +38,20 @@
     (s0))))
 (filecon "/var/db/sudo(/.*)?" any file_sudo_var)
 
-(allow is_sudo_subject self (capability (setuid setgid sys_resource fowner dac_override kill)))
+(type sudo_run_t)
+(call files_run_object (sudo_run_t))
+
+(context file_sudo_run (system_u object_r sudo_run_t ((s0) (s0))))
+(filecon "/run/sudo(/.*)?" any file_sudo_run)
+
+(allow is_sudo_subject self (capability (setuid setgid chown net_admin sys_resource fowner dac_override kill)))
 (allow is_sudo_subject self (process (setsched setkeycreate setrlimit setexec signal signull)))
 (allow is_sudo_subject self rw_fifo_file_perms)
 (allow is_sudo_subject self (key (search)))
+
+(allow is_sudo_subject sudo_run_t manage_dir_perms)
+(allow is_sudo_subject sudo_run_t manage_file_perms)
+(call files_run_filetrans (is_sudo_subject sudo_run_t dir "sudo"))
 
 (call system_getattr_core_if (is_sudo_subject))
 (call system_read_generic_proc_files (is_sudo_subject))
@@ -49,10 +59,11 @@
 (call system_search_keyring (is_sudo_subject))
 
 (call commands_dontaudit_getattr_all_bin_files (is_sudo_subject)) ; only apps
- 
+
 (call devices_list (is_sudo_subject))
 (call devices_getattr_all_nodes (is_sudo_subject))
 (call devices_dontaudit_getattr_generic_nodes (is_sudo_subject))
+(call devices_read_urandom (is_sudo_subject))
 
 (call files_read_generic_etc_files (is_sudo_subject)) ; /etc/login.defs
 
@@ -77,6 +88,8 @@
 (call initctl_getattr_run_fifo_files (is_sudo_subject))
 
 (call journald_client_subject (is_sudo_subject))
+
+(call logind_client_subject (is_sudo_subject))
 
 (call miscfiles_read_localization_files (is_sudo_subject))
 

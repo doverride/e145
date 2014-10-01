@@ -224,10 +224,8 @@
 
 (call dbus_system_client_subject (is_login_program_subject))
 
-(call logind_dbus_chat (is_login_program_subject))
+(call logind_client_subject (is_login_program_subject))
 (call logind_read_run_files (is_login_program_subject))
-(call logind_use_fd (is_login_program_subject))
-(call logind_write_inherited_run_fifo_files (is_login_program_subject))
 
 (call miscfiles_read_localization_files (is_login_program_subject))
 

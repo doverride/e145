@@ -171,9 +171,7 @@
 
 (call journald_client_subject (crond_t))
 
-(call logind_dbus_chat (crond_t))
-(call logind_use_fd (crond_t))
-(call logind_write_inherited_run_fifo_files (crond_t))
+(call logind_client_subject (crond_t))
 
 (call miscfiles_read_localization_files (crond_t))
 

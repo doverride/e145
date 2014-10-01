@@ -46,9 +46,7 @@
 
 (call localed_dbus_chat_localed (is_gsd_subject))
 
-(call logind_use_fd (is_gsd_subject))
-(call logind_write_inherited_run_fifo_files (is_gsd_subject))
-(call logind_dbus_chat (is_gsd_subject))
+(macro logind_client_subject (is_gsd_subject))
 
 (call modemmgr_dbus_chat (is_gsd_subject))
 
@@ -106,6 +104,6 @@
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gsdprinter_exec_t ARG3)))
 
-(macro read_state_all_gsd_subjects ((type ARG1))
+(macro gsd_read_state_all_gsd_subjects ((type ARG1))
     (allow ARG1 is_gsd_subject (dirs (list)))
     (allow ARG1 is_gsd_subject read_file_perms))

@@ -1,6 +1,7 @@
 (roleattribute is_loginctl_role)
 
 (typeattribute is_logind_admin_subject)
+(typeattribute is_logind_client_subject)
 
 (typeattribute is_logind_subject)
 (typeattributeset is_logind_subject (logind_t loginctl_t))
@@ -62,6 +63,13 @@
 (context file_logind_unit (system_u object_r logind_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*systemd-logind.*" file file_logind_unit)
 (filecon "/usr/lib/systemd/system/[^/]*org\.freedesktop\.login1.*" file file_logind_unit)
+
+(allow logind_t is_logind_client_subject (dirs (list)))
+(allow logind_t is_logind_client_subject read_file_perms)
+
+(call logind_dbus_chat (is_logind_client_subject))
+(call logind_use_fd (is_logind_client_subject))
+(call logind_write_inherited_run_fifo_files (is_logind_client_subject))
 
 (allow logind_t self (capability (chown fowner sys_tty_config sys_admin dac_override)))
 (allow logind_t self (process (getcap setfscreate)))
@@ -134,9 +142,6 @@
 (call udevd_list_run (logind_t))
 (call udevd_client_subject (logind_t))
 
-(optional logind_optional_cron
-    (call cron_read_crond_state (logind_t)))
-
 (optional logind_optional_gdm
     (call gdm_manage_run_files (logind_t))
     (call gdm_delete_systemd_run_dirs (logind_t))
@@ -144,10 +149,6 @@
     (call gdm_mounton_run_user_dir (logind_t))
     (call gdm_manage_run_user_dir (logind_t))
     (call gdm_run_user_root_filetrans_run_user_dir (logind_t "42")))
-
-(optional logind_optional_networkmgr
-    (call networkmgr_getattr (logind_t))
-    (call networkmgr_read_state (logind_t)))
 
 (optional logind_optional_session
     (call session_delete_systemd_run_dirs (logind_t))
@@ -167,9 +168,6 @@
     (call usersubject_setattr_tty_nodes (logind_t))
     (call usersubject_getattr_all_tmpfs_files (logind_t))
     (call usersubject_use_terminals (logind_t)))
-
-(optional logind_optional_xserver
-    (call xserver_read_state_all_xorg (logind_t)))
 
 (allow is_logind_admin_subject is_logind_subject signal_perms)
 (allow is_logind_admin_subject is_logind_subject (process (ptrace)))
@@ -216,6 +214,9 @@
 (macro logind_read_run_files ((type ARG1))
     (call systemd_search_run (ARG1))
     (call read_files_pattern (ARG1 logind_run_t logind_run_t)))
+
+(macro logind_client_subject ((type ARG1))
+    (typeattributeset is_logind_client_subject ARG1))
 
 (macro logind_admin ((type ARG1))
     (typeattributeset is_logind_admin_subject ARG1))

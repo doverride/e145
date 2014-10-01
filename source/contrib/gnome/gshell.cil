@@ -55,11 +55,9 @@
 
 (call geoclue_dbus_chat (is_gshell_subject))
 
-(call logind_dbus_chat (is_gshell_subject))
+(call logind_client_subject (is_gshell_subject))
 (call logind_list_run (is_gshell_subject))
 (call logind_read_run_files (is_gshell_subject))
-(call logind_use_fd (is_gshell_subject))
-(call logind_write_inherited_run_fifo_files (is_gshell_subject))
 
 (call miscfiles_read_generic_cert_files (is_gshell_subject))
 
