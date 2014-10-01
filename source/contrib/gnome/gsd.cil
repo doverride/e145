@@ -26,6 +26,8 @@
 
 (allow is_gsd_subject self (unix_stream_socket (listen accept)))
 
+(call system_read_sysctl_vm_overcommit_files (is_gsd_subject))
+
 (call devices_read_lnk_files (is_gsd_subject))
 (call devices_rw_wireless (is_gsd_subject))
 

@@ -16,6 +16,8 @@
 (context file_tpmc_exec (system_u object_r tpmc_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/mission-control-5" file file_tpmc_exec)
 
+(allow is_tpmc_subject self rw_fifo_file_perms)
+
 (call devices_read_urandom (is_tpmc_subject))
 
 (call files_list_tmp (is_tpmc_subject))
@@ -57,3 +59,6 @@
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms))
 
+(macro telepathy_read_state_all_tpmc_subjects ((type ARG1))
+    (allow ARG1 is_tpmc_subject (dirs (list)))
+    (allow ARG1 is_tpmc_subject read_file_perms))

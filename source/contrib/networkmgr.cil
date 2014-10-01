@@ -199,12 +199,18 @@
 (optional networkmgr_optional_gsd
     (call read_state_all_gsd_subjects (networkmgr_t)))
 
+(optional networkmgr_optional_gshell
+    (call gshell_read_state_all_gshell_subjects (networkmgr_t)))
+
 (optional networkmgr_optional_http
     (call http_tcp_connect_http_port (networkmgr_t)))
 
 (optional networkmgr_optional_session
     (call session_getattr (networkmgr_t))
     (call session_read_state (networkmgr_t)))
+
+(optional networkmgr_optional_telepathy
+    (call telepathy_read_state_all_tpmc_subjects (networkmgr_t)))
 
 (allow networkmgr_disp_t self (process (setpgid)))
 (allow networkmgr_disp_t self rw_fifo_file_perms)

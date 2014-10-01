@@ -207,6 +207,10 @@
     (type user_gvfsd_run_t)
     (call usersubject_run_object (user_gvfsd_run_t)))
 
+(call devices_read_urandom (is_gvfsd_metad_subject))
+
+(call miscfiles_read_localization_files (is_gvfsd_metad_subject))
+
 (optional gvfsdmetad_subject_optional_usersubject
     (type user_gvfsdmetad_data_t)
     (call usersubject_data_object (user_gvfsdmetad_data_t)))

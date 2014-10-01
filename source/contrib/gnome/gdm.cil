@@ -184,6 +184,7 @@
 (call dbus_read_generic_config_files (gdm_t))
 
 (call dconf_exec_dconfsvc (gdm_t))
+(call dconf_read_config_files (gdm_t))
 
 (call fuse_exec_fusermount (gdm_t))
 (call fuse_read_config_files (gdm_t))

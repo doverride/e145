@@ -61,6 +61,7 @@
 
 (call system_read_generic_proc_files (is_trminapp_subject))
 (call system_read_sysctl_fs_files (is_trminapp_subject))
+(call system_read_sysctl_vm_overcommit_files (is_trminapp_subject))
 
 (call devices_read_urandom (is_trminapp_subject))
 
@@ -75,6 +76,8 @@
 
 (call system_read_sysctl_fs_files (is_trminfs_subject))
 
+(call devices_read_urandom (is_trminfs_subject))
+
 (call files_read_generic_usr_files (is_trminfs_subject))
 
 (call dbus_system_client_subject (is_trminfs_subject))
@@ -86,6 +89,7 @@
 (allow is_trstore_subject self (process (getsched setsched)))
 
 (call devices_read_urandom (is_trstore_subject))
+(call devices_read_random (is_trstore_subject))
 
 (call files_read_generic_usr_files (is_trstore_subject))
 

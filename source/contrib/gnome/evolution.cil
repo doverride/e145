@@ -22,6 +22,14 @@
 (context file_evocfactory_exec (system_u object_r evocfactory_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/evolution-calendar-factory" file file_evocfactory_exec)
 
+(call files_read_generic_usr_files (is_evosrcreg_subject))
+
+(call filesystem_getattr_filesystems (is_evosrcreg_subject))
+
+(call auth_nsswitch_client_subject (is_evosrcreg_subject))
+
+(call miscfiles_read_localization_files (is_evosrcreg_subject))
+
 (optional evosrcreg_subject_optional_usersubject
     (type user_evosrcreg_cache_t)
     (call usersubject_cache_object (user_evosrcreg_cache_t))
@@ -29,6 +37,20 @@
     (call usersubject_config_object (user_evosrcreg_conf_t))
     (type user_evosrcreg_data_t)
     (call usersubject_data_object (user_evosrcreg_data_t)))
+
+(call system_read_generic_proc_files (is_evoanotify_subject))
+
+(call devices_read_urandom (is_evoanotify_subject))
+
+(call auth_nsswitch_client_subject (is_evoanotify_subject))
+
+(call miscfiles_read_localization_files (is_evoanotify_subject))
+
+(call devices_read_sysfs_files (is_evocfactory_subject))
+
+(call filesystem_getattr_filesystems (is_evocfactory_subject))
+
+(call auth_nsswitch_client_subject (is_evocfactory_subject))
 
 (macro evolution_role_template_evosrcreg ((role ARG1)(type ARG2)(type ARG3)
     (type ARG4)(type ARG5)(type ARG6))
@@ -38,6 +60,7 @@
     (call subtrans_pattern (ARG2 evosrcreg_exec_t ARG3))
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG5 manage_dir_perms)
+    (allow ARG3 ARG5 manage_file_perms)
     (allow ARG3 ARG6 manage_dir_perms))
 
 (macro evolution_role_template_evoanotify ((role ARG1)(type ARG2)(type ARG3))

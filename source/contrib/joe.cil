@@ -1004,6 +1004,8 @@
             (allow joe_t joe_gvfsdmetad_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsdmetad_t))
 
+            (call dbus_session_client_subject (joe_gvfsdmetad_t user_dbusd_t joe_dbusd_t))
+
             (call usersubject_application_subject (joe_gvfsdmetad_t))
 
             (type joe_gvfsdmtp_t)
@@ -1616,6 +1618,14 @@
             (call usersubject_manage_generic_data_dirs (joe_evosrcreg_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_evosrcreg_t))
 
+            (call read_files_pattern (joe_evosrcreg_t user_dconf_conf_t user_dconf_conf_t))
+
+            (allow joe_evosrcreg_t user_dconf_run_t manage_dir_perms)
+            (allow joe_evosrcreg_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_evosrcreg_t user_dconf_run_t dir "dconf"))
+
+            (call dbus_session_client_subject (joe_evosrcreg_t user_dbusd_tmp_t joe_dbusd_t))
+
             (call usersubject_application_subject (joe_evosrcreg_t))
 
             (type joe_evocfactory_t)
@@ -1624,6 +1634,15 @@
             (allow joe_t joe_evocfactory_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_evocfactory_t))
 
+            (call read_files_pattern (joe_evocfactory_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_evocfactory_t))
+
+            (allow joe_evocfactory_t user_dconf_run_t manage_dir_perms)
+            (allow joe_evocfactory_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_evocfactory_t user_dconf_run_t dir "dconf"))
+
+            (call dbus_session_client_subject (joe_evocfactory_t user_dbusd_tmp_t joe_dbusd_t))
+
             (call usersubject_application_subject (joe_evocfactory_t))
 
             (type joe_evoanotify_t)
@@ -1631,6 +1650,17 @@
 
             (allow joe_t joe_evoanotify_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_evoanotify_t))
+
+            (call read_files_pattern (joe_evoanotify_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_evoanotify_t))
+
+            (allow joe_evoanotify_t user_dconf_run_t manage_dir_perms)
+            (allow joe_evoanotify_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_evoanotify_t user_dconf_run_t dir "dconf"))
+
+            (call dbus_session_client_subject (joe_evoanotify_t user_dbusd_tmp_t joe_dbusd_t))
+
+            (call xserver_client_subject (joe_evoanotify_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (call usersubject_application_subject (joe_evoanotify_t))
         )

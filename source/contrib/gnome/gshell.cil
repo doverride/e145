@@ -119,3 +119,7 @@
     (typeattributeset is_gshell_hotp_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gshellhotp_exec_t ARG3)))
+
+(macro gshell_read_state_all_gshell_subjects ((type ARG1))
+    (allow ARG1 is_gshell_subject (dirs (list)))
+    (allow ARG1 is_gshell_subject read_file_perms))
