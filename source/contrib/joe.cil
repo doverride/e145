@@ -1566,6 +1566,73 @@
             (call usersubject_application_subject (joe_gdbus_t)) 
 
             (call dbus_session_client_subject (joe_gdbus_t user_dbusd_tmp_t joe_dbusd_t))
+
+            (type joe_evosrcreg_t)
+            (call evolution_role_template_evosrcreg (joe_r joe_dbusd_t joe_evosrcregd_t
+                user_evosrcreg_cache_t user_evosrcreg_config_t user_evosrcreg_data_t))
+
+            (context file_joe_user_evosrcreg_conf (joe_u object_r user_evosrcreg_conf_t ((s0)(s0))))
+            (filecon "/home/joe/\.config/evolution(/.*)?" any file_joe_user_evosrcreg_conf)
+
+            (context file_joe_user_evosrcreg_data (joe_u object_r user_evosrcreg_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/evolution(/.*)?" any file_joe_user_evosrcreg_data)
+
+            (context file_joe_user_evosrcreg_cache (joe_u object_r user_evosrcreg_cache_t ((s0)(s0))))
+            (filecon "/home/joe/\.cache/evolution(/.*)?" any file_joe_user_evosrcreg_cache)
+
+            (allow joe_t joe_evosrcreg_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_evosrcreg_t))
+
+            (allow joe_t user_evosrcreg_conf_t manage_dir_perms)
+            (allow joe_t user_evosrcreg_conf_t relabel_dir_perms)
+            (allow joe_t user_evosrcreg_conf_t manage_file_perms)
+            (allow joe_t user_evosrcreg_conf_t relabel_file_perms)
+
+            (allow joe_t user_evosrcreg_cache_t manage_dir_perms)
+            (allow joe_t user_evosrcreg_cache_t relabel_dir_perms)
+            (allow joe_t user_evosrcreg_cache_t manage_file_perms)
+            (allow joe_t user_evosrcreg_cache_t relabel_file_perms)
+
+            (allow joe_t user_evosrcreg_data_t manage_dir_perms)
+            (allow joe_t user_evosrcreg_data_t relabel_dir_perms)
+            (allow joe_t user_evosrcreg_data_t manage_file_perms)
+            (allow joe_t user_evosrcreg_data_t relabel_file_perms)
+
+            (call usersubject_cache_filetrans (joe_t user_evosrcreg_cache_t dir "evolution"))
+            (call usersubject_cache_filetrans (joe_evosrcreg_t user_evosrcreg_cache_t dir "evolution"))
+
+            (call usersubject_manage_generic_cache_dirs (joe_evosrcreg_t))
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_evosrcreg_t))
+
+            (call usersubject_config_filetrans (joe_t user_evosrcreg_conf_t dir "evolution"))
+            (call usersubject_config_filetrans (joe_evosrcreg_t user_evosrcreg_conf_t dir "evolution"))
+
+            (call usersubject_manage_generic_config_dirs (joe_evosrcreg_t))
+            (call usersubject_home_dir_filetrans_user_config_dir (joe_evosrcreg_t))
+
+            (call usersubject_data_filetrans (joe_t user_evosrcreg_data_t dir "evolution"))
+            (call usersubject_data_filetrans (joe_evosrcreg_t user_evosrcreg_data_t dir "evolution"))
+
+            (call usersubject_manage_generic_data_dirs (joe_evosrcreg_t))
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_evosrcreg_t))
+
+            (call usersubject_application_subject (joe_evosrcreg_t))
+
+            (type joe_evocfactory_t)
+            (call evolution_role_template_evocfactory (joe_r joe_dbusd_t joe_evocfactory_t))
+
+            (allow joe_t joe_evocfactory_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_evocfactory_t))
+
+            (call usersubject_application_subject (joe_evocfactory_t))
+
+            (type joe_evoanotify_t)
+            (call evolution_role_template_evoanotify (joe_r joe_gsession_t joe_evoanotify_t))
+
+            (allow joe_t joe_evoanotify_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_evoanotify_t))
+
+            (call usersubject_application_subject (joe_evoanotify_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))

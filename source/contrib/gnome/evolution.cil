@@ -1,0 +1,53 @@
+(roleattribute is_evolution_role)
+
+(typeattribute is_evosrcreg_subject)
+(typeattribute is_evoanotify_subject)
+(typeattribute is_evocfactory_subject)
+
+(type evosrcreg_exec_t)
+(call application_subject_entry (is_evosrcreg_subject evosrcreg_exec_t))
+
+(context file_evosrcreg_exec (system_u object_r evosrcreg_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/evolution-source-registry" file file_evosrcreg_exec)
+
+(type evoanotify_exec_t)
+(call application_subject_entry (is_evoanotify_subject evoanotify_exec_t))
+
+(context file_evoanotify_exec (system_u object_r evoanotify_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/evolution/.*/evolution-alarm-notify" file file_evoanotify_exec)
+
+(type evocfactory_exec_t)
+(call application_subject_entry (is_evocfactory_subject evocfactory_exec_t))
+
+(context file_evocfactory_exec (system_u object_r evocfactory_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/evolution-calendar-factory" file file_evocfactory_exec)
+
+(optional evosrcreg_subject_optional_usersubject
+    (type user_evosrcreg_cache_t)
+    (call usersubject_cache_object (user_evosrcreg_cache_t))
+    (type user_evosrcreg_conf_t)
+    (call usersubject_config_object (user_evosrcreg_config_t))
+    (type user_evosrcreg_data_t)
+    (call usersubject_data_object (user_evosrcreg_data_t)))
+
+(macro evolution_role_template_evosrcreg ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4)(type ARG5)(type ARG6))
+    (roleattributeset is_evolution_role ARG1)
+    (typeattributeset is_evosrcreg_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 evosrcreg_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG5 manage_dir_perms)
+    (allow ARG3 ARG6 manage_dir_perms))
+
+(macro evolution_role_template_evoanotify ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_evolution_role ARG1)
+    (typeattributeset is_evoanotify_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 evoanotify_exec_t ARG3)))
+
+(macro evolution_role_template_evocfactory ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_evolution_role ARG1)
+    (typeattributeset is_evocfactory_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 evocfactory_exec_t ARG3)))

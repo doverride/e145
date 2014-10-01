@@ -1,5 +1,6 @@
-target: gnome-control-center, evolution-source-registry
-    gnome-software evolution-alarm abrt-applet epiphany evolution-calendar.*
+target: gnome-control-center
+    gnome-software abrt-applet epiphany
+    xdg-user-dirs-gtk-update
 
     label /usr/bin/firefox for gnome access check
 
@@ -14,15 +15,6 @@ at: deal with accessibility technology more gracefully
 
 xdg: anyone how maintains anything in .config/.local/.cache needs to also
     be able to maintain those dirs properly
-
-fixme?
-    are all dbus_session_client_subject "unix_stream_socket (listen accept))"
-    on dbusd_tmp_t sockets
-
-    e.g. can i:
-        (allow is_dbus_session_client_subject self (unix_stream_socket (listen accept)))"
-
-    EDIT: nope these are atpsi client subjects
 
 remove hacks to deal with mislabeled /run/user:
     grep -ri run_user_hack .
