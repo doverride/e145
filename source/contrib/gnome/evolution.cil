@@ -26,7 +26,7 @@
     (type user_evosrcreg_cache_t)
     (call usersubject_cache_object (user_evosrcreg_cache_t))
     (type user_evosrcreg_conf_t)
-    (call usersubject_config_object (user_evosrcreg_config_t))
+    (call usersubject_config_object (user_evosrcreg_conf_t))
     (type user_evosrcreg_data_t)
     (call usersubject_data_object (user_evosrcreg_data_t)))
 

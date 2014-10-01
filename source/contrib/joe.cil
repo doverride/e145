@@ -1568,7 +1568,7 @@
             (call dbus_session_client_subject (joe_gdbus_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_evosrcreg_t)
-            (call evolution_role_template_evosrcreg (joe_r joe_dbusd_t joe_evosrcregd_t
+            (call evolution_role_template_evosrcreg (joe_r joe_dbusd_t joe_evosrcreg_t
                 user_evosrcreg_cache_t user_evosrcreg_config_t user_evosrcreg_data_t))
 
             (context file_joe_user_evosrcreg_conf (joe_u object_r user_evosrcreg_conf_t ((s0)(s0))))
