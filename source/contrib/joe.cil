@@ -1569,7 +1569,7 @@
 
             (type joe_evosrcreg_t)
             (call evolution_role_template_evosrcreg (joe_r joe_dbusd_t joe_evosrcreg_t
-                user_evosrcreg_cache_t user_evosrcreg_config_t user_evosrcreg_data_t))
+                user_evosrcreg_cache_t user_evosrcreg_conf_t user_evosrcreg_data_t))
 
             (context file_joe_user_evosrcreg_conf (joe_u object_r user_evosrcreg_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/evolution(/.*)?" any file_joe_user_evosrcreg_conf)
