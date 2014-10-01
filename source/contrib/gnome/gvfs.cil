@@ -207,6 +207,8 @@
     (type user_gvfsd_run_t)
     (call usersubject_run_object (user_gvfsd_run_t)))
 
+(allow is_gvfsd_fuse_subject self (process (signal)))
+
 (call devices_rw_fuse (is_gvfsd_fuse_subject))
 
 (call files_read_generic_etc_files (is_gvfsd_fuse_subject)) ; /etc/fstab
