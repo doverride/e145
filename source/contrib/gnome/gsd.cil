@@ -46,7 +46,7 @@
 
 (call localed_dbus_chat_localed (is_gsd_subject))
 
-(macro logind_client_subject (is_gsd_subject))
+(call logind_client_subject (is_gsd_subject))
 
 (call modemmgr_dbus_chat (is_gsd_subject))
 

@@ -18,7 +18,7 @@
 (type gctrlc_helper_exec_t)
 (call commands_bin_object (gctrlc_helper_exec_t))
 
-(context file_gctrlc_helper_exec (system_u object_r gctrlcsp_helper_exec_t ((s0)(s0))))
+(context file_gctrlc_helper_exec (system_u object_r gctrlc_helper_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/cc-remote-login-helper" file file_gctrlc_helper_exec)
 
 (macro gctrlc_role_template_gctrlc ((role ARG1)(type ARG2)(type ARG3))
