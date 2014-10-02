@@ -1463,7 +1463,7 @@
             (call usersubject_cache_filetrans (joe_trminapp_t user_trstore_cache_t dir "tracker"))
 
             (call usersubject_manage_generic_cache_dirs (joe_trminapp_t))
-            (call usersubject_home_dir_filetrans_user_data_cache (joe_trminapp_t))
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_trminapp_t))
 
             (call usersubject_application_subject (joe_trminapp_t)) 
 
@@ -1492,7 +1492,7 @@
             (call usersubject_cache_filetrans (joe_trminfs_t user_trstore_cache_t dir "tracker"))
 
             (call usersubject_manage_generic_cache_dirs (joe_trminfs_t))
-            (call usersubject_home_dir_filetrans_user_data_cache (joe_trminfs_t))
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_trminfs_t))
 
             (allow joe_trminfs_t user_trstore_conf_t list_dir_perms)
 
@@ -1514,7 +1514,7 @@
             (call usersubject_cache_filetrans (joe_trmingd_t user_trstore_cache_t dir "tracker"))
 
             (call usersubject_manage_generic_cache_dirs (joe_trmingd_t))
-            (call usersubject_home_dir_filetrans_user_data_cache (joe_trmingd_t))
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_trmingd_t))
 
             (call dbus_session_client_subject (joe_trmingd_t user_dbusd_tmp_t joe_dbusd_t))
  
@@ -1535,7 +1535,7 @@
             (call usersubject_cache_filetrans (joe_trextr_t user_trstore_cache_t dir "tracker"))
 
             (call usersubject_manage_generic_cache_dirs (joe_trextr_t))
-            (call usersubject_home_dir_filetrans_user_data_cache (joe_trextr_t))
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_trextr_t))
 
             (allow joe_trextr_t user_dconf_run_t manage_dir_perms)
             (allow joe_trextr_t user_dconf_run_t manage_file_perms)
