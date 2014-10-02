@@ -7,7 +7,7 @@
 (call application_subject_entry (is_gctrlc_subject gctrlc_exec_t))
 
 (context file_gctrlc_exec (system_u object_r gctrlc_exec_t ((s0)(s0))))
-(filecon "/usr/bin/gnome-control-center" file file_tpmctool_exec)
+(filecon "/usr/bin/gnome-control-center" file file_gctrlc_exec)
 
 (type gctrlcsp_exec_t)
 (call application_subject_entry (is_gctrlcsp_subject gctrlcsp_exec_t))

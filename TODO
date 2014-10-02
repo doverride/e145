@@ -1,6 +1,7 @@
-target:
-    epiphany
+target (gnome doing access checks):
+    epiphany nautilus
     label /usr/bin/firefox for gnome access check
+    /usr/bin/vmware-user-suid-wrapper /usr/bin/bluetooth-sendto
 
 pulseaudio client subjects: review them, there may be duplicate rules
 

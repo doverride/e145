@@ -151,6 +151,8 @@
     (type user_dbusd_tmp_t)
     (call usersubject_tmp_object (user_dbusd_tmp_t)))
 
+(call dbus_search_var_lib (is_dbus_session_client_subject))
+
 (allow is_dbus_admin_subject dbusd_t signal_perms)
 (allow is_dbus_admin_subject dbusd_t (process (ptrace)))
 (call ps_subject_pattern (is_dbus_admin_subject dbusd_t))
@@ -222,6 +224,10 @@
     (allow ARG1 is_dbus_system_client_subject (dirs (list)))
     (allow ARG1 is_dbus_system_client_subject read_file_perms))
 
+(macro dbus_search_var_lib ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (allow ARG1 dbusd_var_lib_t (dirs (search))))
+
 (macro dbus_read_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))
     (call read_files_pattern (ARG1 dbusd_var_lib_t dbusd_var_lib_t)))
@@ -236,6 +242,7 @@
 (macro dbus_session_client_subject ((type ARG1)(type ARG2)(type ARG3))
     (typeattributeset is_dbus_session_client_subject ARG1)
     (call stream_connect_pattern (ARG1 ARG2 ARG2 ARG3))
+    (allow ARG1 ARG3 (unix_stream_socket (read write)))
     (allow ARG1 ARG3 (process (signal)))
     (allow ARG3 ARG1 (dirs (list)))
     (allow ARG3 ARG1 read_file_perms))

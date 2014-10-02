@@ -64,6 +64,7 @@
 (call system_read_sysctl_vm_overcommit_files (is_trminapp_subject))
 
 (call devices_read_urandom (is_trminapp_subject))
+(call devices_read_random (is_trminapp_subject))
 
 (call files_read_generic_usr_files (is_trminapp_subject))
 
@@ -79,6 +80,8 @@
 (call devices_read_urandom (is_trminfs_subject))
 
 (call files_read_generic_usr_files (is_trminfs_subject))
+
+(call filesystem_getattr_filesystems (is_trminfs_subject))
 
 (call dbus_system_client_subject (is_trminfs_subject))
 
@@ -112,6 +115,7 @@
 (call system_read_generic_proc_files (is_trextr_subject))
 
 (call devices_read_urandom (is_trextr_subject))
+(call devices_read_random (is_trextr_subject))
 
 (call files_read_generic_usr_files (is_trextr_subject))
 

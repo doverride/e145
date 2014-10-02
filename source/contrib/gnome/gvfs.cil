@@ -209,6 +209,8 @@
 
 (call devices_read_urandom (is_gvfsd_metad_subject))
 
+(call filesystem_getattr_filesystems (is_gvfsd_metad_subject))
+
 (call miscfiles_read_localization_files (is_gvfsd_metad_subject))
 
 (optional gvfsdmetad_subject_optional_usersubject
@@ -241,6 +243,8 @@
 (call miscfiles_read_localization_files (is_gvfs_goavm_subject))
 
 (call devices_read_urandom (is_gvfs_afcvm_subject))
+
+(call files_list_run (is_gvfs_afcvm_subject))
 
 (call miscfiles_read_localization_files (is_gvfs_afcvm_subject))
 

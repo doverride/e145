@@ -639,6 +639,10 @@
             (call usersubject_data_filetrans (joe_t user_gsd_data_t dir "gnome-settings-daemon"))
             (call usersubject_data_filetrans (joe_gsd_t user_gsd_data_t dir "gnome-settings-daemon"))
 
+            (allow joe_gsd_t user_run_t manage_dir_perms)
+            (allow joe_gsd_t user_run_t manage_sock_file_perms)
+            (call usersubject_run_user_dir_filetrans_user_run (joe_gsd_t dir "*"))
+
             (call xserver_common_client_subject (joe_gsd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
             (call xserver_client_subject_tmpfs_template (joe_gsd_t user_gsd_tmpfs_t))
 
@@ -1100,6 +1104,10 @@
             (call usersubject_manage_generic_data_dirs (joe_gshell_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_gshell_t))
 
+            (allow joe_gshell_t user_run_t manage_dir_perms)
+            (allow joe_gshell_t user_run_t manage_sock_file_perms)
+            (call usersubject_run_user_dir_filetrans_user_run (joe_gshell_t dir "*"))
+
             (context file_joe_user_gshell_run (joe_u object_r user_gshell_run_t ((s0)(s0))))
             (filecon "/run/user/1000/gnome-shell(/.*)?" any file_joe_user_gshell_run)
 
@@ -1412,6 +1420,10 @@
 
             (call usersubject_application_subject (joe_caribou_t)) 
 
+            (allow joe_caribou_t user_run_t manage_dir_perms)
+            (allow joe_caribou_t user_run_t manage_sock_file_perms)
+            (call usersubject_run_user_dir_filetrans_user_run (joe_caribou_t dir "*"))
+
             (call usersubject_home_dir_filetrans_user_cache_dir (joe_caribou_t))
 
             (call dbus_session_client_subject (joe_caribou_t user_dbusd_tmp_t joe_dbusd_t))
@@ -1444,6 +1456,8 @@
 
             (allow joe_t joe_trminapp_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trminapp_t))
+
+            (call usersubject_list_generic_data_dirs (joe_trminapp_t)) ; ~/.local/share/applications
 
             (call usersubject_application_subject (joe_trminapp_t)) 
 
@@ -1658,6 +1672,10 @@
             (allow joe_evoanotify_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_evoanotify_t user_dconf_run_t dir "dconf"))
 
+            (allow joe_evoanotify_t user_run_t manage_dir_perms)
+            (allow joe_evoanotify_t user_run_t manage_sock_file_perms)
+            (call usersubject_run_user_dir_filetrans_user_run (joe_evoanotify_t dir "*"))
+
             (call dbus_session_client_subject (joe_evoanotify_t user_dbusd_tmp_t joe_dbusd_t))
 
             (call xserver_client_subject (joe_evoanotify_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
@@ -1670,7 +1688,22 @@
             (allow joe_t joe_gsoftware_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsoftware_t))
 
+            (call read_files_pattern (joe_gsoftware_t user_dconf_conf_t user_dconf_conf_t))
+            (call usersubject_search_generic_config (joe_gsoftware_t))
+
+            (allow joe_gsoftware_t user_dconf_run_t manage_dir_perms)
+            (allow joe_gsoftware_t user_dconf_run_t manage_file_perms)
+            (call usersubject_run_user_dir_filetrans (joe_gsoftware_t user_dconf_run_t dir "dconf"))
+
+            (allow joe_gsoftware_t user_run_t manage_dir_perms)
+            (allow joe_gsoftware_t user_run_t manage_sock_file_perms)
+            (call usersubject_run_user_dir_filetrans_user_run (joe_gsoftware_t dir "*"))
+
             (call usersubject_application_subject (joe_gsoftware_t))
+
+            (call dbus_session_client_subject (joe_gsoftware_t user_dbusd_tmp_t joe_dbusd_t))
+
+            (call xserver_client_subject (joe_gsoftware_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_xdg_t)
             (call xdg_role_template (joe_r joe_gsession_t joe_xdg_t))

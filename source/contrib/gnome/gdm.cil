@@ -361,6 +361,14 @@
     (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 gdm_var_lib_t gdm_var_lib_t)))
 
+(macro gdm_manage_run_dirs ((type ARG1))
+    (call gdm_search_run_user_dir (ARG1))
+    (allow ARG1 gdm_run_t manage_dir_perms))
+
+(macro gdm_manage_run_sock_files ((type ARG1))
+    (call gdm_search_run_user_dir (ARG1))
+    (call manage_sock_files_pattern (ARG1 gdm_run_t gdm_run_t)))
+
 (macro gdm_manage_run_files ((type ARG1))
     (call gdm_search_run_user_dir (ARG1))
     (call manage_files_pattern (ARG1 gdm_run_t gdm_run_t)))
@@ -397,6 +405,9 @@
 
 (macro gdm_rw_inherited_tmpfs_files ((type ARG1))
     (allow ARG1 gdm_tmpfs_t (file (read write))))
+
+(macro gdm_rw_inherited_unix_stream_sockets ((type ARG1))
+    (allow ARG1 gdm_t (unix_stream_socket (read write))))
 
 (macro gdm_admin ((type ARG1))
     (typeattributeset is_gdm_admin_subject ARG1))

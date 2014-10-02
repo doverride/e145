@@ -8,6 +8,20 @@
 (context file_gsoftware_exec (system_u object_r gsoftware_exec_t ((s0)(s0))))
 (filecon "/usr/bin/gnome-software" file file_gsoftware_exec)
 
+(call system_read_sysctl_vm_overcommit_files (is_gsoftware_subject))
+
+(call files_read_generic_etc_files (is_gsoftware_subject))
+
+(call devices_read_urandom (is_gsoftware_subject))
+
+(call auth_nsswitch_client_subject (is_gsoftware_subject))
+
+(call dbus_system_client_subject (is_gsoftware_subject))
+
+(call miscfiles_read_localization_files (is_gsoftware_subject))
+
+(call rpm_dbus_chat (is_gsoftware_subject))
+
 (macro gsoftware_role_template ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gsoftware_role ARG1)
     (typeattributeset is_gsoftware_subject ARG3)

@@ -236,6 +236,9 @@
 (optional usersubject_gui_login_user_optional_xserver
     (call xserver_xsession_exec_files_entry_subject (is_gui_login_user_subject)))
 
+(optional usersubject_common_gui_login_user_optional_gdm
+    (call gdm_rw_inherited_unix_stream_sockets (is_common_gui_login_user_subject)))
+
 (macro usersubject_base_user_template ((role ARG1)(type ARG2))
     (call subject_common_subject (ARG2))
     (roletype ARG1 ARG2)
@@ -698,6 +701,10 @@
 (macro usersubject_home_dir_filetrans_user_data_dir ((type ARG1))
     (call usersubject_search_home_dir (ARG1))
     (call filetrans_pattern (ARG1 user_home_dir_t user_data_t dir ".local")))
+
+(macro usersubject_list_generic_data_dirs ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (allow ARG1 user_data_t (dirs (list))))
 
 (macro usersubject_manage_generic_data_dirs ((type ARG1))
     (call usersubject_search_generic_data (ARG1))

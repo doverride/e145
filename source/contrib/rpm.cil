@@ -182,6 +182,10 @@
 (macro rpm_script_shell_manual_subject_type_transition ((type ARG1))
     (call commands_shell_manual_subject_type_transition (ARG1 rpm_script_t)))
 
+(macro rpm_dbus_chat ((type ARG1))
+    (allow ARG1 rpm_t (dbus (send_msg)))
+    (allow rpm_t ARG1 (dbus (send_msg))))
+
 (macro rpm_list_config ((type ARG1))
     (call files_search_etc (ARG1))
     (allow ARG1 rpm_conf_t (dirs (list))))

@@ -15,6 +15,9 @@
     (call emacs_use_fd_all (is_application_subject))
     (call emacs_rw_inherited_fifo_files_all (is_application_subject)))
 
+(optional application_optional_gdm
+    (call gdm_rw_inherited_unix_stream_sockets (is_application_subject)))
+
 (optional application_optional_irssi
     (call irc_send_sigchld_all_irssi (is_application_subject))
     (call irc_use_fd_all_irssi (is_application_subject))
