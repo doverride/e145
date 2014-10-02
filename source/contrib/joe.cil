@@ -47,9 +47,10 @@
     (s0))))
 (filecon "/home/joe/\.config(/.*)?" any file_joe_user_conf)
 
-(context file_joe_user_gtk2_conf (joe_u object_r user_gtk2_conf_t ((s0)
+(context file_joe_user_gtk_conf (joe_u object_r user_gtk_conf_t ((s0)
     (s0))))
-(filecon "/home/joe/\.config/gtk-2\.0(/.*)?" any file_joe_user_gtk2_conf)
+(filecon "/home/joe/\.config/gtk-2\.0(/.*)?" any file_joe_user_gtk_conf)
+(filecon "/home/joe/\.config/gtk-3\.0(/.*)?" any file_joe_user_gtk_conf)
 
 (context file_joe_user_data (joe_u object_r user_data_t ((s0)
     (s0))))
@@ -483,9 +484,9 @@
         (call usersubject_manage_generic_config_dirs (joe_firefox_t))
         (call usersubject_home_dir_filetrans_user_config_dir (joe_firefox_t))
 
-        (call usersubject_manage_gtk2_config_dirs (joe_firefox_t))
-        (call usersubject_manage_gtk2_config_files (joe_firefox_t))
-        (call usersubject_config_filetrans_user_gtk2_config_dir (joe_firefox_t))
+        (call usersubject_manage_gtk_config_dirs (joe_firefox_t))
+        (call usersubject_manage_gtk_config_files (joe_firefox_t))
+        (call usersubject_config_filetrans_user_gtk_config_dir (joe_firefox_t))
 
         (call usersubject_manage_generic_home_content_files (joe_firefox_t))
         (call usersubject_manage_generic_home_content_dirs (joe_firefox_t))
@@ -592,6 +593,7 @@
             (filecon "/home/joe/\.config/gnome-session(/.*)?" any file_joe_user_gsession_conf)
 
             (call gkeyring_role_template_gkeyringd (joe_r joe_gsession_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
+            (allow joe_gkeyringd_t joe_gsession_t (unix_stream_socket (read write)))
 
             (call pa_client_subject (joe_r joe_gsession_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_gsession_tmpfs_t))
@@ -627,6 +629,7 @@
 
             (type joe_gsd_t)
             (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t user_gsd_data_t))
+            (allow joe_gsd_t joe_gsession_t (unix_stream_socket (read write)))
 
             (context file_joe_user_gsd_data (joe_u object_r user_gsd_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gnome-settings-daemon(/.*)?" any file_joe_user_gsd_data)
@@ -660,7 +663,6 @@
             (allow joe_t user_gsd_tmpfs_t relabel_file_perms)
 
             (call read_files_pattern (joe_gsd_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_gsd_t))
 
             (allow joe_gsd_t user_dconf_run_t manage_dir_perms)
             (allow joe_gsd_t user_dconf_run_t manage_file_perms)
@@ -720,7 +722,6 @@
             (call usersubject_home_dir_filetrans_user_data_dir (joe_gkeyringd_t))
 
             (call read_files_pattern (joe_gkeyringd_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_gkeyringd_t))
 
             (allow joe_gkeyringd_t user_dconf_run_t manage_dir_perms)
             (allow joe_gkeyringd_t user_dconf_run_t manage_file_perms)
@@ -741,7 +742,6 @@
             (call usersubject_run_user_dir_filetrans (joe_atspibusl_t user_dconf_run_t dir "dconf"))
 
             (call read_files_pattern (joe_atspibusl_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_atspibusl_t))
 
             (allow joe_atspibusl_t user_dconf_run_t manage_dir_perms)
             (allow joe_atspibusl_t user_dconf_run_t manage_file_perms)
@@ -774,6 +774,7 @@
 
             (type joe_vdagent_t)
             (call spice_role_template_vdagent (joe_r joe_gsession_t joe_vdagent_t))
+            (allow joe_vdagent_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_vdagent_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_vdagent_t))
@@ -1071,6 +1072,7 @@
             (type joe_gshell_t)
             (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t
                 user_gshell_tmpfs_t user_gshell_tmp_t user_gshell_data_t))
+            (allow joe_gshell_t joe_gsession_t (unix_stream_socket (read write)))
 
             (context file_joe_user_gshell_data (joe_u object_r user_gshell_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gnome-shell(/.*)?" any file_joe_user_gshell_data)
@@ -1115,7 +1117,6 @@
             (call usersubject_run_user_dir_filetrans (joe_gshell_t user_gshell_run_t dir "gnome-shell"))
 
             (call read_files_pattern (joe_gshell_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_gshell_t))
 
             (allow joe_gshell_t user_dconf_run_t manage_dir_perms)
             (allow joe_gshell_t user_dconf_run_t manage_file_perms)
@@ -1149,7 +1150,6 @@
             (call ps_subject_pattern (joe_t joe_gshellcald_t))
 
             (call read_files_pattern (joe_gshellcald_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_gshellcald_t))
 
             (allow joe_gshellcald_t user_dconf_run_t manage_dir_perms)
             (allow joe_gshellcald_t user_dconf_run_t manage_file_perms)
@@ -1193,6 +1193,7 @@
 
             (type joe_giscw_t)
             (call gis_role_template_giscw (joe_r joe_gsession_t joe_giscw_t))
+            (allow joe_giscw_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_giscw_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_giscw_t))
@@ -1204,6 +1205,7 @@
             (type joe_canberra_t)
             (call canberra_role_template_canberra (joe_r joe_gsession_t joe_canberra_t
                 user_canberra_tmpfs_t))
+            (allow joe_canberra_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t user_canberra_tmpfs_t manage_file_perms)
             (allow joe_t user_canberra_tmpfs_t relabel_file_perms)
@@ -1228,6 +1230,7 @@
 
             (type joe_startpa_t)
             (call pa_role_template_startpa (joe_r joe_gsession_t joe_startpa_t))
+            (allow joe_startpa_t joe_gsession_t (unix_stream_socket (read write)))
 
             (optional joe_startpa_optional_joe_pactl
                 (call pa_role_template_pactl (joe_r joe_startpa_t joe_pactl_t
@@ -1244,6 +1247,7 @@
 
             (type joe_gsettings_t)
             (call glib_role_template_gsettings (joe_r joe_gsession_t joe_gsettings_t))
+            (allow joe_gsettings_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_gsettings_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsettings_t))
@@ -1251,7 +1255,6 @@
             (call usersubject_application_subject (joe_gsettings_t))
 
             (call read_files_pattern (joe_gsettings_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_gsettings_t))
 
             (allow joe_gsettings_t user_dconf_run_t manage_dir_perms)
             (allow joe_gsettings_t user_dconf_run_t manage_file_perms)
@@ -1260,6 +1263,7 @@
             (type joe_gsdconv_t)
             (call gconf_role_template_gsdconv (joe_r joe_gsession_t joe_gsdconv_t user_gsdconv_data_t
                 user_gsdconv_conf_t))
+            (allow joe_gsdconv_t joe_gsession_t (unix_stream_socket (read write)))
 
             (context file_joe_user_gsdconv_data (joe_u object_r user_gsdconv_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gsettings-data-convert.*" file file_joe_user_gsdconv_data)
@@ -1281,7 +1285,6 @@
             (call usersubject_config_filetrans (joe_gsdconv_t user_gsdconv_conf_t dir "gconf"))
 
             (call read_files_pattern (joe_gsdconv_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_gsdconv_t))
 
             (allow joe_gsdconv_t user_dconf_run_t manage_dir_perms)
             (allow joe_gsdconv_t user_dconf_run_t manage_file_perms)
@@ -1327,13 +1330,11 @@
 
             (allow joe_ibusdconf_t joe_ibusd_t (process (signull)))
 
-            (call usersubject_search_generic_config (joe_ibusdconf_t))
             (allow joe_ibusdconf_t user_ibus_conf_t (dirs (list)))
             (allow joe_ibusdconf_t user_ibus_conf_t read_file_perms)
             (allow joe_ibusdconf_t user_ibus_conf_t (dir (setattr)))
             
             (call read_files_pattern (joe_ibusdconf_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_ibusdconf_t))
 
             (allow joe_ibusdconf_t user_dconf_run_t manage_dir_perms)
             (allow joe_ibusdconf_t user_dconf_run_t manage_file_perms)
@@ -1349,7 +1350,6 @@
 
             (allow joe_ibusx11_t joe_ibusd_t (process (signull)))
 
-            (call usersubject_search_generic_config (joe_ibusx11_t))
             (allow joe_ibusx11_t user_ibus_conf_t (dirs (list)))
             (allow joe_ibusx11_t user_ibus_conf_t read_file_perms)
             (allow joe_ibusx11_t user_ibus_conf_t (dir (setattr)))
@@ -1370,7 +1370,6 @@
 
             (allow joe_ibuseng_t joe_ibusd_t (process (signull)))
 
-            (call usersubject_search_generic_config (joe_ibuseng_t))
             (allow joe_ibuseng_t user_ibus_conf_t (dirs (list)))
             (allow joe_ibuseng_t user_ibus_conf_t read_file_perms)
             (allow joe_ibuseng_t user_ibus_conf_t (dir (setattr)))
@@ -1402,7 +1401,6 @@
             (call usersubject_home_dir_filetrans_user_data_dir (joe_tpmc_t))
 
             (call read_files_pattern (joe_tpmc_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_tpmc_t))
 
             (allow joe_tpmc_t user_dconf_run_t manage_dir_perms)
             (allow joe_tpmc_t user_dconf_run_t manage_file_perms)
@@ -1453,11 +1451,19 @@
 
             (type joe_trminapp_t)
             (call tracker_role_template_trminapp (joe_r joe_gsession_t joe_trminapp_t))
+            (allow joe_trminapp_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_trminapp_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trminapp_t))
 
             (call usersubject_list_generic_data_dirs (joe_trminapp_t)) ; ~/.local/share/applications
+
+            (allow joe_trminapp_t user_trstore_cache_t manage_dir_perms)
+            (allow joe_trminapp_t user_trstore_cache_t manage_file_perms)
+            (call usersubject_cache_filetrans (joe_trminapp_t user_trstore_cache_t dir "tracker"))
+
+            (call usersubject_manage_generic_cache_dirs (joe_trminapp_t))
+            (call usersubject_home_dir_filetrans_user_data_cache (joe_trminapp_t))
 
             (call usersubject_application_subject (joe_trminapp_t)) 
 
@@ -1465,16 +1471,30 @@
 
             (type joe_trminfs_t)
             (call tracker_role_template_trminfs (joe_r joe_gsession_t joe_trminfs_t))
+            (allow joe_trminfs_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_trminfs_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trminfs_t))
 
             (call read_files_pattern (joe_trminfs_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_trminfs_t))
+
+            (call usersubject_list_all_user_home_content (joe_trminfs_t))
+            (call usersubject_getattr_all_user_home_file_objects (joe_trminfs_t))
 
             (allow joe_trminfs_t user_dconf_run_t manage_dir_perms)
             (allow joe_trminfs_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_trminfs_t user_dconf_run_t dir "dconf"))
+
+            (call usersubject_read_generic_config_files (joe_trminfs_t))
+
+            (allow joe_trminfs_t user_trstore_cache_t manage_dir_perms)
+            (allow joe_trminfs_t user_trstore_cache_t manage_file_perms)
+            (call usersubject_cache_filetrans (joe_trminfs_t user_trstore_cache_t dir "tracker"))
+
+            (call usersubject_manage_generic_cache_dirs (joe_trminfs_t))
+            (call usersubject_home_dir_filetrans_user_data_cache (joe_trminfs_t))
+
+            (allow joe_trminfs_t user_trstore_conf_t list_dir_perms)
 
             (call usersubject_application_subject (joe_trminfs_t)) 
 
@@ -1482,16 +1502,25 @@
 
             (type joe_trmingd_t)
             (call tracker_role_template_trmingd (joe_r joe_gsession_t joe_trmingd_t))
+            (allow joe_trmingd_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_trmingd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trmingd_t))
 
             (call usersubject_application_subject (joe_trmingd_t)) 
 
+            (allow joe_trmingd_t user_trstore_cache_t manage_dir_perms)
+            (allow joe_trmingd_t user_trstore_cache_t manage_file_perms)
+            (call usersubject_cache_filetrans (joe_trmingd_t user_trstore_cache_t dir "tracker"))
+
+            (call usersubject_manage_generic_cache_dirs (joe_trmingd_t))
+            (call usersubject_home_dir_filetrans_user_data_cache (joe_trmingd_t))
+
             (call dbus_session_client_subject (joe_trmingd_t user_dbusd_tmp_t joe_dbusd_t))
  
             (type joe_trextr_t)
             (call tracker_role_template_trextr (joe_r joe_gsession_t joe_trextr_t user_trextr_tmp_t))
+            (allow joe_trextr_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t user_trextr_tmp_t manage_dir_perms)
             (allow joe_t user_trextr_tmp_t relabel_dir_perms)
@@ -1500,7 +1529,13 @@
             (call ps_subject_pattern (joe_t joe_trextr_t))
 
             (call read_files_pattern (joe_trextr_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_trextr_t))
+
+            (allow joe_trextr_t user_trstore_cache_t manage_dir_perms)
+            (allow joe_trextr_t user_trstore_cache_t manage_file_perms)
+            (call usersubject_cache_filetrans (joe_trextr_t user_trstore_cache_t dir "tracker"))
+
+            (call usersubject_manage_generic_cache_dirs (joe_trextr_t))
+            (call usersubject_home_dir_filetrans_user_data_cache (joe_trextr_t))
 
             (allow joe_trextr_t user_dconf_run_t manage_dir_perms)
             (allow joe_trextr_t user_dconf_run_t manage_file_perms)
@@ -1563,7 +1598,6 @@
             (call ps_subject_pattern (joe_t joe_trstore_t))
 
             (call read_files_pattern (joe_trstore_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_trstore_t))
 
             (allow joe_trstore_t user_dconf_run_t manage_dir_perms)
             (allow joe_trstore_t user_dconf_run_t manage_file_perms)
@@ -1575,6 +1609,7 @@
 
             (type joe_gdbus_t)
             (call glib_role_template_gdbus (joe_r joe_gsession_t joe_gdbus_t))
+            (allow joe_gdbus_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_gdbus_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gdbus_t))
@@ -1649,11 +1684,17 @@
             (call ps_subject_pattern (joe_t joe_evocfactory_t))
 
             (call read_files_pattern (joe_evocfactory_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_evocfactory_t))
 
             (allow joe_evocfactory_t user_dconf_run_t manage_dir_perms)
             (allow joe_evocfactory_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_evocfactory_t user_dconf_run_t dir "dconf"))
+
+            (allow joe_evocfactory_t user_evosrcreg_data_t manage_dir_perms)
+            (allow joe_evocfactory_t user_evosrcreg_data_t manage_file_perms)
+            (call usersubject_data_filetrans (joe_evocfactory_t user_evosrcreg_data_t dir "evolution"))
+
+            (call usersubject_manage_generic_data_dirs (joe_evocfactory_t))
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_evocfactory_t))
 
             (call dbus_session_client_subject (joe_evocfactory_t user_dbusd_tmp_t joe_dbusd_t))
 
@@ -1661,12 +1702,12 @@
 
             (type joe_evoanotify_t)
             (call evolution_role_template_evoanotify (joe_r joe_gsession_t joe_evoanotify_t))
+            (allow joe_evoanotify_t joe_gsession_t (unix_stream_socket (read write)))
 
             (allow joe_t joe_evoanotify_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_evoanotify_t))
 
             (call read_files_pattern (joe_evoanotify_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_evoanotify_t))
 
             (allow joe_evoanotify_t user_dconf_run_t manage_dir_perms)
             (allow joe_evoanotify_t user_dconf_run_t manage_file_perms)
@@ -1684,12 +1725,12 @@
 
             (type joe_gsoftware_t)
             (call gsoftware_role_template (joe_r joe_gsession_t joe_gsoftware_t))
+            (allow joe_gsoftware_t joe_gsession_t (unix_stream_socket (read write)))
  
             (allow joe_t joe_gsoftware_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsoftware_t))
 
             (call read_files_pattern (joe_gsoftware_t user_dconf_conf_t user_dconf_conf_t))
-            (call usersubject_search_generic_config (joe_gsoftware_t))
 
             (allow joe_gsoftware_t user_dconf_run_t manage_dir_perms)
             (allow joe_gsoftware_t user_dconf_run_t manage_file_perms)
@@ -1705,13 +1746,20 @@
 
             (call xserver_client_subject (joe_gsoftware_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
-            (type joe_xdg_t)
-            (call xdg_role_template (joe_r joe_gsession_t joe_xdg_t))
+            (type joe_xdggtkupd_t)
+            (call xdg_role_template (joe_r joe_gsession_t joe_xdggtkupd_t))
+            (allow joe_xdggtkupd_t joe_gsession_t (unix_stream_socket (read write)))
  
-            (allow joe_t joe_xdg_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_xdg_t))
+            (allow joe_t joe_xdggtkupd_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_xdggtkupd_t))
 
-            (call usersubject_application_subject (joe_xdg_t))
+            (call usersubject_read_generic_config_files (joe_xdggtkupd_t))
+
+            (call usersubject_manage_gtk_config_dirs (joe_xdggtkupd_t))
+            (call usersubject_manage_gtk_config_files (joe_xdggtkupd_t))
+            (call usersubject_config_filetrans_user_gtk_config_dir (joe_xdggtkupd_t))
+
+            (call usersubject_application_subject (joe_xdggtkupd_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
@@ -2489,8 +2537,6 @@
     (call usersubject_manage_orc_run_files (joe_pa_t))
     (call usersubject_mmap_orc_run_files (joe_pa_t))
     (call usersubject_run_user_dir_filetrans_orc_run_dir (joe_pa_t))
-
-    (call usersubject_search_generic_config (joe_pa_t))
 
     (type joe_pactl_t)
     (call pa_role_template_pactl (joe_r joe_t joe_pactl_t user_pa_run_t
