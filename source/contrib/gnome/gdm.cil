@@ -320,7 +320,7 @@
 
 (macro gdm_delete_systemd_run_sock_files ((type ARG1))
     (call gdm_search_run_user_dir (ARG1))
-    (call delete_sock_files_pattern (ARG1 user_systemd_run_t user_systemd_run_t)))
+    (call delete_sock_files_pattern (ARG1 gdm_systemd_run_t gdm_systemd_run_t)))
 
 (macro gdm_run_user_dir_filetrans_systemd_run_dir ((type ARG1))
     (call gdm_search_run_user_dir (ARG1))
