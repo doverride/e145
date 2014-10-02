@@ -1663,6 +1663,22 @@
             (call xserver_client_subject (joe_evoanotify_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (call usersubject_application_subject (joe_evoanotify_t))
+
+            (type joe_gsoftware_t)
+            (call gsoftware_role_template (joe_r joe_gsession_t joe_gsoftware_t))
+ 
+            (allow joe_t joe_gsoftware_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_gsoftware_t))
+
+            (call usersubject_application_subject (joe_gsoftware_t))
+
+            (type joe_xdg_t)
+            (call xdg_role_template (joe_r joe_gsession_t joe_xdg_t))
+ 
+            (allow joe_t joe_xdg_t (process (signal signull sigstop sigkill)))
+            (call ps_subject_pattern (joe_t joe_xdg_t))
+
+            (call usersubject_application_subject (joe_xdg_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
