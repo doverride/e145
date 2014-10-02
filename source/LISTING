@@ -108,6 +108,7 @@ contrib/gnome/caribou.cil
 contrib/gnome/dconf.cil
 contrib/gnome/evolution.cil
 contrib/gnome/gconf.cil
+contrib/gnome/gctrlc.cil
 contrib/gnome/gdm.cil
 contrib/gnome/gis.cil
 contrib/gnome/gkeyring.cil
@@ -116,10 +117,12 @@ contrib/gnome/goa.cil
 contrib/gnome/gsd.cil
 contrib/gnome/gsession.cil
 contrib/gnome/gshell.cil
+contrib/gnome/gsoftware.cil
 contrib/gnome/gvfs.cil
 contrib/gnome/ibus.cil
 contrib/gnome/telepathy.cil
 contrib/gnome/tracker.cil
+contrib/gnome/xdg.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/autorelabel.cil
 contrib/systemd/backlight.cil

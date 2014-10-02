@@ -1,0 +1,34 @@
+(roleattribute is_gctrlc_role)
+
+(typeattribute is_gctrlc_subject)
+(typeattribute is_gctrlcsp_subject)
+
+(type gctrlc_exec_t)
+(call application_subject_entry (is_gctrlc_subject gctrlc_exec_t))
+
+(context file_gctrlc_exec (system_u object_r gctrlc_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gnome-control-center" file file_tpmctool_exec)
+
+(type gctrlcsp_exec_t)
+(call application_subject_entry (is_gctrlcsp_subject gctrlcsp_exec_t))
+
+(context file_gctrlcsp_exec (system_u object_r gctrlcsp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gnome-control-center-search-provider" file file_gctrlcsp_exec)
+
+(type gctrlc_helper_exec_t)
+(call commands_bin_object (gctrlc_helper_exec_t))
+
+(context file_gctrlc_helper_exec (system_u object_r gctrlcsp_helper_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/cc-remote-login-helper" file file_gctrlc_helper_exec)
+
+(macro gctrlc_role_template_gctrlc ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gctrlc_role ARG1)
+    (typeattributeset is_gctrlc_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gctrlc_exec_t ARG3)))
+
+(macro gctrlc_role_template_gctrlcsp ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gctrlc_role ARG1)
+    (typeattributeset is_gctrlcsp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gctrlcsp_exec_t ARG3)))

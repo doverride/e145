@@ -1,7 +1,5 @@
-target: gnome-control-center
-    gnome-software abrt-applet epiphany
-    xdg-user-dirs-gtk-update
-
+target:
+    epiphany
     label /usr/bin/firefox for gnome access check
 
 pulseaudio client subjects: review them, there may be duplicate rules

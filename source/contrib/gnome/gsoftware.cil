@@ -1,0 +1,15 @@
+(roleattribute is_gsoftware_role)
+
+(typeattribute is_gsoftware_subject)
+
+(type gsoftware_exec_t)
+(call application_subject_entry (is_gsoftware_subject gsoftware_exec_t))
+
+(context file_gsoftware_exec (system_u object_r gsoftware_exec_t ((s0)(s0))))
+(filecon "/usr/bin/gnome-software" file file_gsoftware_exec)
+
+(macro gsoftware_role_template ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gsoftware_role ARG1)
+    (typeattributeset is_gsoftware_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gsoftware_exec_t ARG3)))
