@@ -47,9 +47,10 @@
     (s0))))
 (filecon "/home/joe/\.config(/.*)?" any file_joe_user_conf)
 
-(context file_joe_user_gtk2_conf (joe_u object_r user_gtk2_conf_t ((s0)
+(context file_joe_user_gtk_conf (joe_u object_r user_gtk_conf_t ((s0)
     (s0))))
-(filecon "/home/joe/\.config/gtk-2\.0(/.*)?" any file_joe_user_gtk2_conf)
+(filecon "/home/joe/\.config/gtk-2\.0(/.*)?" any file_joe_user_gtk_conf)
+(filecon "/home/joe/\.config/gtk-3\.0(/.*)?" any file_joe_user_gtk_conf)
 
 (context file_joe_user_data (joe_u object_r user_data_t ((s0)
     (s0))))
@@ -483,9 +484,9 @@
         (call usersubject_manage_generic_config_dirs (joe_firefox_t))
         (call usersubject_home_dir_filetrans_user_config_dir (joe_firefox_t))
 
-        (call usersubject_manage_gtk2_config_dirs (joe_firefox_t))
-        (call usersubject_manage_gtk2_config_files (joe_firefox_t))
-        (call usersubject_config_filetrans_user_gtk2_config_dir (joe_firefox_t))
+        (call usersubject_manage_gtk_config_dirs (joe_firefox_t))
+        (call usersubject_manage_gtk_config_files (joe_firefox_t))
+        (call usersubject_config_filetrans_user_gtk_config_dir (joe_firefox_t))
 
         (call usersubject_manage_generic_home_content_files (joe_firefox_t))
         (call usersubject_manage_generic_home_content_dirs (joe_firefox_t))
