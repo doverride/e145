@@ -109,6 +109,8 @@
 (call dbus_system_client_subject (tuned_t))
 (call dbus_acquire_service_system (tuned_t))
 
+(call fstools_exec (tuned_t))
+
 (call ip_exec (tuned_t))
 
 (call libraries_exec_ldconfig (tuned_t))
