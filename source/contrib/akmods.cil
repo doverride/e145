@@ -103,6 +103,9 @@
 (call akmods_manage_var_cache_files (akmods_t))
 (call akmods_read_config_files (akmods_t))
 
+(call application_subject (akmods_t))
+(call application_executable_object (akmods_t))
+
 (call audit_client_subject (akmods_t)) ; /usr/bin/runuser
 
 (call auth_list_pam_config (akmods_t)) ; /etc/security/limits.d -> /usr/sbin/runuser
@@ -145,7 +148,8 @@
 
 (optional akmods_optional_usersubject
     (call usersubject_search_keyring_all_common_login_user_subjects (akmods_t))
-    (call usersubject_use_terminals (akmods_t)))
+    (call usersubject_use_terminals (akmods_t))
+    (call usersubject_dontaudit_search_home_dir (akmods_t)))
 
 (allow is_akmods_admin_subject is_akmods_subject signal_perms)
 (allow is_akmods_admin_subject is_akmods_subject (process (ptrace)))
