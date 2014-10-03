@@ -101,8 +101,8 @@
 (call devices_read_urandom (tuned_t))
 (call devices_write_net_control (tuned_t))
 
-(call storage_getattr_fixed_disk_nodes (tuned_t))
-(call storage_getattr_scsi_generic_nodes (tuned_t))
+(call storage_read_fixed_disk_nodes (tuned_t))
+(call storage_read_scsi_generic_nodes (tuned_t))
 
 (call auth_nsswitch_client_subject (tuned_t))
 

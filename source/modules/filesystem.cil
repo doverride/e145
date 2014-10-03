@@ -378,6 +378,7 @@
 
 (macro filesystem_delete_cgroup_dirs ((type ARG1))
     (call devices_search_sysfs (ARG1))
+    (call filesystem_search_tmpfs (ARG1))
     (call delete_dirs_pattern (ARG1 cgroup_t cgroup_t)))
 
 (macro filesystem_manage_cgroup_dirs ((type ARG1))
@@ -386,6 +387,7 @@
 
 (macro filesystem_read_cgroup_files ((type ARG1))
     (call devices_search_sysfs (ARG1))
+    (call filesystem_search_tmpfs (ARG1))
     (call read_files_pattern (ARG1 cgroup_t cgroup_t)))
 
 (macro filesystem_remount_dosfs_filesystems ((type ARG1))

@@ -92,6 +92,7 @@
 
 (call filesystem_getattr_filesystems (akmods_t))
 (call filesystem_getattr_tmpfs_filesystems (akmods_t)) ; kmodtool
+(call filesystem_read_cgroup_files (akmods_t))
 
 (call selinux_compute_create_context (akmods_t))
 
@@ -121,11 +122,15 @@
 (call miscfiles_read_network_config_files (akmods_t))
 (call miscfiles_read_localization_files (akmods_t))
 
+(call mount_exec (akmods_t))
+
 (call seutil_read_config_files (akmods_t))
 (call seutil_read_file_context_files (akmods_t))
 
+(call utmp_read_run_files (akmods_t))
+
 (optional akmods_optional_session
-    (call session_use_inherited_terminals (akmods_t))
+    (call session_use_terminals (akmods_t))
     (call session_search_keyring (akmods_t))
     (call session_dontaudit_search_home_dir (akmods_t))
     (call session_dontaudit_search_generic_data (akmods_t))) ; rpmdev-vercmp -> /root/.local
@@ -140,7 +145,7 @@
 
 (optional akmods_optional_usersubject
     (call usersubject_search_keyring_all_common_login_user_subjects (akmods_t))
-    (call usersubject_use_inherited_terminals (akmods_t)))
+    (call usersubject_use_terminals (akmods_t)))
 
 (allow is_akmods_admin_subject is_akmods_subject signal_perms)
 (allow is_akmods_admin_subject is_akmods_subject (process (ptrace)))

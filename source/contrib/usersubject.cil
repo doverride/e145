@@ -453,10 +453,14 @@
     (call usersubject_relabel_font_cache_dirs (ARG1))
     (call usersubject_relabel_font_cache_files (ARG1))
     (call usersubject_relabel_font_cache_lnk_files (ARG1))
+    (call usersubject_home_dir_filetrans_user_font_cache_dir (ARG1))
     (call usersubject_cache_filetrans_user_font_cache_dir (ARG1)))
 
 (macro usersubject_cache_filetrans_user_font_cache_dir ((type ARG1))
     (call usersubject_cache_filetrans (ARG1 user_font_cache_t dir "fontconfig")))
+
+(macro usersubject_home_dir_filetrans_user_font_cache_dir ((type ARG1))
+    (call usersubject_home_dir_filetrans (ARG1 user_font_cache_t dir ".fontconfig")))
 
 (macro usersubject_manage_font_cache_dirs ((type ARG1))
     (call usersubject_search_generic_cache (ARG1))

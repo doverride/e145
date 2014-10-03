@@ -66,6 +66,7 @@
 
 (context file_session_font_cache (session_u object_r session_font_cache_t ((s0)
     (s0))))
+(filecon "/root/\.fontconfig(/.*)?" any file_session_font_cache)
 (filecon "/root/\.cache/fontconfig(/.*)?" any file_session_font_cache)
 
 (type session_conf_t)
