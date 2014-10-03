@@ -8,6 +8,7 @@
 (type avccow_tmpfs_t)
 (call files_tmpfs_object (avccow_t))
 
+(allow avccow_t self (process (signal)))
 (allow avccow_t self rw_fifo_file_perms)
 
 (allow avccow_t avccow_tmpfs_t (file (read write)))
@@ -26,6 +27,8 @@
 (call auth_nsswitch_client_subject (avccow_t))
 
 (call dbus_read_var_lib_files (avccow_t))
+
+(call machined_read_config_files (avccow_t))
 
 (call miscfiles_read_localization_files (avccow_t))
 (call miscfiles_read_network_config_files (avccow_t))

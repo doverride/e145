@@ -309,8 +309,7 @@
 
 (call miscfiles_read_fonts_config (is_xserver_common_client_subject))
 (call miscfiles_read_fonts_files (is_xserver_common_client_subject))
-(call miscfiles_setattr_fonts_cache_dirs (is_xserver_common_client_subject))
-(call miscfiles_read_fonts_cache_files (is_xserver_common_client_subject))
+(call miscfiles_manage_fonts_cache (is_xserver_common_client_subject))
 (call miscfiles_read_localization_files (is_xserver_common_client_subject))
 
 (optional xserver_common_client_subject_optional_ratpoison

@@ -40,7 +40,7 @@
 (call devices_list_sysfs (is_firefox_subject))
 (call devices_read_urandom (is_firefox_subject))
 (call devices_read_sysfs_files (is_firefox_subject))
-(call devices_rw_inherited_dri (is_firefox_subject)) ; inherited from xorg
+(call devices_rw_dri (is_firefox_subject))
 
 (call files_dontaudit_list_all (is_firefox_subject)) ; catchall
 (call files_list_etc (is_firefox_subject)) ; /etc/xdg
