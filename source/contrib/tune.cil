@@ -119,6 +119,7 @@
 
 (call sysctl_exec_sctl (tuned_t))
 
+(call tune_list_config (tuned_t))
 (call tune_rw_config_files (tuned_t))
 
 (call udevd_client_subject (tuned_t))
@@ -144,6 +145,10 @@
 (macro tune_read_config_files ((type ARG1))
     (call files_search_etc (ARG1))
     (call read_files_pattern (ARG1 tuned_conf_t tuned_conf_t)))
+
+(macro tune_list_config ((type ARG1))
+    (call files_search_etc (ARG1))
+    (allow ARG1 tuned_conf_t (dirs (list))))
 
 (macro tune_rw_config_files ((type ARG1))
     (call files_search_etc (ARG1))
