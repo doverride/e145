@@ -198,6 +198,10 @@
     (call files_search_var_cache (ARG1))
     (call read_files_pattern (ARG1 rpm_var_cache_t rpm_var_cache_t)))
 
+(macro rpm_list_var_lib ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (allow ARG1 rpm_var_lib_t (dirs (list))))
+
 (macro rpm_manage_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))
     (call manage_files_pattern (ARG1 rpm_var_lib_t rpm_var_lib_t)))

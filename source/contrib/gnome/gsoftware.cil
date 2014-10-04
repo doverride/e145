@@ -8,6 +8,8 @@
 (context file_gsoftware_exec (system_u object_r gsoftware_exec_t ((s0)(s0))))
 (filecon "/usr/bin/gnome-software" file file_gsoftware_exec)
 
+(allow is_gsoftware_subject self (unix_stream_socket (listen accept)))
+
 (call system_read_sysctl_vm_overcommit_files (is_gsoftware_subject))
 
 (call files_read_generic_etc_files (is_gsoftware_subject))
@@ -23,6 +25,7 @@
 
 (optional gsoftware_subject_optional_rpm
     (call rpm_dbus_chat (is_gsoftware_subject))
+    (call rpm_list_var_lib (is_gsoftware_subject))
     (call rpm_read_var_lib_files (is_gsoftware_subject)))
 
 (macro gsoftware_role_template ((role ARG1)(type ARG2)(type ARG3))

@@ -143,6 +143,8 @@
 (call udevd_client_subject (logind_t))
 
 (optional logind_optional_gdm
+    (call gdm_delete_run_dirs (logind_t))
+    (call gdm_delete_run_files (logind_t))
     (call gdm_delete_systemd_run_dirs (logind_t))
     (call gdm_delete_systemd_run_sock_files (logind_t))
     (call gdm_mounton_run_user_dir (logind_t))

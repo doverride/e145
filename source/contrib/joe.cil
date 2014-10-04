@@ -587,6 +587,10 @@
         (type joe_dbusd_t)
         (call dbus_role_template_session_bus (joe_r joe_dbuslaunch_t joe_dbusd_t user_dbusd_tmp_t))
 
+        (optional joe_dbusd_optional_joe_tracker
+            (allow joe_dbusd_t joe_trminfs_t (fd (use)))
+            (allow joe_dbusd_t joe_trminfs_t (fifo_file (read))))
+
         (optional joe_optional_joe_gnome
             (type joe_gsession_t)
             (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t user_iceauth_tmp_t
@@ -600,10 +604,15 @@
             (filecon "/home/joe/\.config/gnome-session(/.*)?" any file_joe_user_gsession_conf)
 
             (call gkeyring_role_template_gkeyringd (joe_r joe_gsession_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
-            (allow joe_gkeyringd_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_gkeyringd_t joe_gsession_t (fd (use)))
+            (allow joe_gkeyringd_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (call pa_client_subject (joe_r joe_gsession_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_gsession_tmpfs_t))
+
+            (allow joe_pa_t joe_gsession_t (fd (use)))
+            (allow joe_pa_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (call usersubject_home_dir_filetrans_user_config_dir (joe_gsession_t))
             (call usersubject_config_filetrans (joe_gsession_t user_pa_home_t dir "pulse"))
@@ -636,7 +645,9 @@
 
             (type joe_gsd_t)
             (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t user_gsd_data_t))
-            (allow joe_gsd_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_gsd_t joe_gsession_t (fd (use)))
+            (allow joe_gsd_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (context file_joe_user_gsd_data (joe_u object_r user_gsd_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gnome-settings-daemon(/.*)?" any file_joe_user_gsd_data)
@@ -744,6 +755,8 @@
             (type joe_atspibusl_t)
             (call atspi_role_template_busl (joe_r joe_dbusd_t joe_atspibusl_t))
 
+            (allow joe_atspibusl_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (allow joe_atspibusl_t user_dconf_run_t manage_dir_perms)
             (allow joe_atspibusl_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_atspibusl_t user_dconf_run_t dir "dconf"))
@@ -767,6 +780,8 @@
             (type joe_atspiregd_t)
             (call atspi_role_template_regd (joe_r joe_dbusd_t joe_atspiregd_t))
 
+            (allow joe_atspiregd_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (call xserver_client_subject (joe_atspiregd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (allow joe_atspiregd_t joe_atspibusl_t (fd (use)))
@@ -781,7 +796,9 @@
 
             (type joe_vdagent_t)
             (call spice_role_template_vdagent (joe_r joe_gsession_t joe_vdagent_t))
-            (allow joe_vdagent_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_vdagent_t joe_gsession_t (fd (use)))
+            (allow joe_vdagent_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t joe_vdagent_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_vdagent_t))
@@ -794,6 +811,8 @@
 
             (type joe_gvfsd_t)
             (call gvfs_role_template_gvfsd (joe_r joe_dbusd_t joe_gvfsd_t user_gvfsd_run_t))
+
+            (allow joe_gvfsd_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (allow joe_t user_gvfsd_run_t manage_dir_perms)
             (allow joe_t user_gvfsd_run_t relabel_dir_perms)
@@ -815,6 +834,8 @@
             (type joe_gvfsafcvm_t)
             (call gvfs_role_template_gvfsafcvm (joe_r joe_dbusd_t joe_gvfsafcvm_t))
 
+            (allow joe_gvfsafcvm_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (allow joe_t joe_gvfsafcvm_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsafcvm_t))
 
@@ -824,6 +845,8 @@
 
             (type joe_gvfsgoavm_t)
             (call gvfs_role_template_gvfsgoavm (joe_r joe_dbusd_t joe_gvfsgoavm_t))
+
+            (allow joe_gvfsgoavm_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (allow joe_t joe_gvfsgoavm_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsgoavm_t))
@@ -835,6 +858,8 @@
             (type joe_gvfsgph2vm_t)
             (call gvfs_role_template_gvfsgph2vm (joe_r joe_dbusd_t joe_gvfsgph2vm_t))
 
+            (allow joe_gvfsgph2vm_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (allow joe_t joe_gvfsgph2vm_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsgph2vm_t))
 
@@ -845,6 +870,8 @@
             (type joe_gvfsmtpvm_t)
             (call gvfs_role_template_gvfsmtpvm (joe_r joe_dbusd_t joe_gvfsmtpvm_t))
 
+            (allow joe_gvfsmtpvm_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (allow joe_t joe_gvfsmtpvm_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsmtpvm_t))
 
@@ -854,6 +881,8 @@
 
             (type joe_gvfsudisks2vm_t)
             (call gvfs_role_template_gvfsudisks2vm (joe_r joe_dbusd_t joe_gvfsudisks2vm_t))
+
+            (allow joe_gvfsudisks2vm_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (allow joe_t joe_gvfsudisks2vm_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gvfsudisks2vm_t))
@@ -999,6 +1028,8 @@
             (type joe_gvfsdmetad_t)
             (call gvfs_role_template_gvfsdmetad (joe_r joe_dbusd_t joe_gvfsdmetad_t user_gvfsdmetad_data_t))
 
+            (allow joe_gvfsdmetad_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (context file_joe_user_gvfsdmetad_data (joe_u object_r user_gvfsdmetad_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gvfs-metadata(/.*)?" any file_joe_user_gvfsdmetad_data)
 
@@ -1079,7 +1110,9 @@
             (type joe_gshell_t)
             (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t
                 user_gshell_tmpfs_t user_gshell_tmp_t user_gshell_data_t))
-            (allow joe_gshell_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_gshell_t joe_gsession_t (fd (use)))
+            (allow joe_gshell_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (context file_joe_user_gshell_data (joe_u object_r user_gshell_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gnome-shell(/.*)?" any file_joe_user_gshell_data)
@@ -1153,6 +1186,8 @@
             (type joe_gshellcald_t)
             (call gshell_role_template_gshellcald (joe_r joe_dbusd_t joe_gshellcald_t))
 
+            (allow joe_gshellcald_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (allow joe_t joe_gshellcald_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gshellcald_t))
 
@@ -1168,6 +1203,8 @@
 
             (type joe_dconfsvc_t)
             (call dconf_role_template_dconfsvc (joe_r joe_dbusd_t joe_dconfsvc_t user_dconf_run_t user_dconf_conf_t))
+
+            (allow joe_dconfsvc_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (allow joe_t user_dconf_run_t manage_dir_perms)
             (allow joe_t user_dconf_run_t relabel_dir_perms)
@@ -1200,7 +1237,9 @@
 
             (type joe_giscw_t)
             (call gis_role_template_giscw (joe_r joe_gsession_t joe_giscw_t))
-            (allow joe_giscw_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_giscw_t joe_gsession_t (fd (use)))
+            (allow joe_giscw_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t joe_giscw_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_giscw_t))
@@ -1212,7 +1251,9 @@
             (type joe_canberra_t)
             (call canberra_role_template_canberra (joe_r joe_gsession_t joe_canberra_t
                 user_canberra_tmpfs_t))
-            (allow joe_canberra_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_canberra_t joe_gsession_t (fd (use)))
+            (allow joe_canberra_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t user_canberra_tmpfs_t manage_file_perms)
             (allow joe_t user_canberra_tmpfs_t relabel_file_perms)
@@ -1237,11 +1278,16 @@
 
             (type joe_startpa_t)
             (call pa_role_template_startpa (joe_r joe_gsession_t joe_startpa_t))
-            (allow joe_startpa_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_startpa_t joe_gsession_t (fd (use)))
+            (allow joe_startpa_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (optional joe_startpa_optional_joe_pactl
                 (call pa_role_template_pactl (joe_r joe_startpa_t joe_pactl_t
-                    user_pa_home_t joe_pa_t)))
+                    user_pa_home_t joe_pa_t))
+
+                (allow joe_pactl_t joe_gsession_t (fd (use)))
+                (allow joe_pactl_t joe_gsession_t (unix_stream_socket (getattr ioctl read write))))
 
             (optional joe_startpa_optional_joe_pa
                 (call pa_role_template (joe_r joe_startpa_t joe_pa_t user_pa_home_t
@@ -1254,7 +1300,9 @@
 
             (type joe_gsettings_t)
             (call glib_role_template_gsettings (joe_r joe_gsession_t joe_gsettings_t))
-            (allow joe_gsettings_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_gsettings_t joe_gsession_t (fd (use)))
+            (allow joe_gsettings_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t joe_gsettings_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsettings_t))
@@ -1270,7 +1318,9 @@
             (type joe_gsdconv_t)
             (call gconf_role_template_gsdconv (joe_r joe_gsession_t joe_gsdconv_t user_gsdconv_data_t
                 user_gsdconv_conf_t))
-            (allow joe_gsdconv_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_gsdconv_t joe_gsession_t (fd (use)))
+            (allow joe_gsdconv_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (context file_joe_user_gsdconv_data (joe_u object_r user_gsdconv_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gsettings-data-convert.*" file file_joe_user_gsdconv_data)
@@ -1306,6 +1356,8 @@
 
             (type joe_ibusd_t)
             (call ibus_role_template_ibusd (joe_r joe_dbusd_t joe_ibusd_t user_ibus_conf_t))
+
+            (allow joe_ibusd_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (context file_joe_user_ibus_conf (joe_u object_r user_ibus_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/ibus(/.*)?" any file_joe_user_ibus_conf)
@@ -1390,6 +1442,8 @@
             (type joe_tpmc_t)
             (call telepathy_role_template_mc (joe_r joe_dbusd_t joe_tpmc_t user_tpmc_data_t))
 
+            (allow joe_tpmc_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (context file_joe_user_tpmc_data (joe_u object_r user_tpmc_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/telepathy(/.*)?" any file_joe_user_tpmc_data)
 
@@ -1420,6 +1474,8 @@
             (type joe_caribou_t)
             (call caribou_role_template_caribou (joe_r joe_dbusd_t joe_caribou_t))
 
+            (allow joe_caribou_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (allow joe_t joe_caribou_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_caribou_t))
 
@@ -1437,6 +1493,8 @@
 
             (type joe_goad_t)
             (call goa_role_template_goad (joe_r joe_dbusd_t joe_goad_t user_goad_conf_t))
+
+            (allow joe_goad_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (context file_joe_user_goad_conf (joe_u object_r user_goad_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/goa-1\.0(/.*)?" any file_joe_user_goad_conf)
@@ -1458,7 +1516,9 @@
 
             (type joe_trminapp_t)
             (call tracker_role_template_trminapp (joe_r joe_gsession_t joe_trminapp_t))
-            (allow joe_trminapp_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_trminapp_t joe_gsession_t (fd (use)))
+            (allow joe_trminapp_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t joe_trminapp_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trminapp_t))
@@ -1478,7 +1538,9 @@
 
             (type joe_trminfs_t)
             (call tracker_role_template_trminfs (joe_r joe_gsession_t joe_trminfs_t))
-            (allow joe_trminfs_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_trminfs_t joe_gsession_t (fd (use)))
+            (allow joe_trminfs_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t joe_trminfs_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trminfs_t))
@@ -1509,7 +1571,9 @@
 
             (type joe_trmingd_t)
             (call tracker_role_template_trmingd (joe_r joe_gsession_t joe_trmingd_t))
-            (allow joe_trmingd_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_trmingd_t joe_gsession_t (fd (use)))
+            (allow joe_trmingd_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t joe_trmingd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_trmingd_t))
@@ -1527,7 +1591,9 @@
  
             (type joe_trextr_t)
             (call tracker_role_template_trextr (joe_r joe_gsession_t joe_trextr_t user_trextr_tmp_t))
-            (allow joe_trextr_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_trextr_t joe_gsession_t (fd (use)))
+            (allow joe_trextr_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t user_trextr_tmp_t manage_dir_perms)
             (allow joe_t user_trextr_tmp_t relabel_dir_perms)
@@ -1544,6 +1610,13 @@
             (call usersubject_manage_generic_cache_dirs (joe_trextr_t))
             (call usersubject_home_dir_filetrans_user_cache_dir (joe_trextr_t))
 
+            (allow joe_trextr_t user_trstore_data_t manage_dir_perms)
+            (allow joe_trextr_t user_trstore_data_t manage_file_perms)
+            (call usersubject_data_filetrans (joe_trextr_t user_trstore_data_t dir "tracker"))
+
+            (call usersubject_manage_generic_data_dirs (joe_trextr_t))
+            (call usersubject_home_dir_filetrans_user_data_dir (joe_trextr_t))
+
             (allow joe_trextr_t user_dconf_run_t manage_dir_perms)
             (allow joe_trextr_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_trextr_t user_dconf_run_t dir "dconf"))
@@ -1555,6 +1628,8 @@
             (type joe_trstore_t)
             (call tracker_role_template_trstore (joe_r joe_dbusd_t joe_trstore_t user_trstore_conf_t
                 user_trstore_tmp_t user_trstore_cache_t user_trstore_data_t))
+
+            (allow joe_trstore_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (context file_joe_user_trstore_conf (joe_u object_r user_trstore_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/tracker(/.*)?" any file_joe_user_trstore_conf)
@@ -1612,11 +1687,16 @@
 
             (call usersubject_application_subject (joe_trstore_t))  
 
+            (allow joe_trstore_t joe_trminfs_t (fd (use)))
+            (allow joe_trstore_t joe_trminfs_t (fifo_file (read)))
+
             (call dbus_session_client_subject (joe_trstore_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gdbus_t)
             (call glib_role_template_gdbus (joe_r joe_gsession_t joe_gdbus_t))
-            (allow joe_gdbus_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_gdbus_t joe_gsession_t (fd (use)))
+            (allow joe_gdbus_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t joe_gdbus_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gdbus_t))
@@ -1628,6 +1708,8 @@
             (type joe_evosrcreg_t)
             (call evolution_role_template_evosrcreg (joe_r joe_dbusd_t joe_evosrcreg_t
                 user_evosrcreg_cache_t user_evosrcreg_conf_t user_evosrcreg_data_t))
+
+            (allow joe_evosrcreg_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (context file_joe_user_evosrcreg_conf (joe_u object_r user_evosrcreg_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/evolution(/.*)?" any file_joe_user_evosrcreg_conf)
@@ -1687,6 +1769,8 @@
             (type joe_evocfactory_t)
             (call evolution_role_template_evocfactory (joe_r joe_dbusd_t joe_evocfactory_t))
 
+            (allow joe_evocfactory_t joe_dbusd_t (unix_stream_socket (getattr)))
+
             (allow joe_t joe_evocfactory_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_evocfactory_t))
 
@@ -1709,7 +1793,9 @@
 
             (type joe_evoanotify_t)
             (call evolution_role_template_evoanotify (joe_r joe_gsession_t joe_evoanotify_t))
-            (allow joe_evoanotify_t joe_gsession_t (unix_stream_socket (read write)))
+
+            (allow joe_evoanotify_t joe_gsession_t (fd (use)))
+            (allow joe_evoanotify_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
             (allow joe_t joe_evoanotify_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_evoanotify_t))
@@ -1732,8 +1818,10 @@
 
             (type joe_gsoftware_t)
             (call gsoftware_role_template (joe_r joe_gsession_t joe_gsoftware_t))
-            (allow joe_gsoftware_t joe_gsession_t (unix_stream_socket (read write)))
  
+            (allow joe_gsoftware_t joe_gsession_t (fd (use)))
+            (allow joe_gsoftware_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
+
             (allow joe_t joe_gsoftware_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsoftware_t))
 
@@ -1755,8 +1843,10 @@
 
             (type joe_xdggtkupd_t)
             (call xdg_role_template (joe_r joe_gsession_t joe_xdggtkupd_t))
-            (allow joe_xdggtkupd_t joe_gsession_t (unix_stream_socket (read write)))
  
+            (allow joe_xdggtkupd_t joe_gsession_t (fd (use)))
+            (allow joe_xdggtkupd_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
+
             (allow joe_t joe_xdggtkupd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_xdggtkupd_t))
 

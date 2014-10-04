@@ -25,6 +25,8 @@
 
 (call files_read_generic_usr_files (is_atspibusl_subject))
 
+(call dbus_search_var_lib (is_atspibusl_subject))
+
 (macro atspi_exec_busl ((type ARG1))
     (call can_exec (ARG1 atspibusl_exec_t)))
 
