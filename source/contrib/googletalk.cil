@@ -44,10 +44,13 @@
 (call network_tcp_bind_generic_node (is_googletalk_subject))
 (call network_udp_bind_generic_node (is_googletalk_subject))
 (call network_tcp_connect_all_ephemeral_ports (is_googletalk_subject))
+(call network_tcp_connect_all_unreserved_ports (is_googletalk_subject))
 
 (call auth_nsswitch_client_subject (is_googletalk_subject))
 
 (call dbus_system_client_subject (is_googletalk_subject))
+
+(call http_tcp_connect_http_port (is_googletalk_subject))
 
 (call miscfiles_read_network_config_files (is_googletalk_subject))
 
