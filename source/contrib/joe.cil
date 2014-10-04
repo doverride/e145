@@ -1994,7 +1994,8 @@
 
     (call xserver_client_subject (joe_xsel_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
-    (call usersubject_home_dir_filetrans (joe_t user_xsel_log_t file ".xsel.log")))
+    (call usersubject_home_dir_filetrans (joe_t user_xsel_log_t file ".xsel.log"))
+    (call usersubject_home_dir_filetrans (joe_xsel_t user_xsel_log_t file ".xsel.log")))
 
 (optional joe_optional_java
     (allow joe_t user_java_home_t manage_dir_perms)
