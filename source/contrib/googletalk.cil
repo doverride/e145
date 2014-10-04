@@ -108,6 +108,9 @@
     (allow ARG2 ARG6 write_inherited_file_perms)
     (allow ARG3 ARG6 manage_file_perms))
 
+(macro googletalk_rpm_config_filetrans_googletalk_config_files ((type ARG1))
+    (call rpm_config_filetrans (ARG1 googletalk_conf_t file "google-talkplugin.repo")))
+
 (macro googletalk_subtrans_cronjob ((type ARG1))
     (call subtrans_pattern (ARG1 googletalk_cronjob_exec_t googletalk_cronjob_t)))
 

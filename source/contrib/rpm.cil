@@ -156,6 +156,9 @@
 (optional rpm_script_optional_cron
     (call cron_spool_filetrans_system_spool_files (rpm_script_t "*")))
 
+(optional rpm_script_optional_googletalk
+    (call googletalk_rpm_config_filetrans_googletalk_config_files (rpm_script_t)))
+
 (optional rpm_script_optional_usermanage
     (call usermanage_run_groupadd (rpm_script_t is_rpm_role))
     (call usermanage_run_useradd (rpm_script_t is_rpm_role)))

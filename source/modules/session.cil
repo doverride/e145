@@ -739,6 +739,9 @@
     (allow crond_t session_cron_spool_t write_inherited_file_perms)
     (allow crond_t session_cron_spool_t (file (link unlink)))
 
+    (call cron_getattr_spool_files (session_crontab_t))
+    (call cron_manage_system_spool_files (session_crontab_t))
+
     (allow session_t cron_spool_log_t (file (write)))
 
     (call cron_send_sigchld_crond (session_t))
