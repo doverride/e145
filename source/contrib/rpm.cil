@@ -153,6 +153,9 @@
 (optional rpm_script_optional_bootloader
     (call bootloader_run_grubby (rpm_script_t is_rpm_role)))
 
+(optional rpm_script_optional_cron
+    (call cron_spool_filetrans_system_spool_files (rpm_script_t "*")))
+
 (optional rpm_script_optional_usermanage
     (call usermanage_run_groupadd (rpm_script_t is_rpm_role))
     (call usermanage_run_useradd (rpm_script_t is_rpm_role)))

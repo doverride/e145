@@ -163,7 +163,7 @@
 (call auth_nsswitch_client_subject (crond_t))
 
 (call cron_list_spool (crond_t))
-(call cron_read_system_spool_files (crond_t))
+(call cron_manage_system_spool_files (crond_t))
 (call cron_read_crond_pam_config_files (crond_t))
 (call cron_manage_spool_log_files (crond_t))
 
@@ -336,9 +336,17 @@
     (call files_search_var_spool (ARG1))
     (allow ARG1 cron_spool_t (dirs (list))))
 
+(macro cron_getattr_spool_files ((type ARG1))
+    (call files_search_var_spool (ARG1))
+    (allow ARG1 cron_spool_t (file (getattr))))
+
 (macro cron_spool_filetrans ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
     (call files_search_var_spool (ARG1))
     (call filetrans_pattern (ARG1 cron_spool_t ARG2 ARG3 ARG4)))    
+
+(macro cron_spool_filetrans_system_spool_files ((type ARG1)(name ARG2))
+    (call files_search_var_spool (ARG1))
+    (call filetrans_pattern (ARG1 cron_spool_t cron_system_spool_t file ARG2)))
 
 (macro cron_read_crond_config_files ((type ARG1))
     (call files_search_etc (ARG1))
@@ -361,6 +369,10 @@
     (call files_search_etc (ARG1))
     (allow ARG1 cron_system_spool_t (dirs (list)))
     (allow ARG1 cron_system_spool_t write_file_perms))
+
+(macro cron_manage_system_spool_files ((type ARG1))
+    (call files_search_etc (ARG1))
+    (call manage_files_pattern (ARG1 cron_system_spool_t cron_system_spool_t)))
 
 (macro cron_setattr_system_spool_files ((type ARG1))
     (allow ARG1 cron_system_spool_t (file (setattr))))
