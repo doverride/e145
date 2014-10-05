@@ -595,6 +595,14 @@
             (allow joe_dbusd_t joe_trminfs_t (fifo_file (read))))
 
         (optional joe_optional_joe_gnome
+            (typeattribute is_joe_atspi_client_subject)
+
+            (allow is_joe_atspi_client_subject is_joe_atspi_client_subject (unix_stream_socket (connectto)))
+
+            (allow is_joe_atspi_client_subject user_run_t manage_dir_perms)
+            (allow is_joe_atspi_client_subject user_run_t manage_sock_file_perms)
+            (call usersubject_run_user_dir_filetrans_user_run (is_joe_atspi_client_subject dir "*"))
+
             (type joe_gsession_t)
             (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t user_iceauth_tmp_t
                 user_gsession_tmpfs_t user_gsession_conf_t))
@@ -649,6 +657,8 @@
             (type joe_gsd_t)
             (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t user_gsd_data_t))
 
+            (typeattributeset is_joe_atspi_client_subject (joe_gsession_t))
+
             (allow joe_gsd_t joe_gsession_t (fd (use)))
             (allow joe_gsd_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
@@ -662,10 +672,6 @@
 
             (call usersubject_data_filetrans (joe_t user_gsd_data_t dir "gnome-settings-daemon"))
             (call usersubject_data_filetrans (joe_gsd_t user_gsd_data_t dir "gnome-settings-daemon"))
-
-            (allow joe_gsd_t user_run_t manage_dir_perms)
-            (allow joe_gsd_t user_run_t manage_sock_file_perms)
-            (call usersubject_run_user_dir_filetrans_user_run (joe_gsd_t dir "*"))
 
             (call xserver_common_client_subject (joe_gsd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
             (call xserver_client_subject_tmpfs_template (joe_gsd_t user_gsd_tmpfs_t))
@@ -1114,6 +1120,8 @@
             (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t
                 user_gshell_tmpfs_t user_gshell_tmp_t user_gshell_data_t))
 
+            (typeattributeset is_joe_atspi_client_subject (joe_gshell_t))
+
             (allow joe_gshell_t joe_gsession_t (fd (use)))
             (allow joe_gshell_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
@@ -1148,10 +1156,6 @@
 
             (call usersubject_manage_generic_data_dirs (joe_gshell_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_gshell_t))
-
-            (allow joe_gshell_t user_run_t manage_dir_perms)
-            (allow joe_gshell_t user_run_t manage_sock_file_perms)
-            (call usersubject_run_user_dir_filetrans_user_run (joe_gshell_t dir "*"))
 
             (context file_joe_user_gshell_run (joe_u object_r user_gshell_run_t ((s0)(s0))))
             (filecon "/run/user/1000/gnome-shell(/.*)?" any file_joe_user_gshell_run)
@@ -1477,16 +1481,14 @@
             (type joe_caribou_t)
             (call caribou_role_template_caribou (joe_r joe_dbusd_t joe_caribou_t))
 
+            (typeattributeset is_joe_atspi_client_subject (joe_caribou_t))
+
             (allow joe_caribou_t joe_dbusd_t (unix_stream_socket (getattr)))
 
             (allow joe_t joe_caribou_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_caribou_t))
 
             (call usersubject_application_subject (joe_caribou_t)) 
-
-            (allow joe_caribou_t user_run_t manage_dir_perms)
-            (allow joe_caribou_t user_run_t manage_sock_file_perms)
-            (call usersubject_run_user_dir_filetrans_user_run (joe_caribou_t dir "*"))
 
             (call usersubject_home_dir_filetrans_user_cache_dir (joe_caribou_t))
 
@@ -1797,6 +1799,8 @@
             (type joe_evoanotify_t)
             (call evolution_role_template_evoanotify (joe_r joe_gsession_t joe_evoanotify_t))
 
+            (typeattributeset is_joe_atspi_client_subject (joe_evoanotify_t))
+
             (allow joe_evoanotify_t joe_gsession_t (fd (use)))
             (allow joe_evoanotify_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
@@ -1809,10 +1813,6 @@
             (allow joe_evoanotify_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_evoanotify_t user_dconf_run_t dir "dconf"))
 
-            (allow joe_evoanotify_t user_run_t manage_dir_perms)
-            (allow joe_evoanotify_t user_run_t manage_sock_file_perms)
-            (call usersubject_run_user_dir_filetrans_user_run (joe_evoanotify_t dir "*"))
-
             (call dbus_session_client_subject (joe_evoanotify_t user_dbusd_tmp_t joe_dbusd_t))
 
             (call xserver_client_subject (joe_evoanotify_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
@@ -1821,6 +1821,8 @@
 
             (type joe_gsoftware_t)
             (call gsoftware_role_template (joe_r joe_gsession_t joe_gsoftware_t))
+
+            (typeattributeset is_joe_atspi_client_subject (joe_gsoftware_t))
  
             (allow joe_gsoftware_t joe_gsession_t (fd (use)))
             (allow joe_gsoftware_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
@@ -1833,10 +1835,6 @@
             (allow joe_gsoftware_t user_dconf_run_t manage_dir_perms)
             (allow joe_gsoftware_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_gsoftware_t user_dconf_run_t dir "dconf"))
-
-            (allow joe_gsoftware_t user_run_t manage_dir_perms)
-            (allow joe_gsoftware_t user_run_t manage_sock_file_perms)
-            (call usersubject_run_user_dir_filetrans_user_run (joe_gsoftware_t dir "*"))
 
             (call usersubject_application_subject (joe_gsoftware_t))
 
