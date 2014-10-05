@@ -590,6 +590,9 @@
         (type joe_dbusd_t)
         (call dbus_role_template_session_bus (joe_r joe_dbuslaunch_t joe_dbusd_t user_dbusd_tmp_t))
 
+        (typeattribute is_joe_dbusd_tmp_object)
+        (typeattributeset is_joe_dbusd_tmp_object (user_dbusd_tmp_t))
+
         (typeattribute is_joe_dbusd_subject)
 
         (allow is_joe_dbusd_subject joe_dbusd_t (unix_stream_socket (getattr)))
@@ -599,24 +602,17 @@
             (allow joe_dbusd_t joe_trminfs_t (fifo_file (read))))
 
         (optional joe_optional_joe_gnome
-            (typeattribute is_joe_atspi_client_subject)
-
-            (allow is_joe_atspi_client_subject is_joe_atspi_client_subject (unix_stream_socket (connectto)))
-
-            (allow is_joe_atspi_client_subject user_run_t manage_dir_perms)
-            (allow is_joe_atspi_client_subject user_run_t manage_sock_file_perms)
-            (call usersubject_run_user_dir_filetrans_user_run (is_joe_atspi_client_subject dir "*"))
+            (type joe_gsession_t)
+            (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t user_iceauth_tmp_t
+                user_gsession_tmpfs_t user_gsession_conf_t))
 
             (typeattribute is_joe_gsession_subject)
 
             (allow is_joe_gsession_subject joe_gsession_t (fd (use)))
             (allow is_joe_gsession_subject joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
 
-            (type joe_gsession_t)
-            (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t user_iceauth_tmp_t
-                user_gsession_tmpfs_t user_gsession_conf_t))
-
-            (typeattributeset is_joe_gsession_subject (joe_gkeyringd_t))
+            (allow is_joe_gsession_subject user_iceauth_home_t read_file_perms)
+            (call stream_connect_pattern (is_joe_gsession_subject user_iceauth_tmp_t user_iceauth_tmp_t joe_gsession_t))
 
             (context file_joe_user_iceauth_home (joe_u object_r user_iceauth_home_t ((s0)(s0))))
             (filecon "/home/joe/\.ICEauthority" file file_joe_user_iceauth_home)
@@ -626,6 +622,8 @@
             (filecon "/home/joe/\.config/gnome-session(/.*)?" any file_joe_user_gsession_conf)
 
             (call gkeyring_role_template_gkeyringd (joe_r joe_gsession_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
+
+            (typeattributeset is_joe_gsession_subject (joe_gkeyringd_t))
 
             (call pa_client_subject (joe_r joe_gsession_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_gsession_tmpfs_t))
@@ -665,6 +663,7 @@
             (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t user_gsd_data_t))
 
             (typeattributeset is_joe_atspi_client_subject (joe_gsd_t))
+            (typeattributeset is_joe_ibusd_client_subject (joe_gsd_t))
             (typeattributeset is_joe_gsession_subject (joe_gsd_t))
 
             (context file_joe_user_gsd_data (joe_u object_r user_gsd_data_t ((s0)(s0))))
@@ -699,14 +698,6 @@
             (allow joe_gsd_t user_dconf_run_t manage_dir_perms)
             (allow joe_gsd_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_gsd_t user_dconf_run_t dir "dconf"))
-
-            (allow joe_gsd_t joe_ibusd_t (process (signull)))
-
-            (call stream_connect_pattern (joe_gsd_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
-
-            (allow joe_gsd_t user_ibus_conf_t manage_dir_perms)
-            (allow joe_gsd_t user_ibus_conf_t read_file_perms)
-            (call usersubject_config_filetrans (joe_gsd_t user_ibus_conf_t dir "ibus"))
 
             (allow joe_t joe_gsd_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gsd_t))
@@ -769,7 +760,15 @@
             (type joe_atspibusl_t)
             (call atspi_role_template_busl (joe_r joe_dbusd_t joe_atspibusl_t))
 
-            (allow joe_atspibusl_t joe_dbusd_t (unix_stream_socket (getattr)))
+            (typeattribute is_joe_atspi_client_subject)
+
+            (allow is_joe_atspi_client_subject is_joe_atspi_client_subject (unix_stream_socket (connectto)))
+
+            (allow is_joe_atspi_client_subject user_run_t manage_dir_perms)
+            (allow is_joe_atspi_client_subject user_run_t manage_sock_file_perms)
+            (call usersubject_run_user_dir_filetrans_user_run (is_joe_atspi_client_subject dir "*"))
+
+            (typeattributeset is_joe_dbusd_subject (joe_atspibusl_t))
 
             (allow joe_atspibusl_t user_dconf_run_t manage_dir_perms)
             (allow joe_atspibusl_t user_dconf_run_t manage_file_perms)
@@ -811,8 +810,7 @@
             (type joe_vdagent_t)
             (call spice_role_template_vdagent (joe_r joe_gsession_t joe_vdagent_t))
 
-            (allow joe_vdagent_t joe_gsession_t (fd (use)))
-            (allow joe_vdagent_t joe_gsession_t (unix_stream_socket (getattr ioctl read write)))
+            (typeattributeset is_joe_gsession_subject (joe_vdagent_t))
 
             (allow joe_t joe_vdagent_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_vdagent_t))
@@ -1126,6 +1124,7 @@
                 user_gshell_tmpfs_t user_gshell_tmp_t user_gshell_data_t))
 
             (typeattributeset is_joe_atspi_client_subject (joe_gshell_t))
+            (typeattributeset is_joe_ibusd_client_subject (joe_gshell_t))
             (typeattributeset is_joe_gsession_subject (joe_gshell_t))
 
             (context file_joe_user_gshell_data (joe_u object_r user_gshell_data_t ((s0)(s0))))
@@ -1171,17 +1170,6 @@
             (allow joe_gshell_t user_dconf_run_t manage_dir_perms)
             (allow joe_gshell_t user_dconf_run_t manage_file_perms)
             (call usersubject_run_user_dir_filetrans (joe_gshell_t user_dconf_run_t dir "dconf"))
-
-            (call stream_connect_pattern (joe_gshell_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
-
-            (allow joe_gshell_t user_iceauth_home_t read_file_perms)
-            (call stream_connect_pattern (joe_gshell_t user_iceauth_tmp_t user_iceauth_tmp_t joe_gsession_t))
-
-            (allow joe_gshell_t joe_ibusd_t (process (signull)))
-
-            (allow joe_gshell_t user_ibus_conf_t (dirs (list)))
-            (allow joe_gshell_t user_ibus_conf_t read_file_perms)
-            (allow joe_gshell_t user_ibus_conf_t (dir (setattr)))
 
             (allow joe_t joe_gshell_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_gshell_t))
@@ -1361,7 +1349,21 @@
             (type joe_ibusd_t)
             (call ibus_role_template_ibusd (joe_r joe_dbusd_t joe_ibusd_t user_ibus_conf_t))
 
-            (allow joe_ibusd_t joe_dbusd_t (unix_stream_socket (getattr)))
+            (typeattribute is_joe_ibusd_client_subject)
+
+            (call stream_connect_pattern (is_joe_ibusd_client_subject is_joe_dbusd_tmp_object
+                is_joe_dbusd_tmp_object joe_ibusd_t))
+
+            (allow is_joe_ibusd_client_subject user_ibus_conf_t manage_dir_perms)
+            (allow is_joe_ibusd_client_subject user_ibus_conf_t read_file_perms)
+            (call usersubject_config_filetrans (is_joe_ibusd_client_subject user_ibus_conf_t dir "ibus"))
+
+            (call usersubject_manage_generic_config_dirs (is_joe_ibusd_client_subject))
+            (call usersubject_home_dir_filetrans_user_config_dir (is_joe_ibusd_client_subject))
+
+            (allow is_joe_ibusd_client_subject joe_idbusd_t (process (signull)))
+
+            (typeattributeset is_joe_dusd_subject (joe_ibusd_t))
 
             (context file_joe_user_ibus_conf (joe_u object_r user_ibus_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/ibus(/.*)?" any file_joe_user_ibus_conf)
@@ -1384,18 +1386,12 @@
             (type joe_ibusdconf_t)
             (call ibus_role_template_ibusdconf (joe_r joe_ibusd_t joe_ibusdconf_t))
 
+            (typeattributeset is_joe_ibusd_client_subject (joe_ibusdconf_t))
+
             (allow joe_t joe_ibusdconf_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_ibusdconf_t))
 
-            (call stream_connect_pattern (joe_ibusdconf_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
-
             (call usersubject_application_subject (joe_ibusdconf_t))
-
-            (allow joe_ibusdconf_t joe_ibusd_t (process (signull)))
-
-            (allow joe_ibusdconf_t user_ibus_conf_t (dirs (list)))
-            (allow joe_ibusdconf_t user_ibus_conf_t read_file_perms)
-            (allow joe_ibusdconf_t user_ibus_conf_t (dir (setattr)))
             
             (call read_files_pattern (joe_ibusdconf_t user_dconf_conf_t user_dconf_conf_t))
 
@@ -1408,16 +1404,10 @@
             (type joe_ibusx11_t)
             (call ibus_role_template_ibusx11 (joe_r joe_ibusd_t joe_ibusx11_t))
 
+            (typeattributeset is_joe_ibusd_client_subject (joe_ibusx11_t))
+
             (allow joe_t joe_ibusx11_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_ibusx11_t))
-
-            (allow joe_ibusx11_t joe_ibusd_t (process (signull)))
-
-            (allow joe_ibusx11_t user_ibus_conf_t (dirs (list)))
-            (allow joe_ibusx11_t user_ibus_conf_t read_file_perms)
-            (allow joe_ibusx11_t user_ibus_conf_t (dir (setattr)))
-
-            (call stream_connect_pattern (joe_ibusx11_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
 
             (call usersubject_application_subject (joe_ibusx11_t))
 
@@ -1428,16 +1418,10 @@
             (type joe_ibuseng_t)
             (call ibus_role_template_ibuseng (joe_r joe_ibusd_t joe_ibuseng_t))
 
+            (typeattributeset is_joe_ibusd_client_subject (joe_ibuseng_t))
+
             (allow joe_t joe_ibuseng_t (process (signal signull sigstop sigkill)))
             (call ps_subject_pattern (joe_t joe_ibuseng_t))
-
-            (allow joe_ibuseng_t joe_ibusd_t (process (signull)))
-
-            (allow joe_ibuseng_t user_ibus_conf_t (dirs (list)))
-            (allow joe_ibuseng_t user_ibus_conf_t read_file_perms)
-            (allow joe_ibuseng_t user_ibus_conf_t (dir (setattr)))
-
-            (call stream_connect_pattern (joe_ibuseng_t user_dbusd_tmp_t user_dbusd_tmp_t joe_ibusd_t))
 
             (call dbus_session_client_subject (joe_ibuseng_t user_dbusd_tmp_t joe_dbusd_t))
 
@@ -2591,10 +2575,6 @@
 
     (optional joe_pactl_optional_joe_xserver
         (call xserver_client_subject (joe_pactl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
-
-    (optional joe_pa_optional_joe_gsession
-        (allow joe_pa_t user_iceauth_home_t read_file_perms)
-        (call stream_connect_pattern (joe_pa_t user_iceauth_tmp_t user_iceauth_tmp_t joe_gsession_t)))
 
     (optional joe_pa_optional_joe_xserver
         (call xserver_client_subject (joe_pa_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
