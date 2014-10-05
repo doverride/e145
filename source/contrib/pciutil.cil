@@ -36,6 +36,4 @@
     (typeattributeset is_pciutil_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 pciutil_exec_t ARG3))
-    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG4 manage_file_perms))

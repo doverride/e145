@@ -128,8 +128,6 @@
     (typeattributeset is_sudo_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 sudo_exec_t ARG3))
-    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (ARG2 ARG3))
     (allow ARG3 ARG2 (key (search create)))
     (allow ARG3 ARG2 (process (signal)))
     (call commands_bin_auto_subject_type_transition (ARG3 ARG2))
@@ -141,8 +139,6 @@
     (typeattributeset is_visudo_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 visudo_exec_t ARG3))
-    (allow ARG2 ARG3 (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (ARG2 ARG3))
     (call commands_bin_auto_subject_type_transition (ARG3 ARG2)))
 
 (macro sudo_list_config ((type ARG1))

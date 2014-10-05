@@ -1,3 +1,5 @@
+(typeattribute is_joe_application_subject)
+
 (user joe_u)
 (role joe_r)
 (type joe_t)
@@ -106,6 +108,11 @@
     mls_systemhigh)))
 (filecon "/var/spool/mail/joe" file file_joe_user_mail_spool)
 
+(allow joe_t is_joe_application_subject (process (signal signull sigkill sigstop)))
+(call ps_subject_pattern (joe_t is_joe_application_subject))
+
+(call usersubject_application_subject (is_joe_application_subject))
+
 (optional joe_optional_sensors
     (call sensors_run_sensors (joe_t joe_r)))
 
@@ -123,20 +130,19 @@
     (type joe_chfn_t)
     (call usermanage_role_template_chfn (joe_r joe_t joe_chfn_t))
 
-    (call usersubject_application_subject (joe_chfn_t))
+    (typeattributeset is_joe_application_subject (joe_chfn_t))
 
     (type joe_passwd_t)
     (call usermanage_role_template_passwd (joe_r joe_t joe_passwd_t))
 
-    (call usersubject_application_subject (joe_passwd_t)))
+    (typeattributeset is_joe_application_subject (joe_passwd_t)))
 
 (optional joe_optional_joe_crontab
     (type joe_crontab_t)
     (call cron_role_template_crontab (joe_r joe_t joe_crontab_t user_cron_spool_t user_crontab_tmp_t))
- 
-    (allow joe_t joe_crontab_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (joe_t joe_crontab_t))
 
+    (typeattributeset is_joe_application_subject (joe_crontab_t))
+ 
     (allow joe_t user_cron_spool_t manage_file_perms)
     (allow joe_t user_cron_spool_t relabel_file_perms)
 
@@ -145,8 +151,6 @@
 
     (allow joe_t user_crontab_tmp_t manage_file_perms)
     (allow joe_t user_crontab_tmp_t relabel_file_perms)
-
-    (call usersubject_application_subject (joe_crontab_t))
 
     (dontaudit crond_t joe_t (process (noatsecure siginh rlimitinh)))
     (allow crond_t joe_t (key (search link)))
@@ -177,46 +181,65 @@
     (call usersubject_home_dir_filetrans (joe_bti_t user_bti_home_t file ".bti"))
     (call usersubject_home_dir_filetrans (joe_bti_t user_bti_home_t file ".bti.log"))
 
-    (call usersubject_application_subject (joe_bti_t)))
+    (typeattributeset is_joe_application_subject (joe_bti_t)))
 
 (optional joe_optional_joe_xserver
     (type joe_xinit_t)
     (call xserver_role_template_xinit (joe_r joe_t joe_xinit_t user_x_home_t))
 
+    (typeattributeset is_joe_application_subject (joe_xinit_t))
+
     (type joe_xhost_t)
     (call xserver_role_template_xhost (joe_r joe_t joe_xhost_t))
 
+    (typeattributeset is_joe_application_subject (joe_xhost_t))
+
     (type joe_xmodmap_t)
     (call xserver_role_template_xmodmap (joe_r joe_t joe_xmodmap_t))
+
+    (typeattributeset is_joe_application_subject (joe_xmodmap_t))
 
     (type joe_xrdb_t)
     (call xserver_role_template_xrdb (joe_r joe_t joe_xrdb_t user_xrdb_home_t))
     (call xserver_role_template_xrdb (joe_r joe_xinit_t joe_xrdb_t user_xrdb_home_t))
 
+    (typeattributeset is_joe_application_subject (joe_xrdb_t))
+
     (type joe_xauth_t)
     (call xserver_role_template_xauth (joe_r joe_t joe_xauth_t user_xauth_home_t))
+
+    (typeattributeset is_joe_application_subject (joe_xauth_t))
 
     (type joe_xterm_t)
     (call xserver_role_template_xterm (joe_r joe_t joe_xterm_t))
 
+    (typeattributeset is_joe_application_subject (joe_xterm_t))
+
     (type joe_xclock_t)
     (call xserver_role_template_xclock (joe_r joe_t joe_xclock_t))
+
+    (typeattributeset is_joe_application_subject (joe_xclock_t))
 
     (type joe_xsel_t)
     (call xserver_role_template_xsel (joe_r joe_t joe_xsel_t user_xsel_log_t))
 
+    (typeattributeset is_joe_application_subject (joe_xsel_t))
+
     (type joe_xloadimg_t)
     (call xserver_role_template_xloadimg (joe_r joe_t joe_xloadimg_t user_xloadimg_conf_t))
+
+    (typeattributeset is_joe_application_subject (joe_xloadimg_t))
 
     (type joe_xorg_t)
     (call xserver_role_template_xorg (joe_r joe_xorg_wrap_t joe_xorg_t
     user_x_tmp_t))
 
-    (allow joe_t joe_xorg_t (process (signal sigstop signull sigkill)))
-    (call ps_subject_pattern (joe_t joe_xorg_t))
+    (typeattributeset is_joe_application_subject (joe_xorg_t))
 
     (type joe_xorg_wrap_t)
     (call xserver_role_template_xorg_wrap (joe_r joe_xinit_t joe_xorg_wrap_t))
+
+    (typeattributeset is_joe_application_subject (joe_xorg_wrap_t))
 
     (optional joe_xserver_optional_joe_screen
         (allow joe_xterm_t joe_screen_t (process (signal)))
@@ -227,12 +250,13 @@
         (type joe_xlock_t)
         (call xlock_role_template (joe_r joe_t joe_xlock_t user_xlock_home_t))
 
+        (typeattributeset is_joe_application_subject (joe_xlock_t))
+
         (context file_joe_user_xlock_home (joe_u object_r user_xlock_home_t ((s0)(s0))))
         (filecon "/home/joe/\.xlockrc" file file_joe_user_xlock_home)
 
         (call usersubject_home_dir_filetrans (joe_t user_xlock_home_t file ".xlockrc"))
 
-        (call usersubject_application_subject (joe_xlock_t))
         (call usersubject_read_generic_home_content_files (joe_xlock_t)) ; ~/.signature
 
         (call xserver_common_client_subject (joe_xlock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
@@ -241,11 +265,10 @@
         (type joe_qiv_t)
         (call qiv_role_template (joe_r joe_t joe_qiv_t user_qiv_home_t user_qiv_tmpfs_t))
 
+        (typeattributeset is_joe_application_subject (joe_qiv_t))
+
         (context file_joe_user_qiv_home (joe_u object_r user_qiv_home_t ((s0)(s0))))
         (filecon "/home/joe/\.qiv-trash" dir file_joe_user_qiv_home)
-
-        (allow joe_t joe_qiv_t (process (signal signull sigstop sigkill)))
-        (call ps_subject_pattern (joe_t joe_qiv_t))
 
         (allow joe_t user_qiv_home_t manage_dir_perms)
         (allow joe_t user_qiv_home_t relabel_dir_perms)
@@ -265,8 +288,6 @@
         (call usersubject_cache_filetrans_user_font_cache_dir (joe_qiv_t))
         (call usersubject_home_dir_filetrans_user_font_cache_dir (joe_qiv_t))
 
-        (call usersubject_application_subject (joe_qiv_t))
-
         (call usersubject_manage_generic_home_content_files (joe_qiv_t))
         (call usersubject_home_dir_filetrans_user_home (joe_qiv_t file "*"))
 
@@ -277,10 +298,7 @@
         (type joe_glxutils_t)
         (call glxutils_role_template (joe_r joe_t joe_glxutils_t))
 
-        (allow joe_t joe_glxutils_t (process (signal signull sigkill sigstop)))
-        (call ps_subject_pattern (joe_t joe_glxutils_t))
-
-        (call usersubject_application_subject (joe_glxutils_t))
+        (typeattributeset is_joe_application_subject (joe_glxutils_t))
 
         (call xserver_common_client_subject (joe_glxutils_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
@@ -288,11 +306,10 @@
         (type joe_xpdf_t)
         (call xpdf_role_template (joe_r joe_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t))
 
+        (typeattributeset is_joe_application_subject (joe_xpdf_t))
+
         (context file_joe_user_xpdf_home (joe_u object_r user_xpdf_home_t ((s0)(s0))))
         (filecon "/home/joe/\.xpdfrc" file file_joe_user_xpdf_home)
-
-        (allow joe_t joe_xpdf_t (process (signal signull sigstop sigkill)))
-        (call ps_subject_pattern (joe_t joe_xpdf_t))
  
         (allow joe_t user_xpdf_home_t manage_file_perms)
         (allow joe_t user_xpdf_home_t relabel_file_perms)
@@ -303,7 +320,6 @@
         (call usersubject_home_dir_filetrans (joe_t user_xpdf_home_t file ".xpdfrc"))
 
         (call usersubject_dontaudit_read_all_inherited_user_files (joe_xpdf_t))
-        (call usersubject_application_subject (joe_xpdf_t))
 
         (call usersubject_manage_generic_home_content_files (joe_xpdf_t))
         (call usersubject_home_dir_filetrans_user_home (joe_xpdf_t file "*"))
@@ -320,6 +336,8 @@
         (type joe_mplayer_t)
         (call mplayer_role_template (joe_r joe_t joe_mplayer_t user_mplayer_home_t user_mplayer_tmpfs_t
             user_mplayer_tmp_t))
+
+        (typeattributeset is_joe_application_subject (joe_mplayer_t))
 
         (optional joe_mplayer_optional_joe_pa
             (call pa_client_subject (joe_r joe_mplayer_t joe_pa_t user_pa_home_t
@@ -343,8 +361,6 @@
         (call usersubject_cache_filetrans_user_font_cache_dir (joe_mplayer_t))
         (call usersubject_home_dir_filetrans_user_font_cache_dir (joe_mplayer_t))
 
-        (call usersubject_application_subject (joe_mplayer_t))
-
         (call xserver_common_client_subject (joe_mplayer_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
         (call xserver_client_subject_tmpfs_template (joe_mplayer_t user_mplayer_tmpfs_t))
  
@@ -355,6 +371,8 @@
         (type joe_firefox_t)
         (call mozilla_role_template_firefox (joe_r joe_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
             user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
+
+        (typeattributeset is_joe_application_subject (joe_firefox_t))
 
         (optional joe_firefox_optional_joe_xpdf
             (call xpdf_role_template (joe_r joe_firefox_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t)))
@@ -386,6 +404,8 @@
             (call googletalk_role_template (joe_r joe_plugs_t joe_googletalk_t user_googletalk_config_t
                 user_googletalk_tmp_t user_googletalk_tmpfs_t))
 
+            (typeattributeset is_joe_application_subject (joe_googletalk_t))
+
             (optional joe_googletalk_optional_joe_pa
                 (call pa_client_subject (joe_r joe_googletalk_t joe_pa_t user_pa_home_t
                     user_pa_run_t user_googletalk_tmpfs_t))
@@ -396,9 +416,6 @@
 
             (context file_joe_user_googletalk_config (joe_u object_r user_googletalk_config_t ((s0)(s0))))
             (filecon "/home/joe/\.config/google-googletalkplugin(/.*)?" any file_joe_user_googletalk_config)
-
-            (allow joe_t joe_googletalk_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_googletalk_t))
 
             (allow joe_t user_googletalk_config_t manage_dir_perms)
             (allow joe_t user_googletalk_config_t relabel_dir_perms)
@@ -421,8 +438,6 @@
             (call read_files_pattern (joe_googletalk_t user_firefox_home_t user_firefox_home_t))
 
             (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
-
-            (call usersubject_application_subject (joe_googletalk_t))
  
             (call xserver_common_client_subject (joe_googletalk_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
             (call xserver_client_subject_tmpfs_template (joe_googletalk_t user_googletalk_tmpfs_t))
@@ -441,9 +456,6 @@
 
         (call filetrans_pattern (joe_t user_firefox_home_t user_firefox_lib_t dir "components"))
         (call filetrans_pattern (joe_t user_firefox_home_t user_firefox_lib_t dir "lib"))
-
-        (allow joe_t joe_firefox_t (process (signal signull sigstop sigkill)))
-        (call ps_subject_pattern (joe_t joe_firefox_t))
 
         (allow joe_t user_firefox_home_t manage_dir_perms)
         (allow joe_t user_firefox_home_t relabel_dir_perms)
@@ -466,8 +478,6 @@
  
         (allow joe_firefox_t joe_plugs_t (unix_stream_socket (read write)))
         (allow joe_firefox_t joe_plugs_t (fd (use)))
-
-        (call usersubject_application_subject (joe_firefox_t))
 
         (call usersubject_mozilla_filetrans (joe_t user_firefox_home_t dir "firefox"))
         (call usersubject_mozilla_filetrans (joe_firefox_t user_firefox_home_t dir "firefox"))
@@ -516,10 +526,9 @@
         (type joe_plugs_t)
         (call mozilla_role_template_plugs (joe_r joe_firefox_t joe_plugs_t user_plugs_tmpfs_t user_firefox_home_t))
 
-        (allow joe_plugs_t joe_firefox_t (unix_stream_socket (read write)))
+        (typeattributeset is_joe_application_subject (joe_plugs_t))
 
-        (allow joe_t joe_plugs_t (process (signal signull sigstop sigkill)))
-        (call ps_subject_pattern (joe_t joe_plugs_t))
+        (allow joe_plugs_t joe_firefox_t (unix_stream_socket (read write)))
 
         (allow joe_t user_plugs_tmpfs_t manage_file_perms)
         (allow joe_t user_plugs_tmpfs_t relabel_file_perms)
@@ -529,18 +538,14 @@
         (call usersubject_cache_filetrans_user_font_cache_dir (joe_plugs_t))
         (call usersubject_home_dir_filetrans_user_font_cache_dir (joe_plugs_t))
 
-        (call usersubject_application_subject (joe_plugs_t))
-
         (call xserver_common_client_subject (joe_plugs_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
         (call xserver_client_subject_tmpfs_template (joe_plugs_t user_plugs_tmpfs_t))
 
         (type joe_xremotec_t)
         (call mozilla_role_template_xremotec (joe_r joe_t joe_xremotec_t))
 
-        (allow joe_t joe_xremotec_t (process (signal signull sigstop sigkill)))
-        (call ps_subject_pattern (joe_t joe_xremotec_t))
+        (typeattributeset is_joe_application_subject (joe_xremotec_t))
 
-        (call usersubject_application_subject (joe_xremotec_t))
         (call usersubject_read_generic_home_content_files (joe_xremotec_t))
 
         (call xserver_common_client_subject (joe_xremotec_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
@@ -549,12 +554,11 @@
         (type joe_rp_t)
         (call ratpoison_role_template (joe_r joe_xinit_t joe_rp_t user_rp_home_t))
 
+        (typeattributeset is_joe_application_subject (joe_rp_t))
+
         (context file_joe_user_rp_home (joe_u object_r user_rp_home_t ((s0)(s0))))
         (filecon "/home/joe/\.ratpoisonrc" file file_joe_user_rp_home)
         (filecon "/home/joe/\.ratpoison_history" file file_joe_user_rp_home)
-
-        (allow joe_t joe_rp_t (process (signal sigkill sigstop signull)))
-        (call ps_subject_pattern (joe_t joe_rp_t))
 
         (allow joe_t user_rp_home_t manage_file_perms)
         (allow joe_t user_rp_home_t relabel_file_perms)
@@ -572,23 +576,25 @@
         (call usersubject_cache_filetrans_user_font_cache_dir (joe_rp_t))
         (call usersubject_home_dir_filetrans_user_font_cache_dir (joe_rp_t))
 
-        (call usersubject_application_subject (joe_rp_t))
-
         (call xserver_common_client_subject (joe_rp_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
         (type joe_rpws_t)
         (call ratpoison_role_template_rpws (joe_r joe_t joe_rpws_t user_rpws_tmp_t))
 
-        (call xserver_common_client_subject (joe_rpws_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (typeattributeset is_joe_application_subject (joe_rpws_t))
 
-        (call usersubject_application_subject (joe_rpws_t)))
+        (call xserver_common_client_subject (joe_rpws_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
     (optional joe_xserver_optional_joe_dbus
         (type joe_dbuslaunch_t)
         (call dbus_role_template_launch (joe_r joe_t joe_dbuslaunch_t))
 
+        (typeattributeset is_joe_application_subject (joe_dbuslaunch_t))
+
         (type joe_dbusd_t)
         (call dbus_role_template_session_bus (joe_r joe_dbuslaunch_t joe_dbusd_t user_dbusd_tmp_t))
+
+        (typeattributeset is_joe_application_subject (joe_dbusd_t))
 
         (typeattribute is_joe_dbusd_tmp_object)
         (typeattributeset is_joe_dbusd_tmp_object (user_dbusd_tmp_t))
@@ -608,6 +614,8 @@
             (type joe_gsession_t)
             (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t user_iceauth_tmp_t
                 user_gsession_tmpfs_t user_gsession_conf_t))
+
+            (typeattributeset is_joe_application_subject (joe_gsession_t))
 
             (typeattribute is_joe_gsession_subject)
 
@@ -637,8 +645,6 @@
             (call usersubject_config_filetrans (joe_gsession_t user_pa_home_t dir "pulse"))
             (call usersubject_run_user_dir_filetrans (joe_gsession_t user_pa_run_t dir "pulse"))
  
-            (call usersubject_application_subject (joe_gsession_t))
-
             (call usersubject_home_dir_filetrans (joe_t user_iceauth_home_t file ".ICEauthority-c"))
             (call usersubject_home_dir_filetrans (joe_t user_iceauth_home_t file ".ICEauthority"))
             (call usersubject_home_dir_filetrans (joe_gsession_t user_iceauth_home_t file ".ICEauthority-c"))
@@ -651,6 +657,8 @@
 
             (type joe_gsd_t)
             (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t user_gsd_data_t))
+
+            (typeattributeset is_joe_application_subject (joe_gsd_t))
 
             (typeattributeset is_joe_atspi_client_subject (joe_gsd_t))
             (typeattributeset is_joe_dconf_client_subject (joe_gsd_t))
@@ -684,29 +692,20 @@
             (allow joe_t user_gsd_tmpfs_t manage_file_perms)
             (allow joe_t user_gsd_tmpfs_t relabel_file_perms)
 
-            (allow joe_t joe_gsd_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gsd_t))
-
-            (call usersubject_application_subject (joe_gsd_t))
-
             (type joe_gsdprinter_t)
             (call gsd_role_template_printer (joe_r joe_gsd_t joe_gsdprinter_t))
 
-            (allow joe_t joe_gsdprinter_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gsdprinter_t))
-
-            (call usersubject_application_subject (joe_gsdprinter_t))
+            (typeattributeset is_joe_application_subject (joe_gsdprinter_t))
 
             (call dbus_session_client_subject (joe_gsdprinter_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gkeyringd_t)
             (call gkeyring_role_template_gkeyringd (joe_r joe_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
 
-            (typeattributeset is_dconf_client_subject (joe_gkeyringd_t))
-            (typeattributeset is_joe_gsession_subject (joe_gkeyringd_t))
+            (typeattributeset is_joe_application_subject (joe_gkeyringd_t))
 
-            (allow joe_t joe_gkeyringd_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gkeyringd_t))
+            (typeattributeset is_joe_dconf_client_subject (joe_gkeyringd_t))
+            (typeattributeset is_joe_gsession_subject (joe_gkeyringd_t))
 
             (allow joe_t user_gkeyringd_run_t manage_dir_perms)
             (allow joe_t user_gkeyringd_run_t relabel_dir_perms)
@@ -730,13 +729,13 @@
             (call usersubject_manage_generic_data_dirs (joe_gkeyringd_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_gkeyringd_t))
 
-            (call usersubject_application_subject (joe_gkeyringd_t))
-
             (call usersubject_run_user_dir_filetrans (joe_t user_gkeyringd_run_t dir "keyring"))
             (call usersubject_run_user_dir_filetrans (joe_gkeyringd_t user_gkeyringd_run_t dir "keyring"))
 
             (type joe_atspibusl_t)
             (call atspi_role_template_busl (joe_r joe_dbusd_t joe_atspibusl_t))
+
+            (typeattributeset is_joe_application_subject (joe_atspibusl_t))
 
             (typeattribute is_joe_atspi_client_subject)
 
@@ -752,13 +751,10 @@
 
             (call xserver_client_subject (joe_atspibusl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
  
-            (allow joe_t joe_atspibusl_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_atspibusl_t))
-
-            (call usersubject_application_subject (joe_atspibusl_t))
-
             (type joe_atspiregd_t)
             (call atspi_role_template_regd (joe_r joe_dbusd_t joe_atspiregd_t))
+
+            (typeattributeset is_joe_application_subject (joe_atspiregd_t))
 
             (typeattributeset is_joe_dbusd_subject (joe_atspiregd_t))
 
@@ -767,22 +763,14 @@
             (allow joe_atspiregd_t joe_atspibusl_t (fd (use)))
             (allow joe_atspiregd_t joe_dbusd_t (unix_stream_socket (read write)))
 
-            (allow joe_t joe_atspiregd_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_atspiregd_t))
-
-            (call usersubject_application_subject (joe_atspiregd_t))
-
             (call dbus_session_client_subject (joe_atspiregd_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_vdagent_t)
             (call spice_role_template_vdagent (joe_r joe_gsession_t joe_vdagent_t))
 
+            (typeattributeset is_joe_application_subject (joe_vdagent_t))
+
             (typeattributeset is_joe_gsession_subject (joe_vdagent_t))
-
-            (allow joe_t joe_vdagent_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_vdagent_t))
-
-            (call usersubject_application_subject (joe_vdagent_t))
 
             (call usersubject_read_generic_config_files (joe_vdagent_t)) ; ~/.config/user-dirs.dirs
 
@@ -791,7 +779,9 @@
             (type joe_gvfsd_t)
             (call gvfs_role_template_gvfsd (joe_r joe_dbusd_t joe_gvfsd_t user_gvfsd_run_t))
 
-            (typeattributeset is_joe_dbus_subject (joe_gvfsd_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsd_t))
+
+            (typeattributeset is_joe_dbusd_subject (joe_gvfsd_t))
 
             (allow joe_t user_gvfsd_run_t manage_dir_perms)
             (allow joe_t user_gvfsd_run_t relabel_dir_perms)
@@ -799,11 +789,6 @@
             (context file_joe_user_gvfsd_run (joe_u object_r user_gvfsd_run_t ((s0)(s0))))
             (filecon "/run/user/1000/gvfs" dir file_joe_user_gvfsd_run)
             (filecon "/run/user/1000/gvfs/.*" any ())
-
-            (allow joe_t joe_gvfsd_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsd_t))
-
-            (call usersubject_application_subject (joe_gvfsd_t))
 
             (call usersubject_run_user_dir_filetrans (joe_t user_gvfsd_run_t dir "gvfs"))
             (call usersubject_run_user_dir_filetrans (joe_gvfsd_t user_gvfsd_run_t dir "gvfs"))
@@ -813,145 +798,102 @@
             (type joe_gvfsafcvm_t)
             (call gvfs_role_template_gvfsafcvm (joe_r joe_dbusd_t joe_gvfsafcvm_t))
 
-            (allow joe_gvfsafcvm_t joe_dbusd_t (unix_stream_socket (getattr)))
+            (typeattributeset is_joe_application_subject (joe_gvfsafcvm_t))
 
-            (allow joe_t joe_gvfsafcvm_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsafcvm_t))
-
-            (call usersubject_application_subject (joe_gvfsafcvm_t))
+            (typeattributeset is_joe_dbusd_subject (joe_gvfsafcvm_t))
 
             (call dbus_session_client_subject (joe_gvfsafcvm_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsgoavm_t)
             (call gvfs_role_template_gvfsgoavm (joe_r joe_dbusd_t joe_gvfsgoavm_t))
 
+            (typeattributeset is_joe_application_subject (joe_gvfsgoavm_t))
+
             (typeattributeset is_joe_dbusd_subject (joe_gvfsgoavm_t))
-
-            (allow joe_t joe_gvfsgoavm_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsgoavm_t))
-
-            (call usersubject_application_subject (joe_gvfsgoavm_t))
 
             (call dbus_session_client_subject (joe_gvfsgoavm_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsgph2vm_t)
             (call gvfs_role_template_gvfsgph2vm (joe_r joe_dbusd_t joe_gvfsgph2vm_t))
 
+            (typeattributeset is_joe_application_subject (joe_gvfsgph2vm_t))
+
             (typeattributeset is_joe_dbusd_subject (joe_gvfsgph2vm_t))
-
-            (allow joe_t joe_gvfsgph2vm_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsgph2vm_t))
-
-            (call usersubject_application_subject (joe_gvfsgph2vm_t))
 
             (call dbus_session_client_subject (joe_gvfsgph2vm_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsmtpvm_t)
             (call gvfs_role_template_gvfsmtpvm (joe_r joe_dbusd_t joe_gvfsmtpvm_t))
 
+            (typeattributeset is_joe_application_subject (joe_gvfsmtpvm_t))
+
             (typeattributeset is_joe_dbusd_subject (joe_gvfsmtpvm_t))
-
-            (allow joe_t joe_gvfsmtpvm_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsmtpvm_t))
-
-            (call usersubject_application_subject (joe_gvfsmtpvm_t))
 
             (call dbus_session_client_subject (joe_gvfsmtpvm_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsudisks2vm_t)
             (call gvfs_role_template_gvfsudisks2vm (joe_r joe_dbusd_t joe_gvfsudisks2vm_t))
 
+            (typeattributeset is_joe_application_subject (joe_gvfsudisks2vm_t))
+
             (typeattributeset is_joe_dbusd_subject (joe_gvfsudisks2vm_t))
-
-            (allow joe_t joe_gvfsudisks2vm_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsudisks2vm_t))
-
-            (call usersubject_application_subject (joe_gvfsudisks2vm_t))
 
             (call dbus_session_client_subject (joe_gvfsudisks2vm_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsdafc_t)
             (call gvfs_role_template_gvfsdafc (joe_r joe_gvfsd_t joe_gvfsdafc_t))
 
-            (allow joe_t joe_gvfsdafc_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdafc_t))
-
-            (call usersubject_application_subject (joe_gvfsdafc_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdafc_t))
 
             (type joe_gvfsdafp_t)
             (call gvfs_role_template_gvfsdafp (joe_r joe_gvfsd_t joe_gvfsdafp_t))
 
-            (allow joe_t joe_gvfsdafp_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdafp_t))
-
-            (call usersubject_application_subject (joe_gvfsdafp_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdafp_t))
 
             (type joe_gvfsdafpb_t)
             (call gvfs_role_template_gvfsdafpb (joe_r joe_gvfsd_t joe_gvfsdafpb_t))
 
-            (allow joe_t joe_gvfsdafpb_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdafpb_t))
-
-            (call usersubject_application_subject (joe_gvfsdafpb_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdafpb_t))
 
             (type joe_gvfsdarch_t)
             (call gvfs_role_template_gvfsdarch (joe_r joe_gvfsd_t joe_gvfsdarch_t))
 
-            (allow joe_t joe_gvfsdarch_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdarch_t))
-
-            (call usersubject_application_subject (joe_gvfsdarch_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdarch_t))
 
             (type joe_gvfsdburn_t)
             (call gvfs_role_template_gvfsdburn (joe_r joe_gvfsd_t joe_gvfsdburn_t))
 
-            (allow joe_t joe_gvfsdburn_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdburn_t))
-
-            (call usersubject_application_subject (joe_gvfsdburn_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdburn_t))
 
             (type joe_gvfsdcdda_t)
             (call gvfs_role_template_gvfsdcdda (joe_r joe_gvfsd_t joe_gvfsdcdda_t))
 
-            (allow joe_t joe_gvfsdcdda_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdcdda_t))
-
-            (call usersubject_application_subject (joe_gvfsdcdda_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdcdda_t))
 
             (type joe_gvfsdcomp_t)
             (call gvfs_role_template_gvfsdcomp (joe_r joe_gvfsd_t joe_gvfsdcomp_t))
 
-            (allow joe_t joe_gvfsdcomp_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdcomp_t))
-
-            (call usersubject_application_subject (joe_gvfsdcomp_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdcomp_t))
 
             (type joe_gvfsddav_t)
             (call gvfs_role_template_gvfsddav (joe_r joe_gvfsd_t joe_gvfsddav_t))
 
-            (allow joe_t joe_gvfsddav_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsddav_t))
-
-            (call usersubject_application_subject (joe_gvfsddav_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsddav_t))
 
             (type joe_gvfsddnssd_t)
             (call gvfs_role_template_gvfsddnssd (joe_r joe_gvfsd_t joe_gvfsddnssd_t))
 
-            (allow joe_t joe_gvfsddnssd_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsddnssd_t))
-
-            (call usersubject_application_subject (joe_gvfsddnssd_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsddnssd_t))
 
             (type joe_gvfsdftp_t)
             (call gvfs_role_template_gvfsdftp (joe_r joe_gvfsd_t joe_gvfsdftp_t))
 
-            (allow joe_t joe_gvfsdftp_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdftp_t))
-
-            (call usersubject_application_subject (joe_gvfsdftp_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdftp_t))
 
             (type joe_gvfsdfuse_t)
             (call gvfs_role_template_gvfsdfuse (joe_r joe_gvfsd_t joe_gvfsdfuse_t))
+
+            (typeattributeset is_joe_application_subject (joe_gvfsdfuse_t))
 
             (call usersubject_search_run_user_dir (joe_gvfsdfuse_t))
             (allow joe_gvfsdfuse_t user_gvfsd_run_t list_dir_perms)
@@ -962,8 +904,7 @@
             (type joe_fusermount_t)
             (call fuse_role_template_fusermount (joe_r joe_gvfsdfuse_t joe_fusermount_t))
 
-            (allow joe_t joe_fusermount_t (process (signal signull sigkill sigstop)))
-            (call ps_subject_pattern (joe_t joe_fusermount_t))
+            (typeattributeset is_joe_application_subject (joe_fusermount_t))
 
             (call usersubject_search_run_user_dir (joe_fusermount_t))
             (allow joe_fusermount_t user_gvfsd_run_t list_dir_perms)
@@ -973,39 +914,27 @@
             (allow joe_fusermount_t joe_gvfsd_t (fd (use)))
             (allow joe_fusermount_t joe_gvfsdfuse_t (unix_stream_socket (read write)))
 
-            (allow joe_t joe_gvfsdfuse_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdfuse_t))
-
-            (call usersubject_application_subject (joe_gvfsdfuse_t))
-
             (call dbus_session_client_subject (joe_gvfsdfuse_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gvfsdgph2_t)
             (call gvfs_role_template_gvfsdgph2 (joe_r joe_gvfsd_t joe_gvfsdgph2_t))
 
-            (allow joe_t joe_gvfsdgph2_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdgph2_t))
-
-            (call usersubject_application_subject (joe_gvfsdgph2_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdgph2_t))
 
             (type joe_gvfsdhttp_t)
             (call gvfs_role_template_gvfsdhttp (joe_r joe_gvfsd_t joe_gvfsdhttp_t))
 
-            (allow joe_t joe_gvfsdhttp_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdhttp_t))
-
-            (call usersubject_application_subject (joe_gvfsdhttp_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdhttp_t))
 
             (type joe_gvfsdltest_t)
             (call gvfs_role_template_gvfsdltest (joe_r joe_gvfsd_t joe_gvfsdltest_t))
 
-            (allow joe_t joe_gvfsdltest_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdltest_t))
-
-            (call usersubject_application_subject (joe_gvfsdltest_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdltest_t))
 
             (type joe_gvfsdmetad_t)
             (call gvfs_role_template_gvfsdmetad (joe_r joe_dbusd_t joe_gvfsdmetad_t user_gvfsdmetad_data_t))
+
+            (typeattributeset is_joe_application_subject (joe_gvfsdmetad_t))
 
             (typeattributeset is_joe_dbusd_subject (joe_gvfsdmetad_t))
 
@@ -1023,72 +952,48 @@
             (call usersubject_manage_generic_data_dirs (joe_gvfsdmetad_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_gvfsdmetad_t))
 
-            (allow joe_t joe_gvfsdmetad_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdmetad_t))
-
             (call dbus_session_client_subject (joe_gvfsdmetad_t user_dbusd_tmp_t joe_dbusd_t))
-
-            (call usersubject_application_subject (joe_gvfsdmetad_t))
 
             (type joe_gvfsdmtp_t)
             (call gvfs_role_template_gvfsdmtp (joe_r joe_gvfsd_t joe_gvfsdmtp_t))
 
-            (allow joe_t joe_gvfsdmtp_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdmtp_t))
-
-            (call usersubject_application_subject (joe_gvfsdmtp_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdmtp_t))
 
             (type joe_gvfsdnetw_t)
             (call gvfs_role_template_gvfsdnetw (joe_r joe_gvfsd_t joe_gvfsdnetw_t))
 
-            (allow joe_t joe_gvfsdnetw_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdnetw_t))
-
-            (call usersubject_application_subject (joe_gvfsdnetw_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdnetw_t))
 
             (type joe_gvfsdrecnt_t)
             (call gvfs_role_template_gvfsdrecnt (joe_r joe_gvfsd_t joe_gvfsdrecnt_t))
 
-            (allow joe_t joe_gvfsdrecnt_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdrecnt_t))
-
-            (call usersubject_application_subject (joe_gvfsdrecnt_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdrecnt_t))
 
             (type joe_gvfsdsftp_t)
             (call gvfs_role_template_gvfsdsftp (joe_r joe_gvfsd_t joe_gvfsdsftp_t))
 
-            (allow joe_t joe_gvfsdsftp_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdsftp_t))
-
-            (call usersubject_application_subject (joe_gvfsdsftp_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdftp_t))
 
             (type joe_gvfsdsmb_t)
             (call gvfs_role_template_gvfsdsmb (joe_r joe_gvfsd_t joe_gvfsdsmb_t))
 
-            (allow joe_t joe_gvfsdsmb_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdsmb_t))
-
-            (call usersubject_application_subject (joe_gvfsdsmb_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdsmb_t))
 
             (type joe_gvfsdsmbb_t)
             (call gvfs_role_template_gvfsdsmbb (joe_r joe_gvfsd_t joe_gvfsdsmbb_t))
 
-            (allow joe_t joe_gvfsdsmbb_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdsmbb_t))
-
-            (call usersubject_application_subject (joe_gvfsdsmbb_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdsmbb_t))
 
             (type joe_gvfsdtrash_t)
             (call gvfs_role_template_gvfsdtrash (joe_r joe_gvfsd_t joe_gvfsdtrash_t))
 
-            (allow joe_t joe_gvfsdtrash_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gvfsdtrash_t))
-
-            (call usersubject_application_subject (joe_gvfsdtrash_t))
+            (typeattributeset is_joe_application_subject (joe_gvfsdtrash_t))
 
             (type joe_gshell_t)
             (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t
                 user_gshell_tmpfs_t user_gshell_tmp_t user_gshell_data_t))
+
+            (typeattributeset is_joe_application_subject (joe_gshell_t))
 
             (typeattributeset is_joe_atspi_client_subject (joe_gshell_t))
             (typeattributeset is_joe_dconf_client_subject (joe_gshell_t))
@@ -1133,27 +1038,21 @@
             (call usersubject_run_user_dir_filetrans (joe_t user_gshell_run_t dir "gnome-shell"))
             (call usersubject_run_user_dir_filetrans (joe_gshell_t user_gshell_run_t dir "gnome-shell"))
 
-            (allow joe_t joe_gshell_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gshell_t))
-
-            (call usersubject_application_subject (joe_gshell_t))
-
             (call xserver_common_client_subject (joe_gshell_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
             (call xserver_client_subject_tmpfs_template (joe_gshell_t user_gshell_tmpfs_t))
 
             (type joe_gshellcald_t)
             (call gshell_role_template_gshellcald (joe_r joe_dbusd_t joe_gshellcald_t))
 
+            (typeattributeset is_joe_application_subject (joe_gshellcald_t))
+
             (typeattributeset is_joe_dconf_client_subject (joe_gshellcald_t))
             (typeattributeset is_joe_dbusd_subject (joe_gshellcald_t))
 
-            (allow joe_t joe_gshellcald_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gshellcald_t))
-
-            (call usersubject_application_subject (joe_gshellcald_t))
-
             (type joe_dconfsvc_t)
             (call dconf_role_template_dconfsvc (joe_r joe_dbusd_t joe_dconfsvc_t user_dconf_run_t user_dconf_conf_t))
+
+            (typeattributeset is_joe_application_subject (joe_dconfsvc_t))
 
             (typeattribute is_joe_dconf_client_subject)
 
@@ -1196,28 +1095,22 @@
             (context file_joe_user_dconf_conf (joe_u object_r user_dconf_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/dconf(/.*)?" any file_joe_user_dconf_conf)
 
-            (allow joe_t joe_dconfsvc_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_dconfsvc_t))
-
-            (call usersubject_application_subject (joe_dconfsvc_t))
-
             (call dbus_session_client_subject (joe_dconfsvc_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_giscw_t)
             (call gis_role_template_giscw (joe_r joe_gsession_t joe_giscw_t))
 
+            (typeattributeset is_joe_application_subject (joe_giscw_t))
+
             (typeattributeset is_joe_gsession_subject (joe_giscw_t))
-
-            (allow joe_t joe_giscw_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_giscw_t))
-
-            (call usersubject_application_subject (joe_giscw_t))
 
             (call dbus_session_client_subject (joe_giscw_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_canberra_t)
             (call canberra_role_template_canberra (joe_r joe_gsession_t joe_canberra_t
                 user_canberra_tmpfs_t))
+
+            (typeattributeset is_joe_application_subject (joe_canberra_t))
 
             (typeattributeset is_joe_gsession_subject (joe_canberra_t))
 
@@ -1233,17 +1126,14 @@
 
             (call usersubject_manage_generic_cache_files (joe_canberra_t))
 
-            (allow joe_t joe_canberra_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_canberra_t))
-
-            (call usersubject_application_subject (joe_canberra_t))
-
             (call dbus_session_client_subject (joe_canberra_t user_dbusd_tmp_t joe_dbusd_t))
 
             (call xserver_client_subject (joe_canberra_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_startpa_t)
             (call pa_role_template_startpa (joe_r joe_gsession_t joe_startpa_t))
+
+            (typeattributeset is_joe_application_subject (joe_startpa_t))
 
             (typeattributeset is_joe_gsession_subject (joe_startpa_t))
 
@@ -1257,25 +1147,19 @@
                 (call pa_role_template (joe_r joe_startpa_t joe_pa_t user_pa_home_t
                     user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t)))
 
-            (allow joe_t joe_startpa_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_startpa_t))
-
-            (call usersubject_application_subject (joe_startpa_t))
-
             (type joe_gsettings_t)
             (call glib_role_template_gsettings (joe_r joe_gsession_t joe_gsettings_t))
+
+            (typeattributeset is_joe_application_subject (joe_gsettings_t))
 
             (typeattributeset is_joe_gsession_subject (joe_gsettings_t))
             (typeattributeset is_joe_dconf_client_subject (joe_gsettings_t))
 
-            (allow joe_t joe_gsettings_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gsettings_t))
-
-            (call usersubject_application_subject (joe_gsettings_t))
-
             (type joe_gsdconv_t)
             (call gconf_role_template_gsdconv (joe_r joe_gsession_t joe_gsdconv_t user_gsdconv_data_t
                 user_gsdconv_conf_t))
+
+            (typeattributeset is_joe_application_subject (joe_gsdconv_t))
 
             (typeattributeset is_joe_gsession_subject (joe_gsdconv_t))
             (typeattributeset is_joe_dconf_client_subject (joe_gsdconv_t))
@@ -1299,13 +1183,10 @@
             (call usersubject_config_filetrans (joe_t user_gsdconv_conf_t dir "gconf"))
             (call usersubject_config_filetrans (joe_gsdconv_t user_gsdconv_conf_t dir "gconf"))
 
-            (allow joe_t joe_gsdconv_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gsdconv_t))
-
-            (call usersubject_application_subject (joe_gsdconv_t))
-
             (type joe_ibusd_t)
             (call ibus_role_template_ibusd (joe_r joe_dbusd_t joe_ibusd_t user_ibus_conf_t))
+
+            (typeattributeset is_joe_application_subject (joe_ibusd_t))
 
             (typeattribute is_joe_ibusd_client_subject)
 
@@ -1319,9 +1200,9 @@
             (call usersubject_manage_generic_config_dirs (is_joe_ibusd_client_subject))
             (call usersubject_home_dir_filetrans_user_config_dir (is_joe_ibusd_client_subject))
 
-            (allow is_joe_ibusd_client_subject joe_idbusd_t (process (signull)))
+            (allow is_joe_ibusd_client_subject joe_ibusd_t (process (signull)))
 
-            (typeattributeset is_joe_dusd_subject (joe_ibusd_t))
+            (typeattributeset is_joe_dbusd_subject (joe_ibusd_t))
 
             (context file_joe_user_ibus_conf (joe_u object_r user_ibus_conf_t ((s0)(s0))))
             (filecon "/home/joe/\.config/ibus(/.*)?" any file_joe_user_ibus_conf)
@@ -1334,33 +1215,22 @@
             (call usersubject_config_filetrans (joe_t user_ibus_conf_t dir "ibus"))
             (call usersubject_config_filetrans (joe_ibusd_t user_ibus_conf_t dir "ibus"))
 
-            (allow joe_t joe_ibusd_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_ibusd_t))
-
-            (call usersubject_application_subject (joe_ibusd_t))
-
             (call dbus_session_client_subject (joe_ibusd_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_ibusdconf_t)
             (call ibus_role_template_ibusdconf (joe_r joe_ibusd_t joe_ibusdconf_t))
 
+            (typeattributeset is_joe_application_subject (joe_ibusdconf_t))
+
             (typeattributeset is_joe_ibusd_client_subject (joe_ibusdconf_t))
             (typeattributeset is_joe_dconf_client_subject (joe_ibusdconf_t))
-
-            (allow joe_t joe_ibusdconf_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_ibusdconf_t))
-
-            (call usersubject_application_subject (joe_ibusdconf_t))
             
             (type joe_ibusx11_t)
             (call ibus_role_template_ibusx11 (joe_r joe_ibusd_t joe_ibusx11_t))
 
+            (typeattributeset is_joe_application_subject (joe_ibusx11_t))
+
             (typeattributeset is_joe_ibusd_client_subject (joe_ibusx11_t))
-
-            (allow joe_t joe_ibusx11_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_ibusx11_t))
-
-            (call usersubject_application_subject (joe_ibusx11_t))
 
             (call dbus_session_client_subject (joe_ibusx11_t user_dbusd_tmp_t joe_dbusd_t))
 
@@ -1369,17 +1239,16 @@
             (type joe_ibuseng_t)
             (call ibus_role_template_ibuseng (joe_r joe_ibusd_t joe_ibuseng_t))
 
-            (typeattributeset is_joe_ibusd_client_subject (joe_ibuseng_t))
+            (typeattributeset is_joe_application_subject (joe_ibuseng_t))
 
-            (allow joe_t joe_ibuseng_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_ibuseng_t))
+            (typeattributeset is_joe_ibusd_client_subject (joe_ibuseng_t))
 
             (call dbus_session_client_subject (joe_ibuseng_t user_dbusd_tmp_t joe_dbusd_t))
 
-            (call usersubject_application_subject (joe_ibuseng_t))
-
             (type joe_tpmc_t)
             (call telepathy_role_template_mc (joe_r joe_dbusd_t joe_tpmc_t user_tpmc_data_t))
+
+            (typeattributeset is_joe_application_subject (joe_tpmc_t))
 
             (typeattributeset is_joe_dbusd_subject (joe_tpmc_t))
             (typeattributeset is_joe_dconf_client_subject (joe_tpmc_t))
@@ -1395,25 +1264,17 @@
             (call usersubject_data_filetrans (joe_t user_tpmc_data_t dir "telepathy"))
             (call usersubject_data_filetrans (joe_tpmc_t user_tpmc_data_t dir "telepathy"))
 
-            (allow joe_t joe_tpmc_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_tpmc_t))
-
             (call usersubject_manage_generic_data_dirs (joe_tpmc_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_tpmc_t))
-
-            (call usersubject_application_subject (joe_tpmc_t))
 
             (type joe_caribou_t)
             (call caribou_role_template_caribou (joe_r joe_dbusd_t joe_caribou_t))
 
+            (typeattributeset is_joe_application_subject (joe_caribou_t))
+
             (typeattributeset is_joe_atspi_client_subject (joe_caribou_t))
 
             (typeattributeset is_joe_dbusd_subject (joe_caribou_t))
-
-            (allow joe_t joe_caribou_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_caribou_t))
-
-            (call usersubject_application_subject (joe_caribou_t)) 
 
             (call usersubject_home_dir_filetrans_user_cache_dir (joe_caribou_t))
 
@@ -1423,6 +1284,8 @@
 
             (type joe_goad_t)
             (call goa_role_template_goad (joe_r joe_dbusd_t joe_goad_t user_goad_conf_t))
+
+            (typeattributeset is_joe_application_subject (joe_goad_t))
 
             (typeattributeset is_joe_dbusd_subject (joe_goad_t))
 
@@ -1437,20 +1300,14 @@
             (call usersubject_config_filetrans (joe_t user_goad_conf_t dir "goa-1.0"))
             (call usersubject_config_filetrans (joe_goad_t user_goad_conf_t dir "goa-1.0"))
 
-            (allow joe_t joe_goad_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_goad_t))
-
-            (call usersubject_application_subject (joe_goad_t)) 
-
             (call dbus_session_client_subject (joe_goad_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_trminapp_t)
             (call tracker_role_template_trminapp (joe_r joe_gsession_t joe_trminapp_t))
 
-            (typeattributeset is_joe_gsession_suject (joe_trminapp_t))
+            (typeattributeset is_joe_application_subject (joe_trminapp_t))
 
-            (allow joe_t joe_trminapp_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_trminapp_t))
+            (typeattributeset is_joe_gsession_subject (joe_trminapp_t))
 
             (call usersubject_list_generic_data_dirs (joe_trminapp_t)) ; ~/.local/share/applications
 
@@ -1461,18 +1318,15 @@
             (call usersubject_manage_generic_cache_dirs (joe_trminapp_t))
             (call usersubject_home_dir_filetrans_user_cache_dir (joe_trminapp_t))
 
-            (call usersubject_application_subject (joe_trminapp_t)) 
-
             (call dbus_session_client_subject (joe_trminapp_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_trminfs_t)
             (call tracker_role_template_trminfs (joe_r joe_gsession_t joe_trminfs_t))
 
+            (typeattributeset is_joe_application_subject (joe_trminfs_t))
+
             (typeattributeset is_joe_gsession_subject (joe_trminfs_t))
             (typeattributeset is_joe_dconf_client_subject (joe_trminfs_t))
-
-            (allow joe_t joe_trminfs_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_trminfs_t))
 
             (call usersubject_list_all_user_home_content (joe_trminfs_t))
             (call usersubject_getattr_all_user_home_file_objects (joe_trminfs_t))
@@ -1488,17 +1342,12 @@
 
             (allow joe_trminfs_t user_trstore_conf_t list_dir_perms)
 
-            (call usersubject_application_subject (joe_trminfs_t)) 
-
             (type joe_trmingd_t)
             (call tracker_role_template_trmingd (joe_r joe_gsession_t joe_trmingd_t))
 
+            (typeattributeset is_joe_application_subject (joe_trmingd_t))
+
             (typeattributeset is_joe_gsession_subject (joe_trmingd_t))
-
-            (allow joe_t joe_trmingd_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_trmingd_t))
-
-            (call usersubject_application_subject (joe_trmingd_t)) 
 
             (allow joe_trmingd_t user_trstore_cache_t manage_dir_perms)
             (allow joe_trmingd_t user_trstore_cache_t manage_file_perms)
@@ -1512,14 +1361,13 @@
             (type joe_trextr_t)
             (call tracker_role_template_trextr (joe_r joe_gsession_t joe_trextr_t user_trextr_tmp_t))
 
+            (typeattributeset is_joe_application_subject (joe_trextr_t))
+
             (typeattributeset is_joe_gsession_subject (joe_trextr_t))
             (typeattributeset is_joe_dconf_client_subject (joe_trextr_t))
 
             (allow joe_t user_trextr_tmp_t manage_dir_perms)
             (allow joe_t user_trextr_tmp_t relabel_dir_perms)
-
-            (allow joe_t joe_trextr_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_trextr_t))
 
             (allow joe_trextr_t user_trstore_cache_t manage_dir_perms)
             (allow joe_trextr_t user_trstore_cache_t manage_file_perms)
@@ -1535,11 +1383,11 @@
             (call usersubject_manage_generic_data_dirs (joe_trextr_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_trextr_t))
 
-            (call usersubject_application_subject (joe_trextr_t))  
-
             (type joe_trstore_t)
             (call tracker_role_template_trstore (joe_r joe_dbusd_t joe_trstore_t user_trstore_conf_t
                 user_trstore_tmp_t user_trstore_cache_t user_trstore_data_t))
+
+            (typeattributeset is_joe_application_subject (joe_trstore_t))
 
             (typeattributeset is_joe_dbusd_subject (joe_trstore_t))
             (typeattributeset is_joe_dconf_client_subject (joe_trstore_t))
@@ -1589,29 +1437,23 @@
             (call usersubject_manage_generic_data_dirs (joe_trstore_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_trstore_t))
 
-            (allow joe_t joe_trstore_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_trstore_t))
-
-            (call usersubject_application_subject (joe_trstore_t))  
-
             (allow joe_trstore_t joe_trminfs_t (fd (use)))
             (allow joe_trstore_t joe_trminfs_t (fifo_file (read)))
 
             (type joe_gdbus_t)
             (call glib_role_template_gdbus (joe_r joe_gsession_t joe_gdbus_t))
 
+            (typeattributeset is_joe_application_subject (joe_gdbus_t))
+
             (typeattributeset is_joe_gsession_subject (joe_gdbus_t))
-
-            (allow joe_t joe_gdbus_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gdbus_t))
-
-            (call usersubject_application_subject (joe_gdbus_t)) 
 
             (call dbus_session_client_subject (joe_gdbus_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_evosrcreg_t)
             (call evolution_role_template_evosrcreg (joe_r joe_dbusd_t joe_evosrcreg_t
                 user_evosrcreg_cache_t user_evosrcreg_conf_t user_evosrcreg_data_t))
+
+            (typeattributeset is_joe_application_subject (joe_evosrcreg_t))
 
             (typeattributeset is_joe_dbusd_subject (joe_evosrcreg_t))
             (typeattributeset is_joe_dconf_client_subject (joe_evosrcreg_t))
@@ -1624,9 +1466,6 @@
 
             (context file_joe_user_evosrcreg_cache (joe_u object_r user_evosrcreg_cache_t ((s0)(s0))))
             (filecon "/home/joe/\.cache/evolution(/.*)?" any file_joe_user_evosrcreg_cache)
-
-            (allow joe_t joe_evosrcreg_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_evosrcreg_t))
 
             (allow joe_t user_evosrcreg_conf_t manage_dir_perms)
             (allow joe_t user_evosrcreg_conf_t relabel_dir_perms)
@@ -1661,16 +1500,13 @@
             (call usersubject_manage_generic_data_dirs (joe_evosrcreg_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_evosrcreg_t))
 
-            (call usersubject_application_subject (joe_evosrcreg_t))
-
             (type joe_evocfactory_t)
             (call evolution_role_template_evocfactory (joe_r joe_dbusd_t joe_evocfactory_t))
 
+            (typeattributeset is_joe_application_subject (joe_evocfactory_t))
+
             (typeattributeset is_joe_dbusd_subject (joe_evocfactory_t))
             (typeattributeset is_joe_dconf_client_subject (joe_evocfactory_t))
-
-            (allow joe_t joe_evocfactory_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_evocfactory_t))
 
             (allow joe_evocfactory_t user_evosrcreg_data_t manage_dir_perms)
             (allow joe_evocfactory_t user_evosrcreg_data_t manage_file_perms)
@@ -1679,66 +1515,46 @@
             (call usersubject_manage_generic_data_dirs (joe_evocfactory_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_evocfactory_t))
 
-            (call usersubject_application_subject (joe_evocfactory_t))
-
             (type joe_evoanotify_t)
             (call evolution_role_template_evoanotify (joe_r joe_gsession_t joe_evoanotify_t))
+
+            (typeattributeset is_joe_application_subject (joe_evoanotify_t))
 
             (typeattributeset is_joe_atspi_client_subject (joe_evoanotify_t))
             (typeattributeset is_joe_dconf_client_subject (joe_evoanotify_t))
             (typeattributeset is_joe_gsession_subject (joe_evoanotify_t))
 
-            (allow joe_t joe_evoanotify_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_evoanotify_t))
-
             (call xserver_client_subject (joe_evoanotify_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-            (call usersubject_application_subject (joe_evoanotify_t))
 
             (type joe_gsoftware_t)
             (call gsoftware_role_template (joe_r joe_gsession_t joe_gsoftware_t))
+
+            (typeattributeset is_joe_application_subject (joe_gsoftware_t))
 
             (typeattributeset is_joe_atspi_client_subject (joe_gsoftware_t))
             (typeattributeset is_joe_dconf_client_subject (joe_gsoftware_t))
             (typeattributeset is_joe_gsession_subject (joe_gsoftware_t))
  
-            (allow joe_t joe_gsoftware_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_gsoftware_t))
-
-            (call usersubject_application_subject (joe_gsoftware_t))
-
             (call xserver_client_subject (joe_gsoftware_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_xdggtkupd_t)
             (call xdg_role_template (joe_r joe_gsession_t joe_xdggtkupd_t))
  
-            (typeattributeset is_joe_gsession_subject (joe_xdggtkupd_t))
+            (typeattributeset is_joe_application_subject (joe_xdggtkupd_t))
 
-            (allow joe_t joe_xdggtkupd_t (process (signal signull sigstop sigkill)))
-            (call ps_subject_pattern (joe_t joe_xdggtkupd_t))
+            (typeattributeset is_joe_gsession_subject (joe_xdggtkupd_t))
 
             (call usersubject_read_generic_config_files (joe_xdggtkupd_t))
 
             (call usersubject_manage_gtk_config_dirs (joe_xdggtkupd_t))
             (call usersubject_manage_gtk_config_files (joe_xdggtkupd_t))
             (call usersubject_config_filetrans_user_gtk_config_dir (joe_xdggtkupd_t))
-
-            (call usersubject_application_subject (joe_xdggtkupd_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
         (allow joe_t user_dbusd_tmp_t manage_sock_file_perms)
-        (allow joe_t user_dbusd_tmp_t relabel_sock_file_perms)
-
-        (allow joe_t joe_dbusd_t (process (signal signull sigkill sigstop)))
-        (call ps_subject_pattern (joe_t joe_dbusd_t))
-
-        (call usersubject_application_subject (joe_dbusd_t))
-        (call usersubject_application_subject (joe_dbuslaunch_t)))
-
-    (allow joe_t joe_xorg_wrap_t (process (signal sigstop signull sigkill)))
-    (call ps_subject_pattern (joe_t joe_xorg_wrap_t))
+        (allow joe_t user_dbusd_tmp_t relabel_sock_file_perms))
 
     (context file_joe_user_xauth_home (joe_u object_r user_xauth_home_t ((s0)(s0))))
     (filecon "/home/joe/\.Xauthority.*" file file_joe_user_xauth_home)
@@ -1784,26 +1600,11 @@
     (allow joe_xorg_t joe_xinit_t (dirs (list)))
     (allow joe_xorg_t joe_xinit_t read_file_perms)
 
-    (call usersubject_application_subject (joe_xinit_t))
-
-    (call usersubject_application_subject (joe_xorg_t))
     (call usersubject_use_tty_nodes (joe_xorg_t))
-
-    (call usersubject_application_subject (joe_xorg_wrap_t))
-
-    (call usersubject_application_subject (joe_xhost_t))
 
     (call xserver_client_subject (joe_xhost_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
-    (allow joe_t joe_xhost_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (joe_t joe_xhost_t))
-
-    (call usersubject_application_subject (joe_xmodmap_t))
-
     (call xserver_client_subject (joe_xmodmap_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-    (allow joe_t joe_xmodmap_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (joe_t joe_xmodmap_t))
 
     (allow joe_t user_xauth_home_t manage_file_perms)
     (allow joe_t user_xauth_home_t relabel_file_perms)
@@ -1815,14 +1616,11 @@
 
     (call usersubject_read_generic_tmp_files (joe_xauth_t))
 
-    (call usersubject_application_subject (joe_xauth_t))
-
     (call usersubject_cache_filetrans_user_font_cache_dir (joe_xterm_t))
     (call usersubject_home_dir_filetrans_user_font_cache_dir (joe_xterm_t))
     (call usersubject_manage_font_cache_dirs (joe_xterm_t))
     (call usersubject_manage_font_cache_files (joe_xterm_t))
 
-    (call usersubject_application_subject (joe_xterm_t))
     (call usersubject_use_terminals (joe_xterm_t))
     (call usersubject_setattr_terminals (joe_xterm_t))
     (call usersubject_create_pty_node (joe_xterm_t))
@@ -1834,30 +1632,20 @@
     (call usersubject_cache_filetrans_user_font_cache_dir (joe_xclock_t))
     (call usersubject_home_dir_filetrans_user_font_cache_dir (joe_xclock_t))
 
-    (call usersubject_application_subject (joe_xclock_t))
-
     (call xserver_common_client_subject (joe_xclock_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
     (call usersubject_home_dir_filetrans (joe_t user_xloadimg_conf_t file ".xloadimagerc"))
 
-    (call usersubject_application_subject (joe_xloadimg_t))
     (call usersubject_read_generic_home_content_files (joe_xloadimg_t))
 
     (call xserver_common_client_subject (joe_xloadimg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
-    (allow joe_t joe_xrdb_t (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (joe_t joe_xrdb_t))
-
     (allow joe_t user_xrdb_home_t manage_file_perms)
     (allow joe_t user_xrdb_home_t relabel_file_perms)
-
-    (call usersubject_application_subject (joe_xrdb_t))
 
     (call usersubject_home_dir_filetrans (joe_t user_xrdb_home_t file ".Xresources"))
 
     (call xserver_common_client_subject (joe_xrdb_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
-
-    (call usersubject_application_subject (joe_xsel_t))
 
     (call xserver_client_subject (joe_xsel_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
@@ -1885,6 +1673,8 @@
     (call fop_role_template (joe_r joe_t joe_fop_t
         user_fop_home_t user_java_home_t user_java_tmp_t))
 
+    (typeattributeset is_joe_application_subject (joe_fop_t))
+
     (context file_joe_user_fop_home (joe_u object_r user_fop_home_t ((s0)(s0))))
     (filecon "/home/joe/\.fop(/.*)?" any file_joe_user_fop_home)
     (filecon "/home/joe/\.foprc" file file_joe_user_fop_home)
@@ -1897,13 +1687,13 @@
     (call usersubject_home_dir_filetrans (joe_fop_t user_java_home_t dir ".java"))
 
     (call usersubject_manage_generic_home_content_files (joe_fop_t))
-    (call usersubject_home_dir_filetrans_user_home (joe_fop_t file "*"))
-
-    (call usersubject_application_subject (joe_fop_t)))
+    (call usersubject_home_dir_filetrans_user_home (joe_fop_t file "*")))
 
 (optional joe_optional_joe_ffmpeg
     (type joe_ffmpeg_t)
     (call ffmpeg_role_template (joe_r joe_t joe_ffmpeg_t user_ffmpeg_tmpfs_t))
+
+    (typeattributeset is_joe_application_subject (joe_ffmpeg_t))
 
     (optional joe_ffmeg_optional_joe_xserver
         (call xserver_client_subject (joe_ffmpeg_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
@@ -1921,14 +1711,14 @@
     (call usersubject_home_dir_filetrans_user_home (joe_ffmpeg_t file "*"))
 
     (call usersubject_manage_generic_tmp_content_files (joe_ffmpeg_t))
-    (call usersubject_tmp_filetrans_generic_user_tmp (joe_ffmpeg_t file "*"))
-
-    (call usersubject_application_subject (joe_ffmpeg_t)))
+    (call usersubject_tmp_filetrans_generic_user_tmp (joe_ffmpeg_t file "*")))
 
 (optional joe_optional_joe_rtorrent
     (type joe_rtorrent_t)
     (call bt_role_template_rtorrent (joe_r joe_t joe_rtorrent_t
         user_rtorrent_home_t))
+
+    (typeattributeset is_joe_application_subject (joe_rtorrent_t))
 
     (context file_joe_user_rtorrent_home (joe_u object_r user_rtorrent_home_t ((s0)(s0))))
     (filecon "/home/joe/\.rtorrent\.rc" file file_joe_user_rtorrent_home)
@@ -1938,14 +1728,14 @@
     (call usersubject_home_dir_filetrans (joe_t user_rtorrent_home_t dir ".rtorrent")) 
     (call usersubject_read_generic_home_content_files (joe_rtorrent_t))
 
-    (allow joe_rtorrent_t user_terminfo_home_t read_file_perms)
-
-    (call usersubject_application_subject (joe_rtorrent_t)))
+    (allow joe_rtorrent_t user_terminfo_home_t read_file_perms))
 
 (optional joe_optional_joe_elinks
     (type joe_elinks_t)
     (call http_role_template_elinks (joe_r joe_t joe_elinks_t
         user_elinks_home_t user_elinks_tmp_t))
+
+    (typeattributeset is_joe_application_subject (joe_elinks_t))
 
     (optional joe_elinks_optional_joe_newsb
         (allow joe_elinks_t user_newsb_home_t rw_inherited_file_perms))
@@ -1972,10 +1762,8 @@
     (allow joe_t user_elinks_tmp_t manage_sock_file_perms)
     (allow joe_t user_elinks_tmp_t relabel_sock_file_perms)
  
-    (allow joe_t joe_elinks_t (process (sigkill sigstop signal signull)))
     (dontaudit joe_t joe_elinks_t (unix_stream_socket (read write)))
     (dontaudit joe_t joe_elinks_t (tcp_socket (read write)))
-    (call ps_subject_pattern (joe_t joe_elinks_t))
  
     (call usersubject_home_dir_filetrans (joe_t user_elinks_home_t dir ".elinks")) 
     (call usersubject_home_dir_filetrans (joe_elinks_t user_elinks_home_t dir ".elinks")) 
@@ -1994,13 +1782,14 @@
 
     (call commands_shell_auto_subject_type_transition (joe_elinks_t joe_t))
 
-    (call usersubject_application_subject (joe_elinks_t))
     (call usersubject_use_terminals (joe_elinks_t)))
 
 (optional joe_optional_joe_emacs
     (type joe_emacs_t)
     (call emacs_role_template (joe_r joe_t joe_emacs_t
         user_emacs_home_t user_emacs_tmp_t))
+
+    (typeattributeset is_joe_application_subject (joe_emacs_t))
 
     (call usersubject_user_tmp_filetrans (joe_emacs_t user_emacs_tmp_t sock_file "server"))
 
@@ -2015,7 +1804,6 @@
     (call usersubject_tmp_filetrans_generic_user_tmp (joe_emacs_t file "*"))
     (call usersubject_tmp_filetrans_generic_user_tmp (joe_emacs_t lnk_file "*"))
 
-    (call usersubject_application_subject (joe_emacs_t))
     (call usersubject_use_terminals (joe_emacs_t))
 
     (call usersubject_manage_generic_bin_dirs (joe_emacs_t))
@@ -2040,7 +1828,8 @@
     (type joe_emacsclient_t)
     (call emacs_role_template_client (joe_r joe_t joe_emacsclient_t))
 
-    (call usersubject_application_subject (joe_emacsclient_t))
+    (typeattributeset is_joe_application_subject (joe_emacsclient_t))
+
     (call usersubject_use_terminals (joe_emacsclient_t))
 
     (allow joe_emacsclient_t joe_emacs_t (process (signal)))
@@ -2053,6 +1842,8 @@
     (call git_role_template (joe_r joe_t joe_git_t user_git_home_t user_git_conf_t
         user_git_tmp_t))
 
+    (typeattributeset is_joe_application_subject (joe_git_t))
+
     (optional joe_git_optional_joe_ssh
         (call ssh_role_template (joe_r joe_git_t joe_ssh_t user_ssh_home_t)))
 
@@ -2062,9 +1853,6 @@
     (context file_user_joe_git_conf (joe_u object_r user_git_conf_t ((s0)(s0))))
     (filecon "/home/joe/\.gitaliases" file file_user_joe_git_conf)
     (filecon "/home/joe/\.gitconfig" file file_user_joe_git_conf)
-
-    (allow joe_t joe_git_t (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (joe_t joe_git_t))
  
     (allow joe_t user_git_home_t manage_dir_perms)
     (allow joe_t user_git_home_t relabel_dir_perms)
@@ -2085,7 +1873,6 @@
 
     (call usersubject_home_filetrans (joe_t user_git_home_t dir ".git"))
 
-    (call usersubject_application_subject (joe_git_t))
     (call usersubject_home_filetrans (joe_git_t user_git_home_t dir ".git"))
 
     (allow joe_git_t user_terminfo_home_t read_file_perms)
@@ -2104,10 +1891,11 @@
     (type joe_tig_t)
     (call git_role_template_tig (joe_r joe_t joe_tig_t user_tig_home_t))
 
+    (typeattributeset is_joe_application_subject (joe_tig_t))
+
     (context file_joe_user_tig_home (joe_u object_r user_tig_home_t ((s0)(s0))))
     (filecon "/home/joe/\.tigrc" file file_joe_user_tig_home)
 
-    (call usersubject_application_subject (joe_tig_t))
     (call usersubject_home_dir_filetrans (joe_t user_tig_home_t file ".tigrc"))
 
     (call getattr_files_pattern (joe_tig_t user_git_home_t user_git_home_t))
@@ -2121,8 +1909,7 @@
     (call git_role_template_email (joe_r joe_git_t joe_gitemail_t
         user_gitemail_home_t))
 
-    (allow joe_t joe_gitemail_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (joe_t joe_gitemail_t))
+    (typeattributeset is_joe_application_subject (joe_gitemail_t))
 
     (allow joe_t user_gitemail_home_t manage_file_perms)
     (allow joe_t user_gitemail_home_t relabel_file_perms)
@@ -2132,7 +1919,6 @@
 
     (call filetrans_pattern (joe_gitemail_t user_git_home_t user_gitemail_home_t file "*"))
 
-    (call usersubject_application_subject (joe_gitemail_t))
     (call usersubject_read_generic_home_content_files (joe_gitemail_t))
 
     (call git_role_template (joe_r joe_gitemail_t joe_git_t user_git_home_t user_git_conf_t
@@ -2143,19 +1929,19 @@
     (call gpg_role_template (joe_r joe_t joe_gpg_t
         user_gpg_home_t))
 
+    (typeattributeset is_joe_application_subject (joe_gpg_t))
+
     (optional joe_gpgagent_optional_joe_pinentry
         (type joe_pinentry_t)
         (call pinentry_role_template (joe_r joe_gpgagent_t joe_pinentry_t))
 
-        (allow joe_t joe_pinentry_t (process (signal signull sigkill sigstop)))
-        (call ps_subject_pattern (joe_t joe_pinentry_t))
+        (typeattributeset is_joe_application_subject (joe_pinentry_t))
 
         (call stream_connect_pattern (joe_pinentry_t user_gpg_home_t user_gpgagent_home_t
             joe_gpgagent_t))
 
         (allow joe_pinentry_t user_terminfo_home_t read_file_perms)
 
-        (call usersubject_application_subject (joe_pinentry_t))
         (call usersubject_use_terminals (joe_pinentry_t)))
 
     (optional joe_gpg_optional_joe_elinks
@@ -2171,9 +1957,6 @@
 
     (context file_joe_user_gpg_home (joe_u object_r user_gpg_home_t ((s0)(s0))))
     (filecon "/home/joe/\.gnupg(/.*)?" any file_joe_user_gpg_home)
-
-    (allow joe_t joe_gpg_t (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (joe_t joe_gpg_t))
  
     (allow joe_t user_gpg_home_t manage_dir_perms)
     (allow joe_t user_gpg_home_t relabel_dir_perms)
@@ -2193,15 +1976,13 @@
 
     (call manage_files_pattern (joe_gpg_t user_pass_home_t user_pass_home_t))
 
-    (call usersubject_application_subject (joe_gpg_t))
     (call usersubject_use_terminals (joe_gpg_t))
 
     (type joe_gpgagent_t)
     (call gpg_role_template_agent (joe_r joe_t joe_gpgagent_t user_gpgagent_home_t))
     (call gpg_role_template_agent (joe_r joe_gpg_t joe_gpgagent_t user_gpgagent_home_t))
 
-    (allow joe_t joe_gpgagent_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (joe_t joe_gpgagent_t))
+    (typeattributeset is_joe_application_subject (joe_gpgagent_t))
 
     (allow joe_t user_gpgagent_home_t manage_file_perms)
     (allow joe_t user_gpgagent_home_t relabel_file_perms)
@@ -2225,7 +2006,6 @@
     (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t file "*"))
     (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t sock_file "*"))
 
-    (call usersubject_application_subject (joe_gpgagent_t))
     (call usersubject_use_terminals (joe_gpgagent_t))
 
     (call stream_connect_pattern (joe_gpgagent_t user_scd_tmp_t user_scd_tmp_t joe_scd_t))
@@ -2233,6 +2013,8 @@
     (type joe_scd_t) 
     (call gpg_role_template_scd (joe_r joe_gpgagent_t joe_scd_t user_scd_tmp_t
         user_scd_home_t))
+
+    (typeattributeset is_joe_application_subject (joe_scd_t))
 
     (allow joe_t user_scd_home_t manage_file_perms)
     (allow joe_t user_scd_home_t relabel_file_perms)
@@ -2242,9 +2024,6 @@
     (allow joe_t user_scd_tmp_t manage_sock_file_perms)
     (allow joe_t user_scd_tmp_t relabel_sock_file_perms)
 
-    (allow joe_t joe_scd_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (joe_t joe_scd_t))
-
     (context file_joe_user_scd_home (joe_u object_r user_scd_home_t ((s0)(s0))))
     (filecon "/home/joe/\.gnupg/reader_0\.status" file file_joe_user_scd_home)
 
@@ -2252,20 +2031,17 @@
 
     (call filetrans_pattern (joe_scd_t user_gpg_home_t user_scd_home_t file "*"))
 
-    (call usersubject_application_subject (joe_scd_t))
-
     (type joe_gpgpcsc_t)
     (call gpg_role_template_pcsc (joe_r joe_scd_t joe_gpgpcsc_t))
 
-    (allow joe_t joe_gpgpcsc_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (joe_t joe_gpgpcsc_t))
-
-    (call usersubject_application_subject (joe_gpgpcsc_t)))
+    (typeattributeset is_joe_application_subject (joe_gpgpcsc_t)))
 
 (optional joe_optional_joe_mutt
     (type joe_mutt_t)
     (call mail_role_template_mutt (joe_r joe_t joe_mutt_t
         user_mutt_home_t user_mutt_tmp_t))
+
+    (typeattributeset is_joe_application_subject (joe_mutt_t))
 
     (optional joe_mutt_optional_joe_firefox
         (call mozilla_role_template_firefox (joe_r joe_mutt_t joe_firefox_t user_firefox_home_t
@@ -2289,9 +2065,6 @@
     (filecon "/home/joe/\.mutt_certificates" file file_joe_user_mutt_home)
     (filecon "/home/joe/\.mutt_passwords\.gpg" file file_joe_user_mutt_home)
 
-    (allow joe_t joe_mutt_t (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (joe_t joe_mutt_t))
-
     (allow joe_t user_mutt_home_t manage_file_perms)
     (allow joe_t user_mutt_home_t relabel_file_perms)
     (allow joe_t user_mutt_tmp_t manage_dir_perms)
@@ -2310,18 +2083,19 @@
     (call usersubject_manage_generic_home_content_files (joe_mutt_t))
     (call usersubject_home_dir_filetrans_user_home (joe_mutt_t file "*"))
 
-    (call usersubject_application_subject (joe_mutt_t))
     (call usersubject_read_generic_home_content_files (joe_mutt_t)) ; ~/.nanorc
 
     (type joe_mutt_gpg_t)
     (call mail_role_template_mutt_gpg (joe_r joe_mutt_t joe_mutt_gpg_t))
 
-    (call usersubject_application_subject (joe_mutt_gpg_t)))
+    (typeattributeset is_joe_application_subject (joe_mutt_gpg_t)))
 
 (optional joe_optional_joe_irc
     (type joe_irssi_t)
     (call irc_role_template_irssi (joe_r joe_t joe_irssi_t
         user_irssi_home_t))
+
+    (typeattributeset is_joe_application_subject (joe_irssi_t))
 
     (optional joe_irssi_optional_joe_moc
         (call moc_role_template (joe_r joe_irssi_t joe_moc_t
@@ -2335,13 +2109,14 @@
 
     (allow joe_irssi_t user_terminfo_home_t read_file_perms)
 
-    (call usersubject_application_subject (joe_irssi_t))
     (call usersubject_read_cert_files (joe_irssi_t)))
 
 (optional joe_optional_joe_newsb
     (type joe_newsb_t)
     (call newsb_role_template (joe_r joe_t joe_newsb_t
         user_newsb_home_t))
+
+    (typeattributeset is_joe_application_subject (joe_newsb_t))
 
     (optional joe_newsb_optional_joe_moc
         (call moc_role_template (joe_r joe_newsb_t joe_moc_t
@@ -2364,7 +2139,6 @@
 
     (allow joe_newsb_t user_terminfo_home_t read_file_perms)
 
-    (call usersubject_application_subject (joe_newsb_t))
     (call usersubject_use_terminals (joe_newsb_t))
     (call usersubject_read_cert_files (joe_newsb_t)))
 
@@ -2373,8 +2147,7 @@
     (call screen_role_template (joe_r joe_t joe_screen_t
         user_screen_home_t user_screen_tmp_t))
 
-    (allow joe_t joe_screen_t (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (joe_t joe_screen_t))
+    (typeattributeset is_joe_application_subject (joe_screen_t))
 
     (allow joe_t user_screen_home_t manage_file_perms)
     (allow joe_t user_screen_home_t relabel_file_perms)
@@ -2391,7 +2164,6 @@
 
     (allow joe_screen_t user_terminfo_home_t read_file_perms)
 
-    (call usersubject_application_subject (joe_screen_t))
     (call usersubject_use_terminals (joe_screen_t))
     (call usersubject_setattr_terminals (joe_screen_t))
     (call usersubject_create_pty_node (joe_screen_t))
@@ -2401,17 +2173,14 @@
     (type joe_ssh_t)
     (call ssh_role_template (joe_r joe_t joe_ssh_t user_ssh_home_t))
 
+    (typeattributeset is_joe_application_subject (joe_ssh_t))
+
     (optional joe_ssh_optional_joe_gpgagent
         (call stream_connect_pattern (joe_ssh_t user_gpg_home_t user_gpgagent_home_t
             joe_gpgagent_t)))
 
     (context file_joe_user_ssh_home (joe_u object_r user_ssh_home_t ((s0)(s0))))
     (filecon "/home/joe/\.ssh(/.*)?" any file_joe_user_ssh_home)
-
-    (call usersubject_application_subject (joe_ssh_t))
-
-    (allow joe_t joe_ssh_t (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (joe_t joe_ssh_t))
  
     (allow joe_t user_ssh_home_t manage_dir_perms)
     (allow joe_t user_ssh_home_t relabel_dir_perms)
@@ -2441,30 +2210,26 @@
     (type joe_sshkeygen_t)
     (call ssh_role_template_keygen (joe_r joe_t joe_sshkeygen_t user_ssh_home_t))
 
-    (allow joe_t joe_sshkeygen_t (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (joe_t joe_sshkeygen_t))
+    (typeattributeset is_joe_application_subject (joe_sshkeygen_t))
 
     (call usersubject_home_dir_filetrans (joe_sshkeygen_t user_ssh_home_t dir ".ssh")) 
-
-    (call usersubject_application_subject (joe_sshkeygen_t))
 
     (type joe_sshagent_t)
     (call ssh_role_template_agent (joe_r joe_t joe_sshagent_t user_ssh_home_t user_sshagent_tmp_t))
 
+    (typeattributeset is_joe_application_subject (joe_sshagent_t))
+
     (allow joe_t user_sshagent_tmp_t manage_dir_perms)
     (allow joe_t user_sshagent_tmp_t relabel_dir_perms)
     (allow joe_t user_sshagent_tmp_t manage_sock_file_perms)
-    (allow joe_t user_sshagent_tmp_t relabel_sock_file_perms)
-
-    (allow joe_t joe_sshagent_t (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (joe_t joe_sshagent_t))
-
-    (call usersubject_application_subject (joe_sshagent_t)))
+    (allow joe_t user_sshagent_tmp_t relabel_sock_file_perms))
 
 (optional joe_optional_joe_pa
     (type joe_pa_t)
     (call pa_role_template (joe_r joe_t joe_pa_t user_pa_home_t
         user_pa_tmp_t user_pa_tmpfs_t user_pa_run_t))
+
+    (typeattributeset is_joe_application_subject (joe_pa_t))
 
     (optional joe_pactl_optional_joe_xserver
         (call xserver_client_subject (joe_pactl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
@@ -2474,11 +2239,6 @@
 
     (optional joe_pa_optional_joe_dbusd
         (call dbus_session_client_subject (joe_pa_t user_dbusd_tmp_t joe_dbusd_t)))
-
-    (allow joe_t joe_pa_t (process (signal signull sigstop sigkill)))
-    (call ps_subject_pattern (joe_t joe_pa_t))
-
-    (call usersubject_application_subject (joe_pa_t))
 
     (context file_joe_user_pa_home (joe_u object_r user_pa_home_t ((s0)(s0))))
     (filecon "/home/joe/\.esd_auth" file file_joe_user_pa_home)
@@ -2509,22 +2269,21 @@
     (call pa_role_template_pactl (joe_r joe_t joe_pactl_t user_pa_run_t
         joe_pa_t))
 
-    (allow joe_t joe_pactl_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (joe_t joe_pactl_t))
+    (typeattributeset is_joe_application_subject (joe_pactl_t))
 
     (call pa_client_subject (joe_r joe_pactl_t joe_pa_t user_pa_home_t
         user_pa_run_t user_pa_tmpfs_t))
 
     (call usersubject_home_dir_filetrans_user_config_dir (joe_pactl_t))
     (call usersubject_config_filetrans (joe_pactl_t user_pa_home_t dir "pulse"))
-    (call usersubject_run_user_dir_filetrans (joe_pactl_t user_pa_run_t dir "pulse"))
-
-    (call usersubject_application_subject (joe_pactl_t)))
+    (call usersubject_run_user_dir_filetrans (joe_pactl_t user_pa_run_t dir "pulse")))
 
 (optional joe_optional_joe_moc
     (type joe_moc_t)
     (call moc_role_template (joe_r joe_t joe_moc_t
         user_moc_home_t))
+
+    (typeattributeset is_joe_application_subject (joe_moc_t))
 
     (optional joe_moc_optional_joe_xserver
         (call xserver_client_subject (joe_moc_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
@@ -2547,7 +2306,6 @@
         (s0))))
     (filecon "/home/joe/\.moc(/.*)?" any file_joe_user_moc_home)
 
-    (call usersubject_application_subject (joe_moc_t))
     (call usersubject_list_home_dir (joe_moc_t))
     (call usersubject_list_generic_home_content (joe_moc_t))
     (call usersubject_read_generic_home_content_files (joe_moc_t))
@@ -2561,10 +2319,11 @@
     (type joe_sudo_t)
     (call sudo_role_template (joe_r joe_t joe_sudo_t))
 
+    (typeattributeset is_joe_application_subject (joe_sudo_t))
+
     (optional joe_sudo_optional_session
         (call sudo_role_change_template (joe_t joe_sudo_t session_t)))
 
-    (call usersubject_application_subject (joe_sudo_t))
     (call usersubject_use_terminals (joe_sudo_t))
     (call usersubject_relabel_terminals (joe_sudo_t))
 

@@ -100,9 +100,7 @@
     (roleattributeset is_mutt_pgp_role ARG1)
     (typeattributeset is_mutt_pgp_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 mutt_pgp_exec_t ARG3))
-    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (ARG2 ARG3)))
+    (call subtrans_pattern (ARG2 mutt_pgp_exec_t ARG3)))
 
 (macro mail_read_mutt_config_files ((type ARG1))
     (call files_search_etc (ARG1))

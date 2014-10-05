@@ -201,17 +201,13 @@
     (roleattributeset is_chfn_role ARG1)
     (typeattributeset is_chfn_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 chfn_exec_t ARG3))
-    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (ARG2 ARG3)))
+    (call subtrans_pattern (ARG2 chfn_exec_t ARG3)))
 
 (macro usermanage_role_template_passwd ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_passwd_role ARG1)
     (typeattributeset is_passwd_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 passwd_exec_t ARG3))
-    (allow ARG2 ARG3 (process (sigkill sigstop signal signull)))
-    (call ps_subject_pattern (ARG2 ARG3))
     (call auth_run_chkpwd (ARG3 ARG1)))
 
 (macro usermanage_subtrans_groupadd ((type ARG1))

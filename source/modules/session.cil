@@ -191,6 +191,9 @@
 (allow session_t self r_netlink_route_socket_perms)
 (allow session_t self rw_fifo_file_perms)
 
+(allow session_t is_session_application_subject (process (signal signull sigkill sigstop)))
+(call ps_subject_pattern (session_t is_session_application_subject))
+
 (call session_use_inherited_terminals (is_session_application_subject))
 (call session_search_all_home (is_session_application_subject))
 
@@ -1349,9 +1352,6 @@
     (type session_pactl_t)
     (call pa_role_template_pactl (session_r session_t session_pactl_t session_pa_run_t
         session_pa_t))
-
-    (allow session_t session_pactl_t (process (signal signull sigkill sigstop)))
-    (call ps_subject_pattern (session_t session_pactl_t))
 
     (call pa_client_subject (session_r session_pactl_t session_pa_t session_pa_home_t
         session_pa_run_t session_pa_tmpfs_t))
