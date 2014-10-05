@@ -725,8 +725,6 @@
     (type session_crontab_t)
     (call cron_role_template_crontab (session_r session_t session_crontab_t session_cron_spool_t session_crontab_tmp_t))
 
-    (allow session_t session_crontab_t (process (signal signull sigkill sigstop))) 
-
     (call cron_spool_filetrans (session_t session_cron_spool_t file "*"))
     (call cron_spool_filetrans (session_crontab_t session_cron_spool_t file "*"))
 
@@ -857,7 +855,6 @@
         (call mail_role_template_mutt (session_r session_elinks_t session_mutt_t
             session_mutt_home_t session_mutt_tmp_t)))
 
-    (allow session_t session_elinks_t (process (signal signull sigkill sigstop)))
     (dontaudit session_t session_elinks_t (unix_stream_socket (read write)))
     (dontaudit session_t session_elinks_t (tcp_socket (read write)))
 
@@ -964,8 +961,6 @@
     (optional session_git_optional_session_gpg
         (call gpg_role_template (session_r session_git_t session_gpg_t session_gpg_home_t)))
 
-    (allow session_t session_git_t (process (signal signull sigstop sigkill)))
-
     (context file_session_git_home (session_u object_r session_git_home_t ((s0)(s0))))
     (filecon "/root/.*/\.git(/.*)?" any file_session_git_home)
 
@@ -1016,8 +1011,6 @@
     (call git_role_template_email (session_r session_git_t session_gitemail_t
         session_gitemail_home_t))
 
-    (allow session_t session_gitemail_t (process (signal signull sigkill sigstop)))
-
     (context file_session_gitemail_home (session_u object_r session_gitemail_home_t ((s0)(s0))))
     (filecon "/root/.*/\.git/\.gitsendemail\.msg.*" file file_session_gitemail_home)
 
@@ -1059,8 +1052,6 @@
         (type session_pinentry_t)
         (call pinentry_role_template (session_r session_gpgagent_t session_pinentry_t))
 
-        (allow session_t session_pinentry_t (process (signal signull sigkill sigstop)))
-
         (call stream_connect_pattern (session_pinentry_t session_gpg_home_t session_gpgagent_home_t
             session_gpgagent_t))
 
@@ -1071,8 +1062,6 @@
 
     (optional session_gpg_optional_session_git
         (allow session_gpg_t session_git_tmp_t read_file_perms))
-
-    (allow session_t session_gpg_t (process (signal signull sigstop sigkill)))
 
     (context file_session_gpg_home (session_u object_r session_gpg_home_t ((s0)(s0))))
     (filecon "/root/\.gnupg(/.*)?" any file_session_gpg_home)
@@ -1095,8 +1084,6 @@
 
     (call gpg_role_template_agent (session_r session_gpg_t session_gpgagent_t
         session_gpgagent_home_t))
-
-    (allow session_t session_gpgagent_t (process (signal signull sigkill sigstop)))
 
     (context file_session_gpgagent_home (session_u object_r session_gpgagent_home_t ((s0)(s0))))
     (filecon "/root/\.gpg-agent-info" file file_session_gpgagent_home)
@@ -1122,8 +1109,6 @@
 
     (call stream_connect_pattern (session_gpgagent_t session_scd_tmp_t session_scd_tmp_t session_scd_t))
 
-    (allow session_t session_scd_t (process (signal signull sigkill sigstop)))
-
     (context file_session_scd_home (session_u object_r session_scd_home_t ((s0)(s0))))
     (filecon "/root/\.gnupg/reader_0\.status" file file_session_scd_home)
 
@@ -1135,8 +1120,6 @@
 
     (type session_gpgpcsc_t)
     (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t))
-
-    (allow session_t session_gpgpcsc_t (process (signal signull sigkill sigstop)))
 
     (call session_application_subject (session_gpgpcsc_t)))
 
@@ -1161,8 +1144,6 @@
     (filecon "/root/\.mutt_cache" file file_session_mutt_home)
     (filecon "/root/\.mutt_certificates" file file_session_mutt_home)
     (filecon "/root/\.mutt_passwords\.gpg" file file_session_mutt_home)
-
-    (allow session_t session_mutt_t (process (signal sigkill signull sigstop)))
 
     (call session_home_dir_filetrans (session_t session_mutt_home_t file ".muttrc")) 
     (call session_home_dir_filetrans (session_t session_mutt_home_t file ".mutt_passwords")) 
@@ -1268,8 +1249,6 @@
 
     (call session_application_subject (session_ssh_t))
 
-    (allow session_t session_ssh_t (process (signal signull sigkill sigstop)))
-
     (call usersubject_home_dir_filetrans (session_t session_ssh_home_t dir ".ssh"))
 
     (call session_home_dir_filetrans (session_ssh_t session_ssh_home_t dir ".ssh"))
@@ -1296,8 +1275,6 @@
     (type session_sshkeygen_t)
     (call ssh_role_template_keygen (session_r session_t session_sshkeygen_t session_ssh_home_t))
 
-    (allow session_t session_sshkeygen_t (process (signal signull sigkill sigstop)))
-
     (call session_home_dir_filetrans (session_sshkeygen_t session_ssh_home_t dir ".ssh"))
     
     (call session_application_subject (session_sshkeygen_t))
@@ -1310,8 +1287,6 @@
     (allow session_t session_sshagent_tmp_t relabel_dir_perms)
     (allow session_t session_sshagent_tmp_t manage_sock_file_perms)
     (allow session_t session_sshagent_tmp_t relabel_sock_file_perms)
-
-    (allow session_t session_sshagent_t (process (signal signull sigkill sigstop)))
     
     (call session_application_subject (session_sshagent_t)))
 
