@@ -6,7 +6,7 @@
 (call application_subject_entry (is_vmusuidwrapper_subject vmusuidwrapper_exec_t))
 
 (context file_vmusuidwrapper_exec (system_u object_r vmusuidwrapper_exec_t ((s0)(s0))))
-(filecon "/usr/bin/vmware-user-suid-wrapper" file file_wmusuidwrapper_exec)
+(filecon "/usr/bin/vmware-user-suid-wrapper" file file_vmusuidwrapper_exec)
 
 (macro vmware_role_template_vmusuidwrapper ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_vmware_role ARG1)
