@@ -759,7 +759,7 @@
 
             (typeattributeset is_joe_dbusd_subject (joe_atspibusl_t))
 
-            (call dbus_role_template_session_bus (joe_r joe_atspibusl_t is_joe_dbusd_session_subject is_joe_dbusd_tmp_object))
+            (call dbus_role_template_session_bus (joe_r joe_atspibusl_t joe_dbusd_t is_joe_dbusd_tmp_object))
 
             (call xserver_client_subject (joe_atspibusl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
  
