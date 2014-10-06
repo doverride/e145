@@ -194,6 +194,16 @@
 
     (typeattributeset is_joe_application_subject (joe_xhost_t))
 
+    (type joe_xrandr_t)
+    (call xserver_role_template_xrandr (joe_r joe_t joe_xrandr_t))
+
+    (typeattributeset is_joe_application_subject (joe_xrandr_t))
+
+    (type joe_xbacklight_t)
+    (call xserver_role_template_xbacklight (joe_r joe_t joe_xbacklight_t))
+
+    (typeattributeset is_joe_application_subject (joe_xbacklight_t))
+
     (type joe_xmodmap_t)
     (call xserver_role_template_xmodmap (joe_r joe_t joe_xmodmap_t))
 
@@ -1605,6 +1615,8 @@
     (call xserver_client_subject (joe_xhost_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
     (call xserver_client_subject (joe_xmodmap_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+    (call xserver_client_subject (joe_randr_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
     (allow joe_t user_xauth_home_t manage_file_perms)
     (allow joe_t user_xauth_home_t relabel_file_perms)
