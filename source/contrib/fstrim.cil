@@ -1,5 +1,3 @@
-(typepermissive fstrim_t)
-
 (roleattribute is_fstrim_role)
 
 (typeattribute is_fstrim_admin_subject)
