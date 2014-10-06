@@ -1,7 +1,7 @@
 target (gnome doing access checks):
     epiphany nautilus
     label /usr/bin/firefox for gnome access check
-    /usr/bin/vmware-user-suid-wrapper /usr/bin/bluetooth-sendto
+    /usr/bin/bluetooth-sendto
 
 target ssmtp (cron wants it)
 

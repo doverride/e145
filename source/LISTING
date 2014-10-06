@@ -98,6 +98,7 @@ contrib/udisks.cil
 contrib/upower.cil
 contrib/usermanage.cil
 contrib/usersubject.cil
+contrib/vmware.cil
 contrib/wpa.cil
 contrib/xlock.cil
 contrib/xpdf.cil
