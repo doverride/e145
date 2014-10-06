@@ -178,11 +178,7 @@
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG5 manage_file_perms)
-    (call files_tmp_filetrans (ARG3 ARG5 file "*"))
-    (allow ARG3 ARG6 manage_dir_perms)
-    (allow ARG3 ARG6 manage_file_perms)
-    (allow ARG3 ARG7 manage_dir_perms)
-    (allow ARG3 ARG7 manage_file_perms))
+    (call files_tmp_filetrans (ARG3 ARG5 file "*")))
 
 (macro tracker_role_template_trwb ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_tracker_role ARG1)

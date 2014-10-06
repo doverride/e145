@@ -15,6 +15,14 @@
 (context file_vmtoolsd_exec (system_u object_r vmtoolsd_exec_t ((s0)(s0))))
 (filecon "/usr/bin/vmtoolsd" file file_vmtoolsd_exec)
 
+(call files_search_run (is_vmusuidwrapper_subject))
+
+(call files_read_generic_usr_files (is_vmtoolsd_subject))
+
+(call journald_client_subject (is_vmtoolsd_subject))
+
+(call miscfiles_read_localization_files (is_vmtoolsd_subject))
+
 (macro vmware_role_template_vmusuidwrapper ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_vmware_role ARG1)
     (typeattributeset is_vmusuidwrapper_subject ARG3)
