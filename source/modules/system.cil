@@ -339,6 +339,8 @@
 (call systemd_getattr_exec_files (system_t))
 (call systemd_send_signal (system_t))
 
+(allow invalid_t self (process (sigchld)))
+
 (call systemd_send_sigchld (invalid_t))
 
 (booleanif (not secure_mode_insmod)
