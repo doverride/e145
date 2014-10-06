@@ -696,6 +696,10 @@
 (optional session_optional_seutil
     (call seutil_admin (session_t))
     (call seutil_run_chcon (session_t session_r))
+    (call seutil_run_selinuxenabled (session_t session_r))
+    (call seutil_run_selinuxdefcon (session_t session_r))
+    (call seutil_run_selinuxconlist (session_t session_r))
+    (call seutil_run_selinuxexeccon (session_t session_r))
     (call seutil_run_setools (session_t session_r))
     (call seutil_run_load_policy (session_t session_r))
     (call seutil_run_matchpathcon (session_t session_r))

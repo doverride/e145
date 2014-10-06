@@ -7,6 +7,8 @@
 (roleattribute is_setenforce_role)
 (roleattribute is_setools_role)
 
+(roleattribute is_seutil_role)
+
 (typeattribute can_write_binary_policy)
 (typeattribute not_associated_with_can_write_binary_policy)
 
@@ -17,7 +19,8 @@
 
 (typeattribute is_seutil_subject)
 (typeattributeset is_seutil_subject (load_policy_t secilc_t setfiles_t
-    setsebool_t setools_t setenforce_t matchpathcon_t chcon_t))
+    setsebool_t setools_t setenforce_t matchpathcon_t chcon_t
+    selinuxenabled_t selinuxdefcon_t selinuxconlist_t selinuxexeccon_t))
 
 (typeattribute is_seutil_file_object)
 (typeattributeset is_seutil_file_object (default_context_t selinux_conf_t
@@ -33,6 +36,42 @@
 
 (context file_load_policy_exec (system_u object_r load_policy_exec_t ((s0) (s0))))
 (filecon "/usr/sbin/load_policy" file file_load_policy_exec)
+
+(type selinuxenabled_t)
+(type selinuxenabled_exec_t)
+(call application_subject_entry (selinuxenabled_t selinuxenabled_exec_t))
+(roleattributeset is_seutil_role system_r)
+(roletype is_seutil_role selinuxenabled_t)
+
+(context file_selinuxenabled_exec (system_u object_r selinuxenabled_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/selinuxenabled" file file_selinuxenabled_exec)
+
+(type selinuxconlist_t)
+(type selinuxconlist_exec_t)
+(call application_subject_entry (selinuxconlist_t selinuxconlist_exec_t))
+(roleattributeset is_seutil_role system_r)
+(roletype is_seutil_role selinuxconlist_t)
+
+(context file_selinuxconlist_exec (system_u object_r selinuxconlist_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/selinuxconlist" file file_selinuxconlist_exec)
+
+(type selinuxdefcon_t)
+(type selinuxdefcon_exec_t)
+(call application_subject_entry (selinuxdefcon_t selinuxdefcon_exec_t))
+(roleattributeset is_seutil_role system_r)
+(roletype is_seutil_role selinuxdefcon_t)
+
+(context file_selinuxdefcon_exec (system_u object_r selinuxdefcon_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/selinuxdefcon" file file_selinuxdefcon_exec)
+
+(type selinuxexeccon_t)
+(type selinuxexeccon_exec_t)
+(call application_subject_entry (selinuxexeccon_t selinuxexeccon_exec_t))
+(roleattributeset is_seutil_role system_r)
+(roletype is_seutil_role selinuxexeccon_t)
+
+(context file_selinuxexeccon_exec (system_u object_r selinuxexeccon_exec_t ((s0) (s0))))
+(filecon "/usr/sbin/selinuxexeccon" file file_selinuxexeccon_exec)
 
 (type matchpathcon_t)
 (type matchpathcon_exec_t)
@@ -275,6 +314,34 @@
 (macro seutil_run_load_policy ((type ARG1)(role ARG2))
     (call seutil_subtrans_load_policy (ARG1))
     (roleattributeset is_load_policy_role (ARG2)))
+
+(macro seutil_subtrans_selinuxenabled ((type ARG1))
+    (call subtrans_pattern (ARG1 selinuxenabled_exec_t selinuxenabled_t)))
+
+(macro seutil_run_selinuxenabled ((type ARG1)(role ARG2))
+    (call seutil_subtrans_selinuxenabled (ARG1))
+    (roleattributeset is_seutil_role (ARG2)))
+
+(macro seutil_subtrans_selinuxdefcon ((type ARG1))
+    (call subtrans_pattern (ARG1 selinuxdefcon_exec_t selinuxdefcon_t)))
+
+(macro seutil_run_selinuxdefcon ((type ARG1)(role ARG2))
+    (call seutil_subtrans_selinuxdefcon (ARG1))
+    (roleattributeset is_seutil_role (ARG2)))
+
+(macro seutil_subtrans_selinuxexeccon ((type ARG1))
+    (call subtrans_pattern (ARG1 selinuxexeccon_exec_t selinuxexeccon_t)))
+
+(macro seutil_run_selinuxexeccon ((type ARG1)(role ARG2))
+    (call seutil_subtrans_selinuxexeccon (ARG1))
+    (roleattributeset is_seutil_role (ARG2)))
+
+(macro seutil_subtrans_selinuxconlist ((type ARG1))
+    (call subtrans_pattern (ARG1 selinuxconlist_exec_t selinuxconlist_t)))
+
+(macro seutil_run_selinuxconlist ((type ARG1)(role ARG2))
+    (call seutil_subtrans_selinuxconlist (ARG1))
+    (roleattributeset is_seutil_role (ARG2)))
 
 (macro seutil_subtrans_matchpathcon ((type ARG1))
     (call subtrans_pattern (ARG1 matchpathcon_exec_t matchpathcon_t)))

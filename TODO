@@ -4,7 +4,7 @@ target (gnome doing access checks):
     /usr/bin/vmware-user-suid-wrapper /usr/bin/bluetooth-sendto
 
 target ssmtp (cron wants it)
-    xrandr selinuxdefcon selinuxconlist
+    selinuxdefcon selinuxconlist
 
 pulseaudio client subjects: review them, there may be duplicate rules
 
