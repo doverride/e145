@@ -294,6 +294,14 @@
 
 (call systemd_use_fd (setfiles_t))
 
+(call selinux_validate_context (selinuxdefcon_t))
+(call selinux_compute_user_contexts (selinuxdefcon_t))
+
+(call auth_nsswitch_client_subject (selinuxdefcon_t))
+
+(call seutil_read_config_files (selinuxdefcon_t))
+(call seutil_read_default_context_files (selinuxdefcon_t))
+
 (allow is_seutil_admin_subject is_seutil_subject signal_perms)
 (allow is_seutil_admin_subject is_seutil_subject (process (ptrace)))
 (call ps_subject_pattern (is_seutil_admin_subject is_seutil_subject))
