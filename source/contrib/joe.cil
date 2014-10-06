@@ -1590,6 +1590,8 @@
             (typeattributeset is_joe_gnome_application_object (glib_exec_t))
         )
 
+        (allow joe_dbuslaunch_t joe_dbusd_t (process (signal)))
+
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
         (allow joe_t user_dbusd_tmp_t manage_sock_file_perms)
