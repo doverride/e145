@@ -8,6 +8,7 @@
 (call application_subject_entry (is_firefox_subject firefox_exec_t))
 
 (context file_firefox_exec (system_u object_r firefox_exec_t ((s0)(s0))))
+(filecon "/usr/bin/firefox" file file_firefox_exec)
 (filecon "/usr/lib/firefox/firefox" file file_firefox_exec)
 
 (type firefox_plugs_exec_t)
