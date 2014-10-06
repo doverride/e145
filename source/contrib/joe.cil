@@ -604,6 +604,12 @@
         (type joe_dbusd_t)
         (call dbus_role_template_session_bus (joe_r joe_dbuslaunch_t joe_dbusd_t user_dbusd_tmp_t))
 
+        (optional joe_dbusd_optional_joe_tracker
+            (allow joe_dbusd_t joe_trminfs_t (fd (use)))
+            (allow joe_dbusd_t joe_trminfs_t (fifo_file (read)))
+            (allow joe_dbusd_t joe_trminapp_t (fd (use)))
+            (allow joe_dbusd_t joe_trminapp_t (fifo_file (read))))
+
         (typeattributeset is_joe_application_subject (joe_dbusd_t))
 
         (typeattribute is_joe_dbusd_tmp_object)
@@ -616,11 +622,9 @@
 
         (allow is_joe_dbusd_subject joe_dbusd_t (unix_stream_socket (getattr)))
 
-        (optional joe_dbusd_optional_joe_tracker
-            (allow joe_dbusd_t joe_trminfs_t (fd (use)))
-            (allow joe_dbusd_t joe_trminfs_t (fifo_file (read))))
-
         (optional joe_optional_joe_gnome
+            (typeattribute is_joe_gnome_application_object)
+
             (type joe_gsession_t)
             (call gsession_role_template (joe_r joe_t joe_gsession_t user_iceauth_home_t user_iceauth_tmp_t
                 user_gsession_tmpfs_t user_gsession_conf_t))
@@ -636,6 +640,10 @@
             (call stream_connect_pattern (is_joe_gsession_subject user_iceauth_tmp_t user_iceauth_tmp_t joe_gsession_t))
 
             (typeattributeset is_joe_dconf_client_subject (joe_gsession_t))
+
+            (allow joe_gsession_t is_joe_gnome_application_object (file (getattr execute)))
+
+            (typeattributeset is_joe_gnome_application_object (gsession_exec_t))
 
             (context file_joe_user_iceauth_home (joe_u object_r user_iceauth_home_t ((s0)(s0))))
             (filecon "/home/joe/\.ICEauthority" file file_joe_user_iceauth_home)
@@ -705,6 +713,7 @@
             (type joe_gsdprinter_t)
             (call gsd_role_template_printer (joe_r joe_gsd_t joe_gsdprinter_t))
 
+            (typeattributeset is_joe_gsession_subject (joe_gsdprinter_t))
             (typeattributeset is_joe_application_subject (joe_gsdprinter_t))
 
             (call dbus_session_client_subject (joe_gsdprinter_t user_dbusd_tmp_t joe_dbusd_t))
@@ -758,6 +767,8 @@
             (call usersubject_run_user_dir_filetrans_user_run (is_joe_atspi_client_subject dir "*"))
 
             (typeattributeset is_joe_dbusd_subject (joe_atspibusl_t))
+
+            (typeattributeset is_joe_gnome_application_object (atspibusl_exec_t))
 
             (call dbus_role_template_session_bus (joe_r joe_atspibusl_t joe_dbusd_t user_dbusd_tmp_t))
 
@@ -871,6 +882,8 @@
             (call gvfs_role_template_gvfsdarch (joe_r joe_gvfsd_t joe_gvfsdarch_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsdarch_t))
+
+            (typeattributeset is_joe_gnome_application_object (gvfsdarch_exec_t))
 
             (type joe_gvfsdburn_t)
             (call gvfs_role_template_gvfsdburn (joe_r joe_gvfsd_t joe_gvfsdburn_t))
@@ -1012,6 +1025,8 @@
             (typeattributeset is_joe_ibusd_client_subject (joe_gshell_t))
             (typeattributeset is_joe_gsession_subject (joe_gshell_t))
 
+            (allow joe_gshell_t is_joe_gnome_application_object (file (getattr execute)))
+
             (context file_joe_user_gshell_data (joe_u object_r user_gshell_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gnome-shell(/.*)?" any file_joe_user_gshell_data)
 
@@ -1118,6 +1133,8 @@
 
             (call dbus_session_client_subject (joe_giscw_t user_dbusd_tmp_t joe_dbusd_t))
 
+            (typeattributeset is_joe_gnome_application_object (giswt_exec_t))
+
             (type joe_canberra_t)
             (call canberra_role_template_canberra (joe_r joe_gsession_t joe_canberra_t
                 user_canberra_tmpfs_t))
@@ -1209,6 +1226,8 @@
             (allow is_joe_ibusd_client_subject user_ibus_conf_t read_file_perms)
             (call usersubject_config_filetrans (is_joe_ibusd_client_subject user_ibus_conf_t dir "ibus"))
 
+            (typeattributeset is_joe_gnome_application_object (ibusd_exec_t))
+
             (call usersubject_manage_generic_config_dirs (is_joe_ibusd_client_subject))
             (call usersubject_home_dir_filetrans_user_config_dir (is_joe_ibusd_client_subject))
 
@@ -1287,6 +1306,8 @@
             (typeattributeset is_joe_atspi_client_subject (joe_caribou_t))
 
             (typeattributeset is_joe_dbusd_subject (joe_caribou_t))
+
+            (typeattributeset is_joe_gnome_application_object (caribou_exec_t))
 
             (call usersubject_home_dir_filetrans_user_cache_dir (joe_caribou_t))
 
@@ -1452,11 +1473,13 @@
             (allow joe_trstore_t joe_trminfs_t (fd (use)))
             (allow joe_trstore_t joe_trminfs_t (fifo_file (read)))
 
+            (allow joe_trstore_t joe_trminapp_t (fd (use)))
+            (allow joe_trstore_t joe_trminapp_t (fifo_file (read)))
+
             (type joe_gdbus_t)
             (call glib_role_template_gdbus (joe_r joe_gsession_t joe_gdbus_t))
 
             (typeattributeset is_joe_application_subject (joe_gdbus_t))
-
             (typeattributeset is_joe_gsession_subject (joe_gdbus_t))
 
             (call dbus_session_client_subject (joe_gdbus_t user_dbusd_tmp_t joe_dbusd_t))
@@ -1547,13 +1570,14 @@
             (typeattributeset is_joe_dconf_client_subject (joe_gsoftware_t))
             (typeattributeset is_joe_gsession_subject (joe_gsoftware_t))
  
+            (typeattributeset is_joe_gnome_application_object (gsoftware_exec_t))
+
             (call xserver_client_subject (joe_gsoftware_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_xdggtkupd_t)
             (call xdg_role_template (joe_r joe_gsession_t joe_xdggtkupd_t))
  
             (typeattributeset is_joe_application_subject (joe_xdggtkupd_t))
-
             (typeattributeset is_joe_gsession_subject (joe_xdggtkupd_t))
 
             (call usersubject_read_generic_config_files (joe_xdggtkupd_t))
@@ -1561,6 +1585,24 @@
             (call usersubject_manage_gtk_config_dirs (joe_xdggtkupd_t))
             (call usersubject_manage_gtk_config_files (joe_xdggtkupd_t))
             (call usersubject_config_filetrans_user_gtk_config_dir (joe_xdggtkupd_t))
+
+            (type joe_vmusuidwrapper_t)
+            (call vmware_role_template_vmusuidwrapper (joe_r joe_gsession_t joe_vmusuidwrapper_t))
+
+            (typeattributeset is_joe_application_subject (joe_vmusuidwrapper_t))
+            (typeattributeset is_joe_gsession_subject (joe_vmusuidwrapper_t))
+
+            (typeattributeset is_joe_gnome_application_object (vmusuidwrapper_exec_t))
+
+            (type joe_vmtoolsd_t)
+            (call vmware_role_template_vmtoolsd (joe_r joe_vmusuidwrapper_t joe_vmtoolsd_t))
+
+            (typeattributeset is_joe_application_subject (joe_vmtoolsd_t))
+
+            ; TODO
+
+            (typeattributeset is_joe_gnome_application_object (gctrlc_exec_t))
+            (typeattributeset is_joe_gnome_application_object (glib_exec_t))
         )
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))

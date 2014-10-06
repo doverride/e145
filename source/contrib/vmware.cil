@@ -1,6 +1,7 @@
 (roleattribute is_vmware_role)
 
 (typeattribute is_vmusuidwrapper_subject)
+(typeattribute is_vmtoolsd_subject)
 
 (type vmusuidwrapper_exec_t)
 (call application_subject_entry (is_vmusuidwrapper_subject vmusuidwrapper_exec_t))
@@ -8,8 +9,20 @@
 (context file_vmusuidwrapper_exec (system_u object_r vmusuidwrapper_exec_t ((s0)(s0))))
 (filecon "/usr/bin/vmware-user-suid-wrapper" file file_vmusuidwrapper_exec)
 
+(type vmtoolsd_exec_t)
+(call application_subject_entry (is_vmtoolsd_subject vmtoolsd_exec_t))
+
+(context file_vmtoolsd_exec (system_u object_r vmtoolsd_exec_t ((s0)(s0))))
+(filecon "/usr/bin/vmtoolsd" file file_vmtoolsd_exec)
+
 (macro vmware_role_template_vmusuidwrapper ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_vmware_role ARG1)
     (typeattributeset is_vmusuidwrapper_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 vmusuidwrapper_exec_t ARG3)))
+
+(macro vmware_role_template_vmtoolsd ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_vmware_role ARG1)
+    (typeattributeset is_vmtoolsd_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 vmtoolsd_exec_t ARG3)))

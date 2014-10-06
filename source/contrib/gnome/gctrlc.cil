@@ -32,3 +32,6 @@
     (typeattributeset is_gctrlcsp_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gctrlcsp_exec_t ARG3)))
+
+(macro gctrlc_check_exec_gctrlc_executable_files ((type ARG1))
+    (allow ARG1 gctrlc_exec_t (file (getattr execute))))

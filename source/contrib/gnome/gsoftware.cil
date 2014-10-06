@@ -33,3 +33,6 @@
     (typeattributeset is_gsoftware_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gsoftware_exec_t ARG3)))
+
+(macro gsoftware_check_exec_gsoftware_executable_files ((type ARG1))
+    (allow ARG1 gsoftware_exec_t (file (getattr execute))))

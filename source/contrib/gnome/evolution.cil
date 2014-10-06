@@ -38,6 +38,8 @@
     (type user_evosrcreg_data_t)
     (call usersubject_data_object (user_evosrcreg_data_t)))
 
+(allow is_evoanotify_subject self (unix_stream_socket (listen accept)))
+
 (call system_read_generic_proc_files (is_evoanotify_subject))
 
 (call devices_read_urandom (is_evoanotify_subject))

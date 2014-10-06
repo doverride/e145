@@ -10,6 +10,8 @@
 
 (allow is_goad_subject self (key (write link search read view)))
 
+(call system_read_sysctl_vm_overcommit_files (is_goad_subject))
+
 (call devices_read_urandom (is_goad_subject))
 
 (call files_read_generic_etc_files (is_goad_subject)) ; FIXME: /etc/krb5.conf

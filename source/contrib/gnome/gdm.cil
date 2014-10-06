@@ -189,6 +189,8 @@
 (call fuse_exec_fusermount (gdm_t))
 (call fuse_read_config_files (gdm_t))
 
+(call gctrlc_check_exec_gctrlc_executable_files (gdm_t))
+
 (call gdm_read_config_files (gdm_t))
 (call gdm_manage_var_lib_dirs (gdm_t))
 (call gdm_manage_var_lib_files (gdm_t))
@@ -212,6 +214,8 @@
 (call gsession_exec_helper (gdm_t))
 
 (call gshell_exec_gshell (gdm_t))
+
+(call gsoftware_check_exec_gsoftware_executable_files (gdm_t))
 
 (call gvfs_exec_gvfsd (gdm_t))
 (call gvfs_exec_gvfsdfuse (gdm_t))

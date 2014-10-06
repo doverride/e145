@@ -115,6 +115,8 @@
 
 (allow is_dbus_launch_subject self rw_fifo_file_perms)
 
+(call dbus_search_var_lib (is_dbus_launch_subject))
+
 (call files_search_tmp (is_dbus_session_client_subject))
 
 (allow is_dbus_session_subject self (process (sigkill)))
