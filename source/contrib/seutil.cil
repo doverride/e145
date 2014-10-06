@@ -302,6 +302,12 @@
 (call seutil_read_config_files (selinuxdefcon_t))
 (call seutil_read_default_context_files (selinuxdefcon_t))
 
+(call selinux_validate_context (selinuxconlist_t))
+(call selinux_compute_user_contexts (selinuxconlist_t))
+
+(call seutil_read_config_files (selinuxconlist_t))
+(call seutil_read_default_context_files (selinuxconlist_t))
+
 (allow is_seutil_admin_subject is_seutil_subject signal_perms)
 (allow is_seutil_admin_subject is_seutil_subject (process (ptrace)))
 (call ps_subject_pattern (is_seutil_admin_subject is_seutil_subject))
