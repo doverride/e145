@@ -1,5 +1,5 @@
 target (gnome doing access checks):
-    epiphany nautilus
+    epiphany nautilus evolution
     label /usr/bin/firefox for gnome access check
     /usr/bin/bluetooth-sendto
 
