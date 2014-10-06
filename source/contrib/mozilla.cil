@@ -36,6 +36,7 @@
 (call system_read_sysctl_crypto_files (is_firefox_subject))
 
 (call commands_execute_bin_files (is_firefox_subject))
+(call commands_execute_shell_files (is_firefox_subject)) ; /usr/bin/firefox
 
 (call devices_read_lnk_files (is_firefox_subject))
 (call devices_list_sysfs (is_firefox_subject))

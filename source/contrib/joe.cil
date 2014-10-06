@@ -382,6 +382,8 @@
 
         (typeattributeset is_joe_application_subject (joe_firefox_t))
 
+        (call mozilla_role_template_xremotec (joe_r joe_firefox_t joe_xremotec_t))
+ 
         (optional joe_firefox_optional_joe_xpdf
             (call xpdf_role_template (joe_r joe_firefox_t joe_xpdf_t user_xpdf_home_t user_xpdf_tmp_t)))
 
