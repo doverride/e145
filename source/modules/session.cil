@@ -816,9 +816,7 @@
         (call pa_client_subject (session_r session_ffmpeg_t session_pa_t session_pa_home_t
             session_pa_run_t session_ffmpeg_tmpfs_t))
 
-        (call session_home_dir_filetrans_session_config_dir (session_ffmpeg_t))
-        (call session_config_filetrans (session_ffmpeg_t session_pa_home_t dir "pulse"))
-        (call session_run_user_dir_filetrans (session_ffmpeg_t session_pa_run_t dir "pulse")))
+        (typeattributeset is_session_pa_client_subject (session_ffmpeg_t)))
 
     (call session_manage_generic_home_content_files (session_ffmpeg_t))
     (call session_home_dir_filetrans_session_home (session_ffmpeg_t file "*"))
@@ -1301,6 +1299,14 @@
 
     (call session_application_subject (session_pa_t))
 
+    (typeattribute is_session_pa_client_subject)
+
+    (call session_config_filetrans (is_session_pa_client_subject user_pa_home_t dir "pulse"))
+    (call session_run_user_dir_filetrans (is_session_pa_client_subject user_pa_run_t dir "pulse"))
+
+    (call session_manage_generic_config_dirs (is_session_pa_client_subject))
+    (call session_home_dir_filetrans_session_config_dir (is_session_pa_client_subject))
+
     (context file_session_pa_home (session_u object_r session_pa_home_t ((s0)(s0))))
     (filecon "/root/\.esd_auth" file file_session_pa_home)
     (filecon "/root/\.config/pulse(/.*)?" any file_session_pa_home)
@@ -1335,9 +1341,7 @@
     (call pa_client_subject (session_r session_pactl_t session_pa_t session_pa_home_t
         session_pa_run_t session_pa_tmpfs_t))
 
-    (call session_home_dir_filetrans_session_config_dir (session_pactl_t))
-    (call session_config_filetrans (session_pactl_t session_pa_home_t dir "pulse"))
-    (call session_run_user_dir_filetrans (session_pactl_t session_pa_run_t dir "pulse"))
+    (typeattributeset is_session_pa_client_subject (session_pactl_t))
  
     (call session_application_subject (session_pactl_t)))
 
@@ -1353,9 +1357,7 @@
         (call pa_client_subject (session_r session_moc_t session_pa_t session_pa_home_t
             session_pa_run_t session_pa_tmpfs_t))
 
-        (call session_home_dir_filetrans_session_config_dir (session_moc_t))
-        (call session_config_filetrans (session_moc_t session_pa_home_t dir "pulse"))
-        (call session_run_user_dir_filetrans (session_moc_t session_pa_run_t dir "pulse")))
+        (typeattributeset is_session_pa_client_subject (session_moc_t)))
 
     (context file_session_moc_home (session_u object_r session_moc_home_t ((s0)
         (s0))))
@@ -1572,6 +1574,10 @@
 (macro session_home_dir_filetrans_session_cert_dir ((type ARG1))
     (call session_search_home_dir (ARG1))
     (call filetrans_pattern (ARG1 session_home_dir_t session_cert_t dir ".pki")))
+
+(macro session_manage_generic_config_dirs ((type ARG1))
+    (call session_search_home_dir (ARG1))
+    (call manage_dirs_pattern (ARG1 session_conf_t session_conf_t)))
 
 (macro session_home_dir_filetrans_session_config_dir ((type ARG1))
     (call session_search_home_dir (ARG1))

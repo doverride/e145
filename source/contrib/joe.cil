@@ -353,9 +353,7 @@
             (call pa_client_subject (joe_r joe_mplayer_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_mplayer_tmpfs_t))
 
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_mplayer_t))
-            (call usersubject_config_filetrans (joe_mplayer_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_mplayer_t user_pa_run_t dir "pulse")))
+            (typeattributeset is_joe_pa_client_subject (joe_mplayer_t)))
 
         (context file_joe_user_mplayer_home (joe_u object_r user_mplayer_home_t ((s0)(s0))))
         (filecon "/home/joe/\.mplayer(/.*)?" any file_joe_user_mplayer_home)
@@ -397,17 +395,13 @@
             (call pa_client_subject (joe_r joe_firefox_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_firefox_tmpfs_t))
 
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_firefox_t))
-            (call usersubject_config_filetrans (joe_firefox_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_firefox_t user_pa_run_t dir "pulse")))
+            (typeattributeset is_joe_pa_client_subject (joe_firefox_t)))
 
         (optional joe_plugs_optional_joe_pa
             (call pa_client_subject (joe_r joe_plugs_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_plugs_tmpfs_t))
 
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_plugs_t))
-            (call usersubject_config_filetrans (joe_plugs_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_plugs_t user_pa_run_t dir "pulse")))
+            (typeattributeset is_joe_pa_client_subject (joe_plugs_t)))
 
         (optional joe_firefox_optional_googletalk
             (type joe_googletalk_t)
@@ -420,9 +414,7 @@
                 (call pa_client_subject (joe_r joe_googletalk_t joe_pa_t user_pa_home_t
                     user_pa_run_t user_googletalk_tmpfs_t))
 
-                (call usersubject_home_dir_filetrans_user_config_dir (joe_googletalk_t))
-                (call usersubject_config_filetrans (joe_googletalk_t user_pa_home_t dir "pulse"))
-                (call usersubject_run_user_dir_filetrans (joe_googletalk_t user_pa_run_t dir "pulse")))
+                (typeattributeset is_joe_pa_client_subject (joe_googletalk_t)))
 
             (context file_joe_user_googletalk_config (joe_u object_r user_googletalk_config_t ((s0)(s0))))
             (filecon "/home/joe/\.config/google-googletalkplugin(/.*)?" any file_joe_user_googletalk_config)
@@ -659,9 +651,7 @@
 
             (typeattributeset is_joe_gsession_subject (joe_pa_t))
 
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_gsession_t))
-            (call usersubject_config_filetrans (joe_gsession_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_gsession_t user_pa_run_t dir "pulse"))
+            (typeattributeset is_joe_pa_client_subject (joe_gsession_t))
  
             (call usersubject_home_dir_filetrans (joe_t user_iceauth_home_t file ".ICEauthority-c"))
             (call usersubject_home_dir_filetrans (joe_t user_iceauth_home_t file ".ICEauthority"))
@@ -700,12 +690,10 @@
             (call pa_client_subject (joe_r joe_gsd_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_gsd_tmpfs_t))
 
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_gsd_t))
-            (call usersubject_config_filetrans (joe_gsd_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_gsd_t user_pa_run_t dir "pulse"))
+            (typeattributeset is_joe_pa_client_subject (joe_gsd_t))
 
-            (call usersubject_manage_generic_data_dirs (joe_gsd_t)) ; ~/.local/share/applications
-            (call usersubject_home_dir_filetrans_user_data_dir (joe_gsd_t))
+            ; (call usersubject_manage_generic_data_dirs (joe_gsd_t)) ; ~/.local/share/applications
+            ; (call usersubject_home_dir_filetrans_user_data_dir (joe_gsd_t))
 
             (allow joe_t user_gsd_tmpfs_t manage_file_perms)
             (allow joe_t user_gsd_tmpfs_t relabel_file_perms)
@@ -724,7 +712,6 @@
             (call gkeyring_role_template_gkeyringd (joe_r joe_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
 
             (typeattributeset is_joe_application_subject (joe_gkeyringd_t))
-
             (typeattributeset is_joe_dconf_client_subject (joe_gkeyringd_t))
             (typeattributeset is_joe_gsession_subject (joe_gkeyringd_t))
 
@@ -757,9 +744,7 @@
             (call atspi_role_template_busl (joe_r joe_dbusd_t joe_atspibusl_t))
 
             (typeattributeset is_joe_application_subject (joe_atspibusl_t))
-
             (typeattribute is_joe_atspi_client_subject)
-
             (typeattributeset is_joe_dconf_client_subject (joe_atspibusl_t))
 
             (allow is_joe_atspi_client_subject is_joe_atspi_client_subject (unix_stream_socket (connectto)))
@@ -769,7 +754,6 @@
             (call usersubject_run_user_dir_filetrans_user_run (is_joe_atspi_client_subject dir "*"))
 
             (typeattributeset is_joe_dbusd_subject (joe_atspibusl_t))
-
             (typeattributeset is_joe_gnome_application_object (atspibusl_exec_t))
 
             (call dbus_role_template_session_bus (joe_r joe_atspibusl_t joe_dbusd_t user_dbusd_tmp_t))
@@ -780,7 +764,6 @@
             (call atspi_role_template_regd (joe_r joe_dbusd_t joe_atspiregd_t))
 
             (typeattributeset is_joe_application_subject (joe_atspiregd_t))
-
             (typeattributeset is_joe_dbusd_subject (joe_atspiregd_t))
 
             (call xserver_client_subject (joe_atspiregd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
@@ -794,7 +777,6 @@
             (call spice_role_template_vdagent (joe_r joe_gsession_t joe_vdagent_t))
 
             (typeattributeset is_joe_application_subject (joe_vdagent_t))
-
             (typeattributeset is_joe_gsession_subject (joe_vdagent_t))
 
             (call usersubject_read_generic_config_files (joe_vdagent_t)) ; ~/.config/user-dirs.dirs
@@ -805,7 +787,6 @@
             (call gvfs_role_template_gvfsd (joe_r joe_dbusd_t joe_gvfsd_t user_gvfsd_run_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsd_t))
-
             (typeattributeset is_joe_dbusd_subject (joe_gvfsd_t))
 
             (allow joe_t user_gvfsd_run_t manage_dir_perms)
@@ -824,7 +805,6 @@
             (call gvfs_role_template_gvfsafcvm (joe_r joe_dbusd_t joe_gvfsafcvm_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsafcvm_t))
-
             (typeattributeset is_joe_dbusd_subject (joe_gvfsafcvm_t))
 
             (call dbus_session_client_subject (joe_gvfsafcvm_t user_dbusd_tmp_t joe_dbusd_t))
@@ -833,7 +813,6 @@
             (call gvfs_role_template_gvfsgoavm (joe_r joe_dbusd_t joe_gvfsgoavm_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsgoavm_t))
-
             (typeattributeset is_joe_dbusd_subject (joe_gvfsgoavm_t))
 
             (call dbus_session_client_subject (joe_gvfsgoavm_t user_dbusd_tmp_t joe_dbusd_t))
@@ -842,7 +821,6 @@
             (call gvfs_role_template_gvfsgph2vm (joe_r joe_dbusd_t joe_gvfsgph2vm_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsgph2vm_t))
-
             (typeattributeset is_joe_dbusd_subject (joe_gvfsgph2vm_t))
 
             (call dbus_session_client_subject (joe_gvfsgph2vm_t user_dbusd_tmp_t joe_dbusd_t))
@@ -851,7 +829,6 @@
             (call gvfs_role_template_gvfsmtpvm (joe_r joe_dbusd_t joe_gvfsmtpvm_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsmtpvm_t))
-
             (typeattributeset is_joe_dbusd_subject (joe_gvfsmtpvm_t))
 
             (call dbus_session_client_subject (joe_gvfsmtpvm_t user_dbusd_tmp_t joe_dbusd_t))
@@ -860,7 +837,6 @@
             (call gvfs_role_template_gvfsudisks2vm (joe_r joe_dbusd_t joe_gvfsudisks2vm_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsudisks2vm_t))
-
             (typeattributeset is_joe_dbusd_subject (joe_gvfsudisks2vm_t))
 
             (call dbus_session_client_subject (joe_gvfsudisks2vm_t user_dbusd_tmp_t joe_dbusd_t))
@@ -884,7 +860,6 @@
             (call gvfs_role_template_gvfsdarch (joe_r joe_gvfsd_t joe_gvfsdarch_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsdarch_t))
-
             (typeattributeset is_joe_gnome_application_object (gvfsdarch_exec_t))
 
             (type joe_gvfsdburn_t)
@@ -962,7 +937,6 @@
             (call gvfs_role_template_gvfsdmetad (joe_r joe_dbusd_t joe_gvfsdmetad_t user_gvfsdmetad_data_t))
 
             (typeattributeset is_joe_application_subject (joe_gvfsdmetad_t))
-
             (typeattributeset is_joe_dbusd_subject (joe_gvfsdmetad_t))
 
             (context file_joe_user_gvfsdmetad_data (joe_u object_r user_gvfsdmetad_data_t ((s0)(s0))))
@@ -1035,9 +1009,7 @@
             (call pa_client_subject (joe_r joe_gshell_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_gshell_tmpfs_t))
 
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_gshell_t))
-            (call usersubject_config_filetrans (joe_gshell_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_gshell_t user_pa_run_t dir "pulse"))
+            (typeattributeset is_joe_pa_client_subject (joe_gshell_t))
 
             (allow joe_t user_gshell_data_t manage_dir_perms)
             (allow joe_t user_gshell_data_t relabel_dir_perms)
@@ -1151,9 +1123,7 @@
             (call pa_client_subject (joe_r joe_canberra_t joe_pa_t user_pa_home_t
                 user_pa_run_t user_canberra_tmpfs_t))
 
-            (call usersubject_home_dir_filetrans_user_config_dir (joe_canberra_t))
-            (call usersubject_config_filetrans (joe_canberra_t user_pa_home_t dir "pulse"))
-            (call usersubject_run_user_dir_filetrans (joe_canberra_t user_pa_run_t dir "pulse"))
+            (typeattributeset is_joe_pa_client_subject (joe_canberra_t)) 
 
             (call usersubject_manage_generic_cache_files (joe_canberra_t))
 
@@ -1746,9 +1716,7 @@
         (call pa_client_subject (joe_r joe_ffmpeg_t joe_pa_t user_pa_home_t
             user_pa_run_t user_ffmpeg_tmpfs_t))
  
-        (call usersubject_home_dir_filetrans_user_config_dir (joe_ffmpeg_t))
-        (call usersubject_config_filetrans (joe_ffmpeg_t user_pa_home_t dir "pulse"))
-        (call usersubject_run_user_dir_filetrans (joe_ffmpeg_t user_pa_run_t dir "pulse")))
+        (typeattributeset is_joe_pa_client_subject (joe_ffmpeg_t)))
 
     (call usersubject_manage_generic_home_content_files (joe_ffmpeg_t))
     (call usersubject_home_dir_filetrans_user_home (joe_ffmpeg_t file "*"))
@@ -2274,6 +2242,14 @@
 
     (typeattributeset is_joe_application_subject (joe_pa_t))
 
+    (typeattribute is_joe_pa_client_subject)
+
+    (call usersubject_config_filetrans (is_joe_pa_client_subject user_pa_home_t dir "pulse"))
+    (call usersubject_run_user_dir_filetrans (is_joe_pa_client_subject user_pa_run_t dir "pulse"))
+
+    (call usersubject_manage_generic_config_dirs (is_joe_pa_client_subject))
+    (call usersubject_home_dir_filetrans_user_config_dir (is_joe_pa_client_subject))
+
     (optional joe_pactl_optional_joe_xserver
         (call xserver_client_subject (joe_pactl_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
 
@@ -2317,9 +2293,7 @@
     (call pa_client_subject (joe_r joe_pactl_t joe_pa_t user_pa_home_t
         user_pa_run_t user_pa_tmpfs_t))
 
-    (call usersubject_home_dir_filetrans_user_config_dir (joe_pactl_t))
-    (call usersubject_config_filetrans (joe_pactl_t user_pa_home_t dir "pulse"))
-    (call usersubject_run_user_dir_filetrans (joe_pactl_t user_pa_run_t dir "pulse")))
+    (typeattributeset is_joe_pa_client_subject (joe_pactl_t)))
 
 (optional joe_optional_joe_moc
     (type joe_moc_t)
@@ -2335,9 +2309,7 @@
         (call pa_client_subject (joe_r joe_moc_t joe_pa_t user_pa_home_t
             user_pa_run_t user_pa_tmpfs_t))
 
-        (call usersubject_home_dir_filetrans_user_config_dir (joe_moc_t))
-        (call usersubject_config_filetrans (joe_moc_t user_pa_home_t dir "pulse"))
-        (call usersubject_run_user_dir_filetrans (joe_moc_t user_pa_run_t dir "pulse")))
+        (typeattributeset is_joe_pa_client_subject (joe_moc_t)))
 
     (optional joe_moc_optional_joe_newsb
         (allow joe_moc_t user_newsb_home_t rw_inherited_file_perms))
