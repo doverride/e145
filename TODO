@@ -1,18 +1,12 @@
 target (gnome doing access checks):
-    epiphany nautilus evolution
-    label /usr/bin/firefox for gnome access check
-    /usr/bin/bluetooth-sendto
+    epiphany (gsoftware) nautilus evolution bluetooth-sendto
 
-target ssmtp (cron wants it)
+target ssmtp (cron wants it), loadkeys (so that i dont have to give sys_tty_config to session_t)
 
 pulseaudio client subjects: review them, there may be duplicate rules
 
 session: re-evaluate dbus_system_client_subject(session_t) (packagekit plugin i think)
     and capability sys_admin
-
-atspi: deal with accessibility technology more gracefully
-    various components listen and accept unix stream socket connections
-    on atspi sockets in ~
 
 xdg: anyone how maintains anything in .config/.local/.cache needs to also
     be able to maintain those dirs properly
