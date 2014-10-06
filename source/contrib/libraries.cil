@@ -109,6 +109,10 @@
 (macro libraries_use_ld_so ((type ARG1))
     (call libraries_list (ARG1))
     (allow ARG1 ld_so_t mmap_file_perms)
+    (call libraries_read_ld_so_cache_files (ARG1)))
+
+(macro libraries_read_ld_so_cache_files ((type ARG1))
+    (call files_search_etc (ARG1))
     (allow ARG1 ld_so_cache_t read_file_perms))
 
 (macro libraries_read_lib_files ((type ARG1))
