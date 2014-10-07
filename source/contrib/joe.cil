@@ -1616,9 +1616,15 @@
             (call xserver_client_subject (joe_vmtoolsd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_gstpluginsc_t)
-            (call gstreamer_role_template_gstpluginsc (joe_r joe_gis_t joe_gstpluginsc_t))
+            (call gstreamer_role_template_gstpluginsc (joe_r joe_gis_t joe_gstpluginsc_t user_gstpluginsc_tmp_t))
 
             (typeattributeset is_joe_application_subject (joe_gstpluginsc_t))
+            (typeattributeset is_joe_gsession_subject (joe_gstpluginsc_t))
+
+            (allow joe_t user_gstpluginsc_tmp_t manage_file_perms)
+            (allow joe_t user_gstpluginsc_tmp_t relabel_file_perms)
+
+            (call xserver_client_subject (joe_gstpluginsc_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             ; TODO
 

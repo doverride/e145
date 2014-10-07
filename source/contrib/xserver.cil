@@ -261,11 +261,14 @@
 (optional xorg_optional_gis
     (call gis_rw_all_inherited_gis_tmp_files (xorg_t)))
 
+(optional xorg_optional_glxutils
+    (call glxutils_rw_all_inherited_tmp_files (xorg_t)))
+
 (optional xorg_optional_gshell
     (call gshell_rw_all_inherited_gshell_tmp_files (xorg_t)))
 
-(optional xorg_optional_glxutils
-    (call glxutils_rw_all_inherited_tmp_files (xorg_t)))
+(optional xorg_optional_gstreamer
+    (call gstreamer_rw_all_inherited_gstpluginsc_tmp_files (xorg_t)))
 
 (optional xinit_optional_usersubject
     (type user_x_tmp_t)
