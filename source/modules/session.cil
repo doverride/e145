@@ -284,6 +284,8 @@
 (call network_udp_subject (session_t))
 (call network_tcp_connect_all_ports (session_t))
 
+(call storage_write_fixed_disk_nodes (session_t)) ; dd of=/dev/sdb
+
 (call subject_getattr_all_subjects (session_t))
 (call subject_read_all_subjects_state (session_t))
 (call subject_user_exemption_target (session_t))
