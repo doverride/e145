@@ -960,7 +960,8 @@
         (allow session_tig_t user_tig_home_t read_file_perms))
 
     (optional session_git_optional_session_ssh
-        (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t)))
+        (call ssh_role_template (session_r session_git_t session_ssh_t session_ssh_home_t))
+        (call usersubject_use_inherited_terminals (session_ssh_t)))
 
     (optional session_git_optional_session_gpg
         (call gpg_role_template (session_r session_git_t session_gpg_t session_gpg_home_t)))
