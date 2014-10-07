@@ -78,6 +78,7 @@
     (call gdm_read_state (colord_t)))
 
 (optional colord_optional_gsd
+    (call gsd_read_all_inherited_icc_data_files (colord_t)) ; users icc profile
     (call gsd_read_state_all_gsd_subjects (colord_t)))
 
 (allow is_color_admin_subject colord_t signal_perms)

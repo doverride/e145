@@ -258,6 +258,9 @@
     (call gdm_read_state (xorg_t))
     (call gdm_read_run_files (xorg_t)))
 
+(optional xorg_optional_gis
+    (call gis_rw_all_inherited_gis_tmp_files (xorg_t)))
+
 (optional xorg_optional_gshell
     (call gshell_rw_all_inherited_gshell_tmp_files (xorg_t)))
 

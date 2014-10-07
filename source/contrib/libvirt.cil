@@ -93,7 +93,7 @@
 (filecon "/etc/sysconfig/virtlockd" file file_libvirtd_env)
 
 (allow libvirtd_t self (capability (dac_override chown net_raw
-    net_admin setgid setuid kill)))
+    net_admin setgid setuid kill sys_admin)))
 (allow libvirtd_t self (process (signal getsched setcap getcap sigkill)))
 (allow libvirtd_t self (unix_stream_socket (listen accept)))
 (allow libvirtd_t self create_packet_socket_perms)

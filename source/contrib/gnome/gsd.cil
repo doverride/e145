@@ -1,6 +1,8 @@
 (roleattribute is_gsd_role)
 
 (typeattribute is_gsd_subject)
+(typeattribute is_gsd_icc_data_file_object)
+
 (typeattribute is_gsd_printer_subject)
 
 (type gsd_exec_t)
@@ -51,6 +53,8 @@
 
 (call logind_client_subject (is_gsd_subject))
 
+(call miscfiles_read_hwdata_files (is_gsd_subject))
+
 (call modemmgr_dbus_chat (is_gsd_subject))
 
 (call networkmgr_dbus_chat (is_gsd_subject))
@@ -97,12 +101,14 @@
     (type ARG5)(type ARG6))
     (roleattributeset is_gsd_role ARG1)
     (typeattributeset is_gsd_subject ARG3)
+    (typeattributeset is_gsd_icc_data_file_object ARG6)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gsd_exec_t ARG3))
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG5 manage_dir_perms)
     (allow ARG3 ARG5 manage_file_perms)
-    (allow ARG3 ARG6 manage_dir_perms))
+    (allow ARG3 ARG6 manage_dir_perms)
+    (allow ARG3 ARG6 manage_file_perms))
 
 (macro gsd_role_template_printer ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gsd_role ARG1)
@@ -113,3 +119,7 @@
 (macro gsd_read_state_all_gsd_subjects ((type ARG1))
     (allow ARG1 is_gsd_subject (dirs (list)))
     (allow ARG1 is_gsd_subject read_file_perms))
+
+(macro gsd_read_all_inherited_icc_data_files ((type ARG1))
+    (allow ARG1 is_gsd_subject (fd (use)))
+    (allow ARG1 is_gsd_icc_data_file_object (file (getattr read))))

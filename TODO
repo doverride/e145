@@ -4,6 +4,7 @@ target /usr/bin/xprop for pinentry
 
 target (gnome doing access checks):
     epiphany (gsoftware) nautilus evolution bluetooth-sendto orca
+    /usr/libexec/gstreamer-1.0/gst-plugin-scanner (run by gis)
 
 target ssmtp (cron wants it), loadkeys (so that i dont have to give sys_tty_config to session_t)
 

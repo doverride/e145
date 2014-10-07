@@ -46,6 +46,7 @@ contrib/git.cil
 contrib/glxutils.cil
 contrib/googletalk.cil
 contrib/gpg.cil
+contrib/gstreamer.cil
 contrib/hostname.cil
 contrib/http.cil
 contrib/hwclock.cil

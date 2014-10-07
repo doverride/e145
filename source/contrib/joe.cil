@@ -517,6 +517,9 @@
         (call usersubject_manage_gstreamer_cache_files (joe_firefox_t))
         (call usersubject_cache_filetrans_user_gstreamer_cache_dir (joe_firefox_t))
 
+        (call usersubject_manage_generic_cache_dirs (joe_firefox_t))
+        (call usersubject_home_dir_filetrans_user_cache_dir (joe_firefox_t))
+
         (call usersubject_manage_generic_config_dirs (joe_firefox_t))
         (call usersubject_home_dir_filetrans_user_config_dir (joe_firefox_t))
 
@@ -705,6 +708,8 @@
             (allow joe_t user_icc_data_t relabel_dir_perms)
             (allow joe_t user_icc_data_t manage_file_perms)
             (allow joe_t user_icc_data_t relabel_file_perms)
+
+            (call usersubject_manage_generic_data_dirs (joe_gsd_t)) ; ~/.local/share/{applications,sounds}
 
             (call usersubject_data_filetrans (joe_t user_gsd_data_t dir "gnome-settings-daemon"))
             (call usersubject_data_filetrans (joe_gsd_t user_gsd_data_t dir "gnome-settings-daemon"))
@@ -1126,16 +1131,29 @@
             (call dbus_session_client_subject (joe_dconfsvc_t user_dbusd_tmp_t joe_dbusd_t))
 
             (type joe_gis_t)
-            (call gis_role_template_gis (joe_r joe_gsession_t joe_gis_t user_gis_tmpfs_t))
+            (call gis_role_template_gis (joe_r joe_gsession_t joe_gis_t user_gis_tmpfs_t
+            user_gis_tmp_t))
 
+            (call gkeyring_role_template_gkeyringd (joe_r joe_gis_t joe_gkeyringd_t user_gkeyringd_run_t user_gkeyringd_data_t))
+
+            (typeattributeset is_joe_ibusd_client_subject (joe_gis_t))
+            (typeattributeset is_joe_application_subject (joe_gis_t))
+            (typeattributeset is_joe_gsession_subject (joe_gis_t))
+            (typeattributeset is_joe_gnome_application_object (gis_exec_t))
+
+            (allow joe_t user_gis_tmp_t manage_file_perms)
+            (allow joe_t user_gis_tmp_t relabel_file_perms)
             (allow joe_t user_gis_tmpfs_t manage_file_perms)
             (allow joe_t user_gis_tmpfs_t relabel_file_perms)
 
-            (typeattributeset is_joe_application_subject (joe_gis_t))
+            (call usersubject_manage_gstreamer_cache_dirs (joe_gis_t))
+            (call usersubject_manage_gstreamer_cache_files (joe_gis_t))
+            (call usersubject_cache_filetrans_user_gstreamer_cache_dir (joe_gis_t))
 
-            (typeattributeset is_joe_gsession_subject (joe_gis_t))
+            (call usersubject_manage_generic_cache_dirs (joe_gis_t))
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_gis_t))
 
-            (typeattributeset is_joe_gnome_application_object (gis_exec_t))
+            (call dbus_session_client_subject (joe_gis_t user_dbusd_tmp_t joe_dbusd_t))
 
 	    (call xserver_common_client_subject (joe_gis_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
             (call xserver_client_subject_tmpfs_template (joe_gis_t user_gis_tmpfs_t))
@@ -1596,6 +1614,11 @@
             (typeattributeset is_joe_gsession_subject (joe_vmtoolsd_t))
 
             (call xserver_client_subject (joe_vmtoolsd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+
+            (type joe_gstpluginsc_t)
+            (call gstreamer_role_template_gstpluginsc (joe_r joe_gis_t joe_gstpluginsc_t))
+
+            (typeattributeset is_joe_application_subject (joe_gstpluginsc_t))
 
             ; TODO
 

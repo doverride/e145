@@ -1,6 +1,8 @@
 (roleattribute is_gis_role)
 
 (typeattribute is_gis_subject)
+(typeattribute is_gis_tmp_file_object)
+
 (typeattribute is_giscw_subject)
 (typeattribute is_giswt_subject)
 
@@ -24,20 +26,49 @@
 
 (call auth_nsswitch_client_subject (is_giscw_subject))
 
+(allow is_gis_subject self (process (execmem)))
+(allow is_gis_subject self rw_fifo_file_perms)
+
+(call devices_list_sysfs (is_gis_subject))
+(call devices_read_sysfs_files (is_gis_subject))
+(call devices_read_urandom (is_gis_subject))
+(call devices_rw_dri (is_gis_subject))
+
+(call files_read_generic_etc_files (is_gis_subject))
+
+(call accountsservice_dbus_chat (is_gis_subject))
+
+(call dbus_system_client_subject (is_gis_subject))
+
+(call machined_read_config_files (is_gis_subject))
+
+(call seutil_read_config_files (is_gis_subject))
+
+(call udevd_client_subject (is_gis_subject))
+
+(optional gis_subject_optional_networkmgr
+    (call networkmgr_dbus_chat (is_gis_subject)))
+
 (optional gis_subject_optional_usersubject
+    (type user_gis_tmp_t)
+    (call usersubject_tmp_object (user_gis_tmp_t))
     (type user_gis_tmpfs_t)
     (call usersubject_tmpfs_object (user_gis_tmpfs_t)))
 
 (macro gis_exec_gis ((type ARG1))
     (call can_exec (ARG1 gis_exec_t)))
 
-(macro gis_role_template_gis ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+(macro gis_role_template_gis ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4)(type ARG5))
     (roleattributeset is_gis_role ARG1)
     (typeattributeset is_gis_subject ARG3)
+    (typeattributeset is_gis_tmp_file_object ARG5)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gis_exec_t ARG3))
     (allow ARG3 ARG4 manage_file_perms)
-    (call filesystem_tmpfs_filetrans (ARG3 ARG4 file "*")))
+    (call filesystem_tmpfs_filetrans (ARG3 ARG4 file "*"))
+    (allow ARG3 ARG5 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 file "*")))
 
 (macro gis_role_template_giswt ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gis_role ARG1)
@@ -50,3 +81,7 @@
     (typeattributeset is_giscw_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 giscw_exec_t ARG3)))
+
+(macro gis_rw_all_inherited_gis_tmp_files ((type ARG1))
+    (allow ARG1 is_gis_subject (fd (use)))
+    (allow ARG1 is_gis_tmp_file_object (file (read write))))

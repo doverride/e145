@@ -1,0 +1,15 @@
+(roleattribute is_gstreamer_role)
+
+(typeattribute is_gstpluginsc_subject)
+
+(type gstpluginsc_exec_t)
+(call application_subject_entry (is_gstpluginsc_subject gstpluginsc_exec_t))
+
+(context file_gstpluginsc_exec (system_u object_r gstpluginsc_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gstreamer-1\.0/gst-plugin-scanner" file file_gstpluginsc_exec)
+
+(macro gstreamer_role_template_gstpluginsc ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gstreamer_role ARG1)
+    (typeattributeset is_gstpluginsc_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gstpluginsc_exec_t ARG3)))
