@@ -63,6 +63,7 @@
 (call journald_client_subject (dnsmasq_t))
 
 (call miscfiles_read_localization_files (dnsmasq_t))
+(call miscfiles_read_network_config_files (dnsmasq_t))
 
 (optional dnsmasq_optional_libvirt
     (call libvirt_manage_run_files (dnsmasq_t))

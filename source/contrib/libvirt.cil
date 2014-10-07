@@ -147,6 +147,7 @@
 (call journald_client_subject (libvirtd_t))
 
 (call libvirt_read_libvirtd_config_files (libvirtd_t))
+(call libvirt_manage_dnsmasq_var_lib_files (libvirtd_t))
 
 (call logind_dbus_chat (libvirtd_t))
 

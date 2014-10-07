@@ -137,3 +137,6 @@
     (typeattributeset is_xremotec_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 mozilla_xremotec_exec_t ARG3)))
+
+(macro mozilla_check_exec_firefox_executable_files ((type ARG1))
+    (allow ARG1 firefox_exec_t (file (getattr execute))))

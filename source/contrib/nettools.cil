@@ -99,7 +99,13 @@
 
 (allow ping_t self (capability (net_raw)))
 (allow ping_t self (process (getcap setcap)))
+(allow ping_t self create_packet_socket_perms)
+(allow ping_t self create_unix_dgram_socket_perms)
 (allow ping_t self create_rawip_socket_perms)
+
+(call system_read_proc_net_files (ping_t))
+
+(call network_udp_bind_generic_node (ping_t))
 
 (call terminal_use_inherited_unallocated_tty_nodes (ping_t))
 

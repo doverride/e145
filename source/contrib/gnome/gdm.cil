@@ -292,6 +292,9 @@
 (optional gdm_optional_geoclue
     (call geoclue_dbus_chat (gdm_t)))
 
+(optional gdm_optional_mozilla
+    (call mozilla_check_exec_firefox_executable_files (gdm_t)))
+
 (optional gdm_optional_networkmgr
     (call networkmgr_dbus_chat (gdm_t)))
 

@@ -78,6 +78,8 @@
 (optional udisksctl_optional_session
     (call session_use_inherited_terminals (udisksctl_t)))
 
+(allow udisksd_t self (capability (sys_rawio)))
+
 (allow udisksd_t udisksd_run_t manage_dir_perms)
 (call files_run_filetrans (udisksd_t udisksd_run_t dir "*"))
 
