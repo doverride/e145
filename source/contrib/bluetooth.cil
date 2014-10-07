@@ -35,6 +35,8 @@
 (type bluetoothd_exec_t)
 (call systemd_daemon_subject_entry (bluetoothd_t bluetoothd_exec_t))
 
+(call systemd_socket_activated_subject (bluetoothd_t bluetoothd_var_lib_t))
+
 (context file_bluetoothd_exec (system_u object_r bluetoothd_exec_t ((s0)
     (s0))))
 (filecon "/usr/libexec/bluetooth/bluetoothd" file file_bluetoothd_exec)

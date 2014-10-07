@@ -113,6 +113,9 @@
 
 (call systemd_getattr_generic_unit_dirs (dbusd_t))
 
+(optional dbusd_optional_gdm
+    (call gdm_read_inherited_var_lib_files (dbusd_t))) ; gdm colord icc profile
+
 (allow is_dbus_launch_subject self rw_fifo_file_perms)
 
 (call dbus_search_var_lib (is_dbus_launch_subject))

@@ -252,5 +252,8 @@
     (call network_tcp_connect_subject (ARG1))
     (allow ARG1 port_tor_t (tcp_socket (name_connect))))
 
+(macro network_rw_tun_tap ((type ARG1))
+    (allow ARG1 device_tun_tap_t rw_chr_file_perms))
+
 (macro network_unconfined ((type ARG1))
     (typeattributeset has_unconfined_access_to_network_assets ARG1))

@@ -418,6 +418,9 @@
 (macro filesystem_list_hugetlbfs ((type ARG1))
     (allow ARG1 hugetlbfs_t (dirs (list))))
 
+(macro filesystem_manage_hugetlbfs_dirs ((type ARG1))
+    (allow ARG1 hugetlbfs_t manage_dir_perms))
+
 (macro filesystem_list_tmpfs ((type ARG1))
     (allow ARG1 tmpfs_t (dirs (list))))
 

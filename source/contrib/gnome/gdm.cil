@@ -147,6 +147,7 @@
 (call devices_read_sysfs_files (gdm_t))
 (call devices_rw_sound (gdm_t))
 (call devices_rw_fuse (gdm_t))
+(call devices_rw_dri (gdm_t))
 
 (call files_list_etc (gdm_t))
 (call files_search_home_root (gdm_t))
@@ -279,6 +280,10 @@
 (call xserver_send_signal_xorg (gdm_t))
 (call xserver_subtrans_xorg_wrap (gdm_t))
 (call xserver_stream_connect_xorg (gdm_t))
+(call xserver_use_fd_all_xorg (gdm_t))
+
+(optional gdm_optional_bluetooth
+    (call bluetooth_dbus_chat_bluetoothd (gdm_t)))
 
 (optional gdm_optional_color
     (call color_dbus_chat_colord (gdm_t)))
@@ -364,6 +369,10 @@
     (allow ARG1 gdm_t (dirs (list)))
     (allow ARG1 gdm_t read_file_perms))
 
+(macro gdm_read_inherited_var_lib_files ((type ARG1))
+    (allow ARG1 gdm_t (fd (use)))
+    (allow ARG1 gdm_var_lib_t (file (getattr read))))
+
 (macro gdm_read_var_lib_files ((type ARG1))
     (call files_search_var_lib (ARG1))
     (allow ARG1 gdm_var_lib_t (dirs (list)))
@@ -418,6 +427,9 @@
 
 (macro gdm_rw_shm ((type ARG1))
     (allow ARG1 gdm_t rw_shm_perms))
+
+(macro gdm_rw_inherited_tmp_files ((type ARG1))
+    (allow ARG1 gdm_tmp_t (file (read write))))
 
 (macro gdm_rw_inherited_tmpfs_files ((type ARG1))
     (allow ARG1 gdm_tmpfs_t (file (read write))))

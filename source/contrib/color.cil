@@ -74,6 +74,7 @@
 (call udevd_client_subject (colord_t))
 
 (optional colord_optional_gdm
+    (call gdm_read_inherited_var_lib_files (colord_t)) ; gdm icc profile
     (call gdm_read_state (colord_t)))
 
 (optional colord_optional_gsd

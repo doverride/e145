@@ -49,7 +49,7 @@
 
 (call devices_read_kmsg (mcelog_t))
 (call devices_read_memory_raw (mcelog_t))
-(call devices_write_sysfs_files (mcelog_t)) ; soft-online-page
+(call devices_rw_sysfs_files (mcelog_t)) ; soft-online-page
 
 (call auth_nsswitch_client_subject (mcelog_t))
 

@@ -39,6 +39,8 @@
 (call network_reserved_port_object (port_dhcp_t))
 
 (context port_dhcp (system_u object_r port_dhcp_t ((s0) (s0))))
+(portcon "tcp" 67 port_dhcp)
+(portcon "udp" 67 port_dhcp)
 (portcon "tcp" 68 port_dhcp)
 (portcon "udp" 68 port_dhcp)
 

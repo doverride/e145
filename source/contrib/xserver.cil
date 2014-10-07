@@ -244,6 +244,7 @@
     (call gdm_send_sigchld (xorg_t))
     (call gdm_send_signal (xorg_t))
     (call gdm_rw_shm (xorg_t))
+    (call gdm_rw_inherited_tmp_files (xorg_t))
     (call gdm_rw_inherited_tmpfs_files (xorg_t))
     (call gdm_rw_inherited_stream_sockets (xorg_t))
     (call gdm_read_state (xorg_t))
