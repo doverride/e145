@@ -13,6 +13,11 @@
 
 (context file_qemu_exec (system_u object_r qemu_exec_t ((s0) (s0))))
 (filecon "/usr/bin/qemu-img" file file_qemu_exec)
+(filecon "/usr/bin/qemu-io" file file_qemu_exec)
+(filecon "/usr/bin/qemu-kvm" file file_qemu_exec)
+(filecon "/usr/bin/qemu-nbd" file file_qemu_exec)
+(filecon "/usr/bin/qemu-system-i386" file file_qemu_exec)
+(filecon "/usr/bin/qemu-system-x86_64" file file_qemu_exec)
 
 (type qga_t)
 (type qga_exec_t)
