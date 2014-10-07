@@ -290,14 +290,14 @@
 (call subject_read_all_subjects_state (session_t))
 (call subject_user_exemption_target (session_t))
 
-(call terminal_use_inherited_unallocated_tty_nodes (session_t)) ; emergency mode/sulogin
-(call terminal_getattr_generic_pty_nodes (session_t)) ; /dev/pts/ptmx
-
 (call subject_obj_id_change_exemption (session_t))
 
 (call session_execute_bin_files (session_t))
 (call session_use_terminals (session_t))
 (call session_create_pty_node (session_t)) ; script/script replay
+
+(call terminal_use_inherited_unallocated_tty_nodes (session_t)) ; emergency mode/sulogin
+(call terminal_getattr_generic_pty_nodes (session_t)) ; /dev/pts/ptmx
 
 (call dbus_system_client_subject (session_t)) ; packagekit plugin wants to chat to rpm 
 
@@ -1256,6 +1256,8 @@
     (call usersubject_home_dir_filetrans (session_t session_ssh_home_t dir ".ssh"))
 
     (call session_home_dir_filetrans (session_ssh_t session_ssh_home_t dir ".ssh"))
+
+    (call commands_shell_auto_subject_type_transition (session_ssh_t session_t))
 
     (allow sshd_t session_ssh_home_t list_dir_perms)
     (allow sshd_t session_ssh_home_t create_dir_perms)

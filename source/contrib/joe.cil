@@ -1888,6 +1888,8 @@
 
     (call usersubject_home_filetrans (joe_git_t user_git_home_t dir ".git"))
 
+    (call commands_shell_auto_subject_type_transition (joe_ssh_t joe_t))
+
     (allow joe_git_t user_terminfo_home_t read_file_perms)
 
     (call subtrans_pattern (joe_git_t user_git_home_t joe_t))
