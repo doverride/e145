@@ -28,7 +28,7 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*xlock.*" file file_xlock_unit)
 
-(allow is_xlock_subject self (process (setsched signal)))
+(allow is_xlock_subject self (process (setsched)))
 (allow is_xlock_subject self rw_fifo_file_perms)
 
 (call devices_list_sysfs (is_xlock_subject))
