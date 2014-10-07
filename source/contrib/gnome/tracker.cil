@@ -56,7 +56,7 @@
 (context file_trwb_exec (system_u object_r trwb_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/tracker-writeback" file file_trwb_exec)
 
-(allow is_trminapp_subject self (process (getsched setsched)))
+(allow is_trminapp_subject self (process (getsched setsched signal)))
 (allow is_trminapp_subject self rw_fifo_file_perms)
 
 (call system_read_generic_proc_files (is_trminapp_subject))
@@ -73,7 +73,7 @@
 
 (call miscfiles_read_localization_files (is_trminapp_subject))
 
-(allow is_trminfs_subject self (process (getsched setsched)))
+(allow is_trminfs_subject self (process (getsched setsched signal)))
 (allow is_trminfs_subject self rw_fifo_file_perms)
 
 (call system_read_sysctl_fs_files (is_trminfs_subject))
@@ -91,7 +91,9 @@
 
 (call upower_dbus_chat_upowerd (is_trminfs_subject))
 
-(allow is_trstore_subject self (process (getsched setsched)))
+(allow is_trstore_subject self (process (getsched setsched signal)))
+
+(call system_read_sysctl_vm_overcommit_files (is_trstore_subject))
 
 (call devices_read_urandom (is_trstore_subject))
 (call devices_read_random (is_trstore_subject))
@@ -112,9 +114,10 @@
     (type user_trstore_tmp_t)
     (call usersubject_tmp_object (user_trstore_tmp_t)))
 
-(allow is_trextr_subject self (process (getsched setsched)))
+(allow is_trextr_subject self (process (getsched setsched signal)))
 
 (call system_read_generic_proc_files (is_trextr_subject))
+(call system_read_sysctl_vm_overcommit_files (is_trextr_subject))
 
 (call devices_read_urandom (is_trextr_subject))
 (call devices_read_random (is_trextr_subject))

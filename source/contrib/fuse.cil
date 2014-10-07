@@ -30,6 +30,7 @@
 (call files_read_generic_etc_files (is_fusermount_subject))
 
 (call filesystem_mount_fuse_filesystems (is_fusermount_subject))
+(call filesystem_unmount_fuse_filesystems (is_fusermount_subject))
 
 (call auth_nsswitch_client_subject (is_fusermount_subject))
 

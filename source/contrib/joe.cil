@@ -386,6 +386,9 @@
         (call mozilla_role_template_firefox (joe_r joe_t joe_firefox_t user_firefox_home_t user_mozilla_cache_t
             user_firefox_tmp_t user_firefox_tmpfs_t user_firefox_lib_t))
 
+	(optional joe_firefox_optional_joe_gnome
+            (typeattributeset is_joe_gnome_application_object (firefox_exec_t)))
+
         (typeattributeset is_joe_application_subject (joe_firefox_t))
 
         (call mozilla_role_template_xremotec (joe_r joe_firefox_t joe_xremotec_t))
@@ -1198,6 +1201,7 @@
             (call ibus_role_template_ibusd (joe_r joe_dbusd_t joe_ibusd_t user_ibus_conf_t))
 
             (typeattributeset is_joe_application_subject (joe_ibusd_t))
+            (typeattributeset is_joe_gsession_subject (joe_ibusd_t))
 
             (typeattribute is_joe_ibusd_client_subject)
 
@@ -1570,7 +1574,7 @@
             (typeattributeset is_joe_gnome_application_object (glib_exec_t))
         )
 
-        (allow joe_dbuslaunch_t joe_dbusd_t (process (signal)))
+        (allow joe_dbuslaunch_t joe_dbusd_t (process (signal sigkill)))
 
         (call xserver_client_subject (joe_dbuslaunch_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
