@@ -92,8 +92,9 @@
 (filecon "/etc/sysconfig/libvirtd" file file_libvirtd_env)
 (filecon "/etc/sysconfig/virtlockd" file file_libvirtd_env)
 
-(allow libvirtd_t self (capability (dac_override chown net_raw net_admin)))
-(allow libvirtd_t self (process (signal getsched setcap getcap)))
+(allow libvirtd_t self (capability (dac_override chown net_raw
+    net_admin setgid setuid kill)))
+(allow libvirtd_t self (process (signal getsched setcap getcap sigkill)))
 (allow libvirtd_t self (unix_stream_socket (listen accept)))
 (allow libvirtd_t self create_packet_socket_perms)
 (allow libvirtd_t self create_tun_socket_perms)
@@ -110,6 +111,7 @@
 
 (allow libvirtd_t libvirtd_var_lib_t manage_dir_perms)
 (allow libvirtd_t libvirtd_var_lib_t manage_file_perms)
+(allow libvirtd_t libvirtd_var_lib_t manage_sock_file_perms)
 
 (call system_read_generic_proc_files (libvirtd_t))
 (call system_read_proc_net_files (libvirtd_t))
@@ -117,6 +119,8 @@
 (call system_rw_sysctl_net_files (libvirtd_t))
 (call system_request_load_module (libvirtd_t))
 (call system_write_proc_mtrr_files (libvirtd_t))
+
+(call commands_execute_shell_files (libvirtd_t))
 
 (call devices_list_sysfs (libvirtd_t))
 (call devices_rw_sysfs_files (libvirtd_t))

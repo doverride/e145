@@ -194,6 +194,11 @@
 
     (typeattributeset is_joe_application_subject (joe_xhost_t))
 
+    (type joe_xprop_t)
+    (call xserver_role_template_xprop (joe_r joe_t joe_xprop_t))
+
+    (typeattributeset is_joe_application_subject (joe_xprop_t))
+
     (type joe_xrandr_t)
     (call xserver_role_template_xrandr (joe_r joe_t joe_xrandr_t))
 
@@ -1961,6 +1966,9 @@
     (optional joe_gpgagent_optional_joe_pinentry
         (type joe_pinentry_t)
         (call pinentry_role_template (joe_r joe_gpgagent_t joe_pinentry_t))
+
+	(optional joe_pinentry_optional_joe_xserver
+            (call xserver_role_template_xprop (joe_r joe_pinentry_t joe_xprop_t)))
 
         (typeattributeset is_joe_application_subject (joe_pinentry_t))
 

@@ -36,6 +36,7 @@
     (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*mcelog.*" file file_mcelog_unit)
 
+(allow mcelog_t self (capability (sys_admin)))
 (allow mcelog_t self (unix_stream_socket (listen accept)))
 
 (allow mcelog_t mcelog_run_t manage_file_perms)
