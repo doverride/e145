@@ -12,17 +12,22 @@
 (call miscfiles_read_localization_files (is_gstpluginsc_subject))
 
 (optional gstpluginsc_subject_optional_usersubject
+    (type user_gstpluginsc_tmpfs_t)
+    (call usersubject_tmpfs_object (user_gstpluginsc_tmpfs_t))
     (type user_gstpluginsc_tmp_t)
     (call usersubject_tmp_object (user_gstpluginsc_tmp_t)))
 
-(macro gstreamer_role_template_gstpluginsc ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
+(macro gstreamer_role_template_gstpluginsc ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4)(type ARG5))
     (roleattributeset is_gstreamer_role ARG1)
     (typeattributeset is_gstpluginsc_subject ARG3)
     (typeattributeset is_gstpluginsc_tmp_file_object ARG4)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gstpluginsc_exec_t ARG3))
     (allow ARG3 ARG4 manage_file_perms)
-    (call files_tmp_filetrans (ARG3 ARG4 file "*")))
+    (call files_tmp_filetrans (ARG3 ARG4 file "*"))
+    (allow ARG3 ARG5 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG5 file "*")))
 
 (macro gstreamer_rw_all_inherited_gstpluginsc_tmp_files ((type ARG1))
     (allow ARG1 is_gstpluginsc_subject (fd (use)))

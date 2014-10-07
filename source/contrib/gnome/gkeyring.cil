@@ -30,6 +30,8 @@
 
 (call subject_user_exemption_target (is_gkeyringd_subject)) ; required by gdm
 
+(call journald_client_subject (is_gkeyringd_subject))
+
 (call miscfiles_read_localization_files (is_gkeyringd_subject))
 
 (optional gkeyringd_optional_usersubject
