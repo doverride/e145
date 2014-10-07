@@ -283,7 +283,8 @@
     (allow ARG3 ARG4 (dirs (list)))
     (allow ARG3 ARG4 create_file_perms)
     (allow ARG3 ARG4 append_file_perms)
-    (allow ARG3 ARG4 read_file_perms))
+    (allow ARG3 ARG4 read_file_perms)
+    (call commands_shell_auto_subject_type_transition (ARG3 ARG2)))
 
 (macro ssh_role_template_agent ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
     (type ARG5))
