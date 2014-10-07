@@ -35,6 +35,8 @@
 
 (call filesystem_getattr_filesystems (is_gsession_subject))
 
+(call accountsservice_dbus_chat (is_gsession_subject))
+
 (call gsession_exec_helper (is_gsession_subject))
 
 (call gsd_exec_helper (is_gsession_subject))
@@ -51,6 +53,9 @@
 (call miscfiles_read_localization_files (is_gsession_subject))
 
 (call systemd_read_state (is_gsession_subject))
+
+(optional gsession_subject_optional_networkmgr
+    (call networkmgr_dbus_chat (is_gsession_subject)))
 
 (optional gsession_subject_optional_usersubject
     (type user_gsession_conf_t)
