@@ -1,6 +1,8 @@
 (roleattribute is_gshell_role)
 
 (typeattribute is_gshell_subject)
+(typeattribute is_gshell_tmp_file_object)
+
 (typeattribute is_gshell_cald_subject)
 (typeattribute is_gshell_hotp_subject)
 
@@ -36,6 +38,7 @@
 
 (call devices_read_urandom (is_gshell_subject))
 (call devices_read_sysfs_files (is_gshell_subject))
+(call devices_rw_dri (is_gshell_subject))
 
 (call files_list_etc (is_gshell_subject)) ; /etc/xdg
 (call files_read_generic_etc_files (is_gshell_subject)) ; /etc/drirc
@@ -69,7 +72,12 @@
 
 (call systemd_read_state (is_gshell_subject))
 
+(call udevd_client_subject (is_gshell_subject))
+
 (call upower_dbus_chat_upowerd (is_gshell_subject))
+
+(optional gshell_subject_optional_modemmgr
+    (call modemmgr_dbus_chat (is_gshell_subject)))
 
 (optional gshell_subject_optional_usersubject
     (type user_gshell_data_t)
@@ -94,6 +102,7 @@
     (type ARG5)(type ARG6)(type ARG7))
     (roleattributeset is_gshell_role ARG1)
     (typeattributeset is_gshell_subject ARG3)
+    (typeattributeset is_gshell_tmp_file_object ARG6)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gshell_exec_t ARG3))
     (allow ARG3 ARG4 manage_dir_perms)
@@ -121,3 +130,7 @@
 (macro gshell_read_state_all_gshell_subjects ((type ARG1))
     (allow ARG1 is_gshell_subject (dirs (list)))
     (allow ARG1 is_gshell_subject read_file_perms))
+
+(macro gshell_rw_all_inherited_gshell_tmp_files ((type ARG1))
+    (allow ARG1 is_gshell_subject (fd (use)))
+    (allow ARG1 is_gshell_tmp_file_object (file (read write))))

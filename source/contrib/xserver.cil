@@ -250,6 +250,12 @@
     (call gdm_read_state (xorg_t))
     (call gdm_read_run_files (xorg_t)))
 
+(optional xorg_optional_gshell
+    (call gshell_rw_all_inherited_gshell_tmp_files (xorg_t)))
+
+(optional xorg_optional_glxutils
+    (call glxutils_rw_all_inherited_tmp_files (xorg_t)))
+
 (optional xinit_optional_usersubject
     (type user_x_tmp_t)
     (call usersubject_tmp_object (user_x_tmp_t))
@@ -313,6 +319,8 @@
 
 (optional server_client_subject_optional_gdm
     (call gdm_read_run_files (is_xserver_client_subject)))
+
+(allow is_xserver_common_client_subject is_xorg_subject (fd (use)))
 
 (allow is_xserver_common_client_subject_tmpfs self create_shm_perms)
 (allow is_xorg_subject is_xserver_common_client_subject_tmpfs rw_shm_perms)
@@ -450,7 +458,6 @@
 
 (macro xserver_common_client_subject ((type ARG1)(type ARG2)(type ARG3)(type ARG4)(type ARG5))
     (typeattributeset is_xserver_common_client_subject ARG1)
-    (allow ARG1 ARG3 (fd (use)))
     (call xserver_client_subject (ARG1 ARG2 ARG3 ARG4 ARG5)))
 
 (macro xserver_client_subject_tmpfs_template ((type ARG1)(type ARG2))

@@ -1,7 +1,9 @@
+xserver_common_client_subjects probably all need to device_rw_dri()
+
 target /usr/bin/xprop for pinentry
 
 target (gnome doing access checks):
-    epiphany (gsoftware) nautilus evolution bluetooth-sendto
+    epiphany (gsoftware) nautilus evolution bluetooth-sendto orca
 
 target ssmtp (cron wants it), loadkeys (so that i dont have to give sys_tty_config to session_t)
 

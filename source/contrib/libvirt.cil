@@ -184,9 +184,13 @@
     (call files_search_run (ARG1))
     (call manage_files_pattern (ARG1 libvirtd_run_t libvirtd_run_t)))
 
-(macro libvirt_manage_dnsmasq_var_lib_files ((type ARG1))
+(macro libvirt_search_var_lib ((type ARG1))
     (call files_search_var_lib (ARG1))
-    (call manage_files_pattern (ARG1 libvirtd_var_lib_t libvirtd_dnsmasq_var_lib_t)))
+    (allow ARG1 libvirtd_var_lib_t (dirs (search))))
+
+(macro libvirt_manage_dnsmasq_var_lib_files ((type ARG1))
+    (call libvirt_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 libvirtd_dnsmasq_var_lib_t libvirtd_dnsmasq_var_lib_t)))
 
 (macro libvirt_admin ((type ARG1))
     (typeattributeset is_libvirt_admin_subject ARG1))

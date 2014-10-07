@@ -1,6 +1,7 @@
 (roleattribute is_glxutils_role)
 
 (typeattribute is_glxutils_subject)
+(typeattribute is_glxutils_tmp_file_object)
 
 (type glxutils_exec_t)
 (call application_subject_entry (is_glxutils_subject glxutils_exec_t))
@@ -11,15 +12,35 @@
 (filecon "/usr/bin/glxinfo64" file file_glxutils_exec)
 (filecon "/usr/bin/xdriinfo" file file_glxutils_exec)
 
+(call devices_list_sysfs (is_glxutils_subject))
 (call devices_read_sysfs_files (is_glxutils_subject))
+(call devices_rw_dri (is_glxutils_subject))
 
 (call files_read_generic_etc_files (is_glxutils_subject)) ; /etc/drirc
+
+(call udevd_client_subject (is_glxutils_subject))
+
+(optional glxutils_subject_optional_usersubject
+    (type user_glxutils_tmpfs_t)
+    (call usersubject_tmpfs_object (user_glxutils_tmpfs_t))
+    (type user_glxutils_tmp_t)
+    (call usersubject_tmp_object (user_glxutils_tmp_t)))
 
 (macro glxutils_exec ((type ARG1))
     (call can_exec (ARG1 glxutils_exec_t)))
 
-(macro glxutils_role_template ((role ARG1)(type ARG2)(type ARG3))
+(macro glxutils_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4)
+    (type ARG5))
     (roleattributeset is_glxutils_role ARG1)
     (typeattributeset is_glxutils_subject ARG3)
+    (typeattributeset is_glxutils_tmp_file_object ARG5)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 glxutils_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 glxutils_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG4 file "*"))
+    (allow ARG3 ARG5 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG5 file "*")))
+
+(macro glxutils_rw_all_inherited_tmp_files ((type ARG1))
+    (allow ARG1 is_glxutils_subject (fd (use)))
+    (allow ARG1 is_glxutils_tmp_file_object (file (read write))))

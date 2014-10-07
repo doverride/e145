@@ -306,11 +306,17 @@
 
     (optional joe_xserver_optional_joe_glxutils
         (type joe_glxutils_t)
-        (call glxutils_role_template (joe_r joe_t joe_glxutils_t))
+        (call glxutils_role_template (joe_r joe_t joe_glxutils_t user_glxutils_tmpfs_t user_glxutils_tmp_t))
+
+	(allow joe_t user_glxutils_tmp_t manage_file_perms)
+	(allow joe_t user_glxutils_tmp_t relabel_file_perms)
+	(allow joe_t user_glxutils_tmpfs_t manage_file_perms)
+	(allow joe_t user_glxutils_tmpfs_t relabel_file_perms)
 
         (typeattributeset is_joe_application_subject (joe_glxutils_t))
 
-        (call xserver_common_client_subject (joe_glxutils_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t)))
+        (call xserver_common_client_subject (joe_glxutils_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+        (call xserver_client_subject_tmpfs_template (joe_glxutils_t user_glxutils_tmpfs_t)))
 
     (optional joe_xserver_optional_joe_xpdf
         (type joe_xpdf_t)
@@ -995,6 +1001,8 @@
             (type joe_gshell_t)
             (call gshell_role_template_gshell (joe_r joe_gsession_t joe_gshell_t user_gshell_run_t
                 user_gshell_tmpfs_t user_gshell_tmp_t user_gshell_data_t))
+
+            (call ibus_role_template_ibusd (joe_r joe_gshell_t joe_ibusd_t user_ibus_conf_t))
 
             (typeattributeset is_joe_application_subject (joe_gshell_t))
 
