@@ -680,7 +680,8 @@
             (call xserver_client_subject (joe_gsession_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
 
             (type joe_gsd_t)
-            (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t user_gsd_data_t))
+            (call gsd_role_template_gsd (joe_r joe_gsession_t joe_gsd_t user_gsd_tmpfs_t user_gsd_data_t
+                user_icc_data_t))
 
             (typeattributeset is_joe_application_subject (joe_gsd_t))
 
@@ -692,13 +693,24 @@
             (context file_joe_user_gsd_data (joe_u object_r user_gsd_data_t ((s0)(s0))))
             (filecon "/home/joe/\.local/share/gnome-settings-daemon(/.*)?" any file_joe_user_gsd_data)
 
+            (context file_joe_user_icc_data (joe_u object_r user_icc_data_t ((s0)(s0))))
+            (filecon "/home/joe/\.local/share/icc(/.*)?" any file_joe_user_icc_data)
+
             (allow joe_t user_gsd_data_t manage_dir_perms)
             (allow joe_t user_gsd_data_t relabel_dir_perms)
             (allow joe_t user_gsd_data_t manage_file_perms)
             (allow joe_t user_gsd_data_t relabel_file_perms)
 
+            (allow joe_t user_icc_data_t manage_dir_perms)
+            (allow joe_t user_icc_data_t relabel_dir_perms)
+            (allow joe_t user_icc_data_t manage_file_perms)
+            (allow joe_t user_icc_data_t relabel_file_perms)
+
             (call usersubject_data_filetrans (joe_t user_gsd_data_t dir "gnome-settings-daemon"))
             (call usersubject_data_filetrans (joe_gsd_t user_gsd_data_t dir "gnome-settings-daemon"))
+
+            (call usersubject_data_filetrans (joe_t user_icc_data_t dir "icc"))
+            (call usersubject_data_filetrans (joe_gsd_t user_icc_data_t dir "icc"))
 
             (call xserver_common_client_subject (joe_gsd_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
             (call xserver_client_subject_tmpfs_template (joe_gsd_t user_gsd_tmpfs_t))
@@ -707,9 +719,6 @@
                 user_pa_run_t user_gsd_tmpfs_t))
 
             (typeattributeset is_joe_pa_client_subject (joe_gsd_t))
-
-            ; (call usersubject_manage_generic_data_dirs (joe_gsd_t)) ; ~/.local/share/applications
-            ; (call usersubject_home_dir_filetrans_user_data_dir (joe_gsd_t))
 
             (allow joe_t user_gsd_tmpfs_t manage_file_perms)
             (allow joe_t user_gsd_tmpfs_t relabel_file_perms)
