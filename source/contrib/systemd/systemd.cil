@@ -288,6 +288,8 @@
 (call files_read_all_lock_files (systemd_t))
 (call files_read_generic_etc_files (systemd_t)) ; /etc/login.defs
 (call files_list_run_lock (systemd_t))
+(call files_list_var (systemd_t))
+(call files_list_var_spool (systemd_t))
 
 (call filesystem_create_generic_tmpfs_sock_files (systemd_t)) ; early /run/systemd/notify
 (call filesystem_getattr_all_filesystems (systemd_t))
@@ -399,6 +401,7 @@
 
 (optional systemd_optional_gdm
     (call gdm_link_keyring (systemd_t))
+    (call gdm_search_var_lib (systemd_t))
     (call gdm_run_user_dir_filetrans_systemd_run_dir (systemd_t))
     (call gdm_manage_systemd_run_dirs (systemd_t))
     (call gdm_manage_systemd_run_sock_files (systemd_t)))

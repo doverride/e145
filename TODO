@@ -1,3 +1,5 @@
+target /usr/bin/xprop for pinentry
+
 target (gnome doing access checks):
     epiphany (gsoftware) nautilus evolution bluetooth-sendto
 

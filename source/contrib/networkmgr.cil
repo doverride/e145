@@ -176,6 +176,8 @@
 
 (call mount_exec (networkmgr_t))
 
+(call nettools_subtrans_ping (networkmgr_t))
+
 (call networkmgr_manage_config_files (networkmgr_t))
 
 (call polkit_dbus_chat_polkitd (networkmgr_t))

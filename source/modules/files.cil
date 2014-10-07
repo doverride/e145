@@ -594,6 +594,9 @@
 (macro files_search_var_spool ((type ARG1))
     (call search_dirs_pattern (ARG1 var_t var_spool_t)))
 
+(macro files_list_var_spool ((type ARG1))
+    (call list_dirs_pattern (ARG1 var_t var_spool_t)))
+
 (macro files_var_spool_filetrans ((type ARG1)(type ARG2)(class ARG3)(name
     ARG4))
     (call files_search_var (ARG1))

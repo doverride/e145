@@ -81,6 +81,7 @@
 (allow udisksd_t udisksd_run_t manage_dir_perms)
 (call files_run_filetrans (udisksd_t udisksd_run_t dir "*"))
 
+(call system_read_sysctl_vm_overcommit_files (udisksd_t))
 (call system_read_generic_proc_files (udisksd_t))
 
 (call devices_list_sysfs (udisksd_t))
@@ -89,9 +90,9 @@
 (call files_list_etc (udisksd_t))
 (call files_read_generic_etc_files (udisksd_t)) ; /etc/fstab
 
-(call storage_getattr_fixed_disk_nodes (udisksd_t))
-(call storage_getattr_scsi_generic_nodes (udisksd_t))
-(call storage_getattr_removable_nodes (udisksd_t))
+(call storage_read_fixed_disk_nodes (udisksd_t))
+(call storage_read_scsi_generic_nodes (udisksd_t))
+(call storage_read_removable_nodes (udisksd_t))
 
 (call auth_nsswitch_client_subject (udisksd_t))
 

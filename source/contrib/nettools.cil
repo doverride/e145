@@ -29,6 +29,7 @@
 (context file_ping_exec (system_u object_r ping_exec_t ((s0)
     (s0))))
 (filecon "/usr/bin/ping" file file_ping_exec)
+(filecon "/usr/sbin/arping" file file_ping_exec)
 
 (type traceroute_t)
 (type traceroute_exec_t)

@@ -246,6 +246,7 @@
 (call miscfiles_read_fonts_config (gdm_t))
 (call miscfiles_read_fonts_files (gdm_t))
 (call miscfiles_read_fonts_cache_files (gdm_t))
+(call miscfiles_read_hwdata_files (gdm_t))
 (call miscfiles_read_generic_cert_files (gdm_t))
 
 (call pa_exec_pa (gdm_t))
@@ -369,6 +370,10 @@
     (allow ARG1 gdm_t (dirs (list)))
     (allow ARG1 gdm_t read_file_perms))
 
+(macro gdm_search_var_lib ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (allow ARG1 gdm_var_lib_t (dirs (search))))
+
 (macro gdm_read_inherited_var_lib_files ((type ARG1))
     (allow ARG1 gdm_t (fd (use)))
     (allow ARG1 gdm_var_lib_t (file (getattr read))))
@@ -418,7 +423,7 @@
     (allow ARG1 gdm_t (process (signal))))
 
 (macro gdm_link_keyring ((type ARG1))
-    (allow ARG1 gdm_t (key (link))))
+    (allow ARG1 gdm_t (key (search link))))
 
 (macro gdm_read_run_files ((type ARG1))
     (call files_search_run (ARG1))

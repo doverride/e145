@@ -6,7 +6,7 @@
 (typeattribute is_libvirt_file_object)
 (typeattributeset is_libvirt_file_object (libvirtd_conf_t
     libvirtd_unit_t libvirtd_cache_t libvirtd_var_lib_t libvirtd_log_t
-    libvirtd_run_t libvirtd_env_t))
+    libvirtd_run_t libvirtd_env_t libvirtd_dnsmasq_var_lib_t))
 
 (type libvirtd_t)
 (type libvirtd_exec_t)
@@ -54,6 +54,13 @@
 (context file_libvirtd_var_lib (system_u object_r libvirtd_var_lib_t ((s0)
     (s0))))
 (filecon "/var/lib/libvirt(/.*)?" any file_libvirtd_var_lib)
+
+(type libvirtd_dnsmasq_var_lib_t)
+(call files_var_lib_object (libvirtd_dnsmasq_var_lib_t))
+
+(context file_libvirtd_dnsmasq_var_lib (system_u object_r libvirtd_dnsmasq_var_lib_t ((s0)
+    (s0))))
+(filecon "/var/lib/libvirt/dnsmasq(/.*)?" any file_libvirtd_dnsmasq_var_lib)
 
 (type libvirtd_conf_t)
 (call files_etc_object (libvirtd_conf_t))
@@ -171,6 +178,14 @@
     (call files_search_etc (ARG1))
     (allow ARG1 libvirtd_conf_t (dirs (list)))
     (allow ARG1 libvirtd_conf_t read_file_perms))
+
+(macro libvirt_manage_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call manage_files_pattern (ARG1 libvirtd_run_t libvirtd_run_t)))
+
+(macro libvirt_manage_dnsmasq_var_lib_files ((type ARG1))
+    (call files_search_var_lib (ARG1))
+    (call manage_files_pattern (ARG1 libvirtd_var_lib_t libvirtd_dnsmasq_var_lib_t)))
 
 (macro libvirt_admin ((type ARG1))
     (typeattributeset is_libvirt_admin_subject ARG1))
