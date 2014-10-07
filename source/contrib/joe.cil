@@ -1125,6 +1125,21 @@
 
             (call dbus_session_client_subject (joe_dconfsvc_t user_dbusd_tmp_t joe_dbusd_t))
 
+            (type joe_gis_t)
+            (call gis_role_template_gis (joe_r joe_gsession_t joe_gis_t user_gis_tmpfs_t))
+
+            (allow joe_t user_gis_tmpfs_t manage_file_perms)
+            (allow joe_t user_gis_tmpfs_t relabel_file_perms)
+
+            (typeattributeset is_joe_application_subject (joe_gis_t))
+
+            (typeattributeset is_joe_gsession_subject (joe_gis_t))
+
+            (typeattributeset is_joe_gnome_application_object (gis_exec_t))
+
+	    (call xserver_common_client_subject (joe_gis_t joe_xinit_t joe_xorg_t user_x_tmp_t user_xauth_home_t))
+            (call xserver_client_subject_tmpfs_template (joe_gis_t user_gis_tmpfs_t))
+
             (type joe_giscw_t)
             (call gis_role_template_giscw (joe_r joe_gsession_t joe_giscw_t))
 

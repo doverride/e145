@@ -390,6 +390,9 @@
     (call filesystem_search_tmpfs (ARG1))
     (call read_files_pattern (ARG1 cgroup_t cgroup_t)))
 
+(macro filesystem_getattr_dosfs_filesystems ((type ARG1))
+    (allow ARG1 dosfs_t (filesystem (getattr))))
+
 (macro filesystem_remount_dosfs_filesystems ((type ARG1))
     (allow ARG1 dosfs_t (filesystem (remount))))
 

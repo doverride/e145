@@ -24,14 +24,20 @@
 
 (call auth_nsswitch_client_subject (is_giscw_subject))
 
+(optional gis_subject_optional_usersubject
+    (type user_gis_tmpfs_t)
+    (call usersubject_tmpfs_object (user_gis_tmpfs_t)))
+
 (macro gis_exec_gis ((type ARG1))
     (call can_exec (ARG1 gis_exec_t)))
 
-(macro gis_role_template_gis ((role ARG1)(type ARG2)(type ARG3))
+(macro gis_role_template_gis ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gis_role ARG1)
     (typeattributeset is_gis_subject ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 gis_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 gis_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG4 file "*")))
 
 (macro gis_role_template_giswt ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gis_role ARG1)

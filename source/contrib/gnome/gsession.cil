@@ -18,6 +18,7 @@
 (filecon "/usr/libexec/gnome-session-check-accelerated-helper" file file_gsession_helper_exec)
 (filecon "/usr/libexec/gnome-session-failed" file file_gsession_helper_exec)
 
+(allow is_gsession_subject self (process (signal)))
 (allow is_gsession_subject self (unix_stream_socket (listen accept)))
 (allow is_gsession_subject self rw_fifo_file_perms)
 
