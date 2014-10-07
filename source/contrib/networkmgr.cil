@@ -176,7 +176,7 @@
 
 (call mount_exec (networkmgr_t))
 
-(call nettools_subtrans_ping (networkmgr_t))
+(call nettools_subtrans (networkmgr_t))
 
 (call networkmgr_manage_config_files (networkmgr_t))
 

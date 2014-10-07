@@ -52,6 +52,8 @@
 
 (call miscfiles_read_localization_files (is_evoanotify_subject))
 
+(allow is_evocfactory_subject self (process (signal)))
+
 (call devices_read_sysfs_files (is_evocfactory_subject))
 
 (call files_read_generic_usr_files (is_evocfactory_subject))

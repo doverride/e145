@@ -21,6 +21,7 @@
 (context file_atspi_conf (system_u object_r atspi_conf_t ((s0)(s0))))
 (filecon "/etc/at-spi2(/.*)?" file file_atspi_conf)
 
+(allow is_atspibusl_subject self (process (signal)))
 (allow is_atspibusl_subject self rw_fifo_file_perms)
 
 (call files_read_generic_usr_files (is_atspibusl_subject))
