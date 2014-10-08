@@ -39,11 +39,15 @@
 
 (call files_read_generic_etc_files (is_gis_subject))
 
+(call selinux_list (is_gis_subject))
+
 (call accountsservice_dbus_chat (is_gis_subject))
 
 (call auth_nsswitch_client_subject (is_gis_subject))
 
 (call dbus_system_client_subject (is_gis_subject))
+
+(call localed_dbus_chat_localed (is_gis_subject))
 
 (call machined_read_config_files (is_gis_subject))
 

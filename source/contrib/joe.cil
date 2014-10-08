@@ -1138,6 +1138,7 @@
 
             (typeattributeset is_joe_ibusd_client_subject (joe_gis_t))
             (typeattributeset is_joe_application_subject (joe_gis_t))
+            (typeattributeset is_joe_atspi_client_subject (joe_gis_t))
             (typeattributeset is_joe_dconf_client_subject (joe_gis_t))
             (typeattributeset is_joe_gsession_subject (joe_gis_t))
             (typeattributeset is_joe_gnome_application_object (gis_exec_t))
@@ -1561,6 +1562,8 @@
 
             (call usersubject_manage_generic_data_dirs (joe_evocfactory_t))
             (call usersubject_home_dir_filetrans_user_data_dir (joe_evocfactory_t))
+
+            (call read_files_pattern (joe_evocfactory_t user_gvfsdmetad_data_t user_gvfsdmetad_data_t))
 
             (type joe_evoanotify_t)
             (call evolution_role_template_evoanotify (joe_r joe_gsession_t joe_evoanotify_t))

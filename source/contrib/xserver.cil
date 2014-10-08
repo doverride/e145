@@ -209,6 +209,7 @@
 
 (call system_read_generic_proc_files (is_xorg_subject))
 (call system_write_proc_mtrr_files (is_xorg_subject))
+(call system_read_sysctl_vm_overcommit_files (xorg_t))
 
 (call commands_execute_bin_files (is_xorg_subject))
 (call commands_execute_shell_files (is_xorg_subject))
