@@ -3,12 +3,13 @@
 (typeattribute is_polkit_admin_subject)
 
 (typeattribute is_polkitpkladm_subject)
+(typeattribute is_polkitpklauth_subject)
 (typeattribute is_polkitagent_subject)
 
 (typeattribute is_polkit_etc_file_object)
 
 (typeattribute is_polkit_subject)
-(typeattributeset is_polkit_subject (polkitd_t polkitd_auth_t))
+(typeattributeset is_polkit_subject (polkitd_t))
 
 (typeattribute is_polkit_file_object)
 (typeattributeset is_polkit_file_object (polkitd_conf_t polkitd_pam_conf_t
@@ -25,6 +26,13 @@
 
 (context file_polkitagent_exec (system_u object_r polkitagent_exec_t ((s0) (s0))))
 (filecon "/usr/lib/polkit-1/polkit-agent-helper-1" file file_polkitagent_exec)
+
+(type polkitpklauth_exec_t)
+(call application_subject_entry (is_polkitpklauth_subject polkitpklauth_exec_t))
+
+(context file_polkitpklauth_exec (system_u object_r polkitpklauth_exec_t ((s0)
+    (s0))))
+(filecon "/usr/bin/pkla-check-authorization" any file_polkitpklauth_exec)
 
 (type polkitd_t)
 (type polkitd_exec_t)
@@ -68,17 +76,6 @@
 (context file_polkitd_unit (system_u object_r polkitd_unit_t ((s0) (s0))))
 (filecon "/usr/lib/systemd/system/[^/]*polkit.*" file file_polkitd_unit)
 
-(type polkitd_auth_t)
-(call subject_common_subject (polkitd_auth_t))
-
-(type polkitd_auth_exec_t)
-(call subject_entry (polkitd_auth_t polkitd_auth_exec_t))
-(roletype system_r polkitd_auth_t)
-
-(context file_polkitd_auth_exec (system_u object_r polkitd_auth_exec_t ((s0)
-    (s0))))
-(filecon "/usr/bin/pkla-check-authorization" any file_polkitd_auth_exec)
-
 (call filesystem_getattr_filesystems (is_polkit_subject))
 
 (call selinux_get_filesystems_mount (is_polkit_subject))
@@ -118,7 +115,7 @@
 (call miscfiles_read_localization_files (polkitd_t))
 
 (call polkit_exec_polkitpkladm (polkitd_t))
-(call polkit_exec_polkitauth (polkitd_t))
+(call polkit_exec_polkitpklauth (polkitd_t))
 
 (allow is_polkit_admin_subject is_polkit_subject signal_perms)
 (allow is_polkit_admin_subject is_polkit_subject (process (ptrace)))
@@ -131,14 +128,20 @@
 (macro polkit_exec_polkitpkladm ((type ARG1))
     (call can_exec (ARG1 polkitpkladm_exec_t)))
 
-(macro polkit_exec_polkitauth ((type ARG1))
-    (call can_exec (ARG1 polkitd_auth_exec_t)))
+(macro polkit_exec_polkitpklauth ((type ARG1))
+    (call can_exec (ARG1 polkitpklauth_exec_t)))
 
 (macro polkit_role_template_polkitpkladm ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_polkit_role ARG1)
     (typeattributeset is_polkitpkladm_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 polkitpkladm_exec_t ARG3)))
+
+(macro polkit_role_template_polkitpklauth ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_polkit_role ARG1)
+    (typeattributeset is_polkitpklauth_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 polkitpklauthexec_t ARG3)))
 
 (macro polkit_role_template_polkitagent ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_polkit_role ARG1)
@@ -149,9 +152,6 @@
 (macro polkit_etc_object ((type ARG1))
     (call files_etc_object (ARG1))
     (typeattributeset is_polkit_etc_file_object ARG1))
-
-(macro polkit_subtrans_auth ((type ARG1))
-    (call subtrans_pattern (ARG1 polkitd_auth_exec_t polkitd_auth_t)))
 
 (macro polkit_dbus_chat_polkitd ((type ARG1))
     (allow ARG1 polkitd_t (dbus (send_msg)))
