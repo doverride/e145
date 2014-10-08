@@ -7,6 +7,7 @@ target (gnome doing access checks):
     /usr/libexec/gstreamer-1.0/gst-plugin-scanner (run by gis)
     /usr/libexec/gnome-user-share-obexpush
     /usr/share/gnome-sound-recorder/org.gnome.SoundRecorder
+    nautilus-sendto
 
 target ssmtp (cron wants it), loadkeys (so that i dont have to give sys_tty_config to session_t)
 

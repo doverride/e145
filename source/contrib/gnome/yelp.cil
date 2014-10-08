@@ -10,9 +10,17 @@
 
 (allow is_yelp_subject self (unix_stream_socket (listen accept)))
 
+(call system_read_sysctl_vm_overcommit_files (is_yelp_subject))
+
+(call devices_read_urandom (is_yelp_subject))
+
 (call auth_nsswitch_client_subject (is_yelp_subject))
 
+(call machined_read_config_files (is_yelp_subject))
+
 (optional yelp_subject_optional_usersubject
+    (type user_yelp_conf_t)
+    (call usersubject_config_object (user_yelp_conf_t))
     (type user_yelp_tmpfs_t)
     (call usersubject_tmpfs_object (user_yelp_tmpfs_t)))
 
@@ -20,10 +28,11 @@
     (call can_exec (ARG1 yelp_exec_t)))
 
 (macro yelp_role_template ((role ARG1)(type ARG2)(type ARG3)
-    (type ARG4))
+    (type ARG4)(type ARG5))
     (roleattributeset is_yelp_role ARG1)
     (typeattributeset is_yelp_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 yelp_exec_t ARG3))
     (allow ARG3 ARG4 manage_file_perms)
-    (call filesystem_tmpfs_filetrans (ARG3 ARG4 file "*")))
+    (call filesystem_tmpfs_filetrans (ARG3 ARG4 file "*"))
+    (allow ARG3 ARG5 manage_dir_perms))

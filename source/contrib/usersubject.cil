@@ -547,6 +547,10 @@
     (call usersubject_search_generic_config (ARG1))
     (call manage_dirs_pattern (ARG1 user_conf_t user_conf_t)))
 
+(macro usersubject_delete_generic_config_files ((type ARG1))
+    (call usersubject_search_home_dir (ARG1))
+    (call delete_files_pattern (ARG1 user_conf_t user_conf_t)))
+
 (macro usersubject_manage_generic_config_files ((type ARG1))
     (call usersubject_search_generic_config (ARG1))
     (call manage_files_pattern (ARG1 user_conf_t user_conf_t)))
