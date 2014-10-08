@@ -30,6 +30,8 @@
 (allow is_gis_subject self rw_fifo_file_perms)
 (allow is_gis_subject self (unix_stream_socket (listen accept)))
 
+(call commands_execute_bin_files (is_gis_subject)) ; /usr/bin/locale
+
 (call devices_list_sysfs (is_gis_subject))
 (call devices_read_sysfs_files (is_gis_subject))
 (call devices_read_urandom (is_gis_subject))
@@ -38,6 +40,8 @@
 (call files_read_generic_etc_files (is_gis_subject))
 
 (call accountsservice_dbus_chat (is_gis_subject))
+
+(call auth_nsswitch_client_subject (is_gis_subject))
 
 (call dbus_system_client_subject (is_gis_subject))
 
@@ -86,3 +90,7 @@
 (macro gis_rw_all_inherited_gis_tmp_files ((type ARG1))
     (allow ARG1 is_gis_subject (fd (use)))
     (allow ARG1 is_gis_tmp_file_object (file (read write))))
+
+(macro gis_read_state_all_gis_subjects ((type ARG1))
+    (allow ARG1 is_gis_subject (dirs (list)))
+    (allow ARG1 is_gis_subject read_file_perms))

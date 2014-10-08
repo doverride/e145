@@ -131,6 +131,7 @@
 (call system_read_proc_net_files (networkmgr_t))
 (call system_request_load_module (networkmgr_t))
 (call system_rw_sysctl_net_files (networkmgr_t))
+(call system_read_sysctl_vm_overcommit_files (networkmgr_t))
 
 (call commands_mmap_shell_files (networkmgr_t))
 (call commands_read_bin_files (networkmgr_t))
@@ -195,6 +196,9 @@
 
 (optional networkgr_optional_gdm
     (call gdm_read_state (networkmgr_t)))
+
+(optional networkmgr_optional_gis
+    (call gis_read_state_all_gis_subjects (networkmgr_t)))
 
 (optional networkmgr_optional_gsd
     (call gsd_read_state_all_gsd_subjects (networkmgr_t)))

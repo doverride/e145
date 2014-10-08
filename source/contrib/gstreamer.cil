@@ -9,7 +9,23 @@
 (context file_gstpluginsc_exec (system_u object_r gstpluginsc_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/gstreamer-1\.0/gst-plugin-scanner" file file_gstpluginsc_exec)
 
+(allow is_gstpluginsc_subject self (process (execmem)))
+
+(call devices_list_sysfs (is_gstpluginsc_subject))
+(call devices_read_sysfs_files (is_gstpluginsc_subject))
+(call devices_read_urandom (is_gstpluginsc_subject))
+(call devices_rw_v4l (is_gstpluginsc_subject))
+(call devices_rw_dri (is_gstpluginsc_subject))
+
+(call files_read_generic_etc_files (is_gstpluginsc_subject)) ; /etc/drirc
+
+(call selinux_list (is_gstpluginsc_subject))
+
 (call miscfiles_read_localization_files (is_gstpluginsc_subject))
+
+(call seutil_read_config_files (is_gstpluginsc_subject))
+
+(call udevd_client_subject (is_gstpluginsc_subject))
 
 (optional gstpluginsc_subject_optional_usersubject
     (type user_gstpluginsc_tmpfs_t)

@@ -72,6 +72,8 @@
     (type user_ibus_conf_t)
     (call usersubject_config_object (user_ibus_conf_t)))
 
+(allow is_ibus_dconf_subject self (process (signal)))
+
 (call filesystem_getattr_filesystems (is_ibus_dconf_subject))
 
 (call dbus_system_client_subject (is_ibus_dconf_subject))
