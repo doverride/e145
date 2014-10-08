@@ -28,6 +28,7 @@
 
 (allow is_gis_subject self (process (execmem)))
 (allow is_gis_subject self rw_fifo_file_perms)
+(allow is_gis_subject self (unix_stream_socket (listen accept)))
 
 (call devices_list_sysfs (is_gis_subject))
 (call devices_read_sysfs_files (is_gis_subject))
