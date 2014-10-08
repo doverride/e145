@@ -78,7 +78,6 @@
 (context file_polkitd_auth_exec (system_u object_r polkitd_auth_exec_t ((s0)
     (s0))))
 (filecon "/usr/bin/pkla-check-authorization" any file_polkitd_auth_exec)
-(filecon "/usr/lib/polkit-1/polkit-agent-helper-1" file file_polkitd_auth_exec)
 
 (call filesystem_getattr_filesystems (is_polkit_subject))
 
@@ -119,12 +118,7 @@
 (call miscfiles_read_localization_files (polkitd_t))
 
 (call polkit_exec_polkitpkladm (polkitd_t))
-(call polkit_subtrans_auth (polkitd_t))
-
-(allow polkitd_auth_t self create_unix_stream_socket_perms)
-
-(call polkit_list_var_lib (polkitd_auth_t))
-(call polkit_read_var_lib_files (polkitd_auth_t))
+(call polkit_exec_polkitauth (polkitd_t))
 
 (allow is_polkit_admin_subject is_polkit_subject signal_perms)
 (allow is_polkit_admin_subject is_polkit_subject (process (ptrace)))
@@ -136,6 +130,9 @@
 
 (macro polkit_exec_polkitpkladm ((type ARG1))
     (call can_exec (ARG1 polkitpkladm_exec_t)))
+
+(macro polkit_exec_polkitauth ((type ARG1))
+    (call can_exec (ARG1 polkitd_auth_exec_t)))
 
 (macro polkit_role_template_polkitpkladm ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_polkit_role ARG1)
