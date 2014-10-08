@@ -4,6 +4,8 @@
 (typeattribute is_gis_tmp_file_object)
 
 (typeattribute is_giscw_subject)
+(typeattribute is_giswt_tmp_file_object)
+
 (typeattribute is_giswt_subject)
 
 (type gis_exec_t)
@@ -64,6 +66,12 @@
     (type user_gis_tmpfs_t)
     (call usersubject_tmpfs_object (user_gis_tmpfs_t)))
 
+(call commands_mprot_read_shell_files (is_giswt_subject))
+
+(optional giswt_optional_usersubject
+    (type user_giswt_tmp_t)
+    (call usersubject_tmp_object (user_giswt_tmp_t)))
+
 (macro gis_exec_gis ((type ARG1))
     (call can_exec (ARG1 gis_exec_t)))
 
@@ -79,11 +87,15 @@
     (allow ARG3 ARG5 manage_file_perms)
     (call files_tmp_filetrans (ARG3 ARG5 file "*")))
 
-(macro gis_role_template_giswt ((role ARG1)(type ARG2)(type ARG3))
+(macro gis_role_template_giswt ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4))
     (roleattributeset is_gis_role ARG1)
     (typeattributeset is_giswt_subject ARG3)
+    (typeattributeset is_giswt_tmp_file_object ARG3)
     (roletype ARG1 ARG3)
-    (call subtrans_pattern (ARG2 giswt_exec_t ARG3)))
+    (call subtrans_pattern (ARG2 giswt_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (call files_tmp_filetrans (ARG3 ARG4 file "*")))
 
 (macro gis_role_template_giscw ((role ARG1)(type ARG2)(type ARG3))
     (roleattributeset is_gis_role ARG1)
@@ -92,6 +104,10 @@
     (call subtrans_pattern (ARG2 giscw_exec_t ARG3)))
 
 (macro gis_rw_all_inherited_gis_tmp_files ((type ARG1))
+    (allow ARG1 is_gis_subject (fd (use)))
+    (allow ARG1 is_gis_tmp_file_object (file (read write))))
+
+(macro gis_rw_all_inherited_giswt_tmp_files ((type ARG1))
     (allow ARG1 is_gis_subject (fd (use)))
     (allow ARG1 is_gis_tmp_file_object (file (read write))))
 

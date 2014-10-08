@@ -260,6 +260,7 @@
     (call gdm_read_run_files (xorg_t)))
 
 (optional xorg_optional_gis
+    (call gis_rw_all_inherited_giswt_tmp_files (xorg_t))
     (call gis_rw_all_inherited_gis_tmp_files (xorg_t)))
 
 (optional xorg_optional_glxutils

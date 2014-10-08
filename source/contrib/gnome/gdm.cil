@@ -283,6 +283,8 @@
 (call xserver_stream_connect_xorg (gdm_t))
 (call xserver_use_fd_all_xorg (gdm_t))
 
+(call yelp_exec (gdm_t))
+
 (optional gdm_optional_bluetooth
     (call bluetooth_dbus_chat_bluetoothd (gdm_t)))
 
@@ -357,6 +359,12 @@
     (allow ARG1 gdm_run_user_dir_t del_entry_dir_perms)
     (allow ARG1 gdm_run_t del_entry_dir_perms)
     (allow ARG1 gdm_run_t delete_file_perms))
+
+(macro gdm_delete_run_sock_files ((type ARG1))
+    (call files_search_run_user_root (ARG1))
+    (allow ARG1 gdm_run_user_dir_t del_entry_dir_perms)
+    (allow ARG1 gdm_run_t del_entry_dir_perms)
+    (allow ARG1 gdm_run_t delete_sock_file_perms))
 
 (macro gdm_manage_systemd_run_sock_files ((type ARG1))
     (call gdm_search_run_user_dir (ARG1))

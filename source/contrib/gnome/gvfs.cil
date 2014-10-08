@@ -197,6 +197,7 @@
 (context file_gvfsudisks2vm_exec (system_u object_r gvfsudisks2vm_exec_t ((s0)(s0))))
 (filecon "/usr/libexec/gvfs-udisks2-volume-monitor" file file_gvfsudisks2vm_exec)
 
+(allow is_gvfsd_subject self (process (signal)))
 (allow is_gvfsd_subject self rw_fifo_file_perms)
 
 (call files_read_generic_usr_files (is_gvfsd_subject)) ; /usr/share/gvfs

@@ -1,0 +1,29 @@
+(roleattribute is_yelp_role)
+
+(typeattribute is_yelp_subject)
+
+(type yelp_exec_t)
+(call application_subject_entry (is_yelp_subject yelp_exec_t))
+
+(context file_yelp_exec (system_u object_r yelp_exec_t ((s0)(s0))))
+(filecon "/usr/bin/yelp" file file_yelp_exec)
+
+(allow is_yelp_subject self (unix_stream_socket (listen accept)))
+
+(call auth_nsswitch_client_subject (is_yelp_subject))
+
+(optional yelp_subject_optional_usersubject
+    (type user_yelp_tmpfs_t)
+    (call usersubject_tmpfs_object (user_yelp_tmpfs_t)))
+
+(macro yelp_exec ((type ARG1))
+    (call can_exec (ARG1 yelp_exec_t)))
+
+(macro yelp_role_template ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4))
+    (roleattributeset is_yelp_role ARG1)
+    (typeattributeset is_yelp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 yelp_exec_t ARG3))
+    (allow ARG3 ARG4 manage_file_perms)
+    (call filesystem_tmpfs_filetrans (ARG3 ARG4 file "*")))

@@ -125,6 +125,7 @@ contrib/gnome/ibus.cil
 contrib/gnome/telepathy.cil
 contrib/gnome/tracker.cil
 contrib/gnome/xdg.cil
+contrib/gnome/yelp.cil
 contrib/systemd/askpwd.cil
 contrib/systemd/autorelabel.cil
 contrib/systemd/backlight.cil

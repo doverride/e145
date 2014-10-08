@@ -33,6 +33,7 @@
 (call devices_read_lnk_files (is_gsd_subject))
 (call devices_rw_wireless (is_gsd_subject))
 
+(call files_list_boot (is_gsd_subject))
 (call files_list_etc (is_gsd_subject))
 (call files_list_tmp (is_gsd_subject))
 (call files_read_generic_etc_files (is_gsd_subject)) ; /etc/fstab
