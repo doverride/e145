@@ -3,6 +3,7 @@
 (typeattribute is_polkit_admin_subject)
 
 (typeattribute is_polkitpkladm_subject)
+(typeattribute is_polkitagent_subject)
 
 (typeattribute is_polkit_etc_file_object)
 
@@ -18,6 +19,12 @@
 
 (context file_polkitpkladm_exec (system_u object_r polkitpkladm_exec_t ((s0) (s0))))
 (filecon "/usr/bin/pkla-admin-identities" file file_polkitpkladm_exec)
+
+(type polkitagent_exec_t)
+(call application_subject_entry (is_polkitagent_subject polkitagent_exec_t))
+
+(context file_polkitagent_exec (system_u object_r polkitagent_exec_t ((s0) (s0))))
+(filecon "/usr/lib/polkit-1/polkit-agent-helper-1" file file_polkitagent_exec)
 
 (type polkitd_t)
 (type polkitd_exec_t)
@@ -131,10 +138,16 @@
     (call can_exec (ARG1 polkitpkladm_exec_t)))
 
 (macro polkit_role_template_polkitpkladm ((role ARG1)(type ARG2)(type ARG3))
-    (typeattributeset is_polkit_role ARG1)
+    (roleattributeset is_polkit_role ARG1)
     (typeattributeset is_polkitpkladm_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 polkitpkladm_exec_t ARG3)))
+
+(macro polkit_role_template_polkitagent ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_polkit_role ARG1)
+    (typeattributeset is_polkitagent_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 polkitagent_exec_t ARG3)))
 
 (macro polkit_etc_object ((type ARG1))
     (call files_etc_object (ARG1))
