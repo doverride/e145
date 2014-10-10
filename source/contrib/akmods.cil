@@ -117,6 +117,7 @@
 (call journald_client_subject (akmods_t)) ; /usr/sbin/runuser
 
 (call kmod_exec (akmods_t))
+(call kmod_read_modules_config_files (akmods_t))
 (call kmod_manage_modules_dep_files (akmods_t))
 (call kmod_relabel_modules_dep_files (akmods_t))
 
