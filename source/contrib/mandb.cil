@@ -2,15 +2,22 @@
 
 (typeattribute is_mandb_file_object)
 (typeattributeset is_mandb_file_object (mandb_conf_t mandb_env_t
-    mandb_cache_t))
+    mandb_cache_t mandb_unit_t))
 
 (type mandb_t)
 (type mandb_exec_t)
-(call cron_system_cronjob_subject_entry (mandb_t mandb_exec_t))
+(call systemd_oneshot_subject_entry (mandb_t mandb_exec_t))
 
 (context file_mandb_exec (system_u object_r mandb_exec_t ((s0)
     (s0))))
 (filecon "/usr/bin/mandb" file file_mandb_exec)
+
+(type mandb_unit_t)
+(call systemd_unit_object (mandb_unit_t))
+
+(context file_mandb_unit (system_u object_r mandb_unit_t ((s0)
+    (s0))))
+(filecon "/usr/lib/systemd/system/[^/]*man-db.*" file file_mandb_unit)
 
 (type mandb_conf_t)
 (call files_etc_object (mandb_conf_t))
@@ -46,9 +53,14 @@
 (call miscfiles_read_man_files (mandb_t))
 (call miscfiles_read_localization_files (mandb_t))
 
+(optional mandb_optional_cron
+    (call cron_system_cronjob_subject_entry (mandb_t mandb_exec_t)))
+
 (allow is_mandb_admin_subject mandb_t signal_perms)
 (allow is_mandb_admin_subject mandb_t (process (ptrace)))
 (call ps_subject_pattern (is_mandb_admin_subject mandb_t))
+
+(allow is_mandb_admin_subject mandb_unit_t (service (all)))
 
 (call admin_pattern (is_mandb_admin_subject is_mandb_file_object))
 
