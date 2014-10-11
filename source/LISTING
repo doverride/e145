@@ -125,6 +125,7 @@ contrib/gnome/gvfs.cil
 contrib/gnome/ibus.cil
 contrib/gnome/telepathy.cil
 contrib/gnome/tracker.cil
+contrib/gnome/webkit.cil
 contrib/gnome/xdg.cil
 contrib/gnome/yelp.cil
 contrib/systemd/askpwd.cil

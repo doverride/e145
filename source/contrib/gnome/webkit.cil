@@ -1,0 +1,48 @@
+(roleattribute is_webkit_role)
+
+(typeattribute is_wknp_subject)
+(typeattribute is_wkpp_subject)
+(typeattribute is_wkwp_subject)
+
+(type wknp_exec_t)
+(call application_subject_entry (is_wknp_subject wknp_exec_t))
+
+(context file_wknp_exec (system_u object_r wknp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/webkit2gtk-.*/WebKitNetworkProcess" file file_wknp_exec)
+
+(type wkpp_exec_t)
+(call application_subject_entry (is_wkpp_subject wkpp_exec_t))
+
+(context file_wkpp_exec (system_u object_r wkpp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/webkit2gtk-.*/WebKitPluginProcess.*" file file_wkpp_exec)
+
+(type wkwp_exec_t)
+(call application_subject_entry (is_wkwp_subject wkwp_exec_t))
+
+(context file_wkwp_exec (system_u object_r wkwp_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/webkit2gtk-.*/WebKitWebProcess" file file_wkwp_exec)
+
+(optional wkwp_subject_optional_usersubject
+    (type user_wkwp_cache_t)
+    (call usersubject_cache_object (user_wkwp_cache_t)))
+
+(macro webkit_role_template_wknp ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_webkit_role ARG1)
+    (typeattributeset is_wknp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 wknp_exec_t ARG3)))
+
+(macro webkit_role_template_wkpp ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_webkit_role ARG1)
+    (typeattributeset is_wkpp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 wkpp_exec_t ARG3)))
+
+(macro webkit_role_template_wkwp ((role ARG1)(type ARG2)(type ARG3)
+    (type ARG4))
+    (roleattributeset is_webkit_role ARG1)
+    (typeattributeset is_wkwp_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 wkwp_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
+    (allow ARG3 ARG4 manage_file_perms))

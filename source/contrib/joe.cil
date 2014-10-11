@@ -1193,6 +1193,7 @@
             (typeattributeset is_joe_atspi_client_subject (joe_yelp_t))
             (typeattributeset is_joe_dconf_client_subject (joe_yelp_t))
             (typeattributeset is_joe_ibusd_client_subject (joe_yelp_t))
+            (typeattributeset is_joe_webkit_client_subject (joe_yelp_t))
 
             (typeattribute is_joe_yelp_client_subject)
 
@@ -1695,6 +1696,33 @@
             (typeattributeset is_joe_application_subject (joe_epiphany_t))
 
             (typeattributeset is_joe_gnome_application_object (epiphany_exec_t))
+
+            (type joe_wkwp_t)
+            (call webkit_role_template_wkwp (joe_r joe_epiphany_t joe_wkwp_t user_wkwp_cache_t))
+
+            (allow joe_t user_wkwp_cache_t manage_dir_perms)
+            (allow joe_t user_wkwp_cache_t relabel_dir_perms)
+            (allow joe_t user_wkwp_cache_t manage_file_perms)
+            (allow joe_t user_wkwp_cache_t relabel_file_perms)
+
+            (call usersubject_cache_filetrans (joe_t user_wkwp_cache_t dir "webkit"))
+            (call usersubject_cache_filetrans (joe_wkwp_t user_wkwp_cache_t dir "webkit"))
+
+            (call usersubject_manage_generic_cache_dirs (joe_wkwp_t))
+            (call usersubject_home_dir_filetrans_user_cache_dir (joe_wkwp_t))
+
+            (typeattribute is_joe_webkit_client_subject)
+
+            (allow is_joe_webkit_client_subject user_wkwp_cache_t manage_dir_perms)
+            (allow is_joe_webkit_client_subject user_wkwp_cache_t manage_file_perms)
+            (call usersubject_cache_filetrans (is_joe_webkit_client_subject user_wkwp_cache_t dir "webkit"))
+
+            (call usersubject_manage_generic_cache_dirs (is_joe_webkit_client_subject))
+            (call usersubject_home_dir_filetrans_user_cache_dir (is_joe_webkit_client_subject))
+            
+            (typeattributeset is_joe_application_subject (joe_wkwp_t))
+
+            (typeattributeset is_joe_gnome_application_object (wkwp_exec_t))
 
             ; TODO
 
