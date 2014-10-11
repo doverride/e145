@@ -1097,16 +1097,16 @@
     (filecon "/root/\.gnupg/S\.gpg-agent" socket file_session_gpgagent_home)
     (filecon "/root/\.gnupg/S\.gpg-agent\.ssh" socket file_session_gpgagent_home)
     (filecon "/root/\.gnupg/sshcontrol" file file_session_gpgagent_home)
+    (filecon "/root/\.gnupg/private-keys-v1\.d(/.*)?" any file_session_gpgagent_home)
 
     (call session_home_dir_filetrans (session_gpgagent_t session_gpgagent_home_t file ".gpg-agent-info"))
-
-    (allow session_gpgagent_t session_gpg_home_t manage_dir_perms) ; wants to rmdir .gnupg
-    (allow session_gpgagent_t session_gpg_home_t read_file_perms)
 
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t file
         "*"))
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t sock_file
         "*"))
+    (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t dir
+        "private-keys-v1.d"))
 
     (call session_application_subject (session_gpgagent_t))
     (call session_use_terminals (session_gpgagent_t))
@@ -1125,7 +1125,14 @@
     (type session_gpgpcsc_t)
     (call gpg_role_template_pcsc (session_r session_scd_t session_gpgpcsc_t))
 
-    (call session_application_subject (session_gpgpcsc_t)))
+    (call session_application_subject (session_gpgpcsc_t))
+
+    (type session_gpg2keys_t)
+    (call gpg_role_template_gpg2keys (session_r session_gpg_t session_gpg2keys_t))
+
+    (call session_read_cert_files (session_gpg2keys_t))
+
+    (call session_application_subject (session_gpg2keys_t)))
 
 (optional session_optional_session_mutt
     (type session_mutt_t)

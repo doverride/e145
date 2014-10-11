@@ -7,12 +7,22 @@
 (typeattribute is_gpgagent_subject)
 (typeattribute is_gpgpcsc_subject)
 (typeattribute is_scd_subject)
+(typeattribute is_gpg2keys_subject)
 
 (type gpg_exec_t)
 (call application_subject_entry (is_gpg_subject gpg_exec_t))
 
 (context file_gpg_exec (system_u object_r gpg_exec_t ((s0)(s0))))
 (filecon "/usr/bin/gpg2" file file_gpg_exec)
+
+(type gpg2keys_exec_t)
+(call application_subject_entry (is_gpg2keys_subject gpg2keys_exec_t))
+
+(context file_gpg2keys_exec (system_u object_r gpg2keys_exec_t ((s0)(s0))))
+(filecon "/usr/libexec/gpg2keys_curl" file file_gpg2keys_exec)
+(filecon "/usr/libexec/gpg2keys_finger" file file_gpg2keys_exec)
+(filecon "/usr/libexec/gpg2keys_hkp" file file_gpg2keys_exec)
+(filecon "/usr/libexec/gpg2keys_ldap" file file_gpg2keys_exec)
 
 (type gpg_helper_exec_t)
 (call commands_bin_object (gpg_helper_exec_t))
@@ -21,10 +31,6 @@
 (filecon "/usr/libexec/gpg-check-pattern" file file_gpg_helper_exec)
 (filecon "/usr/libexec/gpg-preset-passphrase" file file_gpg_helper_exec)
 (filecon "/usr/libexec/gpg-protect-tool" file file_gpg_helper_exec)
-(filecon "/usr/libexec/gpg2keys_curl" file file_gpg_helper_exec)
-(filecon "/usr/libexec/gpg2keys_finger" file file_gpg_helper_exec)
-(filecon "/usr/libexec/gpg2keys_hkp" file file_gpg_helper_exec)
-(filecon "/usr/libexec/gpg2keys_ldap" file file_gpg_helper_exec)
 
 (type gpgagent_exec_t)
 (call application_subject_entry (is_gpgagent_subject gpgagent_exec_t))
@@ -60,21 +66,11 @@
 (call devices_read_urandom (is_gpg_subject))
 (call devices_read_random (is_gpg_subject))
 
-(call files_dontaudit_list_all (is_gpg_subject)) ; catchall
-(call files_audit_access_generic_tmp_dirs (is_gpg_subject))
-(call files_read_generic_etc_files (is_gpg_subject)) ; FIXME: /etc/openldap/ldap.conf (for keyserver)
+; (call files_dontaudit_list_all (is_gpg_subject)) ; catchall
 (call files_read_generic_usr_files (is_gpg_subject)) ; /usr/share/gnupg/gpg-conf.skel
-(call files_list_tmp (is_gpg_subject))
 
-(call auth_nsswitch_client_subject (is_gpg_subject))
-
-(call miscfiles_read_generic_cert_files (is_gpg_subject))
-(call miscfiles_read_network_config_files (is_gpg_subject))
 (call miscfiles_read_terminfo_files (is_gpg_subject))
 (call miscfiles_read_localization_files (is_gpg_subject))
-
-(optional gpg_optional_http
-    (call http_tcp_connect_http_port (is_gpg_subject))) ; keyserver
 
 (optional gpg_optional_session
     (type session_gpg_home_t)
@@ -136,6 +132,22 @@
 
 (call pcsc_stream_connect (is_gpgpcsc_subject))
 
+(call devices_read_urandom (is_gpg2keys_subject))
+(call devices_read_random (is_gpg2keys_subject))
+
+; (call files_dontaudit_list_all (is_gpg2keys_subject)) ; catchall
+(call files_audit_access_generic_tmp_dirs (is_gpg2keys_subject))
+(call files_read_generic_etc_files (is_gpg2keys_subject)) ; FIXME: /etc/openldap/ldap.conf (for keyserver)
+(call files_list_tmp (is_gpg2keys_subject))
+
+(call auth_nsswitch_client_subject (is_gpg2keys_subject))
+
+(call miscfiles_read_generic_cert_files (is_gpg2keys_subject))
+(call miscfiles_read_network_config_files (is_gpg2keys_subject))
+
+(optional gpg2keys_subject_optional_http
+    (call http_tcp_connect_http_port (is_gpg2keys_subject)))
+
 (macro gpg_role_template ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gpg_role ARG1)
     (typeattributeset is_gpg_subject ARG3)
@@ -144,11 +156,18 @@
     (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms))
 
+(macro gpg_role_template_gpg2keys ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_gpg_role ARG1)
+    (typeattributeset is_gpg2keys_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 gpg2keys_exec_t ARG3)))
+
 (macro gpg_role_template_agent ((role ARG1)(type ARG2)(type ARG3)(type ARG4))
     (roleattributeset is_gpgagent_role ARG1)
     (typeattributeset is_gpgagent_subject ARG3)
     (roletype ARG1 ARG3)
     (call subtrans_pattern (ARG2 gpgagent_exec_t ARG3))
+    (allow ARG3 ARG4 manage_dir_perms)
     (allow ARG3 ARG4 manage_file_perms)
     (allow ARG3 ARG4 manage_sock_file_perms))
 

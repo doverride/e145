@@ -2170,6 +2170,8 @@
 
     (typeattributeset is_joe_application_subject (joe_gpgagent_t))
 
+    (allow joe_t user_gpgagent_home_t manage_dir_perms)
+    (allow joe_t user_gpgagent_home_t relabel_dir_perms)
     (allow joe_t user_gpgagent_home_t manage_file_perms)
     (allow joe_t user_gpgagent_home_t relabel_file_perms)
     (allow joe_t user_gpgagent_home_t manage_sock_file_perms)
@@ -2183,14 +2185,13 @@
     (filecon "/home/joe/\.gnupg/S\.gpg-agent" socket file_joe_user_gpgagent_home)
     (filecon "/home/joe/\.gnupg/S\.gpg-agent\.ssh" socket file_joe_user_gpgagent_home)
     (filecon "/home/joe/\.gnupg/sshcontrol" file file_joe_user_gpgagent_home)
-
-    (allow joe_gpgagent_t user_gpg_home_t manage_dir_perms) ; wants to rmdir .gnupg
-    (allow joe_gpgagent_t user_gpg_home_t read_file_perms)
+    (filecon "/home/joe/\.gnupg/private-keys-v1\.d(/.*)?" any file_joe_user_gpgagent_home)
 
     (call usersubject_home_dir_filetrans (joe_gpgagent_t user_gpgagent_home_t file ".gpg-agent-info"))
 
     (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t file "*"))
     (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t sock_file "*"))
+    (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t dir "private-keys-v1.d"))
 
     (call usersubject_use_terminals (joe_gpgagent_t))
 
@@ -2220,7 +2221,14 @@
     (type joe_gpgpcsc_t)
     (call gpg_role_template_pcsc (joe_r joe_scd_t joe_gpgpcsc_t))
 
-    (typeattributeset is_joe_application_subject (joe_gpgpcsc_t)))
+    (typeattributeset is_joe_application_subject (joe_gpgpcsc_t))
+
+    (type joe_gpg2keys_t)
+    (call gpg_role_template_gpg2keys (joe_r joe_gpg_t joe_gpg2keys_t))
+
+    (call usersubject_read_cert_files (joe_gpg2keys_t))
+
+    (typeattributeset is_joe_application_subject (joe_gpg2keys_t)))
 
 (optional joe_optional_joe_mutt
     (type joe_mutt_t)
