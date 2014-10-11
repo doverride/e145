@@ -1101,6 +1101,8 @@
 
     (call session_home_dir_filetrans (session_gpgagent_t session_gpgagent_home_t file ".gpg-agent-info"))
 
+    (call filetrans_pattern (session_t session_gpg_home_t session_gpgagent_home_t file "gpg-agent-wrapper"))
+
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t file
         "*"))
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t sock_file

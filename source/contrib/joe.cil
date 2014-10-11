@@ -2189,6 +2189,8 @@
 
     (call usersubject_home_dir_filetrans (joe_gpgagent_t user_gpgagent_home_t file ".gpg-agent-info"))
 
+    (call filetrans_pattern (joe_t user_gpg_home_t user_gpgagent_home_t file "gpg-agent-wrapper"))
+
     (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t file "*"))
     (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t sock_file "*"))
     (call filetrans_pattern (joe_gpgagent_t user_gpg_home_t user_gpgagent_home_t dir "private-keys-v1.d"))
