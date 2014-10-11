@@ -1,0 +1,15 @@
+(roleattribute is_epiphany_role)
+
+(typeattribute is_epiphany_subject)
+
+(type epiphany_exec_t)
+(call application_subject_entry (is_epiphany_subject epiphany_exec_t))
+
+(context file_epiphany_exec (system_u object_r epiphany_exec_t ((s0)(s0))))
+(filecon "/usr/bin/epiphany" file file_epiphany_exec)
+
+(macro epiphany_role_template_epiphany ((role ARG1)(type ARG2)(type ARG3))
+    (roleattributeset is_epiphany_role ARG1)
+    (typeattributeset is_epiphany_subject ARG3)
+    (roletype ARG1 ARG3)
+    (call subtrans_pattern (ARG2 epiphany_exec_t ARG3)))

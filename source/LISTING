@@ -108,6 +108,7 @@ contrib/gnome/atspi.cil
 contrib/gnome/canberra.cil
 contrib/gnome/caribou.cil
 contrib/gnome/dconf.cil
+contrib/gnome/epiphany.cil
 contrib/gnome/evolution.cil
 contrib/gnome/gconf.cil
 contrib/gnome/gctrlc.cil

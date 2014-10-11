@@ -1689,6 +1689,13 @@
 
             (typeattributeset is_joe_gnome_application_object (polkitagent_exec_t))
 
+            (type joe_epiphany_t)
+            (call epiphany_role_template_epiphany (joe_r joe_gshell_t joe_epiphany_t))
+
+            (typeattributeset is_joe_application_subject (joe_epiphany_t))
+
+            (typeattributeset is_joe_gnome_application_object (epiphany_exec_t))
+
             ; TODO
 
             (typeattributeset is_joe_gnome_application_object (gctrlc_exec_t))
