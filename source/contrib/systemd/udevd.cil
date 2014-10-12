@@ -117,6 +117,7 @@
 (call devices_rw_sysfs_dirs (udevd_t)) ; write is for power dir, its looking for control (i suspect bug: does not work in permissive mode either)
 
 (call files_list_etc (udevd_t))
+(call files_audit_access_root_dirs (udevd_t))
 
 (call filesystem_read_cgroup_files (udevd_t))
 (call filesystem_search_efivarfs (udevd_t))
