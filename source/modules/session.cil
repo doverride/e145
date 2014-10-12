@@ -1110,6 +1110,9 @@
     (call filetrans_pattern (session_gpgagent_t session_gpg_home_t session_gpgagent_home_t dir
         "private-keys-v1.d"))
 
+    (allow session_gpgagent_t session_gpg_home_t manage_dir_perms)
+    (call session_home_dir_filetrans (session_gpgagent_t session_gpg_home_t dir ".gnupg"))
+
     (call session_application_subject (session_gpgagent_t))
     (call session_use_terminals (session_gpgagent_t))
 
