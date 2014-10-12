@@ -47,6 +47,8 @@
 
 (call files_read_generic_etc_files (mandb_t)) ; /etc/alternatives/emacs.etags.man
 
+(call filesystem_getattr_filesystems (mandb_t))
+
 (call mandb_read_config_files (mandb_t))
 (call mandb_manage_cache (mandb_t))
 
