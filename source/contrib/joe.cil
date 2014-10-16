@@ -2075,6 +2075,10 @@
     (call usersubject_home_dir_filetrans_user_home (joe_git_t file "*"))
     (call usersubject_home_dir_filetrans_user_home (joe_git_t lnk_file "*"))
 
+    (call usersubject_manage_generic_bin_dirs (joe_git_t))
+    (call usersubject_manage_generic_bin_files (joe_git_t))
+    (call usersubject_manage_generic_bin_lnk_files (joe_git_t))
+ 
     (type joe_tig_t)
     (call git_role_template_tig (joe_r joe_t joe_tig_t user_tig_home_t))
 
