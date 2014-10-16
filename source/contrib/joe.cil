@@ -120,6 +120,10 @@
     (call session_role_allow (joe_r))
     (call session_user_role (joe_u)))
 
+(optional joe_optional_seutil
+    (call seutil_exec_chcon (joe_t))
+    (call seutil_exec_secilc (joe_t)))
+
 (optional joe_optional_upower
     (call upower_run (joe_t joe_r)))
 

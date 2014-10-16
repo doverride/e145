@@ -395,6 +395,9 @@
     (call seutil_subtrans_setools (ARG1))
     (roleattributeset is_setools_role (ARG2)))
 
+(macro seutil_exec_secilc ((type ARG1))
+    (call can_exec (ARG1 secilc_exec_t)))
+
 (macro seutil_subtrans_secilc ((type ARG1))
     (call subtrans_pattern (ARG1 secilc_exec_t secilc_t)))
 
