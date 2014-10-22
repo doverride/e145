@@ -122,6 +122,7 @@
 
 (optional joe_optional_seutil
     (call seutil_exec_chcon (joe_t))
+    (call seutil_exec_setools (joe_t))
     (call seutil_exec_secilc (joe_t)))
 
 (optional joe_optional_upower

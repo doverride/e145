@@ -388,6 +388,9 @@
     (call seutil_subtrans_setenforce (ARG1))
     (roleattributeset is_setenforce_role (ARG2)))
 
+(macro seutil_exec_setools ((type ARG1))
+    (call can_exec (ARG1 setools_exec_t)))
+
 (macro seutil_subtrans_setools ((type ARG1))
     (call subtrans_pattern (ARG1 setools_exec_t setools_t)))
 
