@@ -108,6 +108,8 @@
 (call application_subject (journalctl_t))
 (call application_executable_object (journalctl_exec_t))
 
+(call journald_stop_service (journalctl_t))
+(call journald_list_run (journalctl_t))
 (call journald_manage_log_files (journalctl_t))
 (call journald_manage_var_lib_files (journalctl_t)) ; /var/lib/systemd/catalog
 
@@ -115,7 +117,7 @@
 
 (call terminal_use_inherited_unallocated_tty_nodes (journalctl_t))
 
-(call systemd_search_run (journalctl_t))
+(call systemd_stream_connect (journalctl_t))
 
 (optional journalctl_optional_session
     (call session_execute_bin_files (journalctl_t)) ; it traverses ~/.local/bin
@@ -219,6 +221,9 @@
 (macro journald_read_run_files ((type ARG1))
     (call systemd_search_run (ARG1))
     (call read_files_pattern (ARG1 journald_run_t journald_run_t)))
+
+(macro journald_stop_service ((type ARG1))
+    (allow ARG1 journald_unit_t (service (stop))))
 
 (macro journald_client_subject ((type ARG1))
     (typeattributeset is_journald_client_subject ARG1))

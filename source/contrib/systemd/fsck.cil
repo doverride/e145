@@ -14,8 +14,18 @@
 (filecon "/usr/lib/systemd/system/[^/]*systemd-fsck.*" file
     file_fsck_unit)
 
+(type fsck_run_t)
+(call files_run_object (fsck_run_t))
+
+(context file_fsck_run (system_u object_r fsck_run_t ((s0) (s0))))
+(filecon "/run/fsck(/.*)?" any file_fsck_run)
+
 (allow fsck_t self (capability (net_admin)))
 (allow fsck_t self rw_fifo_file_perms)
+
+(allow fsck_t fsck_run_t manage_dir_perms)
+(allow fsck_t fsck_run_t manage_file_perms)
+(call files_run_filetrans (fsck_t fsck_run_t dir "*"))
 
 (call system_read_generic_proc_files (fsck_t))
 
@@ -43,6 +53,14 @@
 (allow is_fsck_admin_subject fsck_unit_t (service (all)))
 
 (call admin_pattern (is_fsck_admin_subject fsck_unit_t))
+
+(macro fsck_list_run ((type ARG1))
+    (call files_search_run (ARG1))
+    (allow ARG1 fsck_run_t list_dir_perms))
+
+(macro fsck_read_run_files ((type ARG1))
+    (call files_search_run (ARG1))
+    (call read_files_pattern (ARG1 fsck_run_t fsck_run_t)))
 
 (macro fsck_admin ((type ARG1))
     (typeattributeset is_fsck_admin_subject ARG1))
